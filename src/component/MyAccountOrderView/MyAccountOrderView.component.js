@@ -1074,6 +1074,19 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
+  getCouponSavings() {
+    const {
+      order: { total_mrp = 0, total_discount = 0 },
+    } = this.props;
+
+    let discountPercentage = Math.round(100 * (total_discount / total_mrp));
+
+    if (discountPercentage === 0) {
+      discountPercentage = 1;
+    }
+    return discountPercentage;
+  }
+
   renderPriceLine(price, name, mods = {}, allowZero = false) {
     if (!price && !allowZero) {
       return null;
@@ -1098,6 +1111,14 @@ class MyAccountOrderView extends PureComponent {
               <span>{__("(Taxes included)")}</span>
             </>
           )}
+          {name === "Coupon Savings" ? (
+            <>
+              &nbsp;
+              <span className="discountPercent">
+                {`(-${this.getCouponSavings()}%)`}
+              </span>
+            </>
+          ) : null}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && parseInt(finalPrice) === 0
@@ -1122,6 +1143,7 @@ class MyAccountOrderView extends PureComponent {
       </>
     );
   }
+
   renderPaymentSummary() {
     const {
       order: {
@@ -1137,7 +1159,10 @@ class MyAccountOrderView extends PureComponent {
         currency_code = getCurrency(),
         international_shipping_amount = 0,
         fulfilled_from = "",
+        total_mrp= 0,
+        total_discount= 0,
       },
+      isSidewideCouponEnabled,
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
@@ -1146,9 +1171,16 @@ class MyAccountOrderView extends PureComponent {
       <div block="MyAccountOrderView" elem="OrderTotals">
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
-            {this.renderPriceLine(subTotal, __("Subtotal"))}
+            {isSidewideCouponEnabled
+              ? this.renderPriceLine(total_mrp, __("Total MRP"))
+              : this.renderPriceLine(subTotal, __("Subtotal"))}
+            {isSidewideCouponEnabled
+              ? this.renderPriceLine(total_discount, __("Coupon Savings"), {
+                  couponSavings: true,
+                })
+              : null}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
-              this.renderPriceLine(shipping_amount, __("Shipping"), {
+              this.renderPriceLine(shipping_amount, __("Shipping Fee"), {
                 divider: true,
               })}
             {fulfilled_from === "International" &&
@@ -1172,7 +1204,7 @@ class MyAccountOrderView extends PureComponent {
                   { isClubApparel: true }
                 )
               : null}
-            {parseFloat(discount_amount) !== 0
+            {parseFloat(discount_amount) !== 0 && !isSidewideCouponEnabled
               ? this.renderPriceLine(discount_amount, __("Discount"))
               : null}
             {parseFloat(tax_amount) !== 0

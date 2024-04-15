@@ -422,6 +422,14 @@
         color: var(--color-nobel);
       }
     }
+
+    &_couponSavings {
+      .MyAccountOrderView {
+        &-Price {
+          color: #13CA75;
+        }
+      }
+    }
   }
 
   @include before-desktop {
@@ -580,4 +588,8 @@ h2.prodDetailTitle {
 .MyAccountOrderView-AccordionWrapper_isArabic .subTitle{
   padding-left: 0;
   padding-right: 35px;
+}
+
+.discountPercent {
+  color: red;
 }
