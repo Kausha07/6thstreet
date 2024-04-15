@@ -279,7 +279,7 @@ export class CartItem extends PureComponent {
     ];
     return (
       <div block="CartItem" elem="Price" mods={{ isArabic }}>
-        <Price price={price} renderSpecialPrice={false} cart={true} />
+        <Price price={price} renderSpecialPrice={false} cart={true} pageType="MiniCart"/>
       </div>
     );
   }

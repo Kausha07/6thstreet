@@ -34,9 +34,9 @@ class Price extends PureComponent {
   }
 
   renderDiscountSpecialPrice(onSale, specialPrice) {
-    const { country, showDiscountPercentage, isSidewideCouponEnabled } = this.props;
+    const { country, showDiscountPercentage, isSidewideCouponEnabled, pageType } = this.props;
     const currency = getCurrency();
-    if(isSidewideCouponEnabled) {
+    if(isSidewideCouponEnabled && pageType !== "MiniCart") {
       return null;
     }
     return (
@@ -266,7 +266,7 @@ class Price extends PureComponent {
       );
     }
 
-    if (pageType === "CartPage" && isSidewideCouponEnabled) {
+    if ((pageType === "CartPage" && isSidewideCouponEnabled ) || (pageType === "MiniCart" && isSidewideCouponEnabled )) {
       if (site_wide_applied || coupon_code) {
         return (
           <>
