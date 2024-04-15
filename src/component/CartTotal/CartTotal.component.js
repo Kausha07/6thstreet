@@ -1,11 +1,11 @@
 import React from "react";
-import "./CartTotal.style";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { connect } from "react-redux";
 import { getValueFromTotals } from "./utils/CartTotal.helper";
 import { getFinalPrice } from "Component/Price/Price.config";
 import { getCurrency, isArabic as checkIsArabic } from "Util/App";
 import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
+import { getCountryFromUrl } from "Util/Url";
 
 export const mapDispatchToProps = (dispatch) => ({
   getCart: () => CartDispatcher.getCart(dispatch, false, false),
@@ -21,14 +21,20 @@ export const mapStateToProps = (state) => {
 
 function CartTotal(props) {
   const {
-    totals: { total_segments: totals = [] },
+    totals: { total_segments: totals = [], total = 0, },
     block,
     pageType,
+    cashOnDeliveryFee,
   } = props;
 
   const isArabic = checkIsArabic();
   const currency_code = getCurrency();
   const isInternationalShipment = getValueFromTotals(totals, "intl_shipping");
+  const CODFee = getValueFromTotals(totals, "msp_cashondelivery") || 0;
+  const grandTotal =
+  total > CODFee  || !cashOnDeliveryFee
+    ? getFinalPrice(total, currency_code) - getFinalPrice(CODFee, currency_code)
+    : getFinalPrice(total, currency_code);
 
   const renderPriceLine = (price, name, mods, allowZero = false) => {
     if (!price && !allowZero) {
@@ -99,8 +105,19 @@ function CartTotal(props) {
             getValueFromTotals(totals, "clubapparel"),
             __("Club Apparel Redemption")
           )}
+          {cashOnDeliveryFee
+            ? renderPriceLine(
+                getValueFromTotals(totals, "msp_cashondelivery"),
+                getCountryFromUrl() === "QA"
+                  ? __("Cash on Receiving")
+                  : __("Cash on Delivery")
+              )
+            : null}
+          {renderPriceLine(getValueFromTotals(totals, "tax"), __("Tax"))}
           {renderPriceLine(
-            getValueFromTotals(totals, "grand_total"),
+            pageType === "CartPage" || !cashOnDeliveryFee
+              ? grandTotal
+              : getValueFromTotals(totals, "grand_total"),
             __("Total"),
             {
               divider: true,

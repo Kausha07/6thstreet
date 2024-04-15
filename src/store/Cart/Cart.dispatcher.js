@@ -360,11 +360,14 @@ export class CartDispatcher {
 
     try {
       dispatch(setIsCouponRequest(true));
-      await removeCouponCode({ cartId, couponCode });
+      const resp = await removeCouponCode({ cartId, couponCode });
       await this.getCartTotals(dispatch, cartId);
       dispatch(setIsCouponRequest(false));
-
-      dispatch(showNotification("success", __("Coupon was removed!")));
+      if(resp && typeof resp === "string") {
+        dispatch(showNotification("error", resp));
+      }else {
+        dispatch(showNotification("success", __("Coupon was removed!")));
+      }
     } catch (e) {
       dispatch(setIsCouponRequest(false));
       dispatch(

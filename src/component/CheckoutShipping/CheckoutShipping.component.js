@@ -19,6 +19,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
+import CartTotal from "Component/CartTotal";
 
 import "./CheckoutShipping.style";
 
@@ -75,7 +76,20 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         total_segments: totals = [],
         shipping_fee = 0,
       },
+      config,
     } = this.props;
+    const { isMobile } = this.state;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+
+    if (isSidewideCouponEnabled && isMobile ) {
+      return (
+        <CartTotal
+          pageType="CheckoutPage"
+          block="CheckoutOrderSummary"
+        />
+      );
+    }
 
     if (total !== {}) {
       const grandTotal = getFinalPrice(total, currency_code);

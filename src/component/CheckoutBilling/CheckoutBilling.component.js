@@ -23,6 +23,7 @@ import "./CheckoutBilling.extended.style";
 import Applepay from "./icons/apple.png";
 import Image from "Component/Image";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -306,9 +307,12 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       totals,
       totals: { total, currency_code },
       cashOnDeliveryFee,
+      config,
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const { dropdownToggleIcon, isDropdownOpen } = this.state;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
 
     return (
       <div block="Checkout" elem="OrderTotals">
@@ -331,9 +335,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             />
           </Collapse>
         </div>
-        {this.renderPriceLine(grandTotal, __("Total Amount"), {
+        {!isSidewideCouponEnabled ? this.renderPriceLine(grandTotal, __("Total Amount"), {
           isDropdownOpen,
-        })}
+        }) : null}
       </div>
     );
   }

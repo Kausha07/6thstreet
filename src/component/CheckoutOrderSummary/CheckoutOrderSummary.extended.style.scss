@@ -142,12 +142,29 @@
     }
     &-OrderTotals {
         font-weight: var(--fw-regular);
-        padding: 0 18px;
+        padding: 12px 18px;
+        background: #f6f6f6;
+        margin: 0 18px;
+
+        .OrderTotalsHeading{
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 0;
+
+            @include mobile {
+                display:  none;
+            }
+        }
+
         @include tablet {
             padding: 0;
+            margin: 0;
+            background: none;
         }
         @include mobile {
             padding: 0;
+            margin: 0;
+            background: none;
         }
     }
     &-SummaryItem {
@@ -157,6 +174,30 @@
         }
         &_isDropdownOpen {
             border-top: 2px solid var(--lightest-gray);
+        }
+        &_couponSavings {
+            .CheckoutOrderSummary {
+                &-Price {
+                    font-size: 13px;
+                    font-weight: var(--fw-demi);
+                    color: #13CA75;
+                }
+            }
+        }
+        &_divider {
+            border-top: 1px solid #ccc;
+            padding: 10px 0px;
+            margin-top: 10px;
+            .CheckoutOrderSummary {
+                &-Text {
+                    font-size: 15px;
+                    font-weight: var(--fw-regular);
+                }
+                &-Price {
+                    font-size: 15px;
+                    font-weight: var(--fw-bold);
+                }
+            }
         }
     }
     &-Subtotals {
@@ -233,7 +274,6 @@
 .wrapperCartCouponBlock {
     .cartCouponBlock { 
         margin: 0 18px;
-        margin-bottom: 24px;
         box-sizing: border-box;
         border: 1px dashed #28D9AA;
         border-radius: 6px;
@@ -306,6 +346,12 @@
                 }
             }
         }
+    }
+
+    .sidewideCheckout {
+        margin: 0 18px;
+        width: auto;
+        margin-bottom: 20px;
     }
 
     &_isArabic {
@@ -443,4 +489,12 @@
             }
         }
     }
+}
+
+.discountPercent{
+    color: #D12229;
+}
+
+.taxesIncluded {
+    color: #9B9B9B;
 }

@@ -53,7 +53,8 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
-  international_shipping_fee: state.AppConfig.international_shipping_amount
+  international_shipping_fee: state.AppConfig.international_shipping_amount,
+  config: state.AppConfig.config,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

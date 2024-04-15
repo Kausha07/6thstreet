@@ -19,12 +19,16 @@ import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions
 import { connect } from "react-redux";
 import Event, { MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
 import Delivery from "./icons/delivery-truck.png";
+import SideWideCoupon from "Component/SideWideCoupon";
+import CartTotal from "Component/CartTotal";
 
 import "./CheckoutOrderSummary.extended.style";
 
 export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  config: state.AppConfig.config,
+  isCouponRequest: state.CartReducer.isCouponRequest,
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
@@ -271,8 +275,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   renderDiscountCode() {
     const {
       totals: { coupon_code },
-      couponsItems = [], couponLists= []
+      couponsItems = [], couponLists= [],
+      config,
     } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
     const promoCount = Object.keys(couponsItems).length;
@@ -289,6 +296,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             <>
               <div block="cartCouponBlock" mods={{ isArabic }}>
                 {
+                  isSidewideCouponEnabled ? 
+                  <SideWideCoupon 
+                    handleRemoveCode ={this.handleRemoveCode}
+                  /> :
                   coupon_code ?
                     <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
                       <div block="appliedCouponDetail">
@@ -300,6 +311,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
                 }
               </div>
+              {isSidewideCouponEnabled ? (
+                <div block="otherCouponBlock" onClick={this.openCouponPopup} className="sidewideCheckout">
+                  {__("View other available coupons")}
+                </div>
+              ) : null}
               {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
             </>
             :
@@ -433,8 +449,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       },
       international_shipping_fee,
       checkoutStep,
+      config,
     } = this.props;
     const cashOnDelivery = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     const grandTotal =
       checkoutStep === SHIPPING_STEP && total > cashOnDelivery
         ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDelivery, currency_code)
@@ -450,6 +469,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         inventory_level_cross_border = true;
       }
     });
+
+    if(isSidewideCouponEnabled) {
+      return(
+        <CartTotal 
+          pageType="CheckoutPage"
+          block="CheckoutOrderSummary"
+          cashOnDeliveryFee={cashOnDeliveryFee}
+        />
+      )
+    }
+
     return (
       <div block="CheckoutOrderSummary" elem="OrderTotals">
         <ul>
@@ -499,12 +529,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 
   render() {
-    const { processingRequest } = this.props;
+    const { isCouponRequest } = this.props;
     const { isMobile } = this.state;
 
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
-        {/* <Loader isLoading={processingRequest} /> */}
+        <Loader isLoading={isCouponRequest} />
         {this.renderHeading()}
         {this.renderItems()}
         {this.renderToggleableDiscountOptions()}
