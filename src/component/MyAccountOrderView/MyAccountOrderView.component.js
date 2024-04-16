@@ -1078,12 +1078,8 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { total_mrp = 0, total_discount = 0 },
     } = this.props;
-
     let discountPercentage = Math.round(100 * (total_discount / total_mrp));
 
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
     return discountPercentage;
   }
 

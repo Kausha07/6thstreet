@@ -128,12 +128,24 @@ export class CartOverlay extends PureComponent {
 
   renderTotals() {
     const {
-      totals: { items = [], subtotal },
+      totals: { items = [], subtotal, total_mrp= 0 },
+      isSidewideCouponEnabled,
     } = this.props;
     const { isArabic } = this.state;
 
     if (!items || items.length < 1) {
       return null;
+    }
+
+    if(isSidewideCouponEnabled) {
+      return (
+        <dl block="CartOverlay" elem="Total" mods={{ isArabic }}>
+          <dt>
+            {__("Total MRP")}
+          </dt>
+          <dd>{this.renderPriceLine(total_mrp)}</dd>
+        </dl>
+      );
     }
 
     return (

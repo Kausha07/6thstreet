@@ -1329,5 +1329,10 @@
     "Popular Searches": "بحث شائع",
     "A-Z Brands": "العلامات التجارية بالترتيب الأبجدي",
     "Oops! We couldn't find the brand you are looking for": "عذراً! لم نستطع إيجاد العلامة التجارية التي تبحث عنها",
-    "No result found": "لا يوجد نتائج بحث"
+    "No result found": "لا يوجد نتائج بحث",
+    "View other available coupons": "عرض الكوبونات المتاحة الأخرى",
+    "Recommended code: ": "الكود الموصى به",
+    "OFF": "خصم",
+    "CODE:": "الكود",
+    "Total MRP": "السعر"
 }
