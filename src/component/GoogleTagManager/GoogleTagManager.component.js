@@ -127,7 +127,7 @@ import MyOrderChannel from "./events/MyOrderChannel.event";
  */
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
-export const EVENT_PRODUCT_CLICK = "productClick";
+export const EVENT_PRODUCT_CLICK = "select_item";
 export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
 export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
