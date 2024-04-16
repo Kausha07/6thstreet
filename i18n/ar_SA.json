@@ -1329,5 +1329,7 @@
     "Popular Searches": "بحث شائع",
     "A-Z Brands": "العلامات التجارية بالترتيب الأبجدي",
     "Oops! We couldn't find the brand you are looking for": "عذراً! لم نستطع إيجاد العلامة التجارية التي تبحث عنها",
-    "No result found": "لا يوجد نتائج بحث"
+    "No result found": "لا يوجد نتائج بحث",
+    "Debit/Credit Card Added Successfully": "تمت إضافة بطاقة الائتمان/ بطاقة السحب بنجاح",
+    "Are you sure you want to remove this card?": "هل أنت متأكد من رغبتك في حذف البطاقة؟"
 }
