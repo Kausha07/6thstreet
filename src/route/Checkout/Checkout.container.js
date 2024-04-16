@@ -80,6 +80,7 @@ import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 import { getDefaultEddMessage } from "Util/Date/index";
+import { getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -257,6 +258,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       KnetDetails: {},
       guestAutoSignIn: false,
       addressLoader: true,
+      orderDetailsCartTotal: {},
     };
   }
 
@@ -389,6 +391,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       console.error("error while auth in tabby pay case", error);
     }
   };
+
+  async getOrderDetails (paymentData) {
+    const { orderID} = paymentData;
+    const responseData = await getNewOrderData(orderID);
+    const order = responseData?.data;
+    this.setState({ orderDetailsCartTotal: order });
+  }
 
   getKNETData = async () => {
     try {
@@ -615,6 +624,30 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getQPayData();
     this.getTabbyData();
     getCouponList();
+
+    if (QPAY_CHECK || TABBY_CHECK || KNET_CHECK || TAMARA_CHECK) {
+      let paymentData = {};
+
+      if (TAMARA_CHECK) {
+        const { order_id, increment_id } = TAMARA_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (TABBY_CHECK) {
+        const { order_id, increment_id } = TABBY_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (KNET_CHECK) {
+        const { order_id, increment_id } = KNET_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (QPAY_CHECK) {
+        const { order_id, increment_id } = QPAY_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      }
+
+      this.getOrderDetails(paymentData);
+    }
   }
 
   componentDidCatch(error, info) {

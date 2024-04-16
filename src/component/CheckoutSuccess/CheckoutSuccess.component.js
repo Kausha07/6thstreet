@@ -1421,6 +1421,137 @@ export class CheckoutSuccess extends PureComponent {
       </li>
     );
   }
+  getSideWideCouponSavings() {
+    const {
+      orderDetailsCartTotal: { total_mrp = 0, total_discount = 0 },
+    } = this.props;
+
+    let discountPercentage = Math.round(100 * (total_discount / total_mrp));
+
+    return discountPercentage;
+  }
+  
+  renderSitewidePriceLine(price, name, mods = {}, allowZero = false) {
+    if (!price && !allowZero) {
+      return null;
+    }
+    const { isTotal, isStoreCredit, isClubApparel } = mods;
+    const formatPrice =
+      isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
+
+    const {
+      orderDetailsCartTotal: { order_currency_code: currency_code = getCurrency() },
+    } = this.props;
+    const finalPrice = getFinalPrice(formatPrice, currency_code);
+    const freeTextArray = [__("Shipping"), __("International Shipping Fee")];
+
+    return (
+      <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
+        <strong block="MyAccountOrderView" elem="Text">
+          {name}
+          {isTotal && (
+            <>
+              {" "}
+              <span>{__("(Taxes included)")}</span>
+            </>
+          )}
+          {name === "Coupon Savings" ? (
+            <>
+              &nbsp;
+              <span className="discountPercent">
+                {`(-${this.getSideWideCouponSavings()}%)`}
+              </span>
+            </>
+          ) : null}
+        </strong>
+        <strong block="MyAccountOrderView" elem="Price">
+          {freeTextArray.includes(name) && parseInt(finalPrice) === 0
+            ? __("FREE")
+            : `${currency_code} ${finalPrice}`}
+        </strong>
+      </li>
+    );
+  }
+
+  renderSideWidePaymentSummary() {
+    const {
+      orderDetailsCartTotal: {
+        subtotal = 0,
+        grand_total = 0,
+        shipping_amount = 0,
+        discount_amount = 0,
+        msp_cod_amount = 0,
+        tax_amount = 0,
+        customer_balance_amount = 0,
+        store_credit_amount = 0,
+        currency_code = getCurrency(),
+        international_shipping_amount = 0,
+        fulfilled_from = "",
+        total_mrp = 0,
+        total_discount = 0,
+      },
+    } = this.props;
+    const grandTotal = getFinalPrice(grand_total, currency_code);
+
+    return (
+      <div block="MyAccountOrderView" elem="OrderTotals">
+        <ul>
+          <div block="MyAccountOrderView" elem="Subtotals">
+            {this.renderSitewidePriceLine(total_mrp, __("Total MRP"))}
+            {this.renderSitewidePriceLine(
+              total_discount,
+              __("Coupon Savings"),
+              {
+                couponSavings: true,
+              }
+            )}
+            {(fulfilled_from === "Local" || fulfilled_from === null) &&
+              this.renderSitewidePriceLine(
+                shipping_amount,
+                __("Shipping Fee"),
+                {
+                  divider: true,
+                }
+              )}
+            {fulfilled_from === "International" &&
+              this.renderSitewidePriceLine(
+                international_shipping_amount,
+                __("International Shipping Fee"),
+                {
+                  divider: true,
+                }
+              )}
+            {store_credit_amount !== 0
+              ? this.renderSitewidePriceLine(
+                  store_credit_amount,
+                  __("Store Credit"),
+                  {
+                    isStoreCredit: true,
+                  }
+                )
+              : null}
+            {parseFloat(tax_amount) !== 0
+              ? this.renderSitewidePriceLine(tax_amount, __("Tax"))
+              : null}
+            {parseFloat(msp_cod_amount) !== 0
+              ? this.renderSitewidePriceLine(
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving Fee")
+                    : __("Cash on Delivery Fee")
+                )
+              : null}
+            {this.renderSitewidePriceLine(
+              grandTotal,
+              __("Total"),
+              { isTotal: true },
+              true
+            )}
+          </div>
+        </ul>
+      </div>
+    );
+  }
 
   renderPaymentSummary() {
     const {
@@ -1513,6 +1644,7 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       incrementID,
       initialTotals,
+      isSidewideCouponEnabled,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1556,7 +1688,9 @@ export class CheckoutSuccess extends PureComponent {
           paymentMethod?.code === "tabby_installments" ||
           paymentMethod?.code === "checkout_knet" ||
           paymentMethod?.code === TAMARA
-            ? this.renderPaymentSummary()
+            ? isSidewideCouponEnabled
+              ? this.renderSideWidePaymentSummary()
+              : this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}
         </div>

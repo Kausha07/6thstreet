@@ -258,7 +258,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed, country, config } = this.props;
+    const { isFailed, country, config, orderDetailsCartTotal } = this.props;
     const countryCode = getCountryFromUrl();
     const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     return {
@@ -269,7 +269,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       isFailed,
       isMobileVerification,
       country,
-      isSidewideCouponEnabled
+      isSidewideCouponEnabled,
+      orderDetailsCartTotal,
     };
   };
 

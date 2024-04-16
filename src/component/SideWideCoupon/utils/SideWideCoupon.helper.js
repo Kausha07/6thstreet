@@ -8,8 +8,5 @@ export const getSideWideSavingPercentages = (totals = []) => {
 
   let discountPercentage = Math.round(100 * ( totalDiscount / totalMrp));
 
-  if (discountPercentage === 0) {
-    discountPercentage = 1;
-  }
   return discountPercentage;
 };

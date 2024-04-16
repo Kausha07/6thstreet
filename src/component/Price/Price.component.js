@@ -171,11 +171,8 @@ class Price extends PureComponent {
     const { isArabic } = this.state;
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
 
-    if (pageType !== "PDPPage" && pageType !== "plp") {
+    if ((pageType !== "PDPPage" && pageType !== "plp") || (discountPercentage === 0)) {
       return null;
     }
 

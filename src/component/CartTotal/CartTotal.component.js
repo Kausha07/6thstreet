@@ -65,7 +65,7 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {`${mods?.couponSavings ? "-" : ""} ${
             parseFloat(price) || price === 0 ? currency_code : ""
-          } ${finalPrice}`}
+          } ${name === "Store Credit" ? Math.abs(finalPrice) : finalPrice}`}
         </strong>
       </li>
     );
@@ -99,7 +99,8 @@ function CartTotal(props) {
             : null}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
-            __("Store Credit")
+            __("Store Credit"),
+            { couponSavings: true }
           )}
           {renderPriceLine(
             getValueFromTotals(totals, "clubapparel"),

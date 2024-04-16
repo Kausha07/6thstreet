@@ -158,8 +158,15 @@ export class CartOverlay extends PureComponent {
     } = this.props;
     const finalDiscount = discount_amount || discount || 0;
     const totalDiscount = getDiscountFromTotals(totals, "total_discount") || 0;
+    const sideWideSavingPercentages = getSideWideSavingPercentages(totals);
 
-    if (!coupon_code && !finalDiscount && finalDiscount === 0 && !site_wide_applied) {
+    if (
+      (!coupon_code &&
+        !finalDiscount &&
+        finalDiscount === 0 &&
+        !site_wide_applied) ||
+      sideWideSavingPercentages === 0
+    ) {
       return null;
     }
 
