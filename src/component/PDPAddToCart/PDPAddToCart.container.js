@@ -438,7 +438,6 @@ export class PDPAddToCartContainer extends PureComponent {
             ]
           }
       };
-      console.log("test eventData", eventData);
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
       this.sendMoEImpressions(EVENT_SELECT_SIZE);
     }
