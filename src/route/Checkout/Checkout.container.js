@@ -736,24 +736,27 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       return;
     }
 
-    if (
-      Object.keys(totals).length &&
-      total === 0 &&
-      checkoutStep !== DETAILS_STEP
-    ) {
-      const totalSum = total_segments.reduce((acc, item) => {
-        if (item.code === "msp_cashondelivery") {
-          return acc + 0;
-        } else {
-          return acc + item.value;
-        }
-      }, 0);
+    // We dont have to check cart is invalid or not and
+    // inside cart many field are incresed with new implementation of side wide coupon
 
-      if (totalSum + discount !== 0) {
-        showErrorNotification(__("Your cart is invalid"));
-        history.push("/");
-      }
-    }
+    // if (
+    //   Object.keys(totals).length &&
+    //   total === 0 &&
+    //   checkoutStep !== DETAILS_STEP
+    // ) {
+    //   const totalSum = total_segments.reduce((acc, item) => {
+    //     if (item.code === "msp_cashondelivery") {
+    //       return acc + 0;
+    //     } else {
+    //       return acc + item.value;
+    //     }
+    //   }, 0);
+
+    //   if (totalSum + discount !== 0) {
+    //     showErrorNotification(__("Your cart is invalid"));
+    //     history.push("/");
+    //   }
+    // }
 
     // if guest checkout is disabled and user is not logged in => throw him to homepage
     if (!guest_checkout && !isSignedIn()) {
