@@ -15,3 +15,7 @@ export const saveCreditCard = (data) => MagentoAPI.post(
 export const getSavedCards = () => MagentoAPI.get(
     'customers/me/instruments'
 ) || {};
+
+export const deleteCreditCard = (gatewayToken) => MagentoAPI.delete(
+    `/customers/me/instruments/${gatewayToken}`
+) || {};
