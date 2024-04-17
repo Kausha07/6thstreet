@@ -1,6 +1,10 @@
 .HeaderGenders {
   display: flex;
   justify-content: center;
+  @include mobile {
+    justify-content: space-around;
+    overflow-x: scroll;
+  }
   
   @include before-desktop {
     display: none;

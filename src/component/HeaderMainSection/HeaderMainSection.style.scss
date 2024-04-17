@@ -537,14 +537,9 @@ main {
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        min-width: 14%;
-
-        &_isArabic {
-          min-width: 14%;
-        }
-
-    .GenderButton-Button {
+        .GenderButton-Button {
           padding: 0 0px;
+          text-wrap: nowrap;
         }
       }
     }
