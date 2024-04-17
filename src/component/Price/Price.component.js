@@ -60,7 +60,17 @@ class Price extends PureComponent {
   }
 
   renderBasePrice() {
-    const { basePrice, fixedPrice } = this.props;
+    const { basePrice, fixedPrice, isSidewideCouponEnabled, finalPrice } = this.props;
+
+    if(isSidewideCouponEnabled) {
+      return (
+        <span>
+          {this.renderCurrency()}
+          &nbsp;
+          {fixedPrice ? (1 * finalPrice).toFixed(3) : basePrice}
+        </span>
+      );
+    }
 
     return (
       <span>
@@ -99,16 +109,15 @@ class Price extends PureComponent {
       showDiscountPercentage,
       pageType,
       itemType = "",
+      finalPrice,
     } = this.props;
 
     if (!showDiscountPercentage) {
       return null;
     }
 
-    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
+    let discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
+
     if (!renderSpecialPrice && !cart) {
       return (
         <span
