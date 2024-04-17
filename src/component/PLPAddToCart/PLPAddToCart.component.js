@@ -182,21 +182,22 @@ class PLPAddToCart extends PureComponent {
                   item_name: name,
                   item_id: sku,
                   item_brand: brand_name,
-                  item_category: categories?.level1.length > 0 ? categories?.level1[0] : "",
-                  item_category2: categories?.level2?.length > 1 ? categories?.level2[0] : "",
-                  item_category3: categories?.level3?.length > 2 ? categories?.level3[0] : "",
-                  item_category4: categories?.level4?.length > 3 ? categories?.level4[0] : "",
-                  item_category5: categories?.level5?.length > 4 ? categories?.level5[0] : "",
+                  item_category: categories?.level1?.[0] ?? "",
+                  item_category2: categories?.level2?.[0] ?? "",
+                  item_category3: categories?.level3?.[0] ?? "",
+                  item_category4: categories?.level4?.[0] ?? "",
+                  item_category5: categories?.level5?.[0] ?? "",
                   item_variant: color,
                   // item_list_name: 'Product_LIST_NAME_HERE',
                   // item_list_id: 'Product_LIST_ID_HERE',
-                  price: price[0][currency_code].default_formated,
+                  price: price?.[0]?.[currency_code]?.default_formated,
                   item_size: optionValue,
                   item_size_type: selectedSizeType,
                 }
               ]
             }
         };
+        console.log("test eventData", eventData);
         Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
         this.sendMoEImpressions(EVENT_SELECT_SIZE);
       }

@@ -423,21 +423,22 @@ export class PDPAddToCartContainer extends PureComponent {
                 item_name: name,
                 item_id: sku,
                 item_brand: brand_name,
-                item_category: categories_without_path.length > 0 ? categories_without_path[0] : "",
-                item_category2: categories_without_path.length > 1 ? categories_without_path[1] : "",
-                item_category3: categories_without_path.length > 2 ? categories_without_path[2] : "",
-                item_category4: categories_without_path.length > 3 ? categories_without_path[3] : "",
-                item_category5: categories_without_path.length > 4 ? categories_without_path[4] : "",
+                item_category: categories_without_path?.[0] ?? "",
+                item_category2: categories_without_path?.[1] ?? "",
+                item_category3: categories_without_path?.[2] ?? "",
+                item_category4: categories_without_path?.[3] ?? "",
+                item_category5: categories_without_path?.[4] ?? "",
                 item_variant: color,
                 // item_list_name: 'Product_LIST_NAME_HERE',
                 // item_list_id: 'Product_LIST_ID_HERE',
-                price: price[0][currency_code].default_formated,
+                price: price?.[0]?.[currency_code]?.default_formated,
                 item_size: optionValue,
                 item_size_type: selectedSizeType,
               }
             ]
           }
       };
+      console.log("test eventData", eventData);
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
       this.sendMoEImpressions(EVENT_SELECT_SIZE);
     }

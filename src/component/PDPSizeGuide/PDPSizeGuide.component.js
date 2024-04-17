@@ -116,6 +116,25 @@ class PDPSizeGuide extends PureComponent {
       product_name: name,
       product_id: sku,
       action:"size_chart_click",
+      ecommerce : {
+        currency: getCurrency() || "",
+          items: [
+            {
+              item_name: name,
+              item_id: sku,
+              item_brand: brand_name,
+              item_category: categories?.level0?.[0] ?? "",
+              item_category2: categories?.level1?.[1] ?? "",
+              item_category3:  categories?.level2?.[2] ?? "",
+              item_category4:  categories?.level3?.[3] ?? "",
+              item_category5:  categories?.level4?.[4] ?? "",
+              item_variant: color,
+              // item_list_name: 'Product_LIST_NAME_HERE',
+              // item_list_id: 'Product_LIST_ID_HERE',
+              price: itemPrice,
+            }
+          ]
+        }
     };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({ isOpen: !isOpen });
