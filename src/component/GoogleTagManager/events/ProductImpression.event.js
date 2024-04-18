@@ -79,11 +79,11 @@ class ProductImpressionEvent extends BaseEvent {
             ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
             : "",
         brand: brand_name ? brand_name : "",
-        category:  categories && categories.level1 && categories?.level1.length > 0 ? categories?.level1[0] : "",
-        category2: categories && categories.level2 && categories?.level2?.length > 1 ? categories?.level2[0] : "",
-        category3: categories && categories.level3 && categories?.level3?.length > 2 ? categories?.level3[0] : "",
-        category4: categories && categories.level4 && categories?.level4?.length > 3 ? categories?.level4[0] : "",
-        category5: categories && categories.level5 && categories?.level5?.length > 4 ? categories?.level5[0] : "",
+        category:  categories?.level1?.[0] ?? "",
+        category2: categories?.level2?.[0] ?? "",
+        category3: categories?.level3?.[0] ?? "",
+        category4: categories?.level4?.[0] ?? "",
+        category5: categories?.level5?.[0] ?? "",
         variant: color || "",
         list: list || "Others",
         position: product_Position
