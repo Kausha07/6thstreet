@@ -73,14 +73,40 @@ class PurchaseEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
         : null;
+
+    const total_items = totals?.items;
+    const ga4_items = total_items.map((item) => ({
+      item_name: item?.full_item_info?.name,
+      item_id: item?.full_item_info?.config_sku,
+      item_brand: item?.full_item_info?.brand_name,
+      item_category: item?.full_item_info?.category,
+      item_variant: item?.full_item_info?.color,
+      price: item?.full_item_info?.original_price,
+      discount: item?.full_item_info?.discount_amount,
+      quantity: item?.full_item_info?.qty,
+      item_size: item?.full_item_info?.size_value,
+      item_size_type: item?.full_item_info?.size_option
+    }));
+
     this.pushEventData({
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
+        currency:  this.getCurrencyCode(),
+        transaction_id: totals?.id ?? "",
+        total: totals?.total ?? "",
+        discount: totals?.discount ?? 0,
+        shipping: totals?.shipping_fee ?? 0,
+        international_shipping_amount: totals?.international_shipping_amount?? 0,
+        subtotal: totals?.subtotal ?? 0,
+        cod_amount: totals?.msp_cod_amount ?? 0,
+        coupon:totals?.coupon_code ?? "",
+        tax_amount:totals?.tax_amount ?? "",
         purchase: {
           actionField: this.getActionFields(orderId, totals),
           products: formattedImpressions,
+          items:ga4_items
         },
       },
     });
