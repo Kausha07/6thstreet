@@ -105,9 +105,9 @@ class PurchaseEvent extends BaseEvent {
         tax_amount:totals?.tax_amount ?? "",
         purchase: {
           actionField: this.getActionFields(orderId, totals),
-          products: formattedImpressions,
-          items:ga4_items
+          products: formattedImpressions
         },
+        items:ga4_items
       },
     });
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
