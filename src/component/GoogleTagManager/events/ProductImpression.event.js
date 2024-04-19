@@ -53,6 +53,7 @@ class ProductImpressionEvent extends BaseEvent {
     const storage = this.getStorage();
     let isFilters = false;
     let queryId = null;
+    console.log("impressions " , impressions);
     const formattedImpressions = impressions.map(
       (
         {
@@ -69,6 +70,7 @@ class ProductImpressionEvent extends BaseEvent {
           product_Position,
           position,
           productQueryID,
+          in_stock
         },
         index
       ) => ({
@@ -92,6 +94,7 @@ class ProductImpressionEvent extends BaseEvent {
           ? position
           : index + 1 || "",
         queryId: productQueryID ? productQueryID : null,
+        variant_availability: in_stock
       })
     );
 
@@ -128,7 +131,8 @@ class ProductImpressionEvent extends BaseEvent {
           item_list_name: item.list,
           item_list_id: '',
           price: item.price,
-          index: item.position
+          index: item.position,
+          variant_availability: item.variant_availability
         }))
       },
       is_filter: isFilters ? "Yes" : "No",
