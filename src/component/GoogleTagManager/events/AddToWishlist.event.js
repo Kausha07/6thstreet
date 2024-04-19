@@ -31,6 +31,16 @@ class AddToWishlistEvent extends BaseEvent {
         add_wishlist: {
           products: [product],
         },
+        items: [
+          {
+            item_name: product?.name,
+            item_id: product?.skuFromProps,
+            item_brand: product?.brand,
+            item_category: product?.category,
+            item_variant: product?.variant,
+            price: product?.price,
+          }
+        ]
       },
     });
   }
