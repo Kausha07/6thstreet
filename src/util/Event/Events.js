@@ -25,6 +25,7 @@ export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
 export const EVENT_GTM_CHECKOUT_BILLING = "checkout_billing_Step";
+export const EVENT_ADD_PAYMENT_INFO = "add_payment_info";
 export const EVENT_GTM_ADD_TO_CART = "addToCart";
 
 // new events
