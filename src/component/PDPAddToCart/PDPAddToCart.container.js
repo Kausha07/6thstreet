@@ -676,6 +676,7 @@ export class PDPAddToCartContainer extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          size: optionValue,
         },
       });
 

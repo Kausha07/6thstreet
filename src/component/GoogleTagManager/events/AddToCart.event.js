@@ -52,10 +52,21 @@ class AddToCartEvent extends BaseEvent {
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
       ecommerce: {
-        currencyCode: this.getCurrencyCode(),
+        currency: this.getCurrencyCode(),
         add: {
           products: [formattedData],
         },
+        items: [
+          {
+            item_name: product?.name,
+            item_id: sku,
+            item_brand: product?.brand,
+            item_category: product?.category,
+            item_variant: product?.variant,
+            price: product?.price,
+            item_size: JSON.stringify(product?.size) ?? "",
+          }
+        ]
       },
     });
   }

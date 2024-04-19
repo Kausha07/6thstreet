@@ -935,6 +935,7 @@ class PLPAddToCart extends PureComponent {
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
           colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+          size: size,
         },
       });
 
