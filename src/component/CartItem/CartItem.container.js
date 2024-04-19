@@ -333,6 +333,7 @@ export class CartItemContainer extends PureComponent {
           category: product_type_6s || category,
           variant: color,
           quantity: qty,
+          size: optionValue,
         },
       });
       // vue analytics

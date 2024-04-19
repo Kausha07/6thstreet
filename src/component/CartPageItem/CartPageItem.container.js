@@ -445,6 +445,7 @@ export class CartItemContainer extends PureComponent {
           category: category,
           variant: color,
           quantity: qty,
+          size: size_value,
         },
       });
 
