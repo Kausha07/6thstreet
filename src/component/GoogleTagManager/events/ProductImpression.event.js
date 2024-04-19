@@ -53,7 +53,6 @@ class ProductImpressionEvent extends BaseEvent {
     const storage = this.getStorage();
     let isFilters = false;
     let queryId = null;
-    console.log("impressions " , impressions);
     const formattedImpressions = impressions.map(
       (
         {
