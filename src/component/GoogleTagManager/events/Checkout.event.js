@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_CHECKOUT, EVENT_ADD_PAYMENT_INFO } from "Util/Event";
+import Event, { EVENT_GTM_CHECKOUT, EVENT_ADD_PAYMENT_INFO, EVENT_GTM_CHECKOUT_BILLING } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import ProductHelper from "../utils";
 import BaseEvent from "./Base.event";
@@ -109,6 +109,7 @@ class CheckoutEvent extends BaseEvent {
         addressClicked: addressClicked || false,
         newAddressAdded: newAddressAdded || false,
         isDefaultAddressAdded: isDefaultAddressAdded || false,
+        event: EVENT_GTM_CHECKOUT_BILLING
       }),
       ...(step == 3 && {
         payment_method: payment_code ? payment_code : null,

@@ -765,19 +765,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
-    if (checkoutStep !== DETAILS_STEP) {
-      Event.dispatch(EVENT_GTM_CHECKOUT, {
-        totals,
-        step: this.getCheckoutStepNumber(),
-        payment_code: null,
-        addressClicked: addNewAddressClicked,
-        newAddressAdded: isSignedIn ? newAddressSaved : true,
-        isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
-      });
-      if (this.getCheckoutStepNumber() == "2") {
-        Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
-      }
-    }
+
+    Event.dispatch(EVENT_GTM_CHECKOUT, {
+      totals,
+      step: this.getCheckoutStepNumber(),
+      payment_code: null,
+      addressClicked: addNewAddressClicked,
+      newAddressAdded: isSignedIn ? newAddressSaved : true,
+      isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
+    });
     if (isInitial) {
       this.setState({ initialGTMSent: true });
     }
