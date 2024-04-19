@@ -105,6 +105,7 @@ class WishlistIcon extends PureComponent {
           name: wishListItem.product.name,
           price: wishListItem.product.price,
           variant: wishListItem.product.color,
+          categories: wishListItem?.product?.categories,
         },
       });
       const prodPriceObject = wishListItem?.product?.price[0];
