@@ -27,3 +27,20 @@ export const getBottomNavigationConfig = () => {
     const directory = process.env.REACT_APP_BOTTOM_NAVIGATION_CONFIG_DIR;
     return indexConfig(CDN.get(`${directory}/${configFile}`));
 }
+
+export const getHomePagePersonalisationConfig = () => {
+  try {
+    const promise = new Promise((resolve, reject) => {
+      resolve({
+        HPP: {
+          campaign_name: "TestA/B-D",
+          default_value: 1,
+        },
+      });
+    });
+    return promise;
+  } catch (error) {
+    console.error("Error fetching homepage personalisation config file", error);
+    return null;
+  }
+};

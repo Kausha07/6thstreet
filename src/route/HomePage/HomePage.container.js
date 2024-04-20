@@ -36,6 +36,12 @@ import {
   setMobileAuthorizationToken,
 } from "Util/Auth";
 
+import {
+  getHomePagePersonalizationJsonFileUrl,
+  getUserVWOVariation,
+  getUserSpecificDynamicContent,
+} from "./HompagePersonalisation.helper";
+
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
@@ -45,6 +51,10 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   VueTrendingBrandsEnable: state.MyAccountReducer.VueTrendingBrandsEnable,
   vueTrendingBrandsUserID: state.MyAccountReducer.vueTrendingBrandsUserID,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+  customer: state.MyAccountReducer.customer,
+  homepagePersonalisationConfig: state.AppConfig.homepagePersonalisationConfig,
+  signInIsLoading: state.MyAccountReducer.isLoading,
 });
 
 export const MyAccountDispatcher = import(
@@ -172,8 +182,8 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { gender: prevGender } = prevProps;
-    const { gender, toggleBreadcrumbs, lastHomeItem } = this.props;
+    const { gender: prevGender, customer: prevCustomer } = prevProps;
+    const { gender, toggleBreadcrumbs, lastHomeItem, customer, signInIsLoading } = this.props;
 
     toggleBreadcrumbs(false);
 
@@ -193,6 +203,10 @@ export class HomePageContainer extends PureComponent {
         element.style.scrollMarginTop = "180px";
         element.scrollIntoView({ behavior: "smooth" });
       }, 10);
+    }
+
+    if (prevCustomer?.id !== customer?.id) {
+      this.requestDynamicContent(signInIsLoading, gender);
     }
   }
 
@@ -385,7 +399,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender } = this.props;
+    const { gender, customer, locale, homepagePersonalisationConfig = {} } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -393,12 +407,14 @@ export class HomePageContainer extends PureComponent {
     }
     if (gender !== "influencer") {
       try {
+        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer, locale);
+        const getVariationName = await getUserVWOVariation(customer, homepagePersonalisationConfig); 
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
-          $FILE_NAME: `${devicePrefix}${gender}.json`,
+          $FILE_NAME: fileName,
         });
+        const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, getVariationName, homepagePersonalisationConfig);
         this.setState({
-          dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
-          isLoading: false,
+          dynamicContent: Array.isArray(dynamicHppContent) ? dynamicHppContent : [],isLoading: false,
         });
         this.getMainBannerForMeta();
         dynamicContent?.map((e) => {
