@@ -65,6 +65,8 @@ class CartEvent extends BaseEvent {
       currency: totals?.currency_code || "",
       coupon: totals?.coupon_code || "",
       products: formattedImpressions || "",
+      value: totals?.total || "",
+      items: formattedImpressions || "",
     });
   }
 }
