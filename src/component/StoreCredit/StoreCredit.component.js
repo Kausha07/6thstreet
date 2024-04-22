@@ -53,7 +53,7 @@ export class StoreCredit extends PureComponent {
 
   renderAmount() {
     const { canApply, storeCreditBalance } = this.props;
-    const amount = canApply ? `(${storeCreditBalance})` : storeCreditBalance;
+    const amount = canApply ? `${storeCreditBalance}` : storeCreditBalance;
 
     return (
       <span block="StoreCredit" elem="Amount">
@@ -91,13 +91,15 @@ export class StoreCredit extends PureComponent {
     return (
       <div block="StoreCredit" mods={{ canApply }}>
         <Loader isLoading={isLoading} />
-
+        <div>
+          <label block="StoreCredit" elem="Label" htmlFor={checkboxId}>
+            {label}
+          </label>
+          <div>
+            Available Credit: {this.renderAmount()}
+          </div>
+        </div>
         {canApply && this.renderCheckbox(checkboxId)}
-
-        <label block="StoreCredit" elem="Label" htmlFor={checkboxId}>
-          {label}
-          {this.renderAmount()}
-        </label>
       </div>
     );
   }

@@ -16,6 +16,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import CartCouponList from "Component/CartCouponList";
 import CartCouponDetail from 'Component/CartCouponDetail';
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
+import UseMyWallet from "../MyWallet/UseMyWallet/UseMyWallet";
 import { connect } from "react-redux";
 import Event, { MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
 import Delivery from "./icons/delivery-truck.png";
@@ -376,6 +377,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
         <StoreCredit canApply hideIfZero />
+        <UseMyWallet />
         {this.props?.isClubApparelEnabled ? <ClubApparel hideIfZero /> : null}
       </div>
     );
