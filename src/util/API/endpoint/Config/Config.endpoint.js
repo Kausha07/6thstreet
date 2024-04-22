@@ -30,15 +30,10 @@ export const getBottomNavigationConfig = () => {
 
 export const getHomePagePersonalisationConfig = () => {
   try {
-    const promise = new Promise((resolve, reject) => {
-      resolve({
-        HPP: {
-          campaign_name: "TestA/B-D",
-          default_value: 1,
-        },
-      });
-    });
-    return promise;
+    const configFile = "abtestConfig.json";
+    const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
+    const abTestConfigResponse = CDN.get(`${directory}/${configFile}`);
+    return abTestConfigResponse;
   } catch (error) {
     console.error("Error fetching homepage personalisation config file", error);
     return null;

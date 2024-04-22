@@ -18,7 +18,7 @@ export const getUserVWOVariation = async (
   homepagePersonalisationConfig = {}
 ) => {
   const userId = customer?.id ? customer?.id : getUUID();
-  const campaign_name = homepagePersonalisationConfig?.HPP?.campaign_name || "";
+  const campaign_name = homepagePersonalisationConfig?.HPP?.campaignName || "";
   // Get Logged in User Variations from VWO tool
   try {
     if (userId && vwoClientInstance) {
@@ -40,12 +40,12 @@ export const getUserSpecificDynamicContent = (
 ) => {
   const variant_name = variantionName
     ? variantionName
-    : homepagePersonalisationConfig?.HPP?.default_value;
+    : homepagePersonalisationConfig?.HPP?.defaultValue;
   if (!dynamicContent || dynamicContent?.length === 0) {
     return [];
   }
   const filteredContent = dynamicContent.filter(
-    (item) => item?.widget_variant === variant_name
+    (item) => item?.widget_variant == variant_name
   );
 
   return filteredContent?.length > 0 ? filteredContent : dynamicContent;
