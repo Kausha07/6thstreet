@@ -200,6 +200,7 @@ export const EVENT_LOGIN_TAB_CLICK = "login_tab_click";
 export const EVENT_FORGOT_PASSWORD_CLICK = "forgot_password_click";
 export const EVENT_REGISTER_TAB_CLICK = "register_tab_click";
 export const EVENT_LOGIN = "login";
+export const EVENT_GTM_LOGIN_SUCCESS = "login_success";
 export const EVENT_LOGIN_FAILED = "login_failed";
 export const EVENT_REGISTER = "register";
 export const EVENT_REGISTER_FAILED = "register_failed";

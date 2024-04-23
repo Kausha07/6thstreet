@@ -53,6 +53,7 @@ import {
 import Event, {
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_LOGIN,
+  EVENT_GTM_LOGIN_SUCCESS,
   EVENT_LOGIN_FAILED,
   EVENT_REGISTER,
   EVENT_REGISTER_FAILED,
@@ -394,7 +395,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       await signIn(fields);
       onSignIn();
       const eventAdditionalData = { mode: "Email", };
-      this.sendEvents(EVENT_LOGIN, eventAdditionalData);
+      this.sendEvents(EVENT_GTM_LOGIN_SUCCESS, eventAdditionalData);
       this.checkForOrder();
     } catch (e) {
       this.setState({ isLoading: false });
@@ -605,7 +606,7 @@ export class MyAccountOverlayContainer extends PureComponent {
           }
           if (Object.entries(customerLoginData)?.length) {
             const eventAdditionalData = { mode: "Phone", };
-            this.sendEvents(EVENT_LOGIN, eventAdditionalData);
+            this.sendEvents(EVENT_GTM_LOGIN_SUCCESS, eventAdditionalData);
           }
           try {
             await signInOTP(response);
