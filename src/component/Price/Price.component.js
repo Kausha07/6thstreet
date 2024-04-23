@@ -174,12 +174,12 @@ class Price extends PureComponent {
   }
 
   renderSideWideCouponInfo() {
-    const { basePrice, specialPrice, pageType = "", config } = this.props;
+    const { basePrice, specialPrice, pageType = "", config, finalPrice } = this.props;
     const countryCode = getCountryFromUrl();
     const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode;
     const { isArabic } = this.state;
 
-    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+    let discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
 
     if ((pageType !== "PDPPage" && pageType !== "plp") || (discountPercentage === 0)) {
       return null;
@@ -229,6 +229,7 @@ class Price extends PureComponent {
       pageType,
       itemType = "",
       isSidewideCouponEnabled,
+      finalPrice,
       totals: {
         site_wide_applied = 0,
         coupon_code = "",
@@ -242,7 +243,7 @@ class Price extends PureComponent {
       return null;
     }
 
-    if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
+    if ((basePrice === specialPrice && !isSidewideCouponEnabled) || (!specialPrice && !specialPrice === 0)) {
       if (pageType === "cartSlider" && country === "KW" ) {
         return (
           <span block="Price" elem="Wrapper">
@@ -273,7 +274,8 @@ class Price extends PureComponent {
     }
 
     if ((pageType === "CartPage" && isSidewideCouponEnabled ) || (pageType === "MiniCart" && isSidewideCouponEnabled )) {
-      if (site_wide_applied || coupon_code) {
+      const discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
+      if ((site_wide_applied && discountPercentage) || (coupon_code && discountPercentage)) {
         return (
           <>
             <span block="Price" elem="Wrapper">

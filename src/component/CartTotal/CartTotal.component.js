@@ -8,6 +8,7 @@ import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/Sid
 import { getCountryFromUrl } from "Util/Url";
 import { getShippingFees } from "Util/Common/index";
 import { getLocaleFromUrl } from "Util/Url/Url";
+import "./CartTotal.style";
 
 export const mapDispatchToProps = (dispatch) => ({
   getCart: () => CartDispatcher.getCart(dispatch, false, false),
