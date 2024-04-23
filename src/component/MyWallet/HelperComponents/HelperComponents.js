@@ -38,7 +38,7 @@ export function Cashback({ transaction }) {
   );
 }
 
-export function Refund({ transaction }) {
+export function Refund({ transaction, text }) {
   console.log("test transaction", transaction);
   return (
     <>
@@ -50,7 +50,7 @@ export function Refund({ transaction }) {
               <img src={CashRefundIcon} />
             </div>
             <div>
-              <div className="LinkHeading">Refund</div>
+              <div className="LinkHeading">{text}</div>
               {transaction.expires_at && (
                 <div className="LinkDetails">
                   Expires: {transaction.expires_at}

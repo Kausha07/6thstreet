@@ -6,10 +6,12 @@ import {
 import { useState, useEffect } from "react";
 import { getTransactionHistory } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 import {
-  ACTION_TYPE_ORDER,
-  ACTION_TYPE_RETURN,
-  ACTION_TYPE_REWARD,
   TRANSACTIONAL_HISTORY_TYPE,
+  ACTION_TRANSACTIONAL_BALANCE_UPDATED,
+  ACTION_TRANSACTIONAL_REFERRAL_ADDED,
+  ACTION_TRANSACTIONAL_ORDER,
+  ACTION_TRANSACTIONAL_REFUND,
+  ACTION_TRANSACTIONAL_PAYMENT_REVERT,
 } from "./../MyWalletConfig/MyWalletConfig.js";
 import "./MyCashTransactions.style.scss";
 
@@ -44,20 +46,21 @@ export default function MyCashTransactions() {
       {myCashHistory &&
         myCashHistory.map((transaction) => (
           <>
-            {transaction.action == ACTION_TYPE_ORDER && (
+            {transaction.action == ACTION_TRANSACTIONAL_ORDER && (
               <OrderPlaced transaction={transaction} />
             )}
-            {/* {transaction.action == ACTION_TYPE_RETURN && (
-          <OrderPlaced transaction={transaction} />
-        )} */}
-            {transaction.action == ACTION_TYPE_REWARD && (
-              <Cashback transaction={transaction} />
+            {transaction.action == ACTION_TRANSACTIONAL_BALANCE_UPDATED && (
+              <Refund transaction={transaction} text={"Updated"} />
             )}
-
-            {transaction.action == ACTION_TYPE_RETURN && (
-              <Refund transaction={transaction} />
+            {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT && (
+              <Refund transaction={transaction} text={"Revert"} />
             )}
-            {/* <OrderPlaced transaction={transaction} /> */}
+            {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED && (
+              <Refund transaction={transaction} text={"Referred"} />
+            )}
+            {transaction.action == ACTION_TRANSACTIONAL_REFUND && (
+              <Refund transaction={transaction} text={"Refund"} />
+            )}
             <hr className="HoriRow" />
           </>
         ))}
