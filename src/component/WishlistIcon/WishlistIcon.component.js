@@ -75,6 +75,7 @@ class WishlistIcon extends PureComponent {
       product_position,
       indexCodeRedux,
     } = this.props;
+
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
@@ -202,10 +203,16 @@ class WishlistIcon extends PureComponent {
           id: skuFromProps,
           name: data.name,
           price: itemPrice,
+          discount: (
+            (data?.price[0][Object.keys(data?.price[0])]["6s_base_price"] ?? 0) - 
+            (data?.price[0][Object.keys(data?.price[0])]["6s_special_price"] ?? 0)
+            ) ?? 0,
           variant: data.color,
+          variant_availability: data.in_stock,
           isFilters: isFilters ? "Yes" : "No",
           productPosition: product_position || "",
           colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
+          categories: data?.categories,
         },
       });
     }
