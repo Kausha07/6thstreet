@@ -53,6 +53,7 @@ class AddToCartEvent extends BaseEvent {
       sha256_phone_number: sha_phone,
       ecommerce: {
         currency: this.getCurrencyCode(),
+        currencyCode:  this.getCurrencyCode(),
         add: {
           products: [formattedData],
         },
