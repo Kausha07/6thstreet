@@ -95,6 +95,7 @@ class PurchaseEvent extends BaseEvent {
         currencyCode: this.getCurrencyCode(),
         currency:  this.getCurrencyCode(),
         transaction_id: totals?.id ?? "",
+        order_id: orderId,
         total: totals?.total ?? "",
         discount: totals?.discount ?? 0,
         shipping: totals?.shipping_fee ?? 0,
