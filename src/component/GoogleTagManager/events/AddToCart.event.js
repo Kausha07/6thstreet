@@ -65,7 +65,7 @@ class AddToCartEvent extends BaseEvent {
             item_category: product?.category,
             item_variant: product?.variant,
             price: product?.price,
-            item_size: JSON.stringify(product?.size) ?? "",
+            item_size: product?.size ?? "",
           }
         ]
       },
