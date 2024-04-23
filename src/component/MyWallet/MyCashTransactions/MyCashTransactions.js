@@ -9,7 +9,7 @@ import {
   ACTION_TYPE_ORDER,
   ACTION_TYPE_RETURN,
   ACTION_TYPE_REWARD,
-  PROMOTIONAL_HISTORY_TYPE,
+  TRANSACTIONAL_HISTORY_TYPE,
 } from "./../MyWalletConfig/MyWalletConfig.js";
 import "./MyCashTransactions.style.scss";
 
@@ -21,7 +21,7 @@ export default function MyCashTransactions() {
     try {
       setIsLoading(true);
       //type can be eaither all/transactional/promotional
-      const type = PROMOTIONAL_HISTORY_TYPE;
+      const type = TRANSACTIONAL_HISTORY_TYPE;
       const page = 1;
       const limit = 10;
       const responseHistory = await getTransactionHistory(type, page, limit);
