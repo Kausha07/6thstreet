@@ -1,5 +1,5 @@
-import { setAppConfig, setHomePagePersonalisationConfig } from 'Store/AppConfig/AppConfig.action';
-import { getCities, getConfig, getBottomNavigationConfig, getHomePagePersonalisationConfig } from 'Util/API/endpoint/Config/Config.endpoint';
+import { setAppConfig, setABTestingConfig } from 'Store/AppConfig/AppConfig.action';
+import { getCities, getConfig, getBottomNavigationConfig, getABTestingConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 import Logger from 'Util/Logger';
 
 export class AppConfigDispatcher {
@@ -8,10 +8,10 @@ export class AppConfigDispatcher {
             const bottomNavigationConfig = await getBottomNavigationConfig();
             const config = await getConfig();
             const gtmConfig = this.getGtmConfig();
-            const HompagePersonalisationConfig = await getHomePagePersonalisationConfig();
+            const abTestingConfigData = await getABTestingConfig();
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
             dispatch(setAppConfig(appConfig));
-            dispatch(setHomePagePersonalisationConfig(HompagePersonalisationConfig));
+            dispatch(setABTestingConfig(abTestingConfigData));
         } catch (e) {
             Logger.log(e);
         }

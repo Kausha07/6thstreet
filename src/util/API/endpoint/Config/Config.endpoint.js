@@ -28,7 +28,7 @@ export const getBottomNavigationConfig = () => {
     return indexConfig(CDN.get(`${directory}/${configFile}`));
 }
 
-export const getHomePagePersonalisationConfig = () => {
+export const getABTestingConfig = () => {
   try {
     const configFile = "abtestConfig.json";
     const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;

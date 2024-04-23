@@ -1,6 +1,6 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
 
-import { SET_APP_CONFIG, SET_HOME_PAGE_PERSONALISATION_CONFIG } from './AppConfig.action';
+import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG } from './AppConfig.action';
 import { getCountryFromUrl } from 'Util/Url/Url';
 
 export const APP_CONFIG_CACHE_KEY = 'APP_CONFIG_CACHE_KEY';
@@ -17,11 +17,11 @@ export const getInitialState = () => {
         isAlgoliaEventsEnabled: false,
         isVIPEnabled: false,
         is_msite_megamenu_enabled: false,
-        homepagePersonalisationConfig: {},
+        abTestingConfig: {},
     };
     const initialState =
     storedState && Object.keys(storedState)?.length > 0
-        ? { storedState, homepagePersonalisationConfig: {} }
+        ? { storedState, abTestingConfig: {} }
         : defaultState;
     return initialState;
 };
@@ -31,7 +31,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
     const {
         type,
         config,
-        homepagePersonalisationConfig = {}
+        abTestingConfig = {}
     } = action;
 
     switch (type) {
@@ -70,10 +70,10 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             // the Redux will not trigger component update
             // because it does shallow compartment
             return newState;
-        case SET_HOME_PAGE_PERSONALISATION_CONFIG: {
+        case SET_AB_TESTING_CONFIG: {
             return  {
                 ...state,
-                homepagePersonalisationConfig
+                abTestingConfig
             };
         }
 

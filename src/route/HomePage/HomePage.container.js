@@ -53,7 +53,7 @@ export const mapStateToProps = (state) => ({
   vueTrendingBrandsUserID: state.MyAccountReducer.vueTrendingBrandsUserID,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   customer: state.MyAccountReducer.customer,
-  homepagePersonalisationConfig: state.AppConfig.homepagePersonalisationConfig,
+  abTestingConfig: state.AppConfig.abTestingConfig,
   signInIsLoading: state.MyAccountReducer.isLoading,
 });
 
@@ -399,7 +399,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender, customer, locale, homepagePersonalisationConfig = {} } = this.props;
+    const { gender, customer, locale, abTestingConfig = {} } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -408,11 +408,11 @@ export class HomePageContainer extends PureComponent {
     if (gender !== "influencer") {
       try {
         const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer, locale);
-        const getVariationName = await getUserVWOVariation(customer, homepagePersonalisationConfig); 
+        const getVariationName = await getUserVWOVariation(customer, abTestingConfig); 
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
         });
-        const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, getVariationName, homepagePersonalisationConfig);
+        const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, getVariationName, abTestingConfig);
         this.setState({
           dynamicContent: Array.isArray(dynamicHppContent) ? dynamicHppContent : [],isLoading: false,
         });

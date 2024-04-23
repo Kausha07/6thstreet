@@ -15,10 +15,10 @@ export const getHomePagePersonalizationJsonFileUrl = (
 
 export const getUserVWOVariation = async (
   customer,
-  homepagePersonalisationConfig = {}
+  abTestingConfig = {}
 ) => {
   const userId = customer?.id ? customer?.id : getUUID();
-  const campaign_name = homepagePersonalisationConfig?.HPP?.campaignName || "";
+  const campaign_name = abTestingConfig?.HPP?.campaignName || "";
   // Get Logged in User Variations from VWO tool
   try {
     if (userId && vwoClientInstance) {
@@ -36,11 +36,11 @@ export const getUserVWOVariation = async (
 export const getUserSpecificDynamicContent = (
   dynamicContent = [],
   variantionName,
-  homepagePersonalisationConfig = {}
+  abTestingConfig = {}
 ) => {
   const variant_name = variantionName
     ? variantionName
-    : homepagePersonalisationConfig?.HPP?.defaultValue;
+    : abTestingConfig?.HPP?.defaultValue;
   if (!dynamicContent || dynamicContent?.length === 0) {
     return [];
   }
