@@ -52,21 +52,37 @@ class CartEvent extends BaseEvent {
           })
         )
       : null;
+      const ga4_items = items.map((item) => ({
+        item_name: item?.full_item_info?.name,
+        item_id: item?.full_item_info?.config_sku,
+        item_brand: item?.full_item_info?.brand_name,
+        item_category: item?.full_item_info?.category,
+        item_variant: item?.full_item_info?.color,
+        price: item?.full_item_info?.price,
+        discount: (item?.full_item_info?.original_price - item?.full_item_info?.price),
+        quantity: item?.full_item_info?.qty,
+        item_size: item?.full_item_info?.size_value,
+        item_size_type: item?.full_item_info?.size_option
+      }));
 
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
+    console.log("test", items);
     this.pushEventData({
       event: EVENT_MOE_VIEW_CART_ITEMS,
-      total: totals?.total || "",
-      discount: totals?.discount || "",
-      shipping: totals?.shipping_fee,
-      subtotal: totals?.subtotal || "",
-      currency: totals?.currency_code || "",
-      coupon: totals?.coupon_code || "",
       products: formattedImpressions || "",
       value: totals?.total || "",
-      items: formattedImpressions || "",
+      ecommerce : {
+        total: totals?.total || "",
+        discount: totals?.discount || "",
+        shipping: totals?.shipping_fee,
+        subtotal: totals?.subtotal || "",
+        international_shipping_amount: totals?.international_shipping_amount?? 0,
+        currency: totals?.currency_code || "",
+        coupon: totals?.coupon_code || "",
+        items: ga4_items
+        }
     });
   }
 }
