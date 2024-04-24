@@ -405,9 +405,11 @@ export class CartDispatcher {
       if(Response) {
         await this.getCartTotals(dispatch, cartId);
       }
-      if(flag){
+      if(!Response?.status){
+        dispatch(showNotification("error", Response?.msg ));
+      }else if(Response?.status && flag ) {
         dispatch(showNotification("success", __("Coupon was applied!")));
-      }else  {
+      } else {
         dispatch(showNotification("success", __("Coupon was removed!")));
       }
       dispatch(setIsCouponRequest(false));
