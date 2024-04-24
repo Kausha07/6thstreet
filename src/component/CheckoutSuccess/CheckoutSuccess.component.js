@@ -795,7 +795,7 @@ export class CheckoutSuccess extends PureComponent {
             </span></span>
         </div>
         <div block="Totals" elem="Price" mods={mods}>
-          {`${
+          {`${mods?.couponSavings ? "-" : ""} ${
             parseFloat(price) || price === 0 ? quote_currency_code : ""
           } ${finalPrice}`}
         </div>
@@ -1467,7 +1467,7 @@ export class CheckoutSuccess extends PureComponent {
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && parseInt(finalPrice) === 0
             ? __("FREE")
-            : `${currency_code} ${finalPrice}`}
+            : `${mods?.couponSavings ? "-" : ""} ${currency_code} ${finalPrice}`}
         </strong>
       </li>
     );

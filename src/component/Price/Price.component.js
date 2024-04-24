@@ -116,7 +116,7 @@ class Price extends PureComponent {
       return null;
     }
 
-    let discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
 
     if (!renderSpecialPrice && !cart) {
       return (
@@ -179,7 +179,7 @@ class Price extends PureComponent {
     const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode;
     const { isArabic } = this.state;
 
-    let discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
 
     if ((pageType !== "PDPPage" && pageType !== "plp") || (discountPercentage === 0)) {
       return null;
@@ -243,8 +243,14 @@ class Price extends PureComponent {
       return null;
     }
 
-    if ((basePrice === specialPrice && !isSidewideCouponEnabled) || (!specialPrice && !specialPrice === 0)) {
-      if (pageType === "cartSlider" && country === "KW" ) {
+    if (
+      (basePrice === specialPrice && !isSidewideCouponEnabled) ||
+      (!specialPrice && !specialPrice === 0) ||
+      (basePrice === specialPrice &&
+        isSidewideCouponEnabled &&
+        (pageType === "plp" || pageType === "PDPPage"))
+    ) {
+      if (pageType === "cartSlider" && country === "KW") {
         return (
           <span block="Price" elem="Wrapper">
             {isArabic && <>&nbsp;</>}
@@ -274,7 +280,7 @@ class Price extends PureComponent {
     }
 
     if ((pageType === "CartPage" && isSidewideCouponEnabled ) || (pageType === "MiniCart" && isSidewideCouponEnabled )) {
-      const discountPercentage = Math.round(100 * (1 - finalPrice / basePrice));
+      const discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
       if ((site_wide_applied && discountPercentage) || (coupon_code && discountPercentage)) {
         return (
           <>
