@@ -100,13 +100,15 @@ class WishlistIcon extends PureComponent {
       }
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
         product: {
-          brand: wishListItem.product.brand_name,
+          brand: wishListItem?.product.brand_name ?? "",
           category: "",
-          id: wishListItem.product.sku,
-          name: wishListItem.product.name,
-          price: wishListItem.product.price,
-          variant: wishListItem.product.color,
-          categories: wishListItem?.product?.categories,
+          id: wishListItem?.product?.sku ?? "",
+          name: wishListItem?.product?.name ?? "",
+          price: wishListItem.product?.price ?? "",
+          variant: wishListItem?.product?.color ?? "",
+          categories: wishListItem?.product?.categories?? "",
+          variant_availability: wishListItem?.product?.in_stock ?? "", 
+          quantity: parseInt(wishListItem?.qty ?? 0),
         },
       });
       const prodPriceObject = wishListItem?.product?.price[0];

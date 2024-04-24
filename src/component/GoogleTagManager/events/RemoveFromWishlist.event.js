@@ -27,11 +27,11 @@ class RemoveFromWishlistEvent extends BaseEvent {
     const currency_code = this.getCurrencyCode();
     this.pushEventData({
       ecommerce: {
-        currencyCode: this.getCurrencyCode(),
+        currencyCode: currency_code, 
+        currency:currency_code,
         remove: {
           products: [product],
         },
-        currencyCode: currency_code,
         items: [
           {
             item_name: product?.name,
@@ -44,7 +44,13 @@ class RemoveFromWishlistEvent extends BaseEvent {
             item_category3: product?.categories?.level2?.[0] ?? "",
             item_category4: product?.categories?.level3?.[0] ?? "",
             item_category5: product?.categories?.level4?.[0] ?? "",
-            price: product?.price?.[0]?.[currency_code]?.default_formated ?? "",
+            price: product?.price[0][Object.keys(product?.price[0])]["6s_special_price"] ?? 0,
+            discount: (
+              (product?.price[0][Object.keys(product?.price[0])]["6s_base_price"] ?? 0) - 
+              (product?.price[0][Object.keys(product?.price[0])]["6s_special_price"] ?? 0)
+            ) ?? 0,
+            quantity: product?.quantity,
+            variant_availability: product?.variant_availability,
           }
         ]
       },
