@@ -718,7 +718,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
       if (totalSum + discount !== 0) {
         showErrorNotification(__("Your cart is invalid"));
-        history.push("/");
+        history.push("/");//check if error 
       }
     }
 
