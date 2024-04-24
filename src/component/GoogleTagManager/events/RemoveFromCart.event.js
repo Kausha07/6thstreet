@@ -36,13 +36,17 @@ class RemoveFromCartEvent extends BaseEvent {
                 currency: this.getCurrencyCode(),
                 items: [
                     {
-                      item_name: product?.name,
-                      item_id: product?.id,
-                      item_brand: product?.brand,
-                      item_category: product?.category,
-                      item_variant: product?.variant,
-                      price: product?.price,
-                      item_size: product?.size?? "",
+                      item_name: product?.name ?? "",
+                      item_id: product?.id ?? "",
+                      item_brand: product?.brand ?? "",
+                      item_category: product?.category ?? "",
+                      item_variant: product?.variant ?? "",
+                      price: product?.price ?? "",
+                      discount: product?.discount ?? "", 
+                      variant_availability: product?.variant_availability ?? "",
+                      item_size: product?.size ?? "",
+                      item_size_type: product?.size_option ?? "",
+                      quantity: product?.quantity ?? ""
                     }
                 ],
             }

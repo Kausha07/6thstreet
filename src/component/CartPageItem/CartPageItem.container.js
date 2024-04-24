@@ -413,6 +413,7 @@ export class CartItemContainer extends PureComponent {
           sku,
           color,
           qty,
+          availability,
           product: { name } = {},
           full_item_info: {
             config_sku,
@@ -422,6 +423,7 @@ export class CartItemContainer extends PureComponent {
             size_value,
             itemPrice,
             original_price,
+            discount_amount
           },
         },
         prevPath = null,
@@ -435,17 +437,19 @@ export class CartItemContainer extends PureComponent {
         .catch(() => {
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);
         });
-
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
           name,
-          id: sku,
+          id: config_sku || sku,
           price: itemPrice,
           brand: brand_name,
           category: category,
           variant: color,
           quantity: qty,
           size: size_value,
+          size_option: size_option, 
+          variant_availability: availability, 
+          discount: discount_amount
         },
       });
 
