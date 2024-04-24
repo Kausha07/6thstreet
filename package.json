@@ -43,6 +43,7 @@
         "tiny-slider-react": "0.5.3",
         "url-parse": "^1.4.7",
         "uuid": "^8.3.2",
+        "vwo-node-sdk": "^1.68.0",
         "workbox-webpack-plugin": "^6.0.2",
         "workbox-window": "^6.4.2"
     },
