@@ -1,4 +1,8 @@
-import Event, { EVENT_GTM_PDP_TRACKING } from "Util/Event";
+import Event, { 
+  EVENT_GTM_PDP_TRACKING , 
+  EVENT_SELECT_SIZE, 
+  EVENT_GO_TO_SIZE_CHART
+} from "Util/Event";
 import BaseEvent from "./Base.event";
 
 /**
@@ -56,7 +60,7 @@ class PDPTrackingEvent extends BaseEvent {
       };
   
       // Check if eventName is "select_size"
-      if (eventName === "select_size") {
+      if (eventName === EVENT_SELECT_SIZE || eventName == EVENT_GO_TO_SIZE_CHART) {
         // Add ecommerce data
         eventData.ecommerce ={
           currency: data?.currency ?? "",
