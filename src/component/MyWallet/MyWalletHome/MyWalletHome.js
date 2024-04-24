@@ -215,6 +215,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
                   transaction.type === PROMOTIONAL_HISTORY_TYPE && (
                     <Refund transaction={transaction} text={"Refund"} />
                   )}
+                <hr className="HoriRow" />
               </>
             );
           })}

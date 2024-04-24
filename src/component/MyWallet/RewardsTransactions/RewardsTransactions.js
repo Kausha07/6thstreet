@@ -48,7 +48,6 @@ export default function RewardsTransactions() {
 
   return (
     <>
-      <div> RewardsTransactions</div>
       {isLoading ? (
         <span>Loading....</span>
       ) : (
@@ -68,7 +67,7 @@ export default function RewardsTransactions() {
           {transaction.action == ACTION_PROMOTIONAL_REFUND && (
             <Refund transaction={transaction} text={"Refund"} />
           )}
-          {/* <hr className="HoriRow" /> */}
+          <hr className="HoriRow" />
         </>
       ))}
     </>

@@ -47,8 +47,6 @@ export default function AllTransactions() {
   }, []);
   return (
     <>
-      <div> AllTransactions</div>
-
       {allHistory &&
         allHistory.map((transaction) => (
           <>
@@ -92,7 +90,7 @@ export default function AllTransactions() {
               transaction.type === PROMOTIONAL_HISTORY_TYPE && (
                 <Refund transaction={transaction} text={"Refund"} />
               )}
-            {/* <hr className="HoriRow" /> */}
+            <hr className="HoriRow" />
           </>
         ))}
     </>

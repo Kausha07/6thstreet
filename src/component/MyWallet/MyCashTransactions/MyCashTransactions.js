@@ -42,7 +42,6 @@ export default function MyCashTransactions() {
 
   return (
     <>
-      <div> MyCashTransactions</div>
       {myCashHistory &&
         myCashHistory.map((transaction) => (
           <>
