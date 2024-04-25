@@ -18,6 +18,7 @@ import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.compon
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Loader from "Component/Loader";
 import {
   AUTHORIZED_STATUS,
   BILLING_STEP,
@@ -45,7 +46,6 @@ import {
   FREE,
   CHECKOUT_APPLE_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
-import { qtyAttributeForCountry } from "Util/Common/index";
 export const mapDispatchToProps = (dispatch) => ({
   selectPaymentMethod: (code) =>
     CheckoutDispatcher.selectPaymentMethod(dispatch, code),
@@ -159,9 +159,9 @@ export class Checkout extends SourceCheckout {
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country_code)) {
-                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-              }
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
+              payload["brand"] = item?.full_item_info?.brand_name;
               items.push(payload);
             }
           });
@@ -699,6 +699,13 @@ export class Checkout extends SourceCheckout {
       config: { countries },
       config,
     } = this.props;
+
+    let platform = "";
+    platform = new URLSearchParams(window.location.search).get("platform");
+
+    if (platform === "app") {
+      return <Loader isLoading={true} />;
+    }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
     const { continueAsGuest, isArabic } = this.state;

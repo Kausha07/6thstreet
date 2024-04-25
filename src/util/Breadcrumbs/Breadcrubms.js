@@ -16,14 +16,26 @@ export const getBreadcrumbs = (data = [], onClick, urlArray,isArabic) => data.re
 // eslint-disable-next-line max-len
 export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories = []) => menuCategories.reduce((acc, category) => {
     if (category?.label?.toLowerCase() === categoriesLastLevel[1]?.toLowerCase()) {
-        const currentCategory = category.data[category.data.length - 1] || {};
+        let currentCategory = category?.data[category?.data?.length - 1] || {};
+        if (
+          category &&
+          category?.data &&
+          category?.data?.length > 0 &&
+          currentCategory?.title !== "SHOP BY CATEGORY"
+        ) {
+          category?.data?.filter((item) => {
+            if (item?.title === "SHOP BY CATEGORY") {
+              currentCategory = item;
+            }
+          });
+        }
         acc.push('/', currentCategory?.button?.link);
 
         const { items = [] } = currentCategory;
 
         const mappedCategoryFirstLevel = items
             .reduce((acc, categoryFirst) => {
-                if (categoryFirst.label === categoriesLastLevel[2]) {
+                if (categoryFirst?.label?.toLowerCase() === categoriesLastLevel[2]?.toLowerCase()) {
                     acc.push(categoryFirst?.link);
                 }
 

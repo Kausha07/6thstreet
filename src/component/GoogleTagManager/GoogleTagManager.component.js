@@ -44,6 +44,17 @@ import {
   EVENT_FILTER_SEARCH_VALUE_SELECTED,
   EVENT_GTM_CART,
   EVENT_SIZE_PREDICTION_CLICK,
+  EVENT_COLOUR_VARIENT_CLICK,
+  EVENT_FLIP_IMAGE_SCROLL,
+  EVENT_PRODUCT_RATING_CLICK,
+  EVENT_PRODUCT_RATING_CLEAR,
+  EVENT_PRODUCT_RATING_VALUE,
+  EVENT_MYORDERPAGE_VISIT,
+  EVENT_ORDERDETAILPAGE_VISIT,
+  EVENT_ORDERDETAILPAGE_CHANNEL,
+  EVENT_CATEGORY_EXPANDED,
+  EVENT_MOE_CATEGORIES_TAB_ICON,
+
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -104,6 +115,14 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
 import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
+import ColorVarientEvent from "./events/PLPFiltersEvents/ColorEvent.event";
+import FlipImageScrollEvent from "./events/PLPFiltersEvents/FlipImageScrollEvent.event";
+import ProductRating from "./events/ProductRating.event";
+import ProductRatingClear from "./events/ProductRatingClear.event";
+import MyOrder from "./events/MyOrder.event";
+import MyOrderChannel from "./events/MyOrderChannel.event";
+import MegaMenuEvent from "./events/MegaMenuEvents/MegaMenuEvent.event";
+import CategoriesTabEvent from "./events/MegaMenuEvents/CategoriesTabEvent.event";
 
 /**
  * Event list
@@ -222,6 +241,17 @@ class GoogleTagManager extends PureComponent {
     [EVENT_FILTER_SEARCH_VALUE_SELECTED]: FilterSearchValueSelected,
     [EVENT_GTM_CART]: CartEvent,
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
+    [EVENT_COLOUR_VARIENT_CLICK]: ColorVarientEvent,
+    [EVENT_FLIP_IMAGE_SCROLL]: FlipImageScrollEvent,
+    [EVENT_PRODUCT_RATING_CLICK] :ProductRating,
+    [EVENT_PRODUCT_RATING_CLEAR] :ProductRatingClear,
+    [EVENT_PRODUCT_RATING_VALUE] :ProductRating,
+    [EVENT_MYORDERPAGE_VISIT] :MyOrder,
+    [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
+    [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
+    [EVENT_CATEGORY_EXPANDED]: MegaMenuEvent,
+    [EVENT_MOE_CATEGORIES_TAB_ICON]:CategoriesTabEvent,
+
   };
 
   /**

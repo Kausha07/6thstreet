@@ -6,12 +6,13 @@
 
 .PDPSummary {
   font-weight: var(--fw-regular);
-  margin-top: -6px;
+  margin-top:0;
   padding: 0 20px;
   overflow-x: visible;
 
   @include mobile {
     overflow: hidden;
+    margin-top: -6px;
   }
 
   &_AreaOverlay {
@@ -25,11 +26,22 @@
     .ShareAndWishlistButtonContainer {
       display: flex;
       justify-content: center;
+      @include desktop() { 
+        &.isArabic {
+          position: absolute;
+          left: 0;
+          right: auto;
+          top: 0px;
+        }
+        position: absolute;
+        right: 14px;
+        top: 0px;
+      }
     }
 
     button {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       padding: 0;
       border-radius: 50%;
       border: solid transparent;
@@ -41,8 +53,8 @@
       position: relative;
       top: initial;
       // right: initial;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       background-color: transparent;
       margin-left: 16px;
       right: unset;
@@ -78,7 +90,7 @@
     font-size: 24px;
     margin: 0.4px 0 0 0;
     text-decoration: none;
-
+    max-width: calc(100% - 110px);
     @include before-desktop {
       font-size: 16px;
       font-weight: 500;
@@ -251,6 +263,7 @@
         letter-spacing: 0;
         line-height: 30px;
         font-weight: var(--fw-medium);
+        top: -2px;
       }
 
       &-Discount {
@@ -403,7 +416,7 @@
 }
 
 #TabbyPromo {
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 // hack for tabby promo issue PWA-2182
@@ -427,4 +440,7 @@ div[class^='styles__body'] {
 
 .AdditionShippingInformationInternationalTag{
   margin-top: 15px;
+}
+#TamaraPromo {
+  margin-top: 20px;
 }

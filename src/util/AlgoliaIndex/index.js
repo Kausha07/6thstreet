@@ -55,7 +55,7 @@ const indexCodeList = {
     stage_magento_en_qa_products_ABtest: "qa-en-t",
     stage_magento_ar_qa_products_ABtest: "qa-ar-t",
   },
-  preprod: {
+  uat: {
     preprod_magento_english_products: "ae-en-c",
     preprod_magento_arabic_products: "ae-ar-c",
     preprod_magento_english_products_ABtest: "ae-en-t",

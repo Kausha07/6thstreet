@@ -8,6 +8,7 @@ import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 import {
   CHECKOUT_APPLE_PAY,
   CARD,
+  TAMARA
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import CreditCardTooltip from "Component/CreditCardTooltip";
 import Form from "Component/Form";
@@ -366,7 +367,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   renderButtonPlaceholder() {
     const { paymentMethod, binApplied, newCardVisible } = this.props;
     const isCardPayment = CARD === paymentMethod;
-    let placeholder = __("Place order");
+    const isTamaraPay = TAMARA === paymentMethod;
+    let placeholder = isTamaraPay ? __("Place Tamara Order") : __("Place order");
     if (isCardPayment) {
       //if payment is from card.
       if (newCardVisible && !binApplied) {

@@ -37,7 +37,6 @@ import { isSignedIn } from "Util/Auth";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
 import { getIsFilters } from "./utils/PLPAddToCart.helper";
-import { qtyAttributeForCountry } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -86,18 +85,22 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 class PLPAddToCart extends PureComponent {
-  state = {
-    insertedSizeStatus: null,
-    sizeObject: {},
-    selectedSizeCode: "",
-    selectedSizeType: "eu",
-    selectedClickAndCollectStore: null,
-    addedToCart: false,
-    isLoading: false,
-    isOutOfStock: false,
-    isArabic: isArabic(),
-    productStock: "",
-  };
+  constructor(props) {
+    super(props);
+    this.scrollRef = React.createRef(null);
+    this.state = {
+      insertedSizeStatus: null,
+      sizeObject: {},
+      selectedSizeCode: "",
+      selectedSizeType: "eu",
+      selectedClickAndCollectStore: null,
+      addedToCart: false,
+      isLoading: false,
+      isOutOfStock: false,
+      isArabic: isArabic(),
+      productStock: "",
+    };
+  }
 
   componentDidMount() {
     this.setSizeData();
@@ -146,7 +149,7 @@ class PLPAddToCart extends PureComponent {
     const productStock = simple_products;
 
     const checkproductSize =
-      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      (size_uk?.length !== 0 || size_eu?.length !== 0 || size_us?.length !== 0) &&
       selectedSizeCode !== "";
     const checkproductStock =
       typeof productStock === "object" && productStock !== null;
@@ -389,6 +392,7 @@ class PLPAddToCart extends PureComponent {
           block="PLPAddToCart-SizeSelector-SizeContainer"
           elem="AvailableSizes"
           mods={{ isArabic }}
+          ref={this.scrollRef}
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
@@ -629,6 +633,7 @@ class PLPAddToCart extends PureComponent {
       app6thstreet_platform: "Web",
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_Position || "",
+      colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
     });
   }
 
@@ -724,12 +729,9 @@ class PLPAddToCart extends PureComponent {
                   ? item?.full_item_info?.international_vendor
                   : null,
             };
-            if (
-              payload?.intl_vendor !== null &&
-              qtyAttributeForCountry().includes(countryCode)
-            ) {
-              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-            }
+            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
+            payload["brand"] = item?.full_item_info?.brand_name;
             items.push(payload);
           }
         });
@@ -911,6 +913,7 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
+          colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
         },
       });
 
@@ -975,6 +978,7 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
+          colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
         },
       });
 
@@ -1026,8 +1030,28 @@ class PLPAddToCart extends PureComponent {
     );
   }
 
+  handleScroll = (scrollOffset) => {
+    const adjustedOffset = this.state?.isArabic ? -scrollOffset : scrollOffset;
+    this.scrollRef.current.scrollLeft += adjustedOffset;
+  }
+
+  handleMoreSizeOption = () => {
+    let productStock = this.props?.product?.simple_products;
+    let selectedSizeType = this.state?.selectedSizeType;
+    let sizeObject = this.state?.sizeObject;
+    let product = this.props?.product;
+    if (
+      sizeObject?.sizeCodes !== undefined &&
+      Object.keys(productStock || [])?.length !== 0 &&
+      product[`size_${selectedSizeType}`]?.length !== 0 && sizeObject?.sizeCodes?.length > 4
+    ) { 
+      return true;
+    }
+    return false
+  }
+
   render() {
-    const { sizeObject } = this.state;
+    const { sizeObject, isArabic } = this.state;
     const { influencerPDPURL } = this.props;
     return (
       <div block="PLPAddToCart">
@@ -1038,23 +1062,15 @@ class PLPAddToCart extends PureComponent {
               <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
                 {this.getSizeTypeSelect()}
               </div>
-              <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
-                {this.getSizeSelect()}
-              </div>
+                <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
+                  {(this.handleMoreSizeOption())?<div block="left-arrow-btn" mods={{ isArabic }} onClick={()=>this.handleScroll(-30)}></div>: null}
+                    {this.getSizeSelect()}
+                  {(this.handleMoreSizeOption())?<div block="right-arrow-btn" mods={{ isArabic }} onClick={()=>this.handleScroll(30)}></div> : null}
+                </div>
             </>
           ) : null}
         </div>
         {this.renderAddToCartButton()}
-        <a
-          href={
-            influencerURL().includes(location.pathname)
-              ? influencerPDPURL
-              : this.props.url
-          }
-          block="PLPAddToCart-ViewDetails"
-        >
-          {__("VIEW DETAILS")}
-        </a>
       </div>
     );
   }

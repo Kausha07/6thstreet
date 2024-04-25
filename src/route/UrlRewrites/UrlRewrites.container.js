@@ -76,7 +76,11 @@ export class UrlRewritesContainer extends PureComponent {
           return;
         } else {
           partialQuery = partialQuery.substring(1);
-          history.push(`${pathname}${query}`);
+          if (this.isBrandMenuPage(partialQuery)) {
+            history.replace(`${pathname}${query}`);
+          } else {
+            history.push(`${pathname}${query}`);
+          }
         }
       } else if (window.pageType === "CMS_PAGE") {
         history.push(`${pathname}`);
@@ -133,6 +137,14 @@ export class UrlRewritesContainer extends PureComponent {
     }
   }
 
+  isBrandMenuPage = (newBrandsMenuUrl) => {
+    const searchBrandsValue = new URLSearchParams(newBrandsMenuUrl);
+    const prevPage = searchBrandsValue?.get('prevPage');
+    if(prevPage && prevPage?.match("brands-menu")){
+      return true;
+    }
+    return false;
+  }
   onPageReload = () => {
     const { resetPLPPage } = this.props;
     let previousLocation = location.href;

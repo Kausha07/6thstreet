@@ -46,6 +46,7 @@ import {
   updatePLPInitialFilters,
   setPrevPath,
   setBrandurl,
+  setColourVarientsButtonClick,
 } from "Store/PLP/PLP.action";
 
 import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -116,6 +117,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
   setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+  setColourVarientsButtonClick: (colourVarientsButtonClick) =>
+    dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -387,7 +390,7 @@ export class PLPContainer extends PureComponent {
 
   componentDidMount() {
     const { menuCategories = [], prevPath = null,
-      impressions, catalogue_from_algolia } = this.props;
+      impressions, catalogue_from_algolia, setColourVarientsButtonClick, } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -414,6 +417,8 @@ export class PLPContainer extends PureComponent {
     catalogue_from_algolia
       ? this.getBrandDetailsByAloglia()
       : this.getBrandDetailsByCatalogueApi()
+    
+    setColourVarientsButtonClick(false);
   }
 
   getCategory() {
@@ -919,6 +924,7 @@ export class PLPContainer extends PureComponent {
       pages,
       newSelectedActiveFilters = {},
     } = this.props;
+    let newMoreActiveFilters = {};
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
     const requestOptions = PLPContainer.getRequestOptions();
@@ -1027,12 +1033,43 @@ export class PLPContainer extends PureComponent {
           });
         });
       }
-      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+
+      // moreFilters - adding more filters into state, when the component get updated
+      const selectedMoreFiltersArr = [];
+      const selectedMoreFilters = this.props.moreFilters;
+      const option =
+        selectedMoreFilters && selectedMoreFilters.option
+          ? selectedMoreFilters.option
+            : {};
+      {Object.entries(option).map(function (filter, index) {
+        const key = filter[0]
+        const values = filter[1]
+        if (values) {
+          return Object.values(values).map(function (value, index) {
+          if (value) {
+            return Object.values(value).map(function (val, index) {
+                if (val && val.is_selected === true) {
+                    const newVAl = {...val, type: "MoreFilter"};
+                    selectedMoreFiltersArr.push(newVAl);
+                  }
+                });
+              }
+            });
+          }
+        })}
+      {newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
         ? [...newActiveFilters["categories_without_path"], ...tempArray]
         : [...tempArray];
+
+      newMoreActiveFilters["categories_without_path"] = newMoreActiveFilters["categories_without_path"]
+        ? [...newMoreActiveFilters["categories_without_path"], ...selectedMoreFiltersArr]
+        : [...selectedMoreFiltersArr];
+      }
+      
       this.setState({
         activeFilters: newActiveFilters,
         newActiveFilters: newSelectedActiveFilters,
+        moreActiveFilters: newMoreActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
@@ -1168,21 +1205,21 @@ export class PLPContainer extends PureComponent {
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
     const staticMetaData =
-      getCategoryLevel.length == 5 && metaContent
+      getCategoryLevel?.length == 5 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
-        : getCategoryLevel.length == 4 && metaContent
+        : getCategoryLevel?.length == 4 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]
-        : getCategoryLevel.length == 3 && metaContent
+        : getCategoryLevel?.length == 3 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]
-        : getCategoryLevel.length == 2 && metaContent
+        : getCategoryLevel?.length == 2 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
-        : getCategoryLevel.length == 1 && metaContent
+        : getCategoryLevel?.length == 1 && metaContent
         ? metaContent?.[getCategoryLevel[0]]
         : null;
     const PLPMetaTitle =

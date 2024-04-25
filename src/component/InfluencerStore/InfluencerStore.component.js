@@ -96,7 +96,7 @@ const InfluencerStore = (props) => {
     window.addEventListener("mousedown", closePopupOnOutsideClick);
     const element = document.querySelector(".storeProducts");
     if (element) {
-      element.scrollIntoView({ block: "end", behavior: "smooth" });
+      element.scrollIntoView({ block: "start", behavior: "smooth", inline:"nearest" });
     }
     return () => {
       window.removeEventListener("mousedown", closePopupOnOutsideClick);

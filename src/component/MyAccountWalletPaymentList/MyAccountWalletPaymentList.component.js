@@ -22,6 +22,7 @@ import Image from "Component/Image";
 import BrowserDatabase from "Util/BrowserDatabase";
 import "./MyAccountWalletPaymentList.style";
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
+import MyAccountSwipeToDeleteCard from "Component/MyAccountSwipeToDeleteCard";
 
 export class MyAccountWalletPaymentList extends KeyValueTable {
   static propTypes = {
@@ -44,6 +45,7 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
   renderCard() {
     const {
       savedCard,
+      deleteCreditCard,
     } = this.props;
     const {isArabic} = this.state;
     const customer = BrowserDatabase.getItem("customer");
@@ -66,6 +68,16 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
       default:
         miniCardImg = amex;
         break;
+    }
+
+    if (scheme && expirationDate) {
+      return (
+        <MyAccountSwipeToDeleteCard
+          item={savedCard}
+          deleteCreditCard={deleteCreditCard}
+          isArabic={isArabic}
+        />
+      );
     }
 
     return (

@@ -122,6 +122,14 @@
       margin-top: 0;
     }
   }
+
+  .megaMenuSliderText {
+    @include mobile {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
   &-Label {
     display: flex;
     position: absolute;

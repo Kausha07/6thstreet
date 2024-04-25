@@ -13,21 +13,35 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import MyAccountWalletPaymentList from "./MyAccountWalletPaymentList.component";
+import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 
 export const mapStateToProps = (state) => ({});
 
-export const mapDispatchToProps = (dispatch) => ({});
+export const mapDispatchToProps = (dispatch) => ({
+  deleteCreditCard: (gatewayToken) =>
+    CreditCardDispatcher.deleteCreditCard(dispatch, gatewayToken),
+});
 
 export class MyAccountWalletPaymentListContainer extends PureComponent {
   static propTypes = {
     savedCard: PropTypes.isRequired,
+    deleteCreditCard: PropTypes.isRequired,
   };
 
-  containerFunctions = {};
+  deleteCreditCard = (gatewayToken) => {
+    this.props.deleteCreditCard(gatewayToken);
+  };
+
+  containerFunctions = {
+    deleteCreditCard: this.deleteCreditCard,
+  };
 
   render() {
     return (
-      <MyAccountWalletPaymentList {...this.props} {...this.containerFunctions} />
+      <MyAccountWalletPaymentList
+        {...this.props}
+        {...this.containerFunctions}
+      />
     );
   }
 }

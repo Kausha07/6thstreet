@@ -28,6 +28,9 @@ import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
+import {
+  TAMARA,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -1133,18 +1136,44 @@ export class CheckoutSuccess extends PureComponent {
             </>
           )}
           {paymentMethod?.code === CAREEM_PAY ? ("Careem Pay") : null}
+          {paymentMethod?.code === TAMARA ? ("Tamara") : null}
         </div>
       </>
     );
   };
 
+  // to check for the Mada card
+  getIsMadaCard(numbers) {
+    const { config } = this.props;
+    const madaBinTable = config?.bin_table?.mada || {};
+    const digitCountOfNumber = numbers.toString().length;
+
+    for (const key in madaBinTable) {
+        const values = madaBinTable[key];
+        const number = numbers.slice(0, parseInt(key));
+    
+        if (
+          digitCountOfNumber >= parseInt(key) &&
+          values.includes(parseInt(number))
+        ) {
+          return true;
+        }
+    }
+    return false;
+  }
+
   renderCardLogo() {
     const {
       creditCardData: { number = "" },
     } = this.props;
-    const { visa, mastercard, amex } = MINI_CARDS;
+    const { visa, mastercard, amex, mada } = MINI_CARDS;
     const first = parseInt(number.charAt(0));
     const second = parseInt(number.charAt(1));
+    const isMadaCard = this.getIsMadaCard(number);
+
+    if (isMadaCard) {
+      return <img src={mada} alt="card icon" />;
+    }
 
     if (first === 4) {
       return <img src={visa} alt="card icon" />;
@@ -1365,6 +1394,7 @@ export class CheckoutSuccess extends PureComponent {
         customer_balance_amount = 0,
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
+        international_shipping_charges= 0,
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1378,6 +1408,10 @@ export class CheckoutSuccess extends PureComponent {
             {this.renderPriceLineQPAY(shipping_amount, __("Shipping"), {
               divider: true,
             })}
+            {this.renderPriceLineQPAY(
+              international_shipping_charges,
+              __("International Shipping fee")
+            )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
@@ -1480,7 +1514,8 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
-          paymentMethod?.code === "checkout_knet"
+          paymentMethod?.code === "checkout_knet" ||
+          paymentMethod?.code === TAMARA
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}

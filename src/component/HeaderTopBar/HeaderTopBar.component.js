@@ -138,6 +138,7 @@ class HeaderTopBar extends NavigationAbstract {
       config: { countries },
     } = this.props;
     const isFreeDelivery = countries[country]?.free_delivery
+    const isCODAvailable = countries[country]?.is_cod_available;
 
     return (
       <div className="customVerticalSlider" key="cms-block">
@@ -153,22 +154,24 @@ class HeaderTopBar extends NavigationAbstract {
               {__("CLUB APPAREL REWARDS")}
             </div>
           )}
-          {isFreeDelivery ? (country ? (
-            <div block="HeaderTopBar" elem="CmsBlock">
-              {this.renderShippingInfo()}
-            </div>
-          ) : (
-            null
-          )) : (null)}
-          {getCountryFromUrl() === "QA" ? (
-            <div block="HeaderTopBar" elem="CmsBlock">
-              {__("CASH ON RECEIVING")}
-            </div>
-          ) : (
-            <div block="HeaderTopBar" elem="CmsBlock">
-              {__("CASH ON DELIVERY")}
-            </div>
-          )}
+          {isFreeDelivery ? (
+            country ? (
+              <div block="HeaderTopBar" elem="CmsBlock">
+                {this.renderShippingInfo()}
+              </div>
+            ) : null
+          ) : null}
+          {isCODAvailable ? (
+            getCountryFromUrl() === "QA" ? (
+              <div block="HeaderTopBar" elem="CmsBlock">
+                {__("CASH ON RECEIVING")}
+              </div>
+            ) : (
+              <div block="HeaderTopBar" elem="CmsBlock">
+                {__("CASH ON DELIVERY")}
+              </div>
+            )
+          ) : null}
 
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("ALL PRICES ARE INCLUSIVE OF VAT")}

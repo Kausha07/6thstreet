@@ -33,6 +33,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
   KNET_PAY,
+  TAMARA,
 } from "../CheckoutPayments/CheckoutPayments.config";
 import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent } from "Util/Event";
 import Applepay from "./icons/apple.png";
@@ -89,6 +90,10 @@ import {
 import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
 import { exchangeFormatGroupStatus } from "Util/Common";
 
+import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+
+import {  ARABIC_MONTHS } from "../MyAccountOrderListItem/MyAccountOrderListItem.config";
+
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
     order: ExtendedOrderType,
@@ -101,6 +106,7 @@ class MyAccountOrderView extends PureComponent {
 
   static defaultProps = {
     order: null,
+    productsRating:{},
     displayDiscountPercentage: true,
   };
 
@@ -138,13 +144,16 @@ class MyAccountOrderView extends PureComponent {
     this.setState({ eddEventSent: true });
   };
 
-  renderItem = (item, eddItem, isItemUnderProcessing = false) => {
+  renderItem = (item, eddItem, isItemUnderProcessing = false, increment_id="", itemStatus) => {
     const {
       order: { order_currency_code: currency, status },
       displayDiscountPercentage,
       eddResponse,
       edd_info,
       international_shipping_fee,
+      productsRating,
+      updateRating,
+      isProductRatingEnabled
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -178,6 +187,11 @@ class MyAccountOrderView extends PureComponent {
           currency={currency}
           displayDiscountPercentage={displayDiscountPercentage}
           international_shipping_fee = {international_shipping_fee}
+          incrementId= {increment_id}
+          productsRating = {productsRating}
+          itemStatus = {itemStatus}
+          updateRating = {updateRating}
+          isProductRatingEnabled = {isProductRatingEnabled}
         />
       </>
     );
@@ -220,6 +234,11 @@ class MyAccountOrderView extends PureComponent {
       is_exchange_enabled = false
     } = this.props;
 
+    const date = new Date(created_at?.replace(/-/g, "/"));
+    const arabicDate = `${date.getDate()} ${
+      ARABIC_MONTHS[date.getMonth()]
+    } ${date.getFullYear()}`;
+
     const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
       ? translateArabicStatus(modifiedStatus)
@@ -258,12 +277,15 @@ class MyAccountOrderView extends PureComponent {
             <span>{` ${finalStatus}`}</span>
           </p>
           <p block="MyAccountOrderView" elem="StatusDate">
-            {__("Order placed: ")}
+            {__("Order placed")}: &nbsp;
             <span>
-              {formatDate(
-                "DD MMM YYYY",
-                new Date(created_at.replace(/-/g, "/"))
-              )}
+              {isArabic()
+                  ? arabicDate
+                  : formatDate(
+                    "DD MMM YYYY",
+                    new Date(created_at.replace(/-/g, "/"))
+                  )
+              }
             </span>
           </p>
           {parent_increment_id && (
@@ -406,6 +428,7 @@ class MyAccountOrderView extends PureComponent {
   ) {
     const {
       order: { is_exchange_order: exchangeCount, groups },
+      isProductRatingEnabled
     } = this.props;
     const packageStatus = this.formatGroupStatus(status);
     const exchangePackageStatus = exchangeFormatGroupStatus(status);
@@ -415,6 +438,13 @@ class MyAccountOrderView extends PureComponent {
         : exchangeType?.toUpperCase() === "NORMAL"
         ? __("Normal Exchange")
         : null;
+
+
+    const date = new Date(deliveryDate?.replace(/-/g, "/"));
+    const arabicDate = `${date.getDate()} ${
+      ARABIC_MONTHS[date.getMonth()]
+    } ${date.getFullYear()}`;
+   
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -442,12 +472,18 @@ class MyAccountOrderView extends PureComponent {
             !!packageStatus &&
             exchangeCount === 0 && <span>{` - ${packageStatus}`}</span>
           )}
-          {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ?
-          <span>: &nbsp;{formatDate(
-            "DD MMMM YYYY",
-            new Date(deliveryDate.replace(/-/g, "/"))
-          )}</span>: null } */}
+
         </h3>
+        {(status === DELIVERY_SUCCESSFUL && deliveryDate && isProductRatingEnabled) ?
+        <div className="subTitle">{__("Delivered")}: &nbsp;
+          {isArabic()
+                ? arabicDate
+                : formatDate(
+                  "DD MMMM YYYY",
+                  new Date(deliveryDate.replace(/-/g, "/"))
+                )
+          }</div>: null
+        }
       </div>
     );
   }
@@ -455,9 +491,11 @@ class MyAccountOrderView extends PureComponent {
   shouldDisplayBar = (status) => {
     switch (status) {
       case STATUS_DISPATCHED:
-      case STATUS_IN_TRANSIT:
+      case STATUS_IN_TRANSIT: {
+        return true
+      }
       case DELIVERY_SUCCESSFUL: {
-        return true;
+        return this.props.isProductRatingEnabled ? false : true;
       }
 
       default: {
@@ -708,7 +746,8 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [] },
+      order: { groups: shipped = [], increment_id
+      },
       edd_info,
     } = this.props;
     const { isArabic } = this.state;
@@ -816,7 +855,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           <div></div>
           {item.items.map((data) =>
-            this.renderItem(data, item, isItemUnderProcessing)
+            this.renderItem(data, item, isItemUnderProcessing, increment_id, item.status)
           )}
         </Accordion>
       </div>
@@ -919,7 +958,7 @@ class MyAccountOrderView extends PureComponent {
           method,
           // cc_last_4,
           additional_information: {
-            source: { last4, scheme },
+            source: { last4, scheme, scheme_local },
           },
         },
       },
@@ -935,7 +974,7 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-            this.renderMiniCard(scheme?.toLowerCase())
+            this.renderMiniCard(scheme_local === "mada" ? scheme_local?.toLowerCase() : scheme?.toLowerCase())
           )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
@@ -1018,7 +1057,9 @@ class MyAccountOrderView extends PureComponent {
       case KNET_PAY:
         return this.renderPaymentTypeText("KNET");
       case CAREEM_PAY:
-        return this.renderPaymentTypeText("Careem Pay")
+        return this.renderPaymentTypeText("Careem Pay");
+      case TAMARA:
+        return this.renderPaymentTypeText("Tamara");
       default:
         return null;
     }

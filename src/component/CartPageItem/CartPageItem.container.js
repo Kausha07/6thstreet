@@ -44,7 +44,6 @@ import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { isArabic } from "Util/App";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
-import { qtyAttributeForCountry } from "Util/Common/index";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -206,9 +205,9 @@ export class CartItemContainer extends PureComponent {
       items_in_cart.map(item => {
         if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
           payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item.full_item_info.international_vendor: null}
-          if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country)) {
-            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-          }
+          payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+          payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+          payload["brand"] = item?.full_item_info?.brand_name;
           items.push(payload);
         }
       });

@@ -289,6 +289,11 @@ const config = {
       "highlighted_attributes",
       "product_tag",
       "material_composition",
+      "6s_also_available",
+      "6s_also_available_color",
+      "6s_also_available_count",
+      "gallery_image_urls",
+      "color_hex",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],
@@ -296,6 +301,23 @@ const config = {
     maxValuesPerFacet: 1000,
     sortFacetValuesBy: "alpha",
   },
+
+  megaMenuBrandsSearchParams: {
+    attributesToHighlight: "",
+    attributesToRetrieve: [
+      "name",
+      "name_ar",
+      "sku",
+      "brand_name",
+      "url",
+      "url_path"
+    ],
+    facets: ["brand_name"],
+    facetFilters: [],
+    numericFilters: [],
+    maxValuesPerFacet: 1000,
+    sortFacetValuesBy: "alpha",
+  }
 };
 
 const NUMERIC_FILTERS = config.NUMERIC_FILTERS;
@@ -306,6 +328,7 @@ const CURRENCY_STRIP_INSIGNIFICANT_ZEROS =
 const INDICES = config.INDICES;
 const PREPROD_INDICES = config.PREPROD_INDICES;
 const searchParams = config.searchParams;
+const megamenuSearchParams = config.megaMenuBrandsSearchParams;
 
 const VISIBLE_GENDERS = {
   KIDS: {
@@ -339,6 +362,7 @@ export {
   INDICES,
   PREPROD_INDICES,
   searchParams,
+  megamenuSearchParams,
   VISIBLE_GENDERS,
   MORE_FILTERS
 };

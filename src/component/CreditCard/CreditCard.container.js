@@ -17,12 +17,14 @@ export const mapStateToProps = (state) => ({
     savedCards: state.CreditCardReducer.savedCards,
     newCardVisible: state.CreditCardReducer.newCardVisible,
     loadingSavedCards: state.CreditCardReducer.loadingSavedCards,
+    config: state.AppConfig.config,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
     selectSavedCard: (entity_id) => CreditCardDispatcher.selectSavedCard(dispatch, entity_id),
-    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value)
+    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value),
+    deleteCreditCard: (gatewayToken) => CreditCardDispatcher.deleteCreditCard(dispatch, gatewayToken)
 });
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
@@ -40,7 +42,8 @@ export class CreditCardContainer extends PureComponent {
         getCardLogo: this.getCardLogo.bind(this),
         toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
         selectSavedCard: this.selectSavedCard.bind(this),
-        cardNumberValidator: this.cardNumberValidator
+        cardNumberValidator: this.cardNumberValidator,
+        deleteCreditCard: this.deleteCreditCard,
     };
 
     containerProps = () => {
@@ -122,6 +125,10 @@ export class CreditCardContainer extends PureComponent {
         }
     }
 
+    deleteCreditCard = (gatewayToken) => {
+        this.props.deleteCreditCard(gatewayToken);
+    }
+
     expDateValidator(isMonth, value = '') {
         if (isMonth && !cardValidator.expirationMonth(value).isValid) {
             return __("Card exp month is not valid");
@@ -138,13 +145,38 @@ export class CreditCardContainer extends PureComponent {
             }
         }
 
-        return null;
+         return null;
+  }
+
+// to check for the Mada card
+  getIsMadaCard(numbers) {
+    const { config } = this.props;
+    const madaBinTable = config?.bin_table?.mada || {};
+    const digitCountOfNumber = numbers.toString().length;
+
+    for (const key in madaBinTable) {
+        const values = madaBinTable[key];
+        const number = numbers.slice(0, parseInt(key));
+    
+        if (
+          digitCountOfNumber >= parseInt(key) &&
+          values.includes(parseInt(number))
+        ) {
+          return true;
+        }
     }
+    return false;
+  }
 
     getCardLogo(numbers) {
-        const { visa, mastercard, amex } = MINI_CARDS;
+        const { visa, mastercard, amex, mada } = MINI_CARDS;
         const first = parseInt(numbers.charAt(0));
         const second = parseInt(numbers.charAt(1));
+        const isMadaCard = this.getIsMadaCard(numbers);
+
+        if (isMadaCard) {
+            return mada;
+        }
 
         if (first === 4) {
             return visa;
