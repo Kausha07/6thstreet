@@ -3,11 +3,10 @@ import { getUUID } from "Util/Auth";
 export const getHomePagePersonalizationJsonFileUrl = (
   devicePrefix,
   gender,
-  customer,
-  locale
+  customer
 ) => {
-  const userSegementValue = customer?.user_segment || "";
-  if (userSegementValue && locale === "en-om" && gender === "men") {
+  const userSegementValue = customer?.user_segment ? customer.user_segment : "new_user";
+  if (userSegementValue) {
     return `${devicePrefix}${userSegementValue}_${gender}.json`;
   }
   return `${devicePrefix}${gender}.json`;
@@ -35,12 +34,13 @@ export const getUserVWOVariation = async (
 
 export const getUserSpecificDynamicContent = (
   dynamicContent = [],
-  variantionName,
+  variationName = "",
   abTestingConfig = {}
 ) => {
-  const variant_name = variantionName
-    ? variantionName
-    : abTestingConfig?.HPP?.defaultValue;
+  const variant_name =
+    variationName && variationName?.toLowerCase() !== "control"
+      ? variationName
+      : abTestingConfig?.HPP?.defaultValue; 
   if (!dynamicContent || dynamicContent?.length === 0) {
     return [];
   }

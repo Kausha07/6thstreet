@@ -399,7 +399,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender, customer, locale, abTestingConfig = {} } = this.props;
+    const { gender, customer, abTestingConfig = {} } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -407,7 +407,7 @@ export class HomePageContainer extends PureComponent {
     }
     if (gender !== "influencer") {
       try {
-        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer, locale);
+        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer);
         const getVariationName = await getUserVWOVariation(customer, abTestingConfig); 
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
