@@ -6,7 +6,7 @@ import {
     SET_MY_WALLET,
     SET_MY_WALLET_STATE,
     SET_IS_MY_WALLET_LOADING,   
-} from './StoreCredit.action';
+} from './MyWallet.action';
 
 export const getInitialState = () => ({
     current_balance: `${ getCurrency() } 0`,

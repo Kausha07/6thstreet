@@ -10,12 +10,14 @@ import {
 import ClubApparelReducer from 'Store/ClubApparel/ClubApparel.reducer';
 import MenuReducer from 'Store/Menu/Menu.reducer';
 import StoreCreditReducer from 'Store/StoreCredit/StoreCredit.reducer';
+import MyWalletReducer from 'Store/MyWallet/MyWallet.reducer';
 import CreditCardReducer from 'Store/CreditCard/CreditCard.reducer';
 import logger from "redux-logger";
 
 export const staticReducers = {
     ...sourceStaticReducers,
     StoreCreditReducer,
+    MyWalletReducer,
     ClubApparelReducer,
     MenuReducer,
     CreditCardReducer

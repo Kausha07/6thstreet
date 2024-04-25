@@ -1,35 +1,39 @@
 import Field from "Component/Field";
 import { useDispatch, connect } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyWalletDispatcher from 'Store/MyWallet/MyWallet.dispatcher';
 import "./UseMyWallet.style.scss";
 
 export const mapStateToProps = ({
-    StoreCreditReducer: {
-        storeCredit,
-        isLoading
-    },
-    Cart: {
-        cartTotals
+  
+    MyWalletReducer: {
+      myWallet, 
+      isLoading,
     }
 }) => ({
-    storeCredit,
     isLoading,
-    cartTotals
+    myWallet,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     toggleMyWallet: (apply) => MyWalletDispatcher.toggleMyWallet(dispatch, apply),
+    getReward: () => MyWalletDispatcher.getReward(dispatch),
 });
 
 export  function UseMyWallet(props) {
     const [ isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
-    const {toggleMyWallet } = props;
+    const {toggleMyWallet, getReward, eligibleAmount, myWallet } = props;
     const checkboxId = "My_wallet_applied";
     const handleCheckboxChange = () => {
         toggleMyWallet(true);
         setIsWalletBalanceApplied(!isWalletBalanceApplied);
     };
+
+
+    useEffect(async ()=>{
+        await getReward();
+    }, [])
+  
   return (
     <>
       {/* <div className="UseMyWallet">
@@ -57,8 +61,8 @@ export  function UseMyWallet(props) {
         <div>
           <div className="Heading">My Rewards</div>
           <div className="SubHeading">
-            Eligible to use <span className="boldAmount">AED 37 </span> of
-            <span className="boldAmount"> AED 47</span>
+            Eligible to use <span className="boldAmount"> {eligibleAmount} </span> of
+            <span className="boldAmount"> {myWallet?.current_balance}</span>
           </div>
         </div>
         <div>

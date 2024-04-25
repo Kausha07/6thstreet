@@ -41,11 +41,11 @@ export class MyWalletDispatcher {
             if (apply) {
                 await applyRewards(cartId);
 
-                dispatch(showNotification('success', __('Store Credits are applied!')));
+                dispatch(showNotification('success', __('My Rewards are applied!')));
             } else {
                 await removeReward(cartId);
 
-                dispatch(showNotification('success', __('Store Credits are removed!')));
+                dispatch(showNotification('success', __('My Rewards are removed!')));
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);

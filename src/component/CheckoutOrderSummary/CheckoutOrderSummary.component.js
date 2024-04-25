@@ -370,6 +370,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 
   renderToggleableDiscountOptions() {
+    const {
+      totals: {
+        eligible_amount,
+      },
+    } = this.props;
+
     if (!isSignedIn()) {
       return null;
     }
@@ -377,7 +383,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
         <StoreCredit canApply hideIfZero />
-        <UseMyWallet />
+        <UseMyWallet eligibleAmount = {eligible_amount}/>
         {this.props?.isClubApparelEnabled ? <ClubApparel hideIfZero /> : null}
       </div>
     );
@@ -475,6 +481,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
               __("Store Credit")
+            )}
+              {this.renderPriceLine(
+              getDiscountFromTotals(totals, "reward"),
+              __("My Rewards")
             )}
             {this.props?.isClubApparelEnabled ? this.renderPriceLine(
               getDiscountFromTotals(totals, "clubapparel"),
