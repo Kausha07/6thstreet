@@ -945,13 +945,16 @@ class PDPSummary extends PureComponent {
             )}
           </div>
         </div>
-        {(+simple_products?.[sku]?.cross_border_qty &&
-            +simple_products?.[sku]?.quantity <=
+        {/* here we are showing International Shipment tag based on inventory as soon as you select any size of the product*/}
+        {(+simple_products?.[sku]?.cross_border_qty && //from this line
+          +simple_products?.[sku]?.quantity <=
             +simple_products?.[sku]?.cross_border_qty &&
-            +simple_products?.[sku]?.quantity !== 0) || (actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
-            simple_products?.[selectedSizeCode]?.quantity !== 0 && !selectedSizeCode)
-            ? this.renderIntlTag()
-            : null}
+          +simple_products?.[sku]?.quantity !== 0) || // to this line (including above 2 lines of code) here we are checking for CB inventory
+        (actualEddMess?.split(splitKey)?.[1]?.includes("-") && // now from this line of code
+          simple_products?.[selectedSizeCode]?.quantity !== 0 && // we are checking when we don't have city/area then range EDD will get displayed then IS tag should also get visible
+          !selectedSizeCode) //  but get change as soon as you select any size
+          ? this.renderIntlTag()
+          : null}
       </div>
     );
   }
