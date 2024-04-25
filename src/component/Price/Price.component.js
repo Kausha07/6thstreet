@@ -7,6 +7,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getCountryFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
+import { currencyInTwoDigits } from "Component/Price/Price.config";
 
 class Price extends PureComponent {
   static propTypes = {
@@ -60,7 +61,16 @@ class Price extends PureComponent {
   }
 
   renderBasePrice() {
-    const { basePrice, fixedPrice, isSidewideCouponEnabled, finalPrice } = this.props;
+    const { basePrice, fixedPrice, isSidewideCouponEnabled, finalPrice, pageType } = this.props;
+    if(isSidewideCouponEnabled && pageType === "PDPPage") {
+      return (
+        <span>
+          {this.renderCurrency()}
+          &nbsp;
+          {fixedPrice ? (1 * basePrice).toFixed(3) : basePrice}
+        </span>
+      );
+    }
 
     if(isSidewideCouponEnabled) {
       return (
@@ -110,9 +120,10 @@ class Price extends PureComponent {
       pageType,
       itemType = "",
       finalPrice,
+      isSidewideCouponEnabled,
     } = this.props;
 
-    if (!showDiscountPercentage) {
+    if (!showDiscountPercentage && !isSidewideCouponEnabled) {
       return null;
     }
 
@@ -206,6 +217,8 @@ class Price extends PureComponent {
   renderCartPageFinalPrice() {
     const { specialPrice, finalPrice } = this.props;
     const { isArabic } = this.state;
+    const countryCode = getCountryFromUrl();
+    const decimals = currencyInTwoDigits.includes(countryCode) ? 2 : 3;
 
     return (
       <span
@@ -215,7 +228,7 @@ class Price extends PureComponent {
       >
         {this.renderCurrency()}
         &nbsp;
-        {finalPrice ? (1 * finalPrice).toFixed(3) : specialPrice}
+        {finalPrice ? (1 * finalPrice).toFixed(decimals) : specialPrice}
         {!isArabic && <>&nbsp;</>}
       </span>
     );
@@ -248,7 +261,7 @@ class Price extends PureComponent {
       (!specialPrice && !specialPrice === 0) ||
       (basePrice === specialPrice &&
         isSidewideCouponEnabled &&
-        (pageType === "plp" || pageType === "PDPPage"))
+        (pageType === "plp" || pageType === "PDPPage" || pageType === "cartSlider"))
     ) {
       if (pageType === "cartSlider" && country === "KW") {
         return (

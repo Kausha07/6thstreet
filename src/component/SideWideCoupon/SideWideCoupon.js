@@ -6,6 +6,7 @@ import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import { connect } from "react-redux";
 import { Coupon } from "Component/Icons/index";
 import { isArabic as checkIsArabic } from "Util/App";
+import { getCountryFromUrl } from "Util/Url";
 
 export const mapDispatchToProps = (dispatch) => ({
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
@@ -18,6 +19,7 @@ export const mapStateToProps = (state) => {
   return {
     totals: state.CartReducer.cartTotals,
     isSignedIn: state.MyAccountReducer.isSignedIn,
+    config: state.AppConfig.config,
   };
 };
 
@@ -27,8 +29,11 @@ function SideWideCoupon(props) {
     updateSidewideCoupon,
     totals: { site_wide_applied = 0, site_wide_coupon = "", coupon_code = "" },
     isSignedIn,
+    config,
   } = props;
   const isArabic = checkIsArabic();
+  const countryCode = getCountryFromUrl();
+  const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode || "";
 
   const handleSideWideCoupon = async (flag) => {
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -44,7 +49,7 @@ function SideWideCoupon(props) {
               <img block="couponImage" src={Coupon} alt="couponImage" />
               <span block="couponText" mods={{ isArabic }}>
                 <span block="sideWideCouponBlock" elem="recommendedCode">
-                  {coupon_code ? coupon_code : site_wide_coupon}&nbsp;
+                  {coupon_code ? coupon_code : sidewideCouponCode}&nbsp;
                 </span>
                 {__("coupon applied")}
               </span>
@@ -67,7 +72,7 @@ function SideWideCoupon(props) {
               <span block="couponText" mods={{ isArabic }}>
                 {__("Recommended code: ")}
                 <span block="sideWideCouponBlock" elem="recommendedCode">
-                  {site_wide_coupon}
+                  {sidewideCouponCode}
                 </span>
               </span>
             </span>
