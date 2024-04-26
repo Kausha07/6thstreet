@@ -24,75 +24,105 @@ import "./AllTransactions.style.scss";
 export default function AllTransactions() {
   const [isLoading, setIsLoading] = useState(false);
   const [allHistory, setAllHistory] = useState([]);
-
-  const fetchRewardsTransactionHistory = async () => {
-    try {
-      setIsLoading(true);
-      //type can be eaither all/transactional/promotional
-      const type = ALL_HISTORY_TYPE;
-      const page = 1;
-      const limit = 10;
-      const responseHistory = await getTransactionHistory(type, page, limit);
-      if (responseHistory && responseHistory.success) {
-        setAllHistory(responseHistory?.data?.history);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsLoading(false);
-    }
-  };
+  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [page, setPage] = useState(1);
+  const type = ALL_HISTORY_TYPE;
+  const LIMIT = 10;
 
   useEffect(() => {
-    fetchRewardsTransactionHistory();
+    const fetchMyCashHistory = async () => {
+      try {
+        //type can be eaither all/transactional/promotional
+        if (allHistory?.length == 0 || allHistory?.length < totalTransactions) {
+          setIsLoading(true);
+          const responseHistory = await getTransactionHistory(
+            type,
+            page,
+            LIMIT
+          );
+          if (responseHistory && responseHistory.success) {
+            setAllHistory((oldData) => [
+              ...oldData,
+              ...responseHistory?.data?.history,
+            ]);
+
+            setTotalTransactions(responseHistory?.data?.count);
+            setIsLoading(false);
+          }
+        }
+      } catch (error) {
+        setIsLoading(false);
+      }
+    };
+    fetchMyCashHistory();
+  }, [page]);
+
+  // Handle scroll inside mycash history container
+  useEffect(() => {
+    function handleScroll(event) {
+      const { scrollTop, clientHeight, scrollHeight } = event.target;
+      if (scrollHeight - scrollTop === clientHeight) {
+        setPage((oldPage) => oldPage + 1);
+      }
+    }
+    const element = document.getElementById("all-history");
+    element.addEventListener("scroll", handleScroll);
+
+    return () => {
+      element.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
   return (
     <>
-      {allHistory &&
-        allHistory.map((transaction) => (
-          <>
-            {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
-              transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                <OrderPlaced transaction={transaction} />
-              )}
-            {transaction.action == ACTION_TRANSACTIONAL_BALANCE_UPDATED &&
-              transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Updated"} />
-              )}
-            {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT &&
-              transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Revert"} />
-              )}
-            {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED &&
-              transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Referred"} />
-              )}
-            {transaction.action == ACTION_TRANSACTIONAL_REFUND &&
-              transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Refund"} />
-              )}
+      <div id="all-history" style={{ blockSize: "400px", overflow: "scroll" }}>
+        {allHistory &&
+          allHistory.map((transaction) => (
+            <>
+              {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
+                transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
+                  <OrderPlaced transaction={transaction} />
+                )}
+              {transaction.action == ACTION_TRANSACTIONAL_BALANCE_UPDATED &&
+                transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Updated"} />
+                )}
+              {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT &&
+                transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Revert"} />
+                )}
+              {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED &&
+                transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Referred"} />
+                )}
+              {transaction.action == ACTION_TRANSACTIONAL_REFUND &&
+                transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Refund"} />
+                )}
 
-            {transaction.action == ACTION_PROMOTIONAL_ORDER &&
-              transaction.type === PROMOTIONAL_HISTORY_TYPE && (
-                <OrderPlaced transaction={transaction} />
-              )}
+              {transaction.action == ACTION_PROMOTIONAL_ORDER &&
+                transaction.type === PROMOTIONAL_HISTORY_TYPE && (
+                  <OrderPlaced transaction={transaction} />
+                )}
 
-            {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN &&
-              transaction.type == PROMOTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Reward"} />
-              )}
+              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN &&
+                transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Reward"} />
+                )}
 
-            {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
-              transaction.type == PROMOTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Reward"} />
-              )}
+              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
+                transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Reward"} />
+                )}
 
-            {transaction.action == ACTION_PROMOTIONAL_REFUND &&
-              transaction.type === PROMOTIONAL_HISTORY_TYPE && (
-                <Refund transaction={transaction} text={"Refund"} />
-              )}
-            <hr className="HoriRow" />
-          </>
-        ))}
+              {transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                transaction.type === PROMOTIONAL_HISTORY_TYPE && (
+                  <Refund transaction={transaction} text={"Refund"} />
+                )}
+              <hr className="HoriRow" />
+            </>
+          ))}
+      </div>
     </>
   );
 }

@@ -39,7 +39,6 @@ export function Cashback({ transaction }) {
 }
 
 export function Refund({ transaction, text }) {
-  console.log("test transaction", transaction);
   return (
     <>
       <div className="transactionPill">
@@ -66,7 +65,7 @@ export function Refund({ transaction, text }) {
 }
 
 export function OrderPlaced({ transaction }) {
-  console.log("test transaction", transaction);
+  // console.log("test transaction", transaction);
   return (
     <>
       <div className="transactionPill">

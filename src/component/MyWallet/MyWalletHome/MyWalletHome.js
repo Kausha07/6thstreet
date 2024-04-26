@@ -175,7 +175,6 @@ export default function MyWalletHome({ setCurrentScreen }) {
           {allTransactionHistory?.history.map((transaction) => {
             return (
               <>
-                {console.log("test inside all transaction", transaction)}
                 {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
                   transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
                     <OrderPlaced transaction={transaction} />
