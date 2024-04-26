@@ -35,7 +35,7 @@ class AddToWishlistEvent extends BaseEvent {
         items: [
           {
             item_name: product?.name,
-            item_id: product?.skuFromProps,
+            item_id: product?.id,
             item_brand: product?.brand,
             item_category: product?.category,
             item_variant: product?.variant,
@@ -47,8 +47,7 @@ class AddToWishlistEvent extends BaseEvent {
             item_category5:product?.categories?.level5?.[0] ?? "",
             discount: product?.discount, 
             index: product?.productPosition,
-            quantity: product?.quantity
-
+            variant_availability: product?.variant_availability
           }
         ]
       },

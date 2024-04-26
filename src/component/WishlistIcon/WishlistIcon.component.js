@@ -215,6 +215,7 @@ class WishlistIcon extends PureComponent {
           productPosition: product_position || "",
           colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
           categories: data?.categories,
+          variant_availability: data?.in_stock
         },
       });
     }
