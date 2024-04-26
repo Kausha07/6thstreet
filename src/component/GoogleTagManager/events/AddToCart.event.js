@@ -59,13 +59,20 @@ class AddToCartEvent extends BaseEvent {
         },
         items: [
           {
-            item_name: product?.name,
-            item_id: product?.id,
-            item_brand: product?.brand,
-            item_category: product?.category,
-            item_variant: product?.variant,
-            price: product?.price,
+            item_name: product?.name ?? "",
+            item_id: product?.id ??"",
+            item_brand: product?.brand ?? "",
+            item_category: product?.categories?.level1?.[0] ?? "",
+            item_category2:product?.categories?.level2?.[0] ?? "",
+            item_category3:product?.categories?.level3?.[0] ?? "",
+            item_category4:product?.categories?.level4?.[0] ?? "",
+            item_category5:product?.categories?.level5?.[0] ?? "",
+            item_variant: product?.variant ?? "",
+            price: product?.price ?? "",
+            discount : product?.discount ?? 0,
             item_size: product?.size ?? "",
+            item_size_type : product?.size_id ?? "",
+            variant_availability :product?.variant_availability ?? ""
           }
         ]
       },

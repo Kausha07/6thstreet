@@ -799,6 +799,8 @@ class PLPAddToCart extends PureComponent {
         simple_products,
         international_vendor = null,
         cross_border = 0,
+        categories = {},
+        in_stock
       },
       addProductToCart,
       showNotification,
@@ -922,6 +924,7 @@ class PLPAddToCart extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: basePrice - itemPrice,
           brand: brand_name,
           category: product_type_6s,
           variant: color,
@@ -929,7 +932,10 @@ class PLPAddToCart extends PureComponent {
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
           colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
-          size: size,
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 
@@ -988,6 +994,7 @@ class PLPAddToCart extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: basePrice - itemPrice,
           brand: brand_name,
           category: product_type_6s,
           variant: color,
@@ -995,6 +1002,10 @@ class PLPAddToCart extends PureComponent {
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
           colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 

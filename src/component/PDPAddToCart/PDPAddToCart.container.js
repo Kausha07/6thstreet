@@ -573,6 +573,7 @@ export class PDPAddToCartContainer extends PureComponent {
         objectID,
         product_type_6s,
         categories = {},
+        in_stock,
       },
       product,
       addProductToCart,
@@ -666,11 +667,15 @@ export class PDPAddToCartContainer extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: (basePrice - itemPrice),
           brand: brand_name,
           category: product_type_6s,
           variant: color,
           quantity: 1,
           size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 
@@ -751,10 +756,15 @@ export class PDPAddToCartContainer extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: (basePrice - itemPrice),
           brand: brand_name,
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 

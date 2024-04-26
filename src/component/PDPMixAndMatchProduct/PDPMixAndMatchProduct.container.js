@@ -186,9 +186,12 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
         name,
         sku: configSKU,
         objectID,
+        categories = {},
+        in_stock
       },
       addProductToCart,
       showNotification,
+      product_Position
     } = this.props;
 
     if (!price[0]) {
@@ -196,6 +199,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
 
       return;
     }
+    console.log("test add_to_cart_inside", this.props);
 
     const { selectedSizeType, selectedSizeCode, insertedSizeStatus } =
       this.state;
@@ -251,9 +255,15 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
           id: configSKU,
           name,
           price: itemPrice,
+          discount: basePrice - itemPrice,
           quantity: 1,
           size: optionValue,
           variant: color,
+          position: product_Position || "",
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
       var data = localStorage.getItem("customer");
