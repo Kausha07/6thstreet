@@ -45,7 +45,7 @@ export const getUserSpecificDynamicContent = (
     return [];
   }
   const filteredContent = dynamicContent.filter(
-    (item) => !item?.widget_variant || item.widget_variant === variant_name
+    (item) => !item?.widget_variant || item.widget_variant === `${variant_name}`
   );
 
   return filteredContent?.length > 0 ? filteredContent : dynamicContent;

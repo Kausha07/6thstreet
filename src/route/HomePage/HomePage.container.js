@@ -206,7 +206,7 @@ export class HomePageContainer extends PureComponent {
     }
 
     if (prevCustomer?.id !== customer?.id) {
-      this.requestDynamicContent(signInIsLoading, gender);
+      this.requestDynamicContent(true, gender);
     }
   }
 
