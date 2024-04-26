@@ -72,7 +72,7 @@ function CartTotal(props) {
               <span className="taxesIncluded">{__("(Taxes Included)")}</span>
             </>
           )}
-          {name === "Coupon Savings" ? (
+          {name === "Coupon Savings" || name === "توفير الكوبون" ? (
             <>
               &nbsp;
               <span className="discountPercent">

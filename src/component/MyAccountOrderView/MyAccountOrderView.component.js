@@ -1084,6 +1084,7 @@ class MyAccountOrderView extends PureComponent {
   }
 
   renderPriceLine(price, name, mods = {}, allowZero = false) {
+    const { isArabic } = this.state;
     if (!price && !allowZero) {
       return null;
     }
@@ -1099,7 +1100,7 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
-        <strong block="MyAccountOrderView" elem="Text">
+        <strong block="MyAccountOrderView" elem="Text" mods={{isArabic}}>
           {name}
           {isTotal && (
             <>
@@ -1107,7 +1108,7 @@ class MyAccountOrderView extends PureComponent {
               <span>{__("(Taxes included)")}</span>
             </>
           )}
-          {name === "Coupon Savings" ? (
+          {name === "Coupon Savings" || name === "توفير الكوبون" ? (
             <>
               &nbsp;
               <span className="discountPercent">
@@ -1176,7 +1177,7 @@ class MyAccountOrderView extends PureComponent {
                 })
               : null}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
-              this.renderPriceLine(shipping_amount, __("Shipping Fee"), {
+              this.renderPriceLine(shipping_amount, __("Shipping fee"), {
                 divider: true,
               })}
             {fulfilled_from === "International" &&

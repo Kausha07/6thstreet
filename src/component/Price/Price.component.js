@@ -37,7 +37,7 @@ class Price extends PureComponent {
   renderDiscountSpecialPrice(onSale, specialPrice) {
     const { country, showDiscountPercentage, isSidewideCouponEnabled, pageType } = this.props;
     const currency = getCurrency();
-    if(isSidewideCouponEnabled && pageType !== "MiniCart") {
+    if(isSidewideCouponEnabled && (pageType !== "MiniCart" || pageType === "checkoutSuccess")) {
       return null;
     }
     return (
@@ -62,7 +62,7 @@ class Price extends PureComponent {
 
   renderBasePrice() {
     const { basePrice, fixedPrice, isSidewideCouponEnabled, finalPrice, pageType } = this.props;
-    if(isSidewideCouponEnabled && pageType === "PDPPage") {
+    if(isSidewideCouponEnabled && (pageType === "PDPPage" || pageType === "wishlist")) {
       return (
         <span>
           {this.renderCurrency()}
@@ -247,6 +247,8 @@ class Price extends PureComponent {
         site_wide_applied = 0,
         coupon_code = "",
       },
+      checkoutPageSiteWide = 0,
+      checkoutPageCouponCode = "",
     } = this.props;
     const { isArabic } = this.state;
 
@@ -261,7 +263,11 @@ class Price extends PureComponent {
       (!specialPrice && !specialPrice === 0) ||
       (basePrice === specialPrice &&
         isSidewideCouponEnabled &&
-        (pageType === "plp" || pageType === "PDPPage" || pageType === "cartSlider"))
+        (pageType === "plp" ||
+          pageType === "PDPPage" ||
+          pageType === "cartSlider" ||
+          pageType === "wishlist" ||
+          pageType === "checkoutSuccess"))
     ) {
       if (pageType === "cartSlider" && country === "KW") {
         return (
@@ -292,13 +298,26 @@ class Price extends PureComponent {
       );
     }
 
-    if ((pageType === "CartPage" && isSidewideCouponEnabled ) || (pageType === "MiniCart" && isSidewideCouponEnabled )) {
-      const discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-      if ((site_wide_applied && discountPercentage) || (coupon_code && discountPercentage)) {
+    if (
+      (pageType === "CartPage" && isSidewideCouponEnabled) ||
+      (pageType === "MiniCart" && isSidewideCouponEnabled) ||
+      (pageType === "checkoutSuccess" && isSidewideCouponEnabled)
+    ) {
+      const discountPercentage = Math.round(
+        100 * (1 - specialPrice / basePrice)
+      );
+      if (
+        (site_wide_applied && discountPercentage) ||
+        (coupon_code && discountPercentage) ||
+        (checkoutPageSiteWide && discountPercentage) ||
+        (checkoutPageCouponCode && discountPercentage)
+      ) {
         return (
           <>
             <span block="Price" elem="Wrapper">
-              {coupon_code ? this.renderCartPageFinalPrice() : this.renderSpecialPrice()}
+              {coupon_code || checkoutPageCouponCode
+                ? this.renderCartPageFinalPrice()
+                : this.renderSpecialPrice()}
               {isArabic && <>&nbsp;</>}
               <del block="Price" elem="Del">
                 {this.renderBasePrice()}

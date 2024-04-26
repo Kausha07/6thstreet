@@ -41,6 +41,8 @@ export class PriceContainer extends PureComponent {
       pageType,
       itemType,
       totals,
+      checkoutPageSiteWide,
+      checkoutPageCouponCode,
     } = this.props;
     const priceObj = Array.isArray(price) ? price[0] : price;
     const [currency, priceData] = Object.entries(priceObj)[0];
@@ -65,6 +67,8 @@ export class PriceContainer extends PureComponent {
       isSidewideCouponEnabled,
       totals,
       finalPrice,
+      checkoutPageSiteWide,
+      checkoutPageCouponCode,
     };
   };
 

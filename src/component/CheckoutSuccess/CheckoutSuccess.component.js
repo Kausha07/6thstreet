@@ -687,7 +687,7 @@ export class CheckoutSuccess extends PureComponent {
       );
     } else {
       const {
-        initialTotals: { items = [], quote_currency_code },
+        initialTotals: { items = [], quote_currency_code, site_wide_applied = 0, coupon_code= "" },
         incrementID,
         isFailed,
       } = this.props;
@@ -710,6 +710,8 @@ export class CheckoutSuccess extends PureComponent {
                 isEditing
                 isFailed={isFailed}
                 isLikeTable
+                checkoutPageSiteWide={site_wide_applied}
+                checkoutPageCouponCode={coupon_code}
               />
             ))}
           </ul>
@@ -841,7 +843,7 @@ export class CheckoutSuccess extends PureComponent {
         {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
-            __("Shipping Fee")
+            __("Shipping fee")
           )}
         {inventory_level_cross_border &&
           international_shipping_fee &&
@@ -1455,7 +1457,7 @@ export class CheckoutSuccess extends PureComponent {
               <span>{__("(Taxes included)")}</span>
             </>
           )}
-          {name === "Coupon Savings" ? (
+          {name === "Coupon Savings" || name === "توفير الكوبون" ? (
             <>
               &nbsp;
               <span className="discountPercent">
@@ -1508,7 +1510,7 @@ export class CheckoutSuccess extends PureComponent {
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderSitewidePriceLine(
                 shipping_amount,
-                __("Shipping Fee"),
+                __("Shipping fee"),
                 {
                   divider: true,
                 }

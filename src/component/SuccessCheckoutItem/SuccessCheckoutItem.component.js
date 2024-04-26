@@ -165,6 +165,8 @@ export class SuccessCheckoutItem extends PureComponent {
       country,
       currency_code,
       item: { row_total, basePrice },
+      checkoutPageSiteWide,
+      checkoutPageCouponCode,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -181,7 +183,14 @@ export class SuccessCheckoutItem extends PureComponent {
 
     return (
       <div block="SuccessCheckoutItem" elem="Price" mods={{ isArabic }}>
-        <Price price={price} renderSpecialPrice={false} cart={true} />
+        <Price
+          price={price}
+          renderSpecialPrice={true}
+          cart={true}
+          pageType="checkoutSuccess"
+          checkoutPageCouponCode={checkoutPageCouponCode}
+          checkoutPageSiteWide={checkoutPageSiteWide}
+        />
       </div>
     );
   }
