@@ -59,9 +59,7 @@ class PDPTrackingEvent extends BaseEvent {
         UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       };
   
-      // Check if eventName is "select_size"
       if (eventName === EVENT_SELECT_SIZE || eventName == EVENT_GO_TO_SIZE_CHART) {
-        // Add ecommerce data
         eventData.ecommerce ={
           currency: data?.currency ?? "",
           items: [
@@ -75,8 +73,6 @@ class PDPTrackingEvent extends BaseEvent {
                   item_category4: data?.item_category4?? "",
                   item_category5: data?.item_category5 ?? "",
                   item_variant: data?.color ?? "",
-                  // item_list_name: 'Product_LIST_NAME_HERE',
-                  // item_list_id: 'Product_LIST_ID_HERE',
                   price: data?.price ?? "",
                   discount: data?.discount ?? "",
                   item_size:  data?.size_value ?? "",
@@ -84,9 +80,7 @@ class PDPTrackingEvent extends BaseEvent {
               }
           ]
       };
-      }
-  
-      // Push the event data
+      }  
       this.pushEventData(eventData);
     }
   }

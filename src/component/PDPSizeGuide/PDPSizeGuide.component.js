@@ -118,7 +118,6 @@ class PDPSizeGuide extends PureComponent {
       action:"size_chart_click",
       brand_name: brand_name, 
       currency: getCurrency() || "",
-      // price: price?.[0]?.[currency_code]?.default_formated, 
       price:itemPrice,
       discount :(basePrice - itemPrice) ?? 0,
       brand_name: brand_name, 

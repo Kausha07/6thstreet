@@ -417,7 +417,6 @@ export class PDPAddToCartContainer extends PureComponent {
         product_id: sku,
         action: "select_size_no_option",
         currency: currency_code || "",
-        // price: price?.[0]?.[currency_code]?.default_formated, 
         price:price?.[0]?.[Object.keys(price?.[0])]?.["6s_special_price"] ?? 0,
         discount :(
           (price?.[0]?.[Object.keys(price?.[0])]?.["6s_base_price"] ?? 0) - 

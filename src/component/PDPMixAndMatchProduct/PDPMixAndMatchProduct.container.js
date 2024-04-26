@@ -199,7 +199,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
 
       return;
     }
-    console.log("test add_to_cart_inside", this.props);
 
     const { selectedSizeType, selectedSizeCode, insertedSizeStatus } =
       this.state;

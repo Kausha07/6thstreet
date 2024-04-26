@@ -68,7 +68,6 @@ class CartEvent extends BaseEvent {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
-    console.log("test", items);
     this.pushEventData({
       event: EVENT_MOE_VIEW_CART_ITEMS,
       products: formattedImpressions || "",
