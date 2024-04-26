@@ -60,9 +60,8 @@ class PDPTrackingEvent extends BaseEvent {
       };
   
       if (eventName === EVENT_SELECT_SIZE || eventName == EVENT_GO_TO_SIZE_CHART) {
-        eventData.ecommerce ={
-          currency: data?.currency ?? "",
-          items: [
+          eventData.currency = data?.currency ?? "";
+          eventData.items = [
               {
                   item_name: data?.product_name ?? "",
                   item_id: data?.product_id ?? "",
@@ -78,8 +77,7 @@ class PDPTrackingEvent extends BaseEvent {
                   item_size:  data?.size_value ?? "",
                   item_size_type:  data?.size_type ?? "",
               }
-          ]
-      };
+          ];
       }  
       this.pushEventData(eventData);
     }
