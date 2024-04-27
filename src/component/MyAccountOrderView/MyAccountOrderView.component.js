@@ -47,6 +47,7 @@ import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
 import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
+import { EarnedCashReward } from "../MyWallet/HelperComponents/HelperComponents.js";
 import {
   CANCEL_ITEM_LABEL,
   DELIVERY_FAILED,
@@ -1229,6 +1230,7 @@ class MyAccountOrderView extends PureComponent {
         {this.renderPaymentType()}
         {this.renderPaymentSummary()}
         {this.renderContact()}
+        <EarnedCashReward rewardEarned={order?.total_wallet_earned} />
       </div>
     );
   }

@@ -153,22 +153,25 @@ export function ExpiringSoon({ expiry, balance }) {
   );
 }
 
-export function EarnedCashReward() {
+export function EarnedCashReward({ rewardEarned }) {
   return (
     <>
-      <div className="EarnedCash">
-        <div className="CoinIcon">
-          <img src={CoinsIcon} />
-        </div>
-
-        <div className="CashText">
-          <div className="CashHeading">You earned a cash of AED 3</div>
-          <div className="CashDetails">
-            (The cash will be credited in your wallet after the return window
-            for this order closes)
+      {rewardEarned > 0 && rewardEarned && (
+        <div className="EarnedCash">
+          <div className="CoinIcon">
+            <img src={CoinsIcon} />
+          </div>
+          <div className="CashText">
+            <div className="CashHeading">
+              You earned a cash of AED {rewardEarned}
+            </div>
+            <div className="CashDetails">
+              (The cash will be credited in your wallet after the return window
+              for this order closes)
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
