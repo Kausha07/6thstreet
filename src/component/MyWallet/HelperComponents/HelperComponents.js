@@ -31,7 +31,7 @@ export function Cashback({ transaction }) {
               </div>
             </div>
           </div>
-          <div className="AmountExchange Added">{transaction?.balance}</div>
+          <div className= {transaction?.balance?.[0]==='+'? "AmountExchange Added": "AmountExchange Deducted"} >{transaction?.balance}</div>
         </div>
       </div>
     </>
@@ -57,7 +57,7 @@ export function Refund({ transaction, text }) {
               )}
             </div>
           </div>
-          <div className="AmountExchange Added">{transaction.balance}</div>
+          <div className={transaction?.balance?.[0]==='+'? "AmountExchange Added": "AmountExchange Deducted"}>{transaction.balance}</div>
         </div>
       </div>
     </>
