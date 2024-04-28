@@ -952,7 +952,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     if (storeCredit) {
       LineItems.push({
-        label: __("Store Credit"),
+        label: __("My Cash"),
         amount: storeCredit,
       });
     }

@@ -1,14 +1,14 @@
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action';
-import { getCities, getConfig } from 'Util/API/endpoint/Config/Config.endpoint';
+import { getCities, getConfig, getBottomNavigationConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 import Logger from 'Util/Logger';
 
 export class AppConfigDispatcher {
     async getAppConfig(dispatch) {
         try {
+            const bottomNavigationConfig = await getBottomNavigationConfig();
             const config = await getConfig();
             const gtmConfig = this.getGtmConfig();
-            const appConfig = { ...config, ...gtmConfig };
-
+            const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
             dispatch(setAppConfig(appConfig));
         } catch (e) {
             Logger.log(e);

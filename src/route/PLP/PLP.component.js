@@ -207,6 +207,7 @@ export class PLP extends PureComponent {
     return (
       <PLPPages
         {...this.props}
+        customisedActiveFilter={this.props.activeFilters}
         updateFiltersState={updateFiltersState}
         renderMySignInPopup={this.showMyAccountPopup}
         prevPath={prevPath}

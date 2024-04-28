@@ -86,7 +86,7 @@ export class StoreCredit extends PureComponent {
     }
 
     const checkboxId = "store_credit_applied";
-    const label = canApply ? __("Use Store Credit") : __("Store Credit:");
+    const label = canApply ? __("Use My Cash") : __("My Cash:");
 
     return (
       <div block="StoreCredit" mods={{ canApply }}>

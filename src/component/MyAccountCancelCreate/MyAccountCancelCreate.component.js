@@ -84,7 +84,11 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
     }
 
     isDisabled() {
-        const { selectedNumber, reasonId } = this.props;
+        const { selectedNumber, reasonId, resolutions, resolutionId } = this.props;
+        
+        if(resolutions.length && resolutionId?.resolutionId === false ) {
+            return true;
+        }
         if (selectedNumber !== 0) {
             if (reasonId) {
                 return false;

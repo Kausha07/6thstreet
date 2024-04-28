@@ -480,7 +480,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
-              __("Store Credit")
+              __("My Cash")
             )}
               {this.renderPriceLine(
               getDiscountFromTotals(totals, "reward"),

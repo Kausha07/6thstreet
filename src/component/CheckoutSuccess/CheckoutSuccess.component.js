@@ -820,7 +820,7 @@ export class CheckoutSuccess extends PureComponent {
         ) : null}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
-          __("Store Credit")
+          __("My Cash")
         )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "clubapparel"),
@@ -1273,7 +1273,7 @@ export class CheckoutSuccess extends PureComponent {
       if (getDiscountFromTotals(total_segments, "clubapparel")) {
         this.setState({ paymentTitle: __("Club Apparel") });
       } else if (getDiscountFromTotals(total_segments, "customerbalance")) {
-        this.setState({ paymentTitle: __("Store Credit") });
+        this.setState({ paymentTitle: __("My Cash") });
       }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
@@ -1415,7 +1415,7 @@ export class CheckoutSuccess extends PureComponent {
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
-                  __("Store Credit"),
+                  __("My Cash"),
                   { isStoreCredit: true }
                 )
               : null}
