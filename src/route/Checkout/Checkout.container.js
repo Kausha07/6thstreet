@@ -74,7 +74,7 @@ import {
   DEFAULT_READY_MESSAGE,
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
-import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
+import { getOrderData, getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import Loader from "Component/Loader";
 import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
@@ -257,6 +257,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       KnetDetails: {},
       guestAutoSignIn: false,
       addressLoader: true,
+      orderDetailsCartTotal: null,
     };
   }
 
@@ -389,6 +390,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       console.error("error while auth in tabby pay case", error);
     }
   };
+
+  async getOrderDetails (paymentData) {
+    // const { orderID} = paymentData;
+    const { orderID } = this.state;
+    const responseData = await getNewOrderData(orderID);
+    const order = responseData?.data;
+    this.setState({ orderDetailsCartTotal: order });
+  }
 
   getKNETData = async () => {
     try {
@@ -643,6 +652,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent, PaymentRedirect } = this.state;
     const { checkoutStep: prevCheckoutStep } = prevState;
     const { total: { items: prevItems } = {}, totals: prevtotals } = prevProps;
+    if(checkoutStep == DETAILS_STEP && totals?.total !== prevtotals?.total){
+      const {orderID } = this.state;
+      this.getOrderDetails ({orderID});
+    }   
     if (checkoutStep === BILLING_STEP && totals?.total !== prevtotals?.total) {
       this.getPaymentMethods();
     }

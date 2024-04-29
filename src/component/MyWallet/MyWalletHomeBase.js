@@ -8,7 +8,6 @@ import RewardsTransactions from "./RewardsTransactions/RewardsTransactions";
 import AllTransactions from "./AllTransactions/AllTransactions";
 import {
   TransactionHeading,
-  EarnedCashReward,
   CollapsableComponent,
 } from "./HelperComponents/HelperComponents";
 
@@ -32,7 +31,6 @@ export default function MyWalletHomeBase() {
                 <CollapsableComponent />
                 <CollapsableComponent />
                 <CollapsableComponent />
-                <EarnedCashReward />
               </>
             )}
           </div>

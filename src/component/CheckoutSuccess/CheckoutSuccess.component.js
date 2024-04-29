@@ -31,6 +31,7 @@ import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 import {
   TAMARA,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+import { EarnedCashReward } from "./../MyWallet/HelperComponents/HelperComponents.js"
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -1473,6 +1474,7 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       incrementID,
       initialTotals,
+      walletAmountEarned,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1508,6 +1510,7 @@ export class CheckoutSuccess extends PureComponent {
           )}
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
+          <EarnedCashReward rewardEarned={walletAmountEarned}/>
           {this.renderReferralBanner()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
