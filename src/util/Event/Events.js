@@ -345,3 +345,7 @@ export const EVENT_CLICK_BRAND_SEARCH_SCREEN = "click_brand_search";
 export const EVENT_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
 export const EVENT_CLICK_RECENT_SEARCH = "click_recent_search";
 export const EVENT_CLICK_POPULAR_SEARCH = "click_popular_search";
+
+// Home Page Personalisation Tracking Events
+export const EVENT_HOME_SCREEN_VIEW = "home_screen_view";
+export const EVENT_PLP_SCREEN_VIEW = "plp_screen_view";

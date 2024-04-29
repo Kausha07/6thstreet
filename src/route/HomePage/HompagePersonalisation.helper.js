@@ -1,4 +1,9 @@
 import { getUUID } from "Util/Auth";
+import Event, {
+  EVENT_HOME_SCREEN_VIEW,
+  EVENT_PLP_SCREEN_VIEW,
+  MOE_trackEvent,
+} from "Util/Event";
 
 export const getHomePagePersonalizationJsonFileUrl = (
   devicePrefix,
@@ -49,4 +54,37 @@ export const getUserSpecificDynamicContent = (
   );
 
   return filteredContent?.length > 0 ? filteredContent : dynamicContent;
+};
+
+export const homePageScreenViewTrackingEvent = (
+  user_segment,
+  variant_name,
+  abTestingConfig
+) => {
+  const variantName = variant_name
+    ? variant_name
+    : abTestingConfig?.HPP?.defaultValue;
+  MOE_trackEvent(EVENT_HOME_SCREEN_VIEW, {
+    user_segment: user_segment || "new_user",
+    variant_name: variantName,
+  });
+  Event.dispatch(EVENT_HOME_SCREEN_VIEW, {
+    user_segment: user_segment || "new_user",
+    variant_name: variantName,
+  });
+};
+
+export const hppPlpScreenViewTrackingEvent = (
+  user_segment,
+  variant_name,
+  abTestingConfig
+) => {
+  const variantName = variant_name
+    ? variant_name
+    : abTestingConfig?.HPP?.defaultValue;
+  MOE_trackEvent(EVENT_PLP_SCREEN_VIEW, {
+    prev_screen_name: sessionStorage.getItem("prevScreen"),
+    user_segment: user_segment || "new_user",
+    variant_name: variantName || abTestingConfig.HPP.defaultValue,
+  });
 };

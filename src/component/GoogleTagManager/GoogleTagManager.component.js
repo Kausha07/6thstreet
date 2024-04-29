@@ -54,6 +54,7 @@ import {
   EVENT_ORDERDETAILPAGE_CHANNEL,
   EVENT_CATEGORY_EXPANDED,
   EVENT_MOE_CATEGORIES_TAB_ICON,
+  EVENT_HOME_SCREEN_VIEW,
 
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -123,6 +124,7 @@ import MyOrder from "./events/MyOrder.event";
 import MyOrderChannel from "./events/MyOrderChannel.event";
 import MegaMenuEvent from "./events/MegaMenuEvents/MegaMenuEvent.event";
 import CategoriesTabEvent from "./events/MegaMenuEvents/CategoriesTabEvent.event";
+import HomeScreenViewEvent from "./events/HomeScreenView.event";
 
 /**
  * Event list
@@ -251,6 +253,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
     [EVENT_CATEGORY_EXPANDED]: MegaMenuEvent,
     [EVENT_MOE_CATEGORIES_TAB_ICON]:CategoriesTabEvent,
+    [EVENT_HOME_SCREEN_VIEW]: HomeScreenViewEvent,
 
   };
 

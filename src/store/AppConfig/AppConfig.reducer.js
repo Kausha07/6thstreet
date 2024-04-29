@@ -1,6 +1,6 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
 
-import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG } from './AppConfig.action';
+import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG, SET_VARIATION_NAME } from './AppConfig.action';
 import { getCountryFromUrl } from 'Util/Url/Url';
 
 export const APP_CONFIG_CACHE_KEY = 'APP_CONFIG_CACHE_KEY';
@@ -18,6 +18,7 @@ export const getInitialState = () => {
         isVIPEnabled: false,
         is_msite_megamenu_enabled: false,
         abTestingConfig: {},
+        variationName: "",
     };
     const initialState =
     storedState && Object.keys(storedState)?.length > 0
@@ -31,7 +32,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
     const {
         type,
         config,
-        abTestingConfig = {}
+        abTestingConfig = {},
+        variationName = ""
     } = action;
 
     switch (type) {
@@ -75,6 +77,14 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ...state,
                 abTestingConfig
             };
+        }
+
+        case SET_VARIATION_NAME: {
+            BrowserDatabase.setItem(variationName,"variant_name");
+            return {
+                ...state,
+                variationName
+            }
         }
 
         default:

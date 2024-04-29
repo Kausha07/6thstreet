@@ -65,7 +65,7 @@ import {
   sendEventMoreAttributeSelected,
 } from "Route/PLP/utils/PLP.helper";
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
-
+import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const BreadcrumbsDispatcher = import(
@@ -91,6 +91,9 @@ export const mapStateToProps = (state) => ({
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
+  customer: state.MyAccountReducer.customer,
+  abTestingConfig: state.AppConfig.abTestingConfig,
+  variant_name: state.AppConfig.variationName,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -354,6 +357,11 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { newActiveFilters, activeFilters } = this.state;
+    const {
+      customer: { user_segment },
+      variant_name,
+      abTestingConfig,
+    } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
     const categorylevelPath = this.getCategoryLevel();
@@ -366,6 +374,7 @@ export class PLPContainer extends PureComponent {
     let category_2 = checkCategories ? Categories_level.shift() : "";
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
+    hppPlpScreenViewTrackingEvent(user_segment, variant_name, abTestingConfig);
     MOE_trackEvent(EVENT_MOE_VIEW_PLP_ITEMS, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -383,7 +392,10 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
-      isFilters: isFilters ? "Yes" : "No"
+      isFilters: isFilters ? "Yes" : "No",
+      previous_screen: sessionStorage.getItem("prevScreen"),
+      user_segment: user_segment || "new_user",
+      variant_name: variant_name || abTestingConfig?.HPP.defaultValue,
     });
     this.setState({ categoryloaded: false });
   }

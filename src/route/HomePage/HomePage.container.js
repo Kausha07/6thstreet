@@ -25,6 +25,7 @@ import Influencer from "../Influencer/index";
 import { getUUIDToken } from "Util/Auth";
 import VueQuery from "../../query/Vue.query";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import { setVariationName } from "Store/AppConfig/AppConfig.action";
 
 import {
   deleteAuthorizationToken,
@@ -40,6 +41,7 @@ import {
   getHomePagePersonalizationJsonFileUrl,
   getUserVWOVariation,
   getUserSpecificDynamicContent,
+  homePageScreenViewTrackingEvent,
 } from "./HompagePersonalisation.helper";
 
 export const mapStateToProps = (state) => ({
@@ -55,6 +57,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   abTestingConfig: state.AppConfig.abTestingConfig,
   signInIsLoading: state.MyAccountReducer.isLoading,
+  variant_name: state.AppConfig.variationName,
 });
 
 export const MyAccountDispatcher = import(
@@ -75,6 +78,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
+  setVariationName: (variationName) => dispatch(setVariationName(variationName))
 });
 
 export class HomePageContainer extends PureComponent {
@@ -110,7 +114,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { prevPath = null, requestCustomerData, logout } = this.props;
+    const { prevPath = null, requestCustomerData, logout, customer: { user_segment }, variant_name, abTestingConfig } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     this.getTrendingBrands();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -172,6 +176,7 @@ export class HomePageContainer extends PureComponent {
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
     this.setSchemaJSON();
+    homePageScreenViewTrackingEvent(user_segment,variant_name, abTestingConfig);
     Event.dispatch(EVENT_PAGE_LOAD);
   }
 
@@ -183,7 +188,7 @@ export class HomePageContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { gender: prevGender, customer: prevCustomer } = prevProps;
-    const { gender, toggleBreadcrumbs, lastHomeItem, customer, signInIsLoading } = this.props;
+    const { gender, toggleBreadcrumbs, lastHomeItem, customer, signInIsLoading, customer: { user_segment }, variant_name, abTestingConfig } = this.props;
 
     toggleBreadcrumbs(false);
 
@@ -208,6 +213,7 @@ export class HomePageContainer extends PureComponent {
     if (prevCustomer?.id !== customer?.id) {
       this.requestDynamicContent(true, gender);
     }
+    homePageScreenViewTrackingEvent(user_segment,variant_name, abTestingConfig);
   }
 
   getMainBannerForMeta() {
@@ -399,7 +405,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender, customer, abTestingConfig = {} } = this.props;
+    const { gender, customer, abTestingConfig = {}, setVariationName } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -408,7 +414,8 @@ export class HomePageContainer extends PureComponent {
     if (gender !== "influencer") {
       try {
         const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer);
-        const getVariationName = await getUserVWOVariation(customer, abTestingConfig); 
+        const getVariationName = await getUserVWOVariation(customer, abTestingConfig);
+        setVariationName(getVariationName);
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
         });

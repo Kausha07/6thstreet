@@ -99,7 +99,9 @@ class BannerImpressionEvent extends BaseEvent {
         },
       },
       gender: currentAppState?.gender?.toLowerCase(),
-      banner_type: impressions[0]?.has_video ? "video" : "image"
+      banner_type: impressions[0]?.has_video ? "video" : "image",
+      user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
+      variant_name: BrowserDatabase?.getItem("variant_name")?.data,
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -122,7 +124,9 @@ class BannerImpressionEvent extends BaseEvent {
         screen_name: currentPageType,
         app6thstreet_platform: "Web",
         gender: currentAppState?.gender?.toLowerCase(),
-        banner_type: impressions[0]?.has_video ? "video" : "image"
+        banner_type: impressions[0]?.has_video ? "video" : "image",
+        user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
+        variant_name: BrowserDatabase?.getItem("variant_name")?.data
       });
     }
   }
