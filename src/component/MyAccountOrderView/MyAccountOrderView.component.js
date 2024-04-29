@@ -153,7 +153,8 @@ class MyAccountOrderView extends PureComponent {
       international_shipping_fee,
       productsRating,
       updateRating,
-      isProductRatingEnabled
+      isProductRatingEnabled,
+      order,
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -192,6 +193,7 @@ class MyAccountOrderView extends PureComponent {
           itemStatus = {itemStatus}
           updateRating = {updateRating}
           isProductRatingEnabled = {isProductRatingEnabled}
+          orderDetailsCartTotal={order}
         />
       </>
     );

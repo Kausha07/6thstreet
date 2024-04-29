@@ -576,6 +576,7 @@ export class CheckoutSuccess extends PureComponent {
       edd_info,
       paymentMethod,
       international_shipping_fee,
+      orderDetailsCartTotal,
     } = this.props;
 
     return (
@@ -591,6 +592,7 @@ export class CheckoutSuccess extends PureComponent {
         currency={currency}
         displayDiscountPercentage={true}
         international_shipping_fee={international_shipping_fee}
+        orderDetailsCartTotal={orderDetailsCartTotal}
       />
     );
   };

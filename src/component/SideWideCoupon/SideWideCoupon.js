@@ -51,7 +51,7 @@ function SideWideCoupon(props) {
                 <span block="sideWideCouponBlock" elem="recommendedCode">
                   {coupon_code ? coupon_code : sidewideCouponCode}&nbsp;
                 </span>
-                {__("coupon applied")}
+                {__("Coupon applied")}
               </span>
             </span>
           </div>
