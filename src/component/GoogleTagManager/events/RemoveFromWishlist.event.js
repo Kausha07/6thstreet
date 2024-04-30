@@ -26,6 +26,7 @@ class RemoveFromWishlistEvent extends BaseEvent {
 
     const currency_code = this.getCurrencyCode();
     this.pushEventData({
+      product_sku:  product?.id,
       ecommerce: {
         currencyCode: currency_code, 
         currency:currency_code,
