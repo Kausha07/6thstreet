@@ -333,7 +333,7 @@ export class MyAccount extends SourceMyAccount {
 
     let newTabMap = is_exchange_enabled
       ? {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -341,7 +341,7 @@ export class MyAccount extends SourceMyAccount {
           ...tabMap2,
         }
       : {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -477,7 +477,7 @@ export class MyAccount extends SourceMyAccount {
     }
     let newTabMap = is_exchange_enabled
       ? {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -485,7 +485,7 @@ export class MyAccount extends SourceMyAccount {
           ...tabMap2,
         }
       : {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,

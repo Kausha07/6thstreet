@@ -12,7 +12,7 @@ export function Cashback({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction?.created_at}</div>
+        <div className="date">{transaction?.created_at.slice(0,10)}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -27,7 +27,7 @@ export function Cashback({ transaction }) {
               )}
 
               <div className="LinkDetails">
-                Expires: {transaction?.expires_at}
+                Expires: {transaction?.expires_at.slice(0,10)}
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@ export function Refund({ transaction, text }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction?.created_at}</div>
+        <div className="date">{transaction?.created_at.slice(0,10)}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -52,7 +52,7 @@ export function Refund({ transaction, text }) {
               <div className="LinkHeading">{text}</div>
               {transaction.expires_at && (
                 <div className="LinkDetails">
-                  Expires: {transaction.expires_at}
+                  Expires: {transaction.expires_at.slice(0,10)}
                 </div>
               )}
             </div>
@@ -69,7 +69,7 @@ export function OrderPlaced({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction.created_at}</div>
+        <div className="date">{transaction.created_at.slice(0,10)}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
