@@ -7,7 +7,9 @@ import MyAccountDispatcher, {
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
+  EVENT_GTM_VIEW_PROMOTION,
   EVENT_PRODUCT_IMPRESSION,
+  EVENT_GTM_VIEW_ITEM_LIST,
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_CLEAR_SEARCH,
   EVENT_GTM_GO_TO_SEARCH,
@@ -52,7 +54,6 @@ import {
   EVENT_MYORDERPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_CHANNEL,
-
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -125,7 +126,7 @@ import MyOrderChannel from "./events/MyOrderChannel.event";
  */
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
-export const EVENT_PRODUCT_CLICK = "productClick";
+export const EVENT_PRODUCT_CLICK = "select_item";
 export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
 export const EVENT_ADD_TO_WISHLIST = "add_to_wishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "remove_from_wishlist";
@@ -198,8 +199,8 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_BRANDS_CLICK]: BrandsClickEvent,
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
-    [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
-    [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
+    [EVENT_GTM_VIEW_PROMOTION]: BannerImpressionEvent,
+    [EVENT_GTM_VIEW_ITEM_LIST]: ProductImpressionEvent,
     [EVENT_GTM_CANCEL_SEARCH]: CancelSearchEvent,
     [EVENT_GTM_CLEAR_SEARCH]: ClearSearchEvent,
     [EVENT_GTM_GO_TO_SEARCH]: GoToSearchEvent,
@@ -239,13 +240,12 @@ class GoogleTagManager extends PureComponent {
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
     [EVENT_COLOUR_VARIENT_CLICK]: ColorVarientEvent,
     [EVENT_FLIP_IMAGE_SCROLL]: FlipImageScrollEvent,
-    [EVENT_PRODUCT_RATING_CLICK] :ProductRating,
-    [EVENT_PRODUCT_RATING_CLEAR] :ProductRatingClear,
-    [EVENT_PRODUCT_RATING_VALUE] :ProductRating,
-    [EVENT_MYORDERPAGE_VISIT] :MyOrder,
-    [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
-    [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
-
+    [EVENT_PRODUCT_RATING_CLICK]: ProductRating,
+    [EVENT_PRODUCT_RATING_CLEAR]: ProductRatingClear,
+    [EVENT_PRODUCT_RATING_VALUE]: ProductRating,
+    [EVENT_MYORDERPAGE_VISIT]: MyOrder,
+    [EVENT_ORDERDETAILPAGE_VISIT]: MyOrder,
+    [EVENT_ORDERDETAILPAGE_CHANNEL]: MyOrderChannel,
   };
 
   /**
@@ -484,8 +484,9 @@ class GoogleTagManager extends PureComponent {
       ? BrowserDatabase.getItem("uuid")
       : null;
     const isVipCustomer =
-      isSignedIn() &&
-      this.props?.state?.MyAccountReducer?.customer?.vipCustomer || false;
+      (isSignedIn() &&
+        this.props?.state?.MyAccountReducer?.customer?.vipCustomer) ||
+      false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
@@ -502,12 +503,12 @@ class GoogleTagManager extends PureComponent {
         ...(!data?.prev_screen_name && {
           prev_screen_name: sessionStorage.getItem("prevScreen") || null,
         }),
-        ...({
+        ...{
           country: getCountryFromUrl().toUpperCase(),
-        }),
-        ...({
-          language: getLanguageFromUrl().toLowerCase(), 
-        }),
+        },
+        ...{
+          language: getLanguageFromUrl().toLowerCase(),
+        },
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
         }),

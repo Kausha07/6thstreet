@@ -1,6 +1,6 @@
 import Event,  {
-  EVENT_PROMOTION_IMPRESSION,
-  EVENT_CLICK_PROMOTION_IMPRESSION,
+  EVENT_GTM_VIEW_PROMOTION,
+  EVENT_GTM_SELECT_PROMOTION,
   EVENT_MOE_PROMOTION_IMPRESSION,
   EVENT_MOE_PROMOTION_CLICK,
   MOE_trackEvent
@@ -9,6 +9,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BaseEvent from "./Base.event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getCurrency } from "Util/App";
 
 /**
  * Website places, from where was received event data
@@ -47,11 +48,11 @@ class BannerImpressionEvent extends BaseEvent {
     // Home
     Event.observer(HOME_PAGE_BANNER_IMPRESSIONS, (impression) => {
       if (document.readyState == ("complete" || "interactive")) {
-        this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView");
+        this.handle(EVENT_GTM_VIEW_PROMOTION, impression, "promoView");
       }
     });
     Event.observer(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, (impression) => {
-      this.handle(EVENT_CLICK_PROMOTION_IMPRESSION, impression, "promoClick");
+      this.handle(EVENT_GTM_SELECT_PROMOTION, impression, "promoClick");
     });
   }
 
@@ -61,7 +62,7 @@ class BannerImpressionEvent extends BaseEvent {
    * @param eventName Unique event id
    * @param impressions banner list
    */
-  handler(EVENT_TYPE, impressions = [], promo_key = "promoView") {
+  handler(EVENT_TYPE, impressions = [], promo_key = "promoView", item_key = "items" ){
     const storage = this.getStorage();
     // if (
     //   !impressions ||
@@ -88,23 +89,35 @@ class BannerImpressionEvent extends BaseEvent {
       promoID.push(item?.id);
       promoIndex.push(item?.position);
     });
+
+    const formattedPromotionImpressionsForGa4 = [];
+    formattedImpressions.forEach((item) => {
+      formattedPromotionImpressionsForGa4.push({
+          promotion_id: item.id || item.label,
+          promotion_name: item.name || item.label,
+          creative_name: item.creative,
+          index: item.position || item.indexValue
+      });
+  });
     
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
       event: EVENT_TYPE,
       ecommerce: {
+        currency:getCurrency(),
         [promo_key]: {
           promotions: formattedImpressions,
         },
+        [item_key]: formattedPromotionImpressionsForGa4
       },
       gender: currentAppState?.gender?.toLowerCase(),
       banner_type: impressions[0]?.has_video ? "video" : "image"
     });
     const MoeEventType =
-      EVENT_TYPE == "promotionImpression"
+      EVENT_TYPE == EVENT_GTM_VIEW_PROMOTION
         ? EVENT_MOE_PROMOTION_IMPRESSION
-        : EVENT_TYPE == "promotionClick"
+        : EVENT_TYPE == EVENT_GTM_SELECT_PROMOTION
           ? EVENT_MOE_PROMOTION_CLICK
           : null;
     const currentPageType = this.getPageType() || "";
