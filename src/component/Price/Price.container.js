@@ -50,6 +50,7 @@ export class PriceContainer extends PureComponent {
     const specialPrice = priceData?.["6s_special_price"] || priceData?.default
     const finalPrice = priceData?.["finalPrice"] || priceData?.default;
     const discount_amount = priceData?.["discount_amount"] || 0;
+    const newFinalPrice = priceData?.["newFinalPrice"] || 0;
     const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true;
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
     const isSidewideCouponEnabled = config?.countries[country]?.isSidewideCouponEnabled;
@@ -71,6 +72,7 @@ export class PriceContainer extends PureComponent {
       checkoutPageSiteWide,
       checkoutPageCouponCode,
       discount_amount,
+      newFinalPrice,
     };
   };
 
