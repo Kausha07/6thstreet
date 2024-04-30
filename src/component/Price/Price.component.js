@@ -122,6 +122,7 @@ class Price extends PureComponent {
       finalPrice,
       isSidewideCouponEnabled,
     } = this.props;
+    const { isArabic } = this.state;
 
     if (!showDiscountPercentage && !isSidewideCouponEnabled) {
       return null;
@@ -145,7 +146,9 @@ class Price extends PureComponent {
           <span block="discountPercentageText">{`(-${discountPercentage}%)`}</span>
         );
       }
-      return `-${discountPercentage}%  `;
+      return isArabic && pageType != "checkoutSuccess"
+        ? `(${discountPercentage}% -)`
+        : `(-${discountPercentage}%)  `;
     }
   }
 

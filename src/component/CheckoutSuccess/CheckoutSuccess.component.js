@@ -789,19 +789,31 @@ export class CheckoutSuccess extends PureComponent {
     const {
       initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [], quote_currency_code },
     } = this.props;
+    const { isArabic } = this.state;
     const finalPrice = getFinalPrice(price, quote_currency_code);
 
     return (
       <div block="Totals">
         <div block="Totals" elem="Title">
-          <span>{name}&nbsp;<span className="discountPercent">
-            {`(-${getSideWideSavingPercentages(total_segments)}%)`}
-            </span></span>
+          <span className={isArabic ? "isNameTitleAr" : ""}>
+            {name}&nbsp;
+            {name === "Coupon Savings" ? (
+              <span className="discountPercent">
+                {isArabic
+                  ? `(${getSideWideSavingPercentages(total_segments)}%-)`
+                  : `(-${getSideWideSavingPercentages(total_segments)}%)`}
+              </span>
+            ) : null}
+          </span>
         </div>
         <div block="Totals" elem="Price" mods={mods}>
-          {`${mods?.couponSavings ? "-" : ""} ${
-            parseFloat(price) || price === 0 ? quote_currency_code : ""
-          } ${finalPrice}`}
+          {isArabic
+            ? `${
+                parseFloat(price) || price === 0 ? quote_currency_code : ""
+              } ${finalPrice} ${mods?.couponSavings ? "-" : ""}`
+            : `${mods?.couponSavings ? "-" : ""} ${
+                parseFloat(price) || price === 0 ? quote_currency_code : ""
+              } ${finalPrice}`}
         </div>
       </div>
     );
@@ -837,11 +849,13 @@ export class CheckoutSuccess extends PureComponent {
               getDiscountFromTotals(total_segments, "subtotal"),
               __("Subtotal")
             )}
-        {isSidewideCouponEnabled ? this.renderDiscountPriceLine(
-          getDiscountFromTotals(total_segments, "total_discount"),
-          __("Coupon Savings"),
-          { couponSavings: true }
-        ) : null}
+        {isSidewideCouponEnabled
+          ? this.renderDiscountPriceLine(
+              getDiscountFromTotals(total_segments, "total_discount"),
+              __("Coupon Savings"),
+              { couponSavings: true }
+            )
+          : null}
         {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
@@ -862,10 +876,16 @@ export class CheckoutSuccess extends PureComponent {
                 : __("Cash on Delivery Fee")
             )
           : null}
-        {this.renderPriceLine(
-          getDiscountFromTotals(total_segments, "customerbalance"),
-          __("Store Credit")
-        )}
+        {isSidewideCouponEnabled
+          ? this.renderDiscountPriceLine(
+              getDiscountFromTotals(total_segments, "customerbalance"),
+              __("Store Credit"),
+              { couponSavings: true }
+            )
+          : this.renderPriceLine(
+              getDiscountFromTotals(total_segments, "customerbalance"),
+              __("Store Credit")
+            )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
@@ -1446,6 +1466,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       orderDetailsCartTotal: { order_currency_code: currency_code = getCurrency() },
     } = this.props;
+    const { isArabic } = this.state;
     const finalPrice = getFinalPrice(formatPrice, currency_code);
     const freeTextArray = [__("Shipping"), __("International Shipping Fee")];
 
@@ -1463,7 +1484,9 @@ export class CheckoutSuccess extends PureComponent {
             <>
               &nbsp;
               <span className="discountPercent">
-                {`(-${this.getSideWideCouponSavings()}%)`}
+                {isArabic
+                  ? `(${this.getSideWideCouponSavings()}%-)`
+                  : `(-${this.getSideWideCouponSavings()}%)`}
               </span>
             </>
           ) : null}
@@ -1471,7 +1494,11 @@ export class CheckoutSuccess extends PureComponent {
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && parseInt(finalPrice) === 0
             ? __("FREE")
-            : `${mods?.couponSavings ? "-" : ""} ${currency_code} ${finalPrice}`}
+            : isArabic
+            ? `${currency_code} ${finalPrice} ${mods?.couponSavings ? "-" : ""}`
+            : `${
+                mods?.couponSavings ? "-" : ""
+              } ${currency_code} ${finalPrice}`}
         </strong>
       </li>
     );
@@ -1531,6 +1558,7 @@ export class CheckoutSuccess extends PureComponent {
                   __("Store Credit"),
                   {
                     isStoreCredit: true,
+                    couponSavings: true,
                   }
                 )
               : null}

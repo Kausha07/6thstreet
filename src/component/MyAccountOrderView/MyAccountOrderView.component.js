@@ -1102,7 +1102,7 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
-        <strong block="MyAccountOrderView" elem="Text" mods={{isArabic}}>
+        <strong block="MyAccountOrderView" elem="Text" mods={{ isArabic }}>
           {name}
           {isTotal && (
             <>
@@ -1114,7 +1114,9 @@ class MyAccountOrderView extends PureComponent {
             <>
               &nbsp;
               <span className="discountPercent">
-                {`(-${this.getCouponSavings()}%)`}
+                {isArabic
+                  ? `(${this.getCouponSavings()}%-)`
+                  : `(-${this.getCouponSavings()}%)`}
               </span>
             </>
           ) : null}
@@ -1122,7 +1124,13 @@ class MyAccountOrderView extends PureComponent {
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && parseInt(finalPrice) === 0
             ? __("FREE")
-            : `${mods?.couponSavings ? "-" : ""} ${currency_code} ${finalPrice}`}
+            : isArabic
+            ? `${currency_code} ${Math.abs(finalPrice)} ${
+                mods?.couponSavings ? "-" : ""
+              }`
+            : `${mods?.couponSavings ? "-" : ""} ${currency_code} ${Math.abs(
+                finalPrice
+              )}`}
         </strong>
       </li>
     );
@@ -1193,6 +1201,7 @@ class MyAccountOrderView extends PureComponent {
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
                   isStoreCredit: true,
+                  couponSavings: true,
                 })
               : null}
             {this.props?.order?.club_apparel_amount &&

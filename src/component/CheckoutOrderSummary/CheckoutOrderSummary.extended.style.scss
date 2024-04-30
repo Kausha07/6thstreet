@@ -207,6 +207,9 @@
                 &-Text {
                     font-size: 13px;
                     font-weight: var(--fw-regular);
+                    &_isArabic {
+                        display: flex;
+                    }
                 }
                 &-Price {
                     font-size: 13px;

@@ -64,7 +64,7 @@ function CartTotal(props) {
 
     return (
       <li block={block} elem="SummaryItem" mods={mods}>
-        <strong block={block} elem="Text">
+        <strong block={block} elem="Text" mods={{ isArabic }}>
           {name}
           {name === "Total" && (
             <>
@@ -76,15 +76,21 @@ function CartTotal(props) {
             <>
               &nbsp;
               <span className="discountPercent">
-                {`(-${getSideWideSavingPercentages(totals)}%)`}
+                {isArabic
+                  ? `(${getSideWideSavingPercentages(totals)}%-)`
+                  : `(-${getSideWideSavingPercentages(totals)}%)`}
               </span>
             </>
           ) : null}
         </strong>
         <strong block={block} elem="Price">
-          {`${mods?.couponSavings ? "-" : ""} ${
-            parseFloat(price) || price === 0 ? currency_code : ""
-          } ${name === "Store Credit" ? Math.abs(finalPrice) : finalPrice}`}
+          {isArabic
+            ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
+                name === "Store Credit" ? Math.abs(finalPrice) : finalPrice
+              } ${mods?.couponSavings ? "-" : ""}`
+            : `${mods?.couponSavings ? "-" : ""} ${
+                parseFloat(price) || price === 0 ? currency_code : ""
+              } ${name === "Store Credit" ? Math.abs(finalPrice) : finalPrice}`}
         </strong>
       </li>
     );

@@ -864,6 +864,9 @@ padding: auto ;
             &-Text {
                 font-size: 14px;
                 font-weight: var(--fw-regular);
+                &_isArabic {
+                    display: flex;
+                }
             }
             
             &-Price {
