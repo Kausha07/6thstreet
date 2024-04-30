@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Loader from "Component/Loader";
 import {
   getWalletBalance,
   getTransactionHistory,
@@ -37,7 +38,8 @@ import "./MyWalletHome.style.scss";
 
 export default function MyWalletHome({ setCurrentScreen }) {
   const isMobileValue = isMobile.any() || isMobile.tablet();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
   const [promotionalBalance, setPromotionalBalance] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [transactionalBalance, setTransactionalBalance] = useState(null);
@@ -45,22 +47,22 @@ export default function MyWalletHome({ setCurrentScreen }) {
 
   const fetchWalletBalance = async () => {
     try {
-      setIsLoading(true);
+      setIsBalanceLoading(true);
       const responseBalance = await getWalletBalance();
       if (responseBalance && responseBalance.success) {
         setPromotionalBalance(responseBalance?.data?.promotional_balance);
         setTotalBalance(responseBalance?.data?.total_balance);
         setTransactionalBalance(responseBalance?.data?.transaction_balance);
-        setIsLoading(false);
+        setIsBalanceLoading(false);
       }
     } catch (error) {
-      setIsLoading(false);
+      setIsBalanceLoading(false);
     }
   };
 
   const fetchTransactionHistory = async () => {
     try {
-      setIsLoading(true);
+      setIsHistoryLoading(true);
       //type can be eaither all/transactional/promotional
       const type = ALL_HISTORY_TYPE;
       const page = 1;
@@ -68,10 +70,10 @@ export default function MyWalletHome({ setCurrentScreen }) {
       const responseHistory = await getTransactionHistory(type, page, limit);
       if (responseHistory && responseHistory.success) {
         setAllTransactionHistory(responseHistory?.data);
-        setIsLoading(false);
+        setIsHistoryLoading(false);
       }
     } catch (error) {
-      setIsLoading(false);
+      setIsHistoryLoading(false);
     }
   };
 
@@ -100,7 +102,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
           <div className="SlantBackground"></div>
           <div className="TotalBalance">
             <div className="Heading">{__("Total Available Balance")}</div>
-            <div className="Amount">{totalBalance}</div>
+            {isBalanceLoading ? (
+              <Loader isLoading={isBalanceLoading} />
+            ) : (
+              <div className="Amount">{totalBalance}</div>
+            )}
           </div>
           <div className="WalletIcon">
             <img src={WalletMainIcon} />
@@ -123,7 +129,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
               className="GoTo"
               onClick={() => setCurrentScreen("my-cash")}
             >
-              <div className="Amount">{transactionalBalance}</div>
+              {isBalanceLoading ? (
+                <Loader isLoading={isBalanceLoading} />
+              ) : (
+                <div className="Amount">{transactionalBalance}</div>
+              )}
               <div className="RightIcon">
                 <img src={GoRightIcon} />
               </div>
@@ -145,7 +155,12 @@ export default function MyWalletHome({ setCurrentScreen }) {
               className="GoTo"
               onClick={() => setCurrentScreen("rewards")}
             >
-              <div className="Amount">{promotionalBalance}</div>
+              {isBalanceLoading ? (
+                <Loader isLoading={isBalanceLoading} />
+              ) : (
+                <div className="Amount">{promotionalBalance}</div>
+              )}
+
               <div className="RightIcon">
                 <img src={GoRightIcon} />
               </div>
