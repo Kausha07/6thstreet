@@ -7,6 +7,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getCountryFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
+import { currencyInTwoDigits } from "Component/Price/Price.config";
 
 class Price extends PureComponent {
   static propTypes = {
@@ -34,8 +35,11 @@ class Price extends PureComponent {
   }
 
   renderDiscountSpecialPrice(onSale, specialPrice) {
-    const { country, showDiscountPercentage } = this.props;
+    const { country, showDiscountPercentage, isSidewideCouponEnabled, pageType } = this.props;
     const currency = getCurrency();
+    if(isSidewideCouponEnabled && (pageType !== "MiniCart" || pageType === "checkoutSuccess")) {
+      return null;
+    }
     return (
       <span
         block="Price"
@@ -57,7 +61,26 @@ class Price extends PureComponent {
   }
 
   renderBasePrice() {
-    const { basePrice, fixedPrice } = this.props;
+    const { basePrice, fixedPrice, isSidewideCouponEnabled, finalPrice, pageType } = this.props;
+    if(isSidewideCouponEnabled && (pageType === "PDPPage" || pageType === "wishlist")) {
+      return (
+        <span>
+          {this.renderCurrency()}
+          &nbsp;
+          {fixedPrice ? (1 * basePrice).toFixed(3) : basePrice}
+        </span>
+      );
+    }
+
+    if(isSidewideCouponEnabled) {
+      return (
+        <span>
+          {this.renderCurrency()}
+          &nbsp;
+          {fixedPrice ? (1 * finalPrice).toFixed(3) : basePrice}
+        </span>
+      );
+    }
 
     return (
       <span>
@@ -96,16 +119,17 @@ class Price extends PureComponent {
       showDiscountPercentage,
       pageType,
       itemType = "",
+      finalPrice,
+      isSidewideCouponEnabled,
     } = this.props;
+    const { isArabic } = this.state;
 
-    if (!showDiscountPercentage) {
+    if (!showDiscountPercentage && !isSidewideCouponEnabled) {
       return null;
     }
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
+
     if (!renderSpecialPrice && !cart) {
       return (
         <span
@@ -122,7 +146,9 @@ class Price extends PureComponent {
           <span block="discountPercentageText">{`(-${discountPercentage}%)`}</span>
         );
       }
-      return `-${discountPercentage}%  `;
+      return isArabic && pageType != "checkoutSuccess"
+        ? `(${discountPercentage}% -)`
+        : `(-${discountPercentage}%)  `;
     }
   }
 
@@ -151,6 +177,66 @@ class Price extends PureComponent {
     );
   };
 
+  getBlockForSideWide() {
+    const { pageType = "" } = this.props;
+
+    if (pageType === "PDPPage") {
+      return "PDPSideWideCouponInfo";
+    } else {
+      return "ProductItem";
+    }
+  }
+
+  renderSideWideCouponInfo() {
+    const { basePrice, specialPrice, pageType = "", config, finalPrice } = this.props;
+    const countryCode = getCountryFromUrl();
+    const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode;
+    const { isArabic } = this.state;
+
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+
+    if ((pageType !== "PDPPage" && pageType !== "plp") || (discountPercentage === 0)) {
+      return null;
+    }
+
+    return (
+      <div
+        block={this.getBlockForSideWide()}
+        elem="sidewideCoupon"
+        mods={{ isArabic }}
+      >
+        <span>
+          {discountPercentage}%{isArabic ? "" : <>&nbsp;</>}
+          {__("OFF")}
+        </span>
+        <span>&nbsp;|&nbsp;</span>
+        <span>
+          {__("CODE:")}&nbsp;{sidewideCouponCode}
+        </span>
+      </div>
+    );
+  }
+
+  renderCartPageFinalPrice() {
+    const { specialPrice, finalPrice } = this.props;
+    const { isArabic } = this.state;
+    const countryCode = getCountryFromUrl();
+    const decimals = currencyInTwoDigits.includes(countryCode) ? 2 : 3;
+
+    return (
+      <span
+        block="Price"
+        elem="Special"
+        mods={{ discount: this.haveDiscount() }}
+      >
+        {this.renderCurrency()}
+        &nbsp;
+        {finalPrice ? (1 * finalPrice).toFixed(decimals) : specialPrice}
+        {!isArabic && <>&nbsp;</>}
+      </span>
+    );
+  }
+
   renderPrice() {
     const {
       basePrice,
@@ -158,6 +244,14 @@ class Price extends PureComponent {
       renderSpecialPrice,
       pageType,
       itemType = "",
+      isSidewideCouponEnabled,
+      finalPrice,
+      totals: {
+        site_wide_applied = 0,
+        coupon_code = "",
+      },
+      checkoutPageSiteWide = 0,
+      checkoutPageCouponCode = "",
     } = this.props;
     const { isArabic } = this.state;
 
@@ -167,8 +261,18 @@ class Price extends PureComponent {
       return null;
     }
 
-    if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
-      if (pageType === "cartSlider" && country === "KW" ) {
+    if (
+      (basePrice === specialPrice && !isSidewideCouponEnabled) ||
+      (!specialPrice && !specialPrice === 0) ||
+      (basePrice === specialPrice &&
+        isSidewideCouponEnabled &&
+        (pageType === "plp" ||
+          pageType === "PDPPage" ||
+          pageType === "cartSlider" ||
+          pageType === "wishlist" ||
+          pageType === "checkoutSuccess"))
+    ) {
+      if (pageType === "cartSlider" && country === "KW") {
         return (
           <span block="Price" elem="Wrapper">
             {isArabic && <>&nbsp;</>}
@@ -195,6 +299,46 @@ class Price extends PureComponent {
           {this.discountPercentage()}
         </span>
       );
+    }
+
+    if (
+      (pageType === "CartPage" && isSidewideCouponEnabled) ||
+      (pageType === "MiniCart" && isSidewideCouponEnabled) ||
+      (pageType === "checkoutSuccess" && isSidewideCouponEnabled)
+    ) {
+      const discountPercentage = Math.round(
+        100 * (1 - specialPrice / basePrice)
+      );
+      if (
+        (site_wide_applied && discountPercentage) ||
+        (coupon_code && discountPercentage) ||
+        (checkoutPageSiteWide && discountPercentage) ||
+        (checkoutPageCouponCode && discountPercentage)
+      ) {
+        return (
+          <>
+            <span block="Price" elem="Wrapper">
+              {coupon_code || checkoutPageCouponCode
+                ? this.renderCartPageFinalPrice()
+                : this.renderSpecialPrice()}
+              {isArabic && <>&nbsp;</>}
+              <del block="Price" elem="Del">
+                {this.renderBasePrice()}
+              </del>
+            </span>
+            {this.discountPercentage(basePrice, specialPrice)}
+          </>
+        );
+      } else {
+        return (
+          <span block="Price" elem="Wrapper">
+            {isArabic && <>&nbsp;</>}
+            <span block="Price" elem="NoDel" className="noramlBasePrice">
+              {this.renderBasePrice()}
+            </span>
+          </span>
+        );
+      }
     }
 
     if (itemType === "Cart") {
@@ -254,8 +398,9 @@ class Price extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { pageType = "" } = this.props;
+    const { pageType = "", isSidewideCouponEnabled } = this.props;
     return (
+      <>
       <div
         block={`Price ${this.haveDiscount() ? "discount" : ""}`}
         mix={{ block: "Price", mods: { isArabic } }}
@@ -264,6 +409,8 @@ class Price extends PureComponent {
           ? this.renderFinalPriceOnly()
           : this.renderPrice()}
       </div>
+        {isSidewideCouponEnabled ? this.renderSideWideCouponInfo() : null}
+      </>
     );
   }
 }

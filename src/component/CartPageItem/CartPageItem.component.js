@@ -681,9 +681,15 @@ export class CartItem extends PureComponent {
         full_item_info: { row_total: row_totalforAllQuantities },
       },
       totals: { coupon_code },
+      config,
     } = this.props;
 
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     const { isArabic } = this.state;
+    const finalPrice = row_total
+      ? row_totalforAllQuantities - discount_amount
+      : basePrice - discount_amount;
     let price = [
       {
         [currency_code]: {
@@ -691,20 +697,17 @@ export class CartItem extends PureComponent {
           "6s_special_price": row_total,
           default: row_total,
           default_formated: `${currency_code} ${row_total}`,
+          finalPrice: finalPrice,
         },
       },
     ];
-
-    const finalPrice = row_total
-      ? row_totalforAllQuantities - discount_amount
-      : basePrice - discount_amount;
 
     return (
       <>
         <div
           block="CartPageItem"
           elem={`Price ${
-            coupon_code && discount_amount ? "couponPriceActive" : null
+            coupon_code && discount_amount && !isSidewideCouponEnabled ? "couponPriceActive" : null
           }`}
           mods={{ isArabic }}
         >
@@ -714,9 +717,10 @@ export class CartItem extends PureComponent {
             cart={true}
             coupon_code={coupon_code}
             itemType={"Cart"}
+            pageType="CartPage"
           />
         </div>
-        {coupon_code ? (
+        {coupon_code && !isSidewideCouponEnabled ? (
           discount_amount ? (
             <div block="discountedCouponAppliedBlock">
               <span block="couponAppliedFinalPrice">

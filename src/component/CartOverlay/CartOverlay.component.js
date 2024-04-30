@@ -20,13 +20,14 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import Overlay from "SourceComponent/Overlay";
 import { TotalsType } from "Type/MiniCart";
-import { isArabic } from "Util/App";
+import { isArabic, getDiscountFromTotals } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./CartOverlay.style";
 import Delivery from "./icons/delivery-truck.png";
 import CartNudge from "./../../route/CartPage/CartNudges/CartNudge";
 import MiniEmptyCartNudge from "./MiniEmptyCartNudge/MiniEmptyCartNudge";
 import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
+import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -127,12 +128,24 @@ export class CartOverlay extends PureComponent {
 
   renderTotals() {
     const {
-      totals: { items = [], subtotal },
+      totals: { items = [], subtotal, total_mrp= 0 },
+      isSidewideCouponEnabled,
     } = this.props;
     const { isArabic } = this.state;
 
     if (!items || items.length < 1) {
       return null;
+    }
+
+    if(isSidewideCouponEnabled) {
+      return (
+        <dl block="CartOverlay" elem="Total" mods={{ isArabic }}>
+          <dt>
+            {__("Total MRP")}
+          </dt>
+          <dd>{this.renderPriceLine(total_mrp)}</dd>
+        </dl>
+      );
     }
 
     return (
@@ -147,23 +160,42 @@ export class CartOverlay extends PureComponent {
 
   renderDiscount() {
     const {
-      totals: { coupon_code, discount, discount_amount },
+      totals: { coupon_code, 
+        discount, 
+        discount_amount,
+        site_wide_applied = 0,
+        site_wide_coupon,
+        total_segments: totals = [],
+        },
     } = this.props;
     const finalDiscount = discount_amount || discount || 0;
+    const totalDiscount = getDiscountFromTotals(totals, "total_discount") || 0;
+    const sideWideSavingPercentages = getSideWideSavingPercentages(totals);
 
-    if (!coupon_code && !finalDiscount && finalDiscount === 0) {
+    if (
+      (!coupon_code &&
+        !finalDiscount &&
+        finalDiscount === 0 &&
+        !site_wide_applied) ||
+      sideWideSavingPercentages === 0
+    ) {
       return null;
     }
 
     return (
       <dl block="CartOverlay" elem="Discount">
         <dt>
-          {coupon_code ? __("Coupon ") : __("Discount")}
-          <strong block="CartOverlay" elem="DiscountCoupon">
-            {coupon_code ? coupon_code.toUpperCase() : ""}
+          {coupon_code || site_wide_applied ? __("Coupon ") : __("Discount")}
+          <strong block="CartOverlay" elem="DiscountCouponSideWide">
+            {coupon_code ? coupon_code.toUpperCase() : site_wide_applied ? site_wide_coupon.toUpperCase() : ""}
+            <div className="sidewideSavingPercentages">{`(-${getSideWideSavingPercentages(totals)}%)`}</div>
           </strong>
         </dt>
-        <dd>{`-${this.renderPriceLine(Math.abs(finalDiscount))}`}</dd>
+        {coupon_code ? (
+          <dd>{`-${this.renderPriceLine(Math.abs(finalDiscount))}`}</dd>
+        ) : (
+          <dd>{`${this.renderPriceLine(Math.abs(totalDiscount))}`}</dd>
+        )}
       </dl>
     );
   }

@@ -102,7 +102,19 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order, productsRating } = this.state;
-    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee , isProductRatingEnabled} = this.props;
+    const {
+      history,
+      country,
+      eddResponse,
+      edd_info,
+      is_exchange_enabled,
+      international_shipping_fee,
+      isProductRatingEnabled,
+      config,
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =
+      config?.countries[countryCode]?.isSidewideCouponEnabled;
 
     return {
       isLoading,
@@ -114,6 +126,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       international_shipping_fee,
       productsRating,
       isProductRatingEnabled,
+      isSidewideCouponEnabled,
     };
   };
 

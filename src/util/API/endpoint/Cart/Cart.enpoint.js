@@ -58,3 +58,10 @@ export const removeBulk = (cartId, items=[]) =>
   MobileAPI.post(`/carts2/${cartId}/items/remove/bulk`, {
     items: items
   }) || {}
+
+export const siteWideCouponUpdate = ({ quoteId, flag, is_guest }) =>
+  MobileAPI.post(`/sitewide-coupon`, {
+    quoteId: quoteId,
+    flag: flag,
+    is_guest: is_guest,
+  }) || {};
