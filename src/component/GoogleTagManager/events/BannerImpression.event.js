@@ -75,6 +75,9 @@ class BannerImpressionEvent extends BaseEvent {
     const {
       AppConfig: {
         variations: { HPP = "" },
+        abTestingConfig: {
+          HPP: { defaultUserSegment },
+        },
       },
     } = getStore().getState();
     const formattedImpressions = impressions.map(
@@ -106,7 +109,7 @@ class BannerImpressionEvent extends BaseEvent {
       },
       gender: currentAppState?.gender?.toLowerCase(),
       banner_type: impressions[0]?.has_video ? "video" : "image",
-      user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
+      user_segment: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
       variant_name: HPP,
     });
     const MoeEventType =
@@ -131,7 +134,7 @@ class BannerImpressionEvent extends BaseEvent {
         app6thstreet_platform: "Web",
         gender: currentAppState?.gender?.toLowerCase(),
         banner_type: impressions[0]?.has_video ? "video" : "image",
-        user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
+        user_segment: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
         variant_name: HPP
       });
     }

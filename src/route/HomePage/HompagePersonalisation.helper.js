@@ -8,9 +8,12 @@ import Event, {
 export const getHomePagePersonalizationJsonFileUrl = (
   devicePrefix,
   gender,
-  customer
+  customer,
+  abTestingConfig
 ) => {
-  const userSegementValue = customer?.user_segment ? customer.user_segment : "new_user";
+  const userSegementValue = customer?.user_segment
+    ? customer.user_segment
+    : abTestingConfig?.HPP?.defaultUserSegment;
   if (userSegementValue) {
     return `${devicePrefix}${userSegementValue}_${gender}.json`;
   }
@@ -64,27 +67,21 @@ export const homePageScreenViewTrackingEvent = (
   const variantName = variant_name
     ? variant_name
     : abTestingConfig?.HPP?.defaultValue;
+  const userSegment = user_segment
+    ? user_segment
+    : abTestingConfig?.HPP?.defaultUserSegment;
   MOE_trackEvent(EVENT_HOME_SCREEN_VIEW, {
-    user_segment: user_segment || "new_user",
+    user_segment: userSegment,
     variant_name: variantName,
   });
   Event.dispatch(EVENT_HOME_SCREEN_VIEW, {
-    user_segment: user_segment || "new_user",
+    user_segment: userSegment,
     variant_name: variantName,
   });
 };
 
-export const hppPlpScreenViewTrackingEvent = (
-  user_segment,
-  variant_name,
-  abTestingConfig
-) => {
-  const variantName = variant_name
-    ? variant_name
-    : abTestingConfig?.HPP?.defaultValue;
+export const hppPlpScreenViewTrackingEvent = () => {
   MOE_trackEvent(EVENT_PLP_SCREEN_VIEW, {
     prev_screen_name: sessionStorage.getItem("prevScreen"),
-    user_segment: user_segment || "new_user",
-    variant_name: variantName || abTestingConfig.HPP.defaultValue,
   });
 };

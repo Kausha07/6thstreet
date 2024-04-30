@@ -80,7 +80,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
         }
 
         case SET_VARIATIONS: {
-            BrowserDatabase.setItem(variations, "variant_name");
+            BrowserDatabase.setItem(variations, "variations");
             return {
                 ...state,
                 variations

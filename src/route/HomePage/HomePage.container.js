@@ -412,7 +412,7 @@ export class HomePageContainer extends PureComponent {
     }
     if (gender !== "influencer") {
       try {
-        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer);
+        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer,abTestingConfig);
         const getVariationName = await getUserVWOVariation(customer, abTestingConfig);
         const variations = {
           ...defalutVariations,

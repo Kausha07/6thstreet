@@ -237,12 +237,15 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const {
       AppConfig: {
         variations: { HPP = "" },
+        abTestingConfig: {
+          HPP: { defaultUserSegment },
+        },
       },
     } = getStore().getState();
     let banner = {
       link: item?.link,
       promotion_name: item?.promotion_name,
-      segment_name: BrowserDatabase.getItem("customer")?.user_segment || "new_user",
+      segment_name: BrowserDatabase.getItem("customer")?.user_segment || defaultUserSegment,
       variant_name: HPP,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
