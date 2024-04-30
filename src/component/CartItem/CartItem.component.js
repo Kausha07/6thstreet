@@ -263,8 +263,12 @@ export class CartItem extends PureComponent {
     const {
       country,
       currency_code,
-      item: { row_total, basePrice },
+      item: { row_total, basePrice, discount_amount, full_item_info: { row_total: row_totalforAllQuantities }, },
     } = this.props;
+
+    const finalPrice = row_total
+    ? row_totalforAllQuantities - discount_amount
+    : basePrice - discount_amount;
 
     const { isArabic } = this.state;
     let price = [
@@ -272,8 +276,10 @@ export class CartItem extends PureComponent {
         [currency_code]: {
           "6s_base_price": basePrice || row_total,
           "6s_special_price": row_total,
+          discount_amount: discount_amount,
           default: row_total,
           default_formated: `${currency_code} ${row_total}`,
+          finalPrice,
         },
       },
     ];

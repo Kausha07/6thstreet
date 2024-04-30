@@ -698,6 +698,7 @@ export class CartItem extends PureComponent {
           default: row_total,
           default_formated: `${currency_code} ${row_total}`,
           finalPrice: finalPrice,
+          discount_amount,
         },
       },
     ];

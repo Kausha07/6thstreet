@@ -121,6 +121,7 @@ class Price extends PureComponent {
       itemType = "",
       finalPrice,
       isSidewideCouponEnabled,
+      discount_amount = 0,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -129,6 +130,12 @@ class Price extends PureComponent {
     }
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+
+    if(pageType === "CartPage" || pageType === "MiniCart"){
+      if(finalPrice) {
+        discountPercentage = Math.round(100 * (1 - finalPrice / basePrice))
+      }
+    }
 
     if (!renderSpecialPrice && !cart) {
       return (
