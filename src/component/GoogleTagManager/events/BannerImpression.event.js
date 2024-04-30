@@ -9,6 +9,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BaseEvent from "./Base.event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getStore } from "Store";
 
 /**
  * Website places, from where was received event data
@@ -71,6 +72,11 @@ class BannerImpressionEvent extends BaseEvent {
     //   console.log("impression not recorded", EVENT_TYPE, impressions);
     //   return;
     // }
+    const {
+      AppConfig: {
+        variations: { HPP = "" },
+      },
+    } = getStore().getState();
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id, store_code, tag, indexValue }, index) => ({
         id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : label || "",
@@ -101,7 +107,7 @@ class BannerImpressionEvent extends BaseEvent {
       gender: currentAppState?.gender?.toLowerCase(),
       banner_type: impressions[0]?.has_video ? "video" : "image",
       user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
-      variant_name: BrowserDatabase?.getItem("variant_name")?.data,
+      variant_name: HPP,
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -126,7 +132,7 @@ class BannerImpressionEvent extends BaseEvent {
         gender: currentAppState?.gender?.toLowerCase(),
         banner_type: impressions[0]?.has_video ? "video" : "image",
         user_segment: BrowserDatabase?.getItem("customer")?.user_segment || "new_user",
-        variant_name: BrowserDatabase?.getItem("variant_name")?.data
+        variant_name: HPP
       });
     }
   }

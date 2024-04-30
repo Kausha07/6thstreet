@@ -25,8 +25,7 @@ import Influencer from "../Influencer/index";
 import { getUUIDToken } from "Util/Auth";
 import VueQuery from "../../query/Vue.query";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { setVariationName } from "Store/AppConfig/AppConfig.action";
-
+import { setVariations } from "Store/AppConfig/AppConfig.action";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -57,7 +56,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   abTestingConfig: state.AppConfig.abTestingConfig,
   signInIsLoading: state.MyAccountReducer.isLoading,
-  variant_name: state.AppConfig.variationName,
+  variations: state.AppConfig.variations,
 });
 
 export const MyAccountDispatcher = import(
@@ -78,7 +77,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
-  setVariationName: (variationName) => dispatch(setVariationName(variationName))
+  setVariations: (variations) => dispatch(setVariations(variations))
 });
 
 export class HomePageContainer extends PureComponent {
@@ -405,7 +404,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender, customer, abTestingConfig = {}, setVariationName } = this.props;
+    const { gender, customer, abTestingConfig = {}, setVariations, variations : defalutVariations } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -415,7 +414,11 @@ export class HomePageContainer extends PureComponent {
       try {
         const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer);
         const getVariationName = await getUserVWOVariation(customer, abTestingConfig);
-        setVariationName(getVariationName);
+        const variations = {
+          ...defalutVariations,
+          HPP: getVariationName || abTestingConfig.HPP?.defaultValue,
+        };
+        setVariations(variations);
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
         });
