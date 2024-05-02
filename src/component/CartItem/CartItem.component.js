@@ -36,6 +36,7 @@ import { Store } from "../Icons";
 import "./CartItem.style";
 import "./CartItem.extended.style";
 import { getDefaultEddMessage } from "Util/Date/index";
+import { getCountryFromUrl } from "Util/Url";
 
 /**
  * Cart and CartOverlay item
@@ -264,8 +265,11 @@ export class CartItem extends PureComponent {
       country,
       currency_code,
       item: { row_total, basePrice, discount_amount, full_item_info: { row_total: row_totalforAllQuantities }, qty },
+      config,
     } = this.props;
 
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     const finalPrice = row_total
     ? row_totalforAllQuantities - discount_amount
     : basePrice - discount_amount;
@@ -286,7 +290,12 @@ export class CartItem extends PureComponent {
     ];
     return (
       <div block="CartItem" elem="Price" mods={{ isArabic }}>
-        <Price price={price} renderSpecialPrice={true} cart={true} pageType="MiniCart"/>
+        <Price
+          price={price}
+          renderSpecialPrice={isSidewideCouponEnabled ? true : false}
+          cart={true}
+          pageType="MiniCart"
+        />
       </div>
     );
   }
