@@ -71,11 +71,11 @@ export const homePageScreenViewTrackingEvent = (
     ? user_segment
     : abTestingConfig?.HPP?.defaultUserSegment;
   MOE_trackEvent(EVENT_HOME_SCREEN_VIEW, {
-    user_segment: userSegment,
+    segment_name: userSegment,
     variant_name: variantName,
   });
   Event.dispatch(EVENT_HOME_SCREEN_VIEW, {
-    user_segment: userSegment,
+    segment_name: userSegment,
     variant_name: variantName,
   });
 };

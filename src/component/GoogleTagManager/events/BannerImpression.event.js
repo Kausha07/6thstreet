@@ -83,7 +83,7 @@ class BannerImpressionEvent extends BaseEvent {
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id, store_code, tag, indexValue }, index) => ({
         id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : label || "",
-        name: (store_code ? store_code + "-" : "") + (label || promotion_name),
+        name: (store_code ? store_code + "-" : "") + (label || promotion_name) + (tag ? "-" + tag : ""),
         creative: tag || promotion_name || label || "",
         position: indexValue ? indexValue : index + 1,
       })
@@ -91,6 +91,7 @@ class BannerImpressionEvent extends BaseEvent {
 
     let promoName = [], promoID = [], promoIndex = [];
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const currentPageType = this.getPageType() || "";
 
     formattedImpressions.forEach((item) => {
       promoName.push(item?.name || item?.label);
@@ -109,8 +110,9 @@ class BannerImpressionEvent extends BaseEvent {
       },
       gender: currentAppState?.gender?.toLowerCase(),
       banner_type: impressions[0]?.has_video ? "video" : "image",
-      user_segment: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
+      segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
       variant_name: HPP,
+      current_page: currentPageType,
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -118,7 +120,6 @@ class BannerImpressionEvent extends BaseEvent {
         : EVENT_TYPE == "promotionClick"
           ? EVENT_MOE_PROMOTION_CLICK
           : null;
-    const currentPageType = this.getPageType() || "";
 
     if (document.readyState == ("complete" || "interactive")) {
       MOE_trackEvent(MoeEventType, {
@@ -134,8 +135,10 @@ class BannerImpressionEvent extends BaseEvent {
         app6thstreet_platform: "Web",
         gender: currentAppState?.gender?.toLowerCase(),
         banner_type: impressions[0]?.has_video ? "video" : "image",
-        user_segment: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
-        variant_name: HPP
+        segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
+        variant_name: HPP,
+        current_page: currentPageType,
+        position:  promoIndex.length == 1 ? promoIndex.toString() : promoIndex,
       });
     }
   }
