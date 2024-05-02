@@ -68,6 +68,7 @@ export class PDPSummaryContainer extends PureComponent {
       brandInfoData,
       international_shipping_fee,
       config = {},
+      colourVarientsButtonClick,
     } = this.props;
     return {
       product,
@@ -88,6 +89,7 @@ export class PDPSummaryContainer extends PureComponent {
       brandInfoData,
       international_shipping_fee,
       config,
+      colourVarientsButtonClick,
     };
   };
 

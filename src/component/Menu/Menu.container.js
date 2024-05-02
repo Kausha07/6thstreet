@@ -4,18 +4,20 @@ import { connect } from 'react-redux';
 
 import { setGender } from 'Store/AppState/AppState.action';
 import MenuDispatcher from 'Store/Menu/Menu.dispatcher';
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 import Menu from './Menu.component';
 
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
     locale: state.AppState.locale,
-    categories: state.MenuReducer.categories
+    categories: state.MenuReducer.categories,
+    is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     setGender: (gender) => dispatch(setGender(gender)),
-    requestCategories: (gender) => MenuDispatcher.requestCategories(gender, dispatch)
+    requestCategories: (gender) => MenuDispatcher.requestCategories(gender, dispatch),
 });
 
 export class MenuContainer extends PureComponent {
@@ -25,7 +27,8 @@ export class MenuContainer extends PureComponent {
         newMenuGender: PropTypes.string.isRequired,
         setGender: PropTypes.func.isRequired,
         requestCategories: PropTypes.func.isRequired,
-        categories: PropTypes.array.isRequired
+        categories: PropTypes.array.isRequired,
+        is_msite_megamenu_enabled: PropTypes.bool,
     };
 
     state = {
@@ -68,7 +71,9 @@ export class MenuContainer extends PureComponent {
         if (!gender) {
             return;
         }    
-        requestCategories(gender);
+        if(!isMsiteMegaMenuRoute()) {
+            requestCategories(gender);
+        }
     }
 
     containerProps = () => {
@@ -79,14 +84,16 @@ export class MenuContainer extends PureComponent {
         const {
             gender,
             setGender,
-            categories
+            categories,
+            is_msite_megamenu_enabled,
         } = this.props;
 
         return {
             isLoading,
             categories,
             gender,
-            setGender
+            setGender,
+            is_msite_megamenu_enabled,
         };
     };
 

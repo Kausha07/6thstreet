@@ -29,7 +29,7 @@ import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddMessage } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
 import address from "./icons/address.png";
-import addressBlack from "./icons/address_black.png";
+import addressBlack from "./icons/address_black.svg";
 import Image from "Component/Image";
 import "./PDPSummary.style";
 import Event, {
@@ -43,6 +43,11 @@ import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 class PDPSummary extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.alsoAvailableRef = React.createRef();
+  }
+
   static propTypes = {
     product: Product.isRequired,
     isLoading: PropTypes.bool.isRequired,
@@ -151,6 +156,7 @@ class PDPSummary extends PureComponent {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
               payload["qty"] = parseInt(item?.full_item_info?.available_qty);
               payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+              payload["brand"] = item?.full_item_info?.brand_name;
               items.push(payload);
             }
           })
@@ -184,6 +190,7 @@ class PDPSummary extends PureComponent {
           payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
           payload["qty"] = parseInt(item?.full_item_info?.available_qty);
           payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+          payload["brand"] = item?.full_item_info?.brand_name;
           items.push(payload);
         }
       });
@@ -280,7 +287,16 @@ class PDPSummary extends PureComponent {
   }
 
   getEddForPDP(areaSelected = null) {
-    const { estimateEddResponseForPDP, edd_info, product : { simple_products = {}, cross_border=0, international_vendor = null } } = this.props;
+    const {
+      estimateEddResponseForPDP,
+      edd_info,
+      product: {
+        simple_products = {},
+        cross_border = 0,
+        international_vendor = null,
+        brand_name = "",
+      },
+    } = this.props;
     if(edd_info &&
       edd_info.is_enable &&
       edd_info.has_pdp && edd_info.has_item_level) {
@@ -333,6 +349,7 @@ class PDPSummary extends PureComponent {
 
             payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
             payload["cross_border_qty"] = parseInt(simple_products?.[sku]?.cross_border_qty) ? parseInt(simple_products?.[sku]?.cross_border_qty): "";
+            payload["brand"] = brand_name;
 
             items.push(payload);
           });
@@ -461,7 +478,20 @@ class PDPSummary extends PureComponent {
         );
       }
     }
+
+    if (this.props?.colourVarientsButtonClick) {
+      setTimeout(() => {
+        this.scrollToRef();
+      }, 2000);
+    }
   }
+
+  scrollToRef = () => {
+    if (this?.alsoAvailableRef?.current) {
+      this?.alsoAvailableRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
   static getDerivedStateFromProps(props, state) {
     const { product,intlEddResponse } = props;
 
@@ -522,6 +552,7 @@ class PDPSummary extends PureComponent {
             payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
             payload["qty"] = parseInt(item?.full_item_info?.available_qty);
             payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+            payload["brand"] = item?.full_item_info?.brand_name;
             items.push(payload);
           }
         });
@@ -1029,7 +1060,7 @@ class PDPSummary extends PureComponent {
     return (
       <>
         {this.renderPDPSummaryHeader()}
-        <div block="ShareAndWishlistButtonContainer">
+        <div block="ShareAndWishlistButtonContainer" className={`${this.state.isArabic ? "isArabic": ""}`}>
           <ShareButton
             title={document.title}
             text={`Hey check this out: ${document.title}`}
@@ -1164,6 +1195,12 @@ class PDPSummary extends PureComponent {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
+    if(this.state.tagsFromAddToCart.length){
+      this.state.tagsFromAddToCart.map((tag)=>{
+        tags.push(__(tag));
+      })
+    }
+
     // Commenting this code, because we are showing this tag other where to with different logic
     // if (
     //   simple_products &&
@@ -1200,11 +1237,13 @@ class PDPSummary extends PureComponent {
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
-          <PDPAlsoAvailable
-            productsAvailable={alsoAvailable}
-            renderMySignInPopup={renderMySignInPopup}
-            productSku={sku}
-          />
+          <div ref={this.alsoAvailableRef}>
+            <PDPAlsoAvailable
+              productsAvailable={alsoAvailable}
+              renderMySignInPopup={renderMySignInPopup}
+              productSku={sku}
+            />
+          </div>
         );
       }
     }
@@ -1362,10 +1401,10 @@ class PDPSummary extends PureComponent {
         {inventory_level_cross_border &&
           this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
-        {this.renderTammaraWidget()}
-        {this.renderTabby()}
         {/* { this.renderColors() } */}
         {this.renderAddToCartSection()}
+        {this.renderTammaraWidget()}
+        {this.renderTabby()}
         {this.renderPDPTags()}
         {this.renderAvailableItemsSection()}
       </div>

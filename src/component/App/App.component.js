@@ -13,6 +13,7 @@ import PDP from "Store/PDP/PDP.reducer";
 import PLP from "Store/PLP/PLP.reducer";
 import LiveParty from "Store/LiveParty/LiveParty.reducer";
 import InfluencerReducer from "Store/Influencer/Influencer.reducer";
+import CategoriesListReducer from "Store/MegaMenuCategoriesList/CategoriesList.reducer";
 import SearchSuggestions from "Store/SearchSuggestions/SearchSuggestions.reducer";
 import BrandCms from "Store/BrandCms/BrandCms.reducer";
 import Checkout from "Store/Checkout/Checkout.reducer";
@@ -32,6 +33,7 @@ class App extends SourceApp {
     store.injectReducer("SearchSuggestions", SearchSuggestions);
     store.injectReducer("LiveParty", LiveParty);
     store.injectReducer("InfluencerReducer", InfluencerReducer);
+    store.injectReducer("CategoriesListReducer", CategoriesListReducer);
     store.injectReducer("BrandCms", BrandCms);
     store.injectReducer("CheckoutReducer", Checkout);
 

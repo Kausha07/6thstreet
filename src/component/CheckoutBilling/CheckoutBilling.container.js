@@ -327,9 +327,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   }
 
   async applyBinPromotion() {
-    const { number = "" } = this.state;
-    const { getBinPromotion, updateTotals, binModal } = this.props;
+    const { number = "", saveCard } = this.state;
+    const { getBinPromotion, updateTotals, binModal, showSuccessMessage } = this.props;
     const response = await getBinPromotion(number.substr("0", "6"));
+    if (isSignedIn() && saveCard) {
+      showSuccessMessage(__("Debit/Credit Card Added Successfully"));
+    }
     binModal(response);
     await updateTotals();
     this.setState({ binApplied: true });
@@ -473,9 +476,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 "CREDIT_CART_TOKEN",
                 FIVE_MINUTES_IN_SECONDS
               );
-              if (isSignedIn() && saveCard) {
-                showSuccessMessage(__("Credit card successfully added"));
-              }
 
               savePaymentInformation({
                 billing_address: address,

@@ -235,7 +235,7 @@
     .PLPMobileColorVarients {
       background-color: #ffffff;
       opacity: 1;
-      bottom: 23px;
+      bottom: 18px;
       left: calc(100% - 8px);
       transform: translateX(-100%);
       border-radius: 12px;
@@ -247,10 +247,11 @@
       @include mobile {
         position: absolute;
         font-size: 12px;
-        width: 50px;
         z-index: 1;
+        padding: 3px 6px;
         &_isArabic {
-          transform: translateX(18px);
+          left: 8px;
+          transform: translateX(0);
         }
       }
 
@@ -263,7 +264,7 @@
         }
       }
       .colorVarientCounts {
-        margin-left : 9px;
+        margin-left : 5px;
         font-weight: bold;
         &_isArabic {
           margin-left : 0px;
@@ -357,7 +358,7 @@
     }
   
     .Price {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       letter-spacing: -0.5px;
       text-align: start;
@@ -379,7 +380,7 @@
   
         &_discount {
           display: inline;
-          color: #d12228;
+          color: #C13632;
         }
       }
   
@@ -435,6 +436,14 @@
       padding: 0px;
       border: 2px solid #ffffff;
       border-radius: 50%;
+
+      @include mobile {
+        border: none;
+        width: 13px;
+        height: 13px;
+        min-height: 13px;
+        min-width: 13px;
+      }
     }
     
     .radio-input:checked :after {
@@ -444,6 +453,22 @@
     .swiperWrapper {
       @include desktop {
         min-height: 274px;
+      }
+    }
+  }
+
+  .tagsForMsiteProduct {
+    @include mobile {
+      display: flex;
+      .ExclusiveMobile {
+        background: #e9e9e9;
+        border-radius: 12px;
+        color: #000000;
+        padding: 5px 10px;
+        font-weight: 500;
+        margin: 5px 5px 0 0;
+        font-size: 11px;
+        z-index: 1;
       }
     }
   }

@@ -1,0 +1,206 @@
+.wrapperSwipeToDelete {
+    width: 100%;
+    overflow: hidden;
+
+    &_isArabic {
+        margin-right: 10px;
+    }
+}
+
+.DeleteButton {
+    background: red;
+    border: none;
+    min-width: 65px;
+    height: auto;
+    padding: 0;
+    text-transform: capitalize;
+    color: white;
+    border-radius: 0px 12px 12px 0px;
+
+    &_isArabic {
+        border-radius: 12px 0px 0px 12px;
+    }
+}
+
+.ItemWrapper {
+    display: flex;
+    transition: transform 800ms;
+}
+
+.ItemWrapper .contentWrapper {
+    flex: 1 0 100%;
+}
+
+
+.expiredSavedCard-Item {
+    width: 220px;
+    height: 120px;
+    display: flex;
+    cursor: pointer;
+    margin-right: 0;
+    border-radius: 12px;
+    flex-direction: column;
+    border: 1px solid red;
+    background-color: rgba(240, 17, 54, 0.03);
+
+    &-isNewSwipe {
+        background-color: aqua;
+    }
+}
+
+.expiredSavedCard-CardNumber {
+    font-size: 16px;
+    color: #9b9b9b;
+    line-height: 22px;
+    margin: 17px;
+}
+
+.expiredSavedCard-CvvImgCon {
+    display: flex;
+    padding: 0px 15px;
+    align-items: center;
+    justify-content: space-between;
+    img {
+        width: 40.27px;
+        height: 22px;
+        object-fit: contain;
+    }
+    span {
+        font-size: 13px;
+        color: #747474;
+    }
+}
+
+.expiredSavedCard-expiredText {
+    margin: 15px 0px 0px 15px;
+    color: #f01136;
+    font-family: Avenir Next;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+
+    &_isArabic {
+        margin: 15px 15px 0px 0px;
+    }
+}
+
+.expiredSavedCard-expiredCross {
+    width: 12px;
+    margin: 0px 15px 0px 12px;
+}
+
+.swipedCard .expiredSavedCard-Item {
+    border-radius: 0px;
+}
+
+.deleteActionItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+
+    &-title {
+        color: #FFFFFF;
+        font-family: "Avenir Next";
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 19px;
+        text-transform: none;
+        display: block;
+        width: 96px;
+
+        @include mobile {
+          width: auto;
+        }
+    }
+
+    img {
+        width: 17px;
+        height: 19px;
+    }
+}
+
+
+
+.MyAccountPaymentCard {
+  
+    background: var(--my-acc-background);
+    width: 100%;
+    font-size: 14px;
+    line-height: 19px;
+    padding: 10px 24px 17px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    &-DetailWrapper {
+      display: flex;
+      align-items: center;
+    }
+    &-DetailBlock {
+      padding: 0 8px;
+      margin-left: 16px;
+
+      img:hover {
+        cursor: pointer;
+      }
+      
+    }
+  
+    &:hover {
+      cursor: pointer;
+    }
+  
+    @include desktop() {
+      &:hover {
+        cursor: auto;
+      }
+    }
+  
+    &-Default {
+      color: var(--my-acc-default);
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+  
+    &-Picture {
+      img {
+        width: 50px !important;
+        height: 30px !important;
+      }
+    }
+  
+    &-Name {
+      font: 12px sans-serif;
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      line-height: 16px;
+      word-break: break-all;
+    }
+  
+    &-cardNum {
+      word-break: break-all;
+    }
+  
+    &-ExpDate {
+      color: var(--fw-expDate);
+      span {
+        color: var(--fw-expDate);
+      }
+    }
+
+
+}
+
+.isActive .MyAccountPaymentCard {        
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}

@@ -339,3 +339,17 @@ export const EVENT_PRODUCT_RATING_VALUE = "edit_user_rating";
 export const EVENT_MYORDERPAGE_VISIT = "my_orders_screen_view";
 export const EVENT_ORDERDETAILPAGE_VISIT = "order_details_screen_view";
 export const EVENT_ORDERDETAILPAGE_CHANNEL = "order_details_screen_Channel";
+
+// MegaMenu Feature Tracking Events
+export const EVENT_BOTTOM_NAV_CLICK = "bottom_nav_click";
+export const EVENT_MEGA_MENU_BANNER = "mega_menu_banner";
+export const EVENT_MEGA_MENU_CAROUSAL = "mega_menu_carousal";
+export const EVENT_CATEGORY_EXPANDED = "category_expanded";
+export const EVENT_SUBCATEGORY_CLICK = "subcategory_click";
+export const EVENT_CLICK_BRAND_BANNER = "click_brand_banner";
+export const EVENT_CLICK_BRAND_NAME = "click_brand_name";
+export const EVENT_CLICK_BRAND_ALPHABET = "click_brand_alphabet";
+export const EVENT_CLICK_BRAND_SEARCH_SCREEN = "click_brand_search";
+export const EVENT_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
+export const EVENT_CLICK_RECENT_SEARCH = "click_recent_search";
+export const EVENT_CLICK_POPULAR_SEARCH = "click_popular_search";

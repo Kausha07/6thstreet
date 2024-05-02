@@ -1321,5 +1321,15 @@
     "Place Tamara Order": "ضع طلب تمارا",
     "Split in 4 payments - No late fees.": "قسمها على 4 دفعات - بدون رسوم تأخير.",
     "Rate the quality of the product": "قم بتقييم جودة المنتج",
-    "Store credit is valid for one year": "رصيد المتجر سيكون صالح للاستخدام لمده عام"
+    "Store credit is valid for one year": "رصيد المتجر سيكون صالح للاستخدام لمده عام",
+    "Search for Brands": "البحث عن الماركات",
+    "Search for Categories": "البحث عن الفئات",
+    "Search Results": "نتائج البحث",
+    "Recent Searches": "بحثت عنه مؤخراً",
+    "Popular Searches": "بحث شائع",
+    "A-Z Brands": "العلامات التجارية بالترتيب الأبجدي",
+    "Oops! We couldn't find the brand you are looking for": "عذراً! لم نستطع إيجاد العلامة التجارية التي تبحث عنها",
+    "No result found": "لا يوجد نتائج بحث",
+    "Debit/Credit Card Added Successfully": "تمت إضافة بطاقة الائتمان/ بطاقة السحب بنجاح",
+    "Are you sure you want to remove this card?": "هل أنت متأكد من رغبتك في حذف البطاقة؟"
 }

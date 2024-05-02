@@ -9,6 +9,7 @@ import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 import ProductItem from "Component/ProductItem";
 import CartPageSizePopUp from "Component/CartPageSizePopUp/index";
+import isMobile from "Util/Mobile";
 
 import "./CartPageSliders.style.scss";
 
@@ -300,6 +301,21 @@ const CartPageSliders = (props) => {
     }
   };
 
+  const renderExclusiveMobile = (product) => {
+    const { promotion } = product;
+
+    if (promotion !== undefined && promotion !== "") {
+      return promotion !== null ? (
+        <span block="ExclusiveMobile">
+          {" "}
+          {promotion}{" "}
+        </span>
+      ) : null;
+    }
+
+    return null;
+  };
+
   const renderSlider = () => {
     const slicedSliderProducts = sliderProducts?.slice(0, 25);
     if (slicedSliderProducts?.length > 0) {
@@ -344,6 +360,11 @@ const CartPageSliders = (props) => {
                         ? __("Out of stock")
                         : __("Add to bag")}
                     </button>
+                    {isMobile.any() && (
+                      <div className="tagsForMsiteProduct">
+                        {renderExclusiveMobile(data)}
+                      </div>
+                    )}
                   </div>
                 );
               })}

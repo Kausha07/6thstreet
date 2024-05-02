@@ -244,7 +244,7 @@
       @include mobile() {
         grid-template-columns: repeat(2, 1fr);
         margin: 0;
-        grid-gap: 29px 4px;
+        grid-gap: 20px 4px;
       }
     }
   }

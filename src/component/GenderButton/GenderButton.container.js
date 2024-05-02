@@ -20,6 +20,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   currentContentGender: state.AppState.gender,
+  megamenuHeaderGenderChange: state?.CategoriesListReducer?.megamenuHeaderGenderChange,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -60,6 +61,7 @@ export class GenderButtonContainer extends PureComponent {
       gender: { label, key, icon },
       isCurrentGender,
       isUnsetStyle,
+      megamenuHeaderGenderChange = false,
     } = this.props;
 
     return {
@@ -68,6 +70,7 @@ export class GenderButtonContainer extends PureComponent {
       urlKey: key,
       isCurrentGender,
       isUnsetStyle,
+      megamenuHeaderGenderChange,
     };
   };
   sendNavigationImpressions(label) {
