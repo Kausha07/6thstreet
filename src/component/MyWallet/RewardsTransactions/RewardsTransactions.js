@@ -49,8 +49,10 @@ export default function RewardsTransactions() {
               ...oldData,
               ...responseHistory?.data?.history,
             ]);
-            if (page == 0) {
+            if (nextBalanceExpiry == null) {
               setNextBalanceExpiry(responseHistory?.data?.expires_within_days);
+            }
+            if (expiringAmount == null) {
               setExpiringAmount(responseHistory?.data?.expiring_amount);
             }
             setTotalTransactions(responseHistory?.data?.count);
@@ -88,11 +90,11 @@ export default function RewardsTransactions() {
 
   return (
     <>
-      {isLoading ? (
+      {/* {isLoading ? (
         <span>Loading....</span>
-      ) : (
-        <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
-      )}
+      ) : ( */}
+      <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
+      {/* // )} */}
       <div
         id="reward-history"
         style={{ blockSize: "400px", overflow: "scroll" }}
