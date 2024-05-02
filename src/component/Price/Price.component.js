@@ -72,16 +72,6 @@ class Price extends PureComponent {
       );
     }
 
-    if(isSidewideCouponEnabled) {
-      return (
-        <span>
-          {this.renderCurrency()}
-          &nbsp;
-          {fixedPrice ? (1 * finalPrice).toFixed(3) : basePrice}
-        </span>
-      );
-    }
-
     return (
       <span>
         {this.renderCurrency()}
