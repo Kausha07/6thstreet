@@ -392,8 +392,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async getOrderDetails (paymentData) {
-    // const { orderID} = paymentData;
-    const { orderID } = this.state;
+    const { orderID} = paymentData || this.state;
     const responseData = await getNewOrderData(orderID);
     const order = responseData?.data;
     this.setState({ orderDetailsCartTotal: order });

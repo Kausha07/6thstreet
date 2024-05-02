@@ -948,12 +948,21 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     const storeCredit = getDiscountFromTotals(totals, "customerbalance");
 
+    const reward = getDiscountFromTotals(totals, "reward");
+
     const clubApparel = this.props?.isClubApparelEnabled ? getDiscountFromTotals(totals, "clubapparel") : null;
 
     if (storeCredit) {
       LineItems.push({
         label: __("My Cash"),
         amount: storeCredit,
+      });
+    }
+
+    if (reward) {
+      LineItems.push({
+        label: __("My Wallet"),
+        amount: reward,
       });
     }
 

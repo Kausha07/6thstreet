@@ -824,6 +824,10 @@ export class CheckoutSuccess extends PureComponent {
           __("My Cash")
         )}
         {this.renderPriceLine(
+          getDiscountFromTotals(total_segments, "reward"),
+          __("My Rewards")
+        )}
+        {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}

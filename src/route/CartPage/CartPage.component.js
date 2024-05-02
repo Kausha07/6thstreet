@@ -715,6 +715,10 @@ export class CartPage extends PureComponent {
                 __("My Cash")
               )}
               {this.renderPriceLine(
+                getDiscountFromTotals(totals, "reward"),
+                __("My Rewards")
+              )}
+              {this.renderPriceLine(
                 getDiscountFromTotals(totals, "clubapparel"),
                 __("Club Apparel Redemption")
               )}
