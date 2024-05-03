@@ -1,3 +1,4 @@
+import { Oval } from "react-loader-spinner";
 import {
   OrderPlaced,
   Cashback,
@@ -18,6 +19,8 @@ import "./RewardsTransactions.style.scss";
 
 export default function RewardsTransactions() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
+  const [isFurtherFetchLoading, setIsFurtherFetchLoading] = useState(false);
   const [rewardHistory, setRewardHistory] = useState([]);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [nextBalanceExpiry, setNextBalanceExpiry] = useState(null);
@@ -56,6 +59,9 @@ export default function RewardsTransactions() {
               setExpiringAmount(responseHistory?.data?.expiring_amount);
             }
             setTotalTransactions(responseHistory?.data?.count);
+            if (isFirstFetchLoading) {
+              setIsFirstFetchLoading(false);
+            }
             setIsLoading(false);
           }
         }
@@ -90,32 +96,37 @@ export default function RewardsTransactions() {
 
   return (
     <>
-      {/* {isLoading ? (
-        <span>Loading....</span>
-      ) : ( */}
-      <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
-      {/* // )} */}
-      <div
-        id="reward-history"
-        style={{ blockSize: "400px", overflow: "scroll" }}
-      >
-        {rewardHistory.map((transaction) => (
-          <>
-            {transaction.action == ACTION_PROMOTIONAL_ORDER && (
-              <OrderPlaced transaction={transaction} />
-            )}
+      <div id="reward-history" className="HistoryContainer">
+        {isFirstFetchLoading ? (
+          <div className="LoaderClass">
+            <Oval
+              color="#333"
+              secondaryColor="#333"
+              height={50}
+              width={"100%"}
+              strokeWidth={3}
+              strokeWidthSecondary={3}
+            />
+          </div>
+        ) : (
+          rewardHistory.map((transaction) => (
+            <>
+              {transaction.action == ACTION_PROMOTIONAL_ORDER && (
+                <OrderPlaced transaction={transaction} />
+              )}
 
-            {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
-              (transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
-                <Refund transaction={transaction} text={"Reward"} />
-              ))}
+              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
+                (transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
+                  <Refund transaction={transaction} text={"Reward"} />
+                ))}
 
-            {transaction.action == ACTION_PROMOTIONAL_REFUND && (
-              <Refund transaction={transaction} text={"Refund"} />
-            )}
-            <hr className="HoriRow" />
-          </>
-        ))}
+              {transaction.action == ACTION_PROMOTIONAL_REFUND && (
+                <Refund transaction={transaction} text={"Refund"} />
+              )}
+              <hr className="HoriRow" />
+            </>
+          ))
+        )}
       </div>
     </>
   );

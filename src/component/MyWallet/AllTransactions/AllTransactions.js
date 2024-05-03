@@ -1,3 +1,4 @@
+import { Oval } from "react-loader-spinner";
 import {
   OrderPlaced,
   Cashback,
@@ -24,6 +25,7 @@ import "./AllTransactions.style.scss";
 export default function AllTransactions() {
   const [isLoading, setIsLoading] = useState(false);
   const [allHistory, setAllHistory] = useState([]);
+  const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [page, setPage] = useState(1);
   const type = ALL_HISTORY_TYPE;
@@ -47,6 +49,9 @@ export default function AllTransactions() {
             ]);
 
             setTotalTransactions(responseHistory?.data?.count);
+            if (isFirstFetchLoading) {
+              setIsFirstFetchLoading(false);
+            }
             setIsLoading(false);
           }
         }
@@ -75,8 +80,20 @@ export default function AllTransactions() {
 
   return (
     <>
-      <div id="all-history" style={{ blockSize: "400px", overflow: "scroll" }}>
-        {allHistory &&
+      <div id="all-history" className="HistoryContainer">
+        {isFirstFetchLoading ? (
+          <div className="LoaderClass">
+            <Oval
+              color="#333"
+              secondaryColor="#333"
+              height={50}
+              width={"100%"}
+              strokeWidth={3}
+              strokeWidthSecondary={3}
+            />
+          </div>
+        ) : (
+          allHistory &&
           allHistory.map((transaction) => (
             <>
               {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
@@ -121,7 +138,8 @@ export default function AllTransactions() {
                 )}
               <hr className="HoriRow" />
             </>
-          ))}
+          ))
+        )}
       </div>
     </>
   );
