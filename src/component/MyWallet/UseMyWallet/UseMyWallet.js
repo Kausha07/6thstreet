@@ -1,62 +1,36 @@
 import Field from "Component/Field";
 import { useDispatch, connect } from "react-redux";
 import { useState, useEffect } from "react";
-import MyWalletDispatcher from 'Store/MyWallet/MyWallet.dispatcher';
+import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
 import "./UseMyWallet.style.scss";
 
 export const mapStateToProps = ({
-  
-    MyWalletReducer: {
-      myWallet, 
-      isLoading,
-    }
+  MyWalletReducer: { myWallet, isLoading },
 }) => ({
-    isLoading,
-    myWallet,
+  isLoading,
+  myWallet,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    toggleMyWallet: (apply) => MyWalletDispatcher.toggleMyWallet(dispatch, apply),
-    getReward: () => MyWalletDispatcher.getReward(dispatch),
+  toggleMyWallet: (apply) => MyWalletDispatcher.toggleMyWallet(dispatch, apply),
+  getReward: () => MyWalletDispatcher.getReward(dispatch),
 });
 
-export  function UseMyWallet(props) {
-    const [ isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
-    const {toggleMyWallet, getReward, eligibleAmount, myWallet } = props;
-    const checkboxId = "My_wallet_applied";
-    const handleCheckboxChange = () => {
-        toggleMyWallet(true);
-        setIsWalletBalanceApplied(!isWalletBalanceApplied);
-    };
+export function UseMyWallet(props) {
+  const [isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
+  const { toggleMyWallet, getReward, eligibleAmount, myWallet } = props;
+  const checkboxId = "My_wallet_applied";
+  const handleCheckboxChange = () => {
+    toggleMyWallet(!isWalletBalanceApplied);
+    setIsWalletBalanceApplied(() => !isWalletBalanceApplied);
+  };
 
+  useEffect(async () => {
+    await getReward();
+  }, []);
 
-    useEffect(async ()=>{
-        await getReward();
-    }, [])
-  
   return (
     <>
-      {/* <div className="UseMyWallet">
-        <div>
-          <div className="Heading">My Cash</div>
-          <div className="SubHeading">
-            Eligible to use <span className="boldAmount">AED 37 </span> of
-            <span className="boldAmount"> AED 47</span>
-          </div>
-        </div>
-        <div>
-          <Field
-            block="StoreCredit"
-            elem="Toggle"
-            type="toggle"
-            id={checkboxId}
-            name={checkboxId}
-            value={checkboxId}
-            checked={isWalletBalanceApplied}
-            onClick={handleCheckboxChange}
-          />
-        </div>
-      </div> */}
       <div className="UseMyWallet">
         <div>
           <div className="Heading">My Rewards</div>
@@ -81,6 +55,5 @@ export  function UseMyWallet(props) {
     </>
   );
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(UseMyWallet);
