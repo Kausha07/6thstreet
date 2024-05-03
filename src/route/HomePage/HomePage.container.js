@@ -113,7 +113,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { prevPath = null, requestCustomerData, logout, customer: { user_segment }, variant_name, abTestingConfig } = this.props;
+    const { prevPath = null, requestCustomerData, logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     this.getTrendingBrands();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -175,7 +175,6 @@ export class HomePageContainer extends PureComponent {
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
     this.setSchemaJSON();
-    homePageScreenViewTrackingEvent(user_segment,variant_name, abTestingConfig);
     Event.dispatch(EVENT_PAGE_LOAD);
   }
 
@@ -187,7 +186,7 @@ export class HomePageContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { gender: prevGender, customer: prevCustomer } = prevProps;
-    const { gender, toggleBreadcrumbs, lastHomeItem, customer, signInIsLoading, customer: { user_segment }, variant_name, abTestingConfig } = this.props;
+    const { gender, toggleBreadcrumbs, lastHomeItem, customer, signInIsLoading } = this.props;
 
     toggleBreadcrumbs(false);
 
@@ -212,7 +211,6 @@ export class HomePageContainer extends PureComponent {
     if (prevCustomer?.id !== customer?.id) {
       this.requestDynamicContent(true, gender);
     }
-    homePageScreenViewTrackingEvent(user_segment,variant_name, abTestingConfig);
   }
 
   getMainBannerForMeta() {
@@ -419,6 +417,11 @@ export class HomePageContainer extends PureComponent {
           HPP: getVariationName || abTestingConfig.HPP?.defaultValue,
         };
         setVariations(variations);
+        homePageScreenViewTrackingEvent(
+          customer?.user_segment,
+          variations?.HPP,
+          abTestingConfig
+        );
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
         });
