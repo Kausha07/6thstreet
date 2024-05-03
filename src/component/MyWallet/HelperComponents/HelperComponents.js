@@ -5,7 +5,7 @@ import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState } from "react";
-import { formatDate } from "../../../util/Common"
+import { formatDate } from "../../../util/Common";
 
 import "./HelperComponents.style.scss";
 
@@ -13,7 +13,9 @@ export function Cashback({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{formatDate(transaction?.created_at.slice(0,10))}</div>
+        <div className="date">
+          {formatDate(transaction?.created_at.slice(0, 10))}
+        </div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -27,11 +29,19 @@ export function Cashback({ transaction }) {
                 </div>
               )}
               <div className="LinkDetails">
-                Expires: {formatDate(transaction?.expires_at.slice(0,10))}
+                Expires: {formatDate(transaction?.expires_at.slice(0, 10))}
               </div>
             </div>
           </div>
-          <div className= {transaction?.balance?.[0]==='+'? "AmountExchange Added": "AmountExchange Deducted"} >{transaction?.balance}</div>
+          <div
+            className={
+              transaction?.balance?.[0] === "+"
+                ? "AmountExchange Added"
+                : "AmountExchange Deducted"
+            }
+          >
+            {transaction?.balance}
+          </div>
         </div>
       </div>
     </>
@@ -42,7 +52,9 @@ export function Refund({ transaction, text }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{formatDate(transaction?.created_at.slice(0,10))}</div>
+        <div className="date">
+          {formatDate(transaction?.created_at.slice(0, 10))}
+        </div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -52,12 +64,20 @@ export function Refund({ transaction, text }) {
               <div className="LinkHeading">{text}</div>
               {transaction.expires_at && (
                 <div className="LinkDetails">
-                  Expires: {formatDate(transaction.expires_at.slice(0,10))}
+                  Expires: {formatDate(transaction.expires_at.slice(0, 10))}
                 </div>
               )}
             </div>
           </div>
-          <div className={transaction?.balance?.[0]==='+'? "AmountExchange Added": "AmountExchange Deducted"}>{transaction.balance}</div>
+          <div
+            className={
+              transaction?.balance?.[0] === "+"
+                ? "AmountExchange Added"
+                : "AmountExchange Deducted"
+            }
+          >
+            {transaction.balance}
+          </div>
         </div>
       </div>
     </>
@@ -68,7 +88,9 @@ export function OrderPlaced({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{formatDate(transaction.created_at.slice(0,10))}</div>
+        <div className="date">
+          {formatDate(transaction.created_at.slice(0, 10))}
+        </div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -175,30 +197,18 @@ export function EarnedCashReward({ rewardEarned }) {
   );
 }
 
-export function CollapsableComponent() {
+export function CollapsableComponent({ title, description }) {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <>
       <div className="CollapsableComponent">
         <div className="Heading">
-          <div>What is Wallet?</div>
+          <div>{title}</div>
           <button onClick={() => setIsExpanded(!isExpanded)}>
             <img src={GoDownArrow} />
           </button>
         </div>
-        {isExpanded && (
-          <div>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
-          </div>
-        )}
+        {isExpanded && <div className="Content">{description}</div>}
       </div>
     </>
   );

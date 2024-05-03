@@ -235,10 +235,6 @@ export default function MyWalletHome({ setCurrentScreen }) {
           })}
         </div>
       </div>
-      <div>
-        <div>FAQs</div>
-      </div>
     </div>
   );
 }
-

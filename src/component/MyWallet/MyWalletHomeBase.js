@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { useSelector } from "react-redux";
 import MyWalletHome from "./MyWalletHome/MyWalletHome";
 import YourTransactions from "./YourTransactions/YourTransactions";
@@ -10,16 +11,32 @@ import {
   TransactionHeading,
   CollapsableComponent,
 } from "./HelperComponents/HelperComponents";
+import { getFAQsJson } from "./../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 
 import GoBackIcon from "./IconsAndImages/GoBackIcon.svg";
 
 export default function MyWalletHomeBase() {
   const [currentScreen, setCurrentScreen] = useState("home");
-
+  const [faqsData, setFaqsData] = useState([]);
+  const language = getLanguageFromUrl().toUpperCase();
   const isWalletEnabled = useSelector(
     (state) => state.AppConfig.isWalletV1Enabled
   );
 
+  async function fetchFAQsData() {
+    const res = await getFAQsJson();
+    if (res) {
+      const countryCode = getCountryFromUrl().toUpperCase();
+      const faqs = res["countries"].filter((faq) => {
+        return faq["value"] === countryCode;
+      });
+      setFaqsData(faqs?.[0]?.["data"]);
+    }
+  }
+
+  useEffect(() => {
+    fetchFAQsData();
+  }, []);
   return (
     <>
       {isWalletEnabled && (
@@ -28,9 +45,25 @@ export default function MyWalletHomeBase() {
             {currentScreen === "home" && (
               <>
                 <MyWalletHome setCurrentScreen={setCurrentScreen} />
-                <CollapsableComponent />
-                <CollapsableComponent />
-                <CollapsableComponent />
+                <div>
+                  <h7>FAQs</h7>
+                </div>
+                {faqsData.map((faq) => {
+                  if (language == "EN")
+                    return (
+                      <CollapsableComponent
+                        title={faq?.title}
+                        description={faq?.description}
+                      />
+                    );
+                  return (
+                    <CollapsableComponent
+                      title={faq?.title_ar}
+                      description={faq?.description_ar}
+                    />
+                  );
+                  //
+                })}
               </>
             )}
           </div>
