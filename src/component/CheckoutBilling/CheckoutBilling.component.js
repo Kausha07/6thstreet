@@ -308,11 +308,12 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       totals: { total, currency_code },
       cashOnDeliveryFee,
       config,
+      vwoData,
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const { dropdownToggleIcon, isDropdownOpen } = this.state;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
 
     return (
       <div block="Checkout" elem="OrderTotals">

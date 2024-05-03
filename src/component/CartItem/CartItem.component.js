@@ -266,10 +266,11 @@ export class CartItem extends PureComponent {
       currency_code,
       item: { row_total, basePrice, discount_amount, full_item_info: { row_total: row_totalforAllQuantities }, qty },
       config,
+      vwoData,
     } = this.props;
 
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled = vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     const finalPrice = row_total
     ? row_totalforAllQuantities - discount_amount
     : basePrice - discount_amount;

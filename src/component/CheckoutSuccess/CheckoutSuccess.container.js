@@ -58,6 +58,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -258,9 +259,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed, country, config, orderDetailsCartTotal } = this.props;
+    const { isFailed, country, config, orderDetailsCartTotal, vwoData } = this.props;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
       clubApparelMember,
       isPhoneVerified,

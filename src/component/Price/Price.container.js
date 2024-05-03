@@ -12,6 +12,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
   totals: state.CartReducer.cartTotals,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -43,6 +44,7 @@ export class PriceContainer extends PureComponent {
       totals,
       checkoutPageSiteWide,
       checkoutPageCouponCode,
+      vwoData,
     } = this.props;
     const priceObj = Array.isArray(price) ? price[0] : price;
     const [currency, priceData] = Object.entries(priceObj)[0];
@@ -53,7 +55,7 @@ export class PriceContainer extends PureComponent {
     const newFinalPrice = priceData?.["newFinalPrice"] || 0;
     const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true;
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
-    const isSidewideCouponEnabled = config?.countries[country]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled = vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
       basePrice,
       specialPrice,

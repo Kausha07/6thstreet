@@ -29,6 +29,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   isCouponRequest: state.CartReducer.isCouponRequest,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
@@ -277,9 +278,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       totals: { coupon_code },
       couponsItems = [], couponLists= [],
       config,
+      vwoData,
     } = this.props;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
     const promoCount = Object.keys(couponsItems).length;
@@ -450,10 +452,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       international_shipping_fee,
       checkoutStep,
       config,
+      vwoData,
     } = this.props;
     const cashOnDelivery = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     const grandTotal =
       checkoutStep === SHIPPING_STEP && total > cashOnDelivery
         ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDelivery, currency_code)

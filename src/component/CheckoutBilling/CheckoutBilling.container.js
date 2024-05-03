@@ -55,6 +55,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   international_shipping_fee: state.AppConfig.international_shipping_amount,
   config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

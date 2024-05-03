@@ -77,10 +77,11 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         shipping_fee = 0,
       },
       config,
+      vwoData,
     } = this.props;
     const { isMobile } = this.state;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
 
     if (isSidewideCouponEnabled && isMobile ) {
       return (

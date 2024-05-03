@@ -1,6 +1,6 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
 
-import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG } from './AppConfig.action';
+import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG, SET_VWO_DATA } from './AppConfig.action';
 import { getCountryFromUrl } from 'Util/Url/Url';
 
 export const APP_CONFIG_CACHE_KEY = 'APP_CONFIG_CACHE_KEY';
@@ -18,6 +18,7 @@ export const getInitialState = () => {
         isVIPEnabled: false,
         is_msite_megamenu_enabled: false,
         abTestingConfig: {},
+        vwoData: {},
     };
     const initialState =
     storedState && Object.keys(storedState)?.length > 0
@@ -75,6 +76,14 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ...state,
                 abTestingConfig
             };
+        }
+
+        case SET_VWO_DATA: {
+            const { vwoData = {} } = action;
+            return {
+                ...state,
+                vwoData
+            }
         }
 
         default:

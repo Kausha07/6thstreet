@@ -49,6 +49,7 @@ export const mapStateToProps = (state) => ({
   addressLoader: state.MyAccountReducer.addressLoader,
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
   config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
