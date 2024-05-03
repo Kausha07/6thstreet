@@ -5,6 +5,7 @@ import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState } from "react";
+import { formatDate } from "../../../util/Common"
 
 import "./HelperComponents.style.scss";
 
@@ -12,7 +13,7 @@ export function Cashback({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction?.created_at.slice(0,10)}</div>
+        <div className="date">{formatDate(transaction?.created_at.slice(0,10))}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -25,9 +26,8 @@ export function Cashback({ transaction }) {
                   Order#{transaction?.order_id}
                 </div>
               )}
-
               <div className="LinkDetails">
-                Expires: {transaction?.expires_at.slice(0,10)}
+                Expires: {formatDate(transaction?.expires_at.slice(0,10))}
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@ export function Refund({ transaction, text }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction?.created_at.slice(0,10)}</div>
+        <div className="date">{formatDate(transaction?.created_at.slice(0,10))}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -52,7 +52,7 @@ export function Refund({ transaction, text }) {
               <div className="LinkHeading">{text}</div>
               {transaction.expires_at && (
                 <div className="LinkDetails">
-                  Expires: {transaction.expires_at.slice(0,10)}
+                  Expires: {formatDate(transaction.expires_at.slice(0,10))}
                 </div>
               )}
             </div>
@@ -65,11 +65,10 @@ export function Refund({ transaction, text }) {
 }
 
 export function OrderPlaced({ transaction }) {
-  // console.log("test transaction", transaction);
   return (
     <>
       <div className="transactionPill">
-        <div className="date">{transaction.created_at.slice(0,10)}</div>
+        <div className="date">{formatDate(transaction.created_at.slice(0,10))}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
