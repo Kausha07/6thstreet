@@ -162,8 +162,10 @@ export class PDPSummaryContainer extends PureComponent {
 
   render() {
     const { url_path } = this.state;
+    const {renderSummary} = this.props
     return (
       <PDPSummary
+      renderSummary ={renderSummary}
         {...this.containerProps()}
         url_path={url_path}
         brandNameclick={ this.brandNameclick }

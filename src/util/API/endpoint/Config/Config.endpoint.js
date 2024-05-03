@@ -39,3 +39,10 @@ export const getABTestingConfig = () => {
     return null;
   }
 };
+
+
+export const getPdpSectionConfig = () => {
+  const configFile = 'pdp_components.json';
+  const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
+  return CDN.get(`${directory}/${configFile}`);
+}

@@ -1334,7 +1334,8 @@ class PDPSummary extends PureComponent {
         stock_qty,
       },
       edd_info,
-      intlEddResponse
+      intlEddResponse,
+      renderSummary
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
@@ -1374,11 +1375,68 @@ class PDPSummary extends PureComponent {
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
-        <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+        {renderSummary.map((sectionName, index) => {
+          if(sectionName === "productLabel"){
+            return (
+              <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+                {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
+              </div>
+            )
+          }
+          if(sectionName === "brandName"){
+            return this.renderBrand()
+          }
+          if(sectionName === "priceSummary"){
+            return (
+              <div block="PriceAndPDPSummaryHeaderAndTimer">
+                <div block="PriceAndPDPSummaryHeader">
+                  {this.renderPriceAndPDPSummaryHeader()}
+                </div>
+                  {
+                    timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+                  }
+              </div>
+            )
+          }
+          if(sectionName === "shippingInfo"){
+            return (
+              cityResponse &&
+                edd_info &&
+                edd_info.is_enable &&
+                edd_info.has_pdp &&
+                ((isIntlBrand &&
+                  Object.keys(intlEddResponse).length > 0 &&
+                  !edd_info.has_item_level) ||
+                  cross_border_qty === 0 ||
+                  (edd_info.has_item_level && isIntlBrand)) &&
+                  !outOfStockStatus &&
+                this.renderSelectCity(cross_border_qty === 1)
+            )
+          }
+          if(sectionName === 'interNationalShipping'){
+            return inventory_level_cross_border && this.renderIntlTag()
+          }
+          if(sectionName === 'pdpAddtocart'){
+            return this.renderAddToCartSection()
+          }
+          if(sectionName === 'tamara'){
+            return this.renderTammaraWidget()
+          }
+          if(sectionName === 'tabby'){
+            return this.renderTabby();
+          }
+          if(sectionName === 'pdpTags'){
+            return this.renderTabby();
+          }
+          if(sectionName === 'asloAviable'){
+            return this.renderAvailableItemsSection();
+          }
+        })}
+        {/* <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>
         {this.renderBrand()}
-        {/* {this.renderName()} */}
+        {/ * {this.renderName()} * /}
         <div block="PriceAndPDPSummaryHeaderAndTimer">
           <div block="PriceAndPDPSummaryHeader">
             {this.renderPriceAndPDPSummaryHeader()}
@@ -1400,13 +1458,13 @@ class PDPSummary extends PureComponent {
           this.renderSelectCity(cross_border_qty === 1)}
         {inventory_level_cross_border &&
           this.renderIntlTag()}
-        {/* <div block="Seperator" /> */}
-        {/* { this.renderColors() } */}
+        {/ * <div block="Seperator" /> * /}
+        {/ * { this.renderColors() } * /}
         {this.renderAddToCartSection()}
         {this.renderTammaraWidget()}
         {this.renderTabby()}
         {this.renderPDPTags()}
-        {this.renderAvailableItemsSection()}
+        {this.renderAvailableItemsSection()} */}
       </div>
     );
   }

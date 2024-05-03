@@ -22,6 +22,7 @@ import Event, {
 } from "Util/Event";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { renderDynamicMetaTags } from "Util/Meta/metaTags";
+import { getPdpSectionConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -46,11 +47,27 @@ class PDP extends PureComponent {
     showPopup: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     showPopupField: "",
+    PDPJSON:[]
   };
+
+
 
   componentDidMount() {
     this.renderVueHits();
+    this.renderPDPPageSection();
   }
+
+  async renderPDPPageSection(){
+    try{
+      const response =  await getPdpSectionConfig();
+      this.setState({
+        PDPJSON:response.data
+      });
+    } catch (e) {
+      Logger.log(e);
+    }
+    
+}
 
   showMyAccountPopup = () => {
     const { showPopup } = this.state;
@@ -143,9 +160,10 @@ class PDP extends PureComponent {
       />
     );
   }
-  renderMainSection() {
+  renderMainSection(val) {
     return (
       <PDPMainSection
+        renderMainSection={val}
         renderMySignInPopup={this.showMyAccountPopup}
         {...this.props}
         TabbyInstallment={this.TabbyInstallment}
@@ -193,18 +211,44 @@ class PDP extends PureComponent {
       return renderDynamicMetaTags(metaTitle, metaDesc, imageURL, altText);
     }
   }
+  
 
   renderPDP() {
+    const {PDPJSON} = this.state;
     return (
       <>
         {this.renderMetaData()}
         <div block="PDP" onClick={this.onPDPPageClicked}>
-          {this.renderMySignInPopup()}
+          {
+            PDPJSON.map((data, index) => {
+              
+                if(data.name === 'renderMySignInPopup'){
+                  return this.renderMySignInPopup()
+                }
+                if(data.name === 'renderMainSection'){
+                  return this.renderMainSection(data.sectionData)
+                }
+                 if(data.name === 'renderSeperator'){
+                    return this.renderSeperator()
+                  }
+                  if(data.name === 'renderMixAndMatchSection'){
+                    return this.renderMixAndMatchSection()
+                  }
+                  if(data.name === 'renderDetailsSection'){
+                    return this.renderDetailsSection()
+                  }
+                  if(data.name === 'renderDetail'){
+                    return this.renderDetail()
+                  }
+            })
+           }
+          {/* {this.loadPDPMoreFunction()} */}
+          {/* {this.renderMySignInPopup()}
           {this.renderMainSection()}
           {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
-          {this.renderDetail()}
+          {this.renderDetail()} */}
         </div>
       </>
     );
@@ -269,6 +313,7 @@ class PDP extends PureComponent {
       return this.renderLabelAnimation();
     } else if (!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
+      
     } else if (
       !isLoading &&
       (!nbHits || nbHits === 0) &&

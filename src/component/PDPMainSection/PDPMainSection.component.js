@@ -6,14 +6,26 @@ import PDPSummary from 'Component/PDPSummary';
 
 import './PDPMainSection.style';
 
+const PDPPageJSON = {
+    renderMySignInPopup:{},
+    renderMainSection:{
+      gallery:{},
+      summary:{}
+    },
+    renderSeperator:{},
+    renderMixAndMatchSection:{},
+    renderDetailsSection:{},
+    renderDetail:{}
+  }
+
 class PDPMainSection extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
-    };
+    }
 
-    renderSummary() {
+    renderSummary(val) {
         return (
-            <PDPSummary {...this.props} />
+            <PDPSummary renderSummary={val} {...this.props} />
         );
     }
 
@@ -22,10 +34,19 @@ class PDPMainSection extends PureComponent {
     }
 
     render() {
+        const { renderMainSection } = this.props;
         return (
             <div block="PDPMainSection">
-                { this.renderGallery() }
-                { this.renderSummary() }
+                { renderMainSection.map((data, index) => {
+                    if(data.name === 'gallery'){
+                        return this.renderGallery()
+                    }
+                    if(data.name === 'summary'){
+                        return this.renderSummary(data.sectionData);
+                    }
+                })}
+                {/* { this.renderGallery() }
+                { this.renderSummary() } */}
             </div>
         );
     }
