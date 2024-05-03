@@ -112,7 +112,7 @@ class BannerImpressionEvent extends BaseEvent {
       banner_type: impressions[0]?.has_video ? "video" : "image",
       segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
       variant_name: HPP,
-      current_page: currentPageType,
+      current_page: sessionStorage.getItem("currentScreen"),
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -137,8 +137,8 @@ class BannerImpressionEvent extends BaseEvent {
         banner_type: impressions[0]?.has_video ? "video" : "image",
         segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
         variant_name: HPP,
-        current_page: currentPageType,
-        position:  promoIndex.length == 1 ? promoIndex.toString() : promoIndex,
+        current_page: sessionStorage.getItem("currentScreen"),
+        position:  formattedImpressions?.length == 1 ? formattedImpressions?.[0]?.position : promoIndex,
       });
     }
   }
