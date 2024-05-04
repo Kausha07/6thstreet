@@ -6,7 +6,14 @@ import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import { connect } from "react-redux";
 import { Coupon } from "Component/Icons/index";
 import { isArabic as checkIsArabic } from "Util/App";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import Event, {
+  EVENT_GTM_COUPON,
+  MOE_trackEvent,
+  EVENT_APPLY_COUPON,
+  EVENT_REMOVE_COUPON,
+  EVENT_APPLY_COUPON_FAILED,
+} from "Util/Event";
 
 export const mapDispatchToProps = (dispatch) => ({
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
@@ -35,9 +42,37 @@ function SideWideCoupon(props) {
   const countryCode = getCountryFromUrl();
   const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode || "";
 
+  const sendSiteWideCouponEvents = (event, coupon) => {
+    MOE_trackEvent(event, { 
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      coupon_code: coupon || "",
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: event,
+      coupon: coupon,
+      discount: props?.totals?.discount || "",
+      shipping: props?.totals?.shipping_fee || "",
+      tax: props?.totals?.tax_amount || "",
+      sub_total : props?.totals?.subtotal || "",
+      subtotal_incl_tax : props?.totals?.subtotal_incl_tax || "",
+      total: props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
+  }
+
   const handleSideWideCoupon = async (flag) => {
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
-    await updateSidewideCoupon(cart_id, flag, !isSignedIn);
+    const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
+
+    if(!resp?.status){
+      sendSiteWideCouponEvents(EVENT_APPLY_COUPON_FAILED, sidewideCouponCode );
+    }else if(resp?.status && flag ) {
+      sendSiteWideCouponEvents(EVENT_APPLY_COUPON, sidewideCouponCode );
+    } else {
+      sendSiteWideCouponEvents(EVENT_REMOVE_COUPON, sidewideCouponCode );
+    }
   };
 
   return (

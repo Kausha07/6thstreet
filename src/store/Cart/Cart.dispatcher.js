@@ -413,6 +413,7 @@ export class CartDispatcher {
         dispatch(showNotification("success", __("Coupon was removed!")));
       }
       dispatch(setIsCouponRequest(false));
+      return Response;
     } catch (e) {
       dispatch(
         showNotification(

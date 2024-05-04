@@ -48,6 +48,7 @@ export const mapStateToProps = (state) => ({
   currentGender: state.AppState.gender,
   is_live_party_enabled: state.AppConfig.is_live_party_enabled,
   is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -232,7 +233,14 @@ export class RouterContainer extends SourceRouterContainer {
   }
 
   containerProps = () => {
-    const { isBigOffline, setCountry, setLanguage, is_live_party_enabled, is_msite_megamenu_enabled} = this.props;
+    const {
+      isBigOffline,
+      setCountry,
+      setLanguage,
+      is_live_party_enabled,
+      is_msite_megamenu_enabled,
+      vwoData,
+    } = this.props;
 
     return {
       isBigOffline,
@@ -241,6 +249,7 @@ export class RouterContainer extends SourceRouterContainer {
       setLanguage,
       is_live_party_enabled,
       is_msite_megamenu_enabled,
+      vwoData,
     };
   };
 
