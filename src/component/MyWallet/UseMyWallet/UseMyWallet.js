@@ -1,4 +1,5 @@
 import Field from "Component/Field";
+import Loader from "Component/Loader";
 import { useDispatch, connect } from "react-redux";
 import { useState, useEffect } from "react";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
@@ -18,7 +19,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export function UseMyWallet(props) {
   const [isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
-  const { toggleMyWallet, getReward, eligibleAmount, myWallet } = props;
+  const { toggleMyWallet, getReward, eligibleAmount, myWallet, isLoading } = props;
   const checkboxId = "My_wallet_applied";
   const handleCheckboxChange = () => {
     toggleMyWallet(!isWalletBalanceApplied);
@@ -32,6 +33,7 @@ export function UseMyWallet(props) {
   return (
     <>
       <div className="UseMyWallet">
+        <Loader isLoading={isLoading} />
         <div>
           <div className="Heading">My Rewards</div>
           <div className="SubHeading">

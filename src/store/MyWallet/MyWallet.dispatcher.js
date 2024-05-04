@@ -39,13 +39,15 @@ export class MyWalletDispatcher {
             const { Cart: { cartId } } = getStore().getState();
 
             if (apply) {
-                await applyRewards(cartId);
-
+               const response =  await applyRewards(cartId);
+               if(response?.data?.success){
                 dispatch(showNotification('success', __('My Rewards are applied!')));
+               }
             } else {
-                await removeReward(cartId);
-
-                dispatch(showNotification('success', __('My Rewards are removed!')));
+               const response =  await removeReward(cartId);
+                if(response?.data?.success){
+                    dispatch(showNotification('success', __('My Rewards are removed!')));
+                }
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
