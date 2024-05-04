@@ -1,15 +1,14 @@
 import Field from "Component/Field";
 import Loader from "Component/Loader";
-import { useDispatch, connect } from "react-redux";
+import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
 import "./UseMyWallet.style.scss";
 
-export const mapStateToProps = ({
-  MyWalletReducer: { myWallet, isLoading },
-}) => ({
-  isLoading,
-  myWallet,
+export const mapStateToProps = (state) => ({
+  isLoading: state.MyWalletReducer.isLoading,
+  myWallet: state.MyWalletReducer.myWallet,
+  isWalletEnabled: state.AppConfig.isWalletV1Enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -19,7 +18,14 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export function UseMyWallet(props) {
   const [isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
-  const { toggleMyWallet, getReward, eligibleAmount, myWallet, isLoading } = props;
+  const {
+    toggleMyWallet,
+    getReward,
+    eligibleAmount,
+    myWallet,
+    isLoading,
+    isWalletEnabled,
+  } = props;
   const checkboxId = "My_wallet_applied";
   const handleCheckboxChange = () => {
     toggleMyWallet(!isWalletBalanceApplied);
@@ -32,28 +38,31 @@ export function UseMyWallet(props) {
 
   return (
     <>
-      <div className="UseMyWallet">
-        <Loader isLoading={isLoading} />
-        <div>
-          <div className="Heading">My Rewards</div>
-          <div className="SubHeading">
-            Eligible to use <span className="boldAmount"> {eligibleAmount} </span> of
-            <span className="boldAmount"> {myWallet?.current_balance}</span>
+      {isWalletEnabled && (
+        <div className="UseMyWallet">
+          <Loader isLoading={isLoading} />
+          <div>
+            <div className="Heading">My Rewards</div>
+            <div className="SubHeading">
+              Eligible to use{" "}
+              <span className="boldAmount"> {eligibleAmount} </span> of
+              <span className="boldAmount"> {myWallet?.current_balance}</span>
+            </div>
+          </div>
+          <div>
+            <Field
+              block="StoreCredit"
+              elem="Toggle"
+              type="toggle"
+              id={checkboxId}
+              name={checkboxId}
+              value={checkboxId}
+              checked={isWalletBalanceApplied}
+              onClick={handleCheckboxChange}
+            />
           </div>
         </div>
-        <div>
-          <Field
-            block="StoreCredit"
-            elem="Toggle"
-            type="toggle"
-            id={checkboxId}
-            name={checkboxId}
-            value={checkboxId}
-            checked={isWalletBalanceApplied}
-            onClick={handleCheckboxChange}
-          />
-        </div>
-      </div>
+      )}
     </>
   );
 }
