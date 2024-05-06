@@ -18,7 +18,7 @@ export const getInitialState = () => {
         isVIPEnabled: false,
         is_msite_megamenu_enabled: false,
         abTestingConfig: {},
-        vwoData: {},
+        vwoData: null,
     };
     const initialState =
     storedState && Object.keys(storedState)?.length > 0

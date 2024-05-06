@@ -53,10 +53,10 @@ export class AppConfigDispatcher {
             const gtmConfig = this.getGtmConfig();
             const abTestingConfigData = await getABTestingConfig();
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
-            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData ) || {};
+            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData ) || null;
             dispatch(setAppConfig(appConfig));
             dispatch(setABTestingConfig(abTestingConfigData));
-            dispatch(setVWOConfig(vwoData))
+            vwoData ? dispatch(setVWOConfig(vwoData)) : null;
         } catch (e) {
             Logger.log(e);
         }
