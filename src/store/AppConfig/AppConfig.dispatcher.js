@@ -26,15 +26,20 @@ export class AppConfigDispatcher {
 
     // Get Logged in User Variations from VWO tool
     try {
+        console.log('checking=>', 'testDev--userID=====>>>', userId, "==>>", vwoClientInstance );
         if (userId && vwoClientInstance) {
     
             // isFeature Enbaled se sara kam krna or 
             const isFeatureEnabled = 
                 vwoClientInstance.isFeatureEnabled(siteWideCampaignName, userId, options);
 
+                console.log('checking=>', 'testDev--isFeatureEnabled=====>>>', isFeatureEnabled, "==>>", options,);
+
                 //  may be will read coupon code from here
             const enable_sitewide_coupon = 
                 vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable_sitewide_coupon', userId, options);
+
+                console.log('checking=>', 'testDev--enablesitewide=====>>>', enable_sitewide_coupon );
     
             SiteWideCoupon.isFeatureEnabled = isFeatureEnabled;
             SiteWideCoupon.enable_sitewide_coupon = enable_sitewide_coupon;
