@@ -618,8 +618,8 @@ export class Checkout extends SourceCheckout {
       KnetDetails,
       KNETOrderDetails,
       orderDetailsCartTotal: {
-        total_wallet_earned
-      },
+        total_wallet_earned = 0
+      } = {},
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
