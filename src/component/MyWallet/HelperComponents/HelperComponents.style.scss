@@ -131,7 +131,7 @@
   line-height: 20px;
   letter-spacing: 1px;
   color: rgba(122, 122, 122, 1);
-  inline-size: 120px;
+  min-inline-size: 100px;
 }
 
 .TransactionBtnsActive {
@@ -214,12 +214,12 @@
 }
 
 .CollapsableComponent {
+  border-block-end: 1px solid rgba(234, 234, 234, 1);
   .Heading {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    border-block-end: 1px solid rgba(234, 234, 234, 1);
     font-family: Avenir Next;
     font-size: 14px;
     font-weight: 400;
@@ -229,5 +229,6 @@
   }
   .Content {
     padding-block-start: 4px;
+    padding-block-end: 6px;
   }
 }

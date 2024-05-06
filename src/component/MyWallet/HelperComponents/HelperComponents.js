@@ -153,7 +153,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
           }
           onClick={() => setCurrentScreen("rewards")}
         >
-          Rewards
+          My Rewards
         </button>
       </div>
     </>
