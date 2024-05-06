@@ -14,6 +14,7 @@ import {
 import { getFAQsJson } from "./../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 
 import GoBackIcon from "./IconsAndImages/GoBackIcon.svg";
+import "./MyWalletHomeBase.style.scss";
 
 export default function MyWalletHomeBase() {
   const [currentScreen, setCurrentScreen] = useState("home");
@@ -46,7 +47,7 @@ export default function MyWalletHomeBase() {
               <>
                 <MyWalletHome setCurrentScreen={setCurrentScreen} />
                 <div>
-                  <h7>FAQs</h7>
+                  <h7 className="FaqHeading">FAQs</h7>
                 </div>
                 {faqsData.map((faq) => {
                   if (language == "EN")
