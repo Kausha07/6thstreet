@@ -98,7 +98,11 @@ export function OrderPlaced({ transaction }) {
             </div>
             <div>
               <div className="LinkHeading">Order placed</div>
-              <div className="LinkSubHeading">Order#502814663</div>
+              {transaction?.order_id && (
+                <div className="LinkSubHeading">
+                  Order#{transaction?.order_id}
+                </div>
+              )}
               {/* <div className="LinkDetails">
                 My Cash: -AED70, My Rewards:-AED30
               </div> */}

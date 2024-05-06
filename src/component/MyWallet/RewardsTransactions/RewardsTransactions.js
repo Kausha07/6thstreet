@@ -115,10 +115,13 @@ export default function RewardsTransactions() {
                 <OrderPlaced transaction={transaction} />
               )}
 
-              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
-                (transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
-                  <Refund transaction={transaction} text={"Reward"} />
-                ))}
+              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
+                <Refund transaction={transaction} text={"Reward"} />
+              )}
+
+              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
+                <Refund transaction={transaction} text={"Reward"} />
+              )}
 
               {transaction.action == ACTION_PROMOTIONAL_REFUND && (
                 <Refund transaction={transaction} text={"Refund"} />
