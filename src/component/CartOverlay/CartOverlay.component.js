@@ -191,7 +191,7 @@ export class CartOverlay extends PureComponent {
         <dt>
           {coupon_code || site_wide_applied ? __("Coupon ") : __("Discount")}
           <strong block="CartOverlay" elem="DiscountCouponSideWide">
-            {coupon_code ? coupon_code.toUpperCase() : site_wide_applied ? sidewideCouponCode.toUpperCase() : ""}
+            {coupon_code ? coupon_code.toUpperCase() : site_wide_applied ? sidewideCouponCode?.toUpperCase() : ""}
             <div className="sidewideSavingPercentages">{`(-${getSideWideSavingPercentages(totals)}%)`}</div>
           </strong>
         </dt>
