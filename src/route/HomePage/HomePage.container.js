@@ -36,7 +36,7 @@ import {
 } from "Util/Auth";
 
 import {
-  getHomePagePersonalizationJsonFileUrl,
+  getHomePagePersonalizationContent,
   getUserSpecificDynamicContent,
   homePageScreenViewTrackingEvent,
 } from "./HompagePersonalisation.helper";
@@ -412,15 +412,19 @@ export class HomePageContainer extends PureComponent {
     }
     if (gender !== "influencer") {
       try {
-        const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer,abTestingConfig);
+        const dynamicContent = await getHomePagePersonalizationContent(
+          devicePrefix,
+          gender,
+          customer,
+          abTestingConfig,
+          getStaticFile,
+          HOME_STATIC_FILE_KEY
+        );
         homePageScreenViewTrackingEvent(
           customer?.user_segment,
           variationName,
           abTestingConfig
         );
-        const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
-          $FILE_NAME: fileName,
-        });
         const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, variationName, abTestingConfig);
         this.setState({
           dynamicContent: Array.isArray(dynamicHppContent) ? dynamicHppContent : [],isLoading: false,

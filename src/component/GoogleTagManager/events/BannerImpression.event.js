@@ -86,6 +86,7 @@ class BannerImpressionEvent extends BaseEvent {
         name: (store_code ? store_code + "-" : "") + (label || promotion_name) + (tag ? "-" + tag : ""),
         creative: tag || promotion_name || label || "",
         position: indexValue ? indexValue : index + 1,
+        widget_name: tag ? tag : ""
       })
     );
 
@@ -139,6 +140,7 @@ class BannerImpressionEvent extends BaseEvent {
         variant_name: variationName,
         current_page: sessionStorage.getItem("currentScreen"),
         position:  formattedImpressions?.length == 1 ? formattedImpressions?.[0]?.position : promoIndex,
+        widget_name: formattedImpressions?.length == 1 ? formattedImpressions?.[0]?.widget_name || "" : ""
       });
     }
   }
