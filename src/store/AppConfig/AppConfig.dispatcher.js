@@ -20,9 +20,11 @@ export class AppConfigDispatcher {
     }
     
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "feature_test_sitewide_coupon";
+    const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "";
     const countryCode = getCountryFromUrl();
     const options = {countryCode};
     const SiteWideCoupon = {};
+    const HPP = {}
 
     // Get Logged in User Variations from VWO tool
     try {
@@ -40,10 +42,16 @@ export class AppConfigDispatcher {
                 vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable_sitewide_coupon', userId, options);
 
                 console.log('checking=>', 'testDev--enablesitewide=====>>>', enable_sitewide_coupon );
+
+            const HPPvariationName = vwoClientInstance?.activate(
+              HPPCampaignName,
+              `${userId}`
+            );
     
             SiteWideCoupon.isFeatureEnabled = isFeatureEnabled;
             SiteWideCoupon.enable_sitewide_coupon = enable_sitewide_coupon;
-            return {SiteWideCoupon};
+            HPP.variationName = HPPvariationName;
+            return {SiteWideCoupon, HPP };
         }
     } catch (e) {
         console.error("vwo varition error", e);
