@@ -236,7 +236,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const { index = 0, megamenuType = false, gender = "women" } = this.props;
     const {
       AppConfig: {
-        variations: { HPP = "" },
+        vwoData: { HPP: { variationName = ""} = {} } = {},
         abTestingConfig: {
           HPP: { defaultUserSegment },
         },
@@ -246,7 +246,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       link: item?.link,
       promotion_name: item?.promotion_name,
       segment_name: BrowserDatabase.getItem("customer")?.user_segment || defaultUserSegment,
-      variant_name: HPP,
+      variant_name: variationName,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);

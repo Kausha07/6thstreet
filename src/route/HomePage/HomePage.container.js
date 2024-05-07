@@ -25,7 +25,6 @@ import Influencer from "../Influencer/index";
 import { getUUIDToken } from "Util/Auth";
 import VueQuery from "../../query/Vue.query";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { setVariations } from "Store/AppConfig/AppConfig.action";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -38,7 +37,6 @@ import {
 
 import {
   getHomePagePersonalizationJsonFileUrl,
-  getUserVWOVariation,
   getUserSpecificDynamicContent,
   homePageScreenViewTrackingEvent,
 } from "./HompagePersonalisation.helper";
@@ -56,7 +54,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   abTestingConfig: state.AppConfig.abTestingConfig,
   signInIsLoading: state.MyAccountReducer.isLoading,
-  variations: state.AppConfig.variations,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const MyAccountDispatcher = import(
@@ -77,7 +75,6 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
-  setVariations: (variations) => dispatch(setVariations(variations))
 });
 
 export class HomePageContainer extends PureComponent {
@@ -402,7 +399,12 @@ export class HomePageContainer extends PureComponent {
   }
 
   async requestDynamicContent(isUpdate = false) {
-    const { gender, customer, abTestingConfig = {}, setVariations, variations : defalutVariations } = this.props;
+    const {
+      gender,
+      customer,
+      abTestingConfig = {},
+      vwoData: { HPP : { variationName = "" } = {}} = {},
+    } = this.props;
     const devicePrefix = this.getDevicePrefix();
     if (isUpdate) {
       // Only set loading if this is an update
@@ -411,21 +413,15 @@ export class HomePageContainer extends PureComponent {
     if (gender !== "influencer") {
       try {
         const fileName =  getHomePagePersonalizationJsonFileUrl(devicePrefix, gender, customer,abTestingConfig);
-        const getVariationName = await getUserVWOVariation(customer, abTestingConfig);
-        const variations = {
-          ...defalutVariations,
-          HPP: getVariationName || abTestingConfig.HPP?.defaultValue,
-        };
-        setVariations(variations);
         homePageScreenViewTrackingEvent(
           customer?.user_segment,
-          variations?.HPP,
+          variationName,
           abTestingConfig
         );
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: fileName,
         });
-        const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, getVariationName, abTestingConfig);
+        const dynamicHppContent = getUserSpecificDynamicContent(dynamicContent, variationName, abTestingConfig);
         this.setState({
           dynamicContent: Array.isArray(dynamicHppContent) ? dynamicHppContent : [],isLoading: false,
         });

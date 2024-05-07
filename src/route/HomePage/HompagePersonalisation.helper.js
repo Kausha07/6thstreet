@@ -20,25 +20,6 @@ export const getHomePagePersonalizationJsonFileUrl = (
   return `${devicePrefix}${gender}.json`;
 };
 
-export const getUserVWOVariation = async (
-  customer,
-  abTestingConfig = {}
-) => {
-  const userId = customer?.id ? customer?.id : getUUID();
-  const campaign_name = abTestingConfig?.HPP?.campaignName || "";
-  // Get Logged in User Variations from VWO tool
-  try {
-    if (userId && vwoClientInstance) {
-      const variationName = await vwoClientInstance?.activate(
-        campaign_name,
-        `${userId}`
-      );
-      return variationName;
-    }
-  } catch (e) {
-    console.error("vwo varition error", e);
-  }
-};
 
 export const getUserSpecificDynamicContent = (
   dynamicContent = [],
