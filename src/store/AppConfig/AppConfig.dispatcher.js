@@ -31,10 +31,7 @@ export class AppConfigDispatcher {
         console.log('checking=>', 'testDev--userID=====>>>', `${userId}`, "==>>", vwoClientInstance );
         if (userId && vwoClientInstance) {
     
-            let sitewideVariationName = vwoClientInstance?.activate(
-                siteWideCampaignName,
-                `${userId}`
-            );
+            const sitewideVariationName = vwoClientInstance.getVariation(siteWideCampaignName, `${userId}`, options);
             
             const isFeatureEnabled = 
                 vwoClientInstance.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
@@ -55,10 +52,10 @@ export class AppConfigDispatcher {
             console.log('checking=>', 'testDef-sitewideVariationName=====>>>', sitewideVariationName );
 
             SiteWideCoupon = {
-              isFeatureEnabled,
+              isFeatureEnabled: isFeatureEnabled || sitewideVariationName ? isFeatureEnabled : abTestingConfig?.SiteWideCoupon?.varible?.[0]?.defaultValue,
               enable_sitewide_coupon,
-              variationName: isFeatureEnabled ? "variation-1" : "control",
-              vwo: isFeatureEnabled ? '1' : '0',
+              variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "Control",
+              vwo: sitewideVariationName ? '1' : '0',
               campaignName: siteWideCampaignName,
             };
             HPP = {
