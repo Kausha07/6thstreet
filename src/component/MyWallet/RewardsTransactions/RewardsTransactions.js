@@ -109,26 +109,29 @@ export default function RewardsTransactions() {
             />
           </div>
         ) : (
-          rewardHistory.map((transaction) => (
-            <>
-              {transaction.action == ACTION_PROMOTIONAL_ORDER && (
-                <OrderPlaced transaction={transaction} />
-              )}
+          <div>
+            <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
+            {rewardHistory.map((transaction) => (
+              <>
+                {transaction.action == ACTION_PROMOTIONAL_ORDER && (
+                  <OrderPlaced transaction={transaction} />
+                )}
 
-              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
-                <Refund transaction={transaction} text={"Reward"} />
-              )}
+                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
+                  <Refund transaction={transaction} text={"Reward"} />
+                )}
 
-              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
-                <Refund transaction={transaction} text={"Reward"} />
-              )}
+                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
+                  <Refund transaction={transaction} text={"Reward"} />
+                )}
 
-              {transaction.action == ACTION_PROMOTIONAL_REFUND && (
-                <Refund transaction={transaction} text={"Refund"} />
-              )}
-              <hr className="HoriRow" />
-            </>
-          ))
+                {transaction.action == ACTION_PROMOTIONAL_REFUND && (
+                  <Refund transaction={transaction} text={"Refund"} />
+                )}
+                <hr className="HoriRow" />
+              </>
+            ))}
+          </div>
         )}
       </div>
     </>
