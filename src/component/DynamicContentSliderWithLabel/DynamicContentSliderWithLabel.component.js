@@ -20,6 +20,8 @@ import "./DynamicContentSliderWithLabel.style";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 import { megaMenuCarousalEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import { isMsiteMegaMenuCategoriesRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getStore } from "Store";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -232,9 +234,19 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   onclick = (item, i = 0) => {
     const { index = 0, megamenuType = false, gender = "women" } = this.props;
+    const {
+      AppConfig: {
+        variations: { HPP = "" },
+        abTestingConfig: {
+          HPP: { defaultUserSegment },
+        },
+      },
+    } = getStore().getState();
     let banner = {
       link: item?.link,
       promotion_name: item?.promotion_name,
+      segment_name: BrowserDatabase.getItem("customer")?.user_segment || defaultUserSegment,
+      variant_name: HPP,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
