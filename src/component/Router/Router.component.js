@@ -480,10 +480,22 @@ export class Router extends SourceRouter {
       console.log('checking=>', 'testDev=====>>>', vwoData );
       const { SiteWideCoupon: { isFeatureEnabled = false } = {} } = vwoData;
 
-      Event.dispatch(EVENT_Track_USER_VARIANT, {
-        campaint_variant: {
-          "sidewise": isFeatureEnabled,
+      let eventData = {};
+
+      for (const key in vwoData) {
+        const item = vwoData[key];
+        eventData = {
+          ...eventData,
+          [item.campaignName] : {
+              vwo: item.vwo,
+              value: item.variationName
+          }
         }
+      }
+      console.log('checking=>', 'eventDataeventData=====>>>', eventData );
+
+      Event.dispatch(EVENT_Track_USER_VARIANT, {
+        campaign_variant: JSON.stringify(eventData)
       });
 
       this.setState({isVwoEvent: true})
