@@ -1,17 +1,21 @@
 import { getStore } from 'Store';
 import { getAuthorizationToken } from 'Util/Auth';
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getUUID } from "Util/Auth";
 import { doFetch } from '../helper/Fetch';
 import { merge } from '../helper/Object';
 
 class MagentoAPI {
     makeRequest(type, pathname, body, userOptions={}) {
+        const customer = BrowserDatabase.getItem("customer") || {};
+        const userId = customer?.id ? customer?.id : getUUID();
         const defaults = {
             method: type,
             headers: {
                 'Content-Type': 'application/json',
                 'X-App-Version': '2.23.0',
-                'Request-Source': 'PWA'
+                'Request-Source': 'PWA',
+                userId,
             }
         };
 

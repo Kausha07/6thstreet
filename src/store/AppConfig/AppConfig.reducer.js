@@ -1,12 +1,13 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
 
-import { SET_APP_CONFIG } from './AppConfig.action';
+import { SET_APP_CONFIG, SET_AB_TESTING_CONFIG, SET_VWO_DATA } from './AppConfig.action';
 import { getCountryFromUrl } from 'Util/Url/Url';
 
 export const APP_CONFIG_CACHE_KEY = 'APP_CONFIG_CACHE_KEY';
 
-export const getInitialState = () => (
-    BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {
+export const getInitialState = () => {
+    const storedState = BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY);
+    const defaultState = {
         config: {},
         edd_info: null,
         suggestionEnabled: true,
@@ -16,13 +17,22 @@ export const getInitialState = () => (
         isAlgoliaEventsEnabled: false,
         isVIPEnabled: false,
         is_msite_megamenu_enabled: false,
-    }
-);
+        abTestingConfig: {},
+        vwoData: null,
+    };
+    const initialState =
+    storedState && Object.keys(storedState)?.length > 0
+        ? { storedState, abTestingConfig: {} }
+        : defaultState;
+    return initialState;
+};
+
 
 export const AppConfigReducer = (state = getInitialState(), action) => {
     const {
         type,
-        config
+        config,
+        abTestingConfig = {}
     } = action;
 
     switch (type) {
@@ -61,6 +71,20 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             // the Redux will not trigger component update
             // because it does shallow compartment
             return newState;
+        case SET_AB_TESTING_CONFIG: {
+            return  {
+                ...state,
+                abTestingConfig
+            };
+        }
+
+        case SET_VWO_DATA: {
+            const { vwoData = {} } = action;
+            return {
+                ...state,
+                vwoData
+            }
+        }
 
         default:
             return state;

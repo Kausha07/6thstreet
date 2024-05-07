@@ -9,6 +9,9 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import Event, {
+  EVENT_Track_USER_VARIANT,
+} from "Util/Event";
 // import NoMatch from "Route/NoMatch";
 
 import {
@@ -118,6 +121,7 @@ export class Router extends SourceRouter {
     ...SourceRouter.state,
     isArabic: false,
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html|influencer.html)/",
+    isVwoEvent: false,
   };
 
 
@@ -465,6 +469,24 @@ export class Router extends SourceRouter {
 
     if (language) {
       setLanguage(language);
+    }
+  }
+
+  componentDidUpdate() {
+    const { vwoData } = this.props;
+    const { isVwoEvent } = this.state;
+
+    if(!isVwoEvent && vwoData){
+      console.log('checking=>', 'testDev=====>>>', vwoData );
+      const { SiteWideCoupon: { isFeatureEnabled = false } = {} } = vwoData;
+
+      Event.dispatch(EVENT_Track_USER_VARIANT, {
+        campaint_variant: {
+          "sidewise": isFeatureEnabled,
+        }
+      });
+
+      this.setState({isVwoEvent: true})
     }
   }
 

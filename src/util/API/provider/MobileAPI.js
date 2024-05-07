@@ -1,6 +1,7 @@
 import { getStore } from "Store";
 import { getMobileAuthorizationToken } from "Util/Auth";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getUUID } from "Util/Auth";
 import { doFetch } from '../helper/Fetch';
 import { getQueryParam } from "Util/Url";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
@@ -17,6 +18,8 @@ class MobileAPI {
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const Apptoken = getQueryParam("token", location);
         const tokenHeader = Apptoken ? { 'X-API-Token': Apptoken } : token ? { 'X-API-Token': token } : {};
+        const customer = BrowserDatabase.getItem("customer") || {};
+        const userId = customer?.id ? customer?.id : getUUID();
         const options = {
             method,
             headers: {
@@ -24,7 +27,8 @@ class MobileAPI {
                 'X-App-Version': '2.23.0',
                 'Request-Source': 'PWA',
                 ...tokenHeader,
-                ...header
+                ...header,
+                userId,
             },
             ...payload({ body: JSON.stringify(body) })
         };

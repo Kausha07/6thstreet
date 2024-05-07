@@ -1,0 +1,183 @@
+.sideWideCouponBlock {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f4fffc;
+    cursor: default;
+
+    .showCouponBtnLeftBlock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .couponImage {
+            width: 30px;
+            height: 18px;
+        }
+
+        .couponText {
+            margin-left: 10px;
+            color: #000000;
+
+            &_isArabic {
+                margin-left: initial;
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .showCouponBtn {
+        border-radius: 6px;
+        font-family: "Avenir Next";
+        text-transform: inherit;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .couponCodeSelectText {
+            color: #28d9aa;
+        }
+    }
+
+    .appliedCouponBlock {
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+
+        .appliedCouponDetail {
+            .appliedCouponCode {
+                color: #000000;
+                font-family: "Avenir Next";
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 18px;
+                margin: 0 0;
+                word-break: break-word;
+                margin-left: 10px;
+
+                &_isArabic {
+                    margin-left: initial;
+                    margin-right: 10px;
+                }
+            }
+
+            .appliedCouponName {
+                color: #4a4a4a;
+                font-family: "Avenir Next";
+                font-size: 12px;
+                letter-spacing: 0;
+                line-height: 16px;
+                margin: 0 0 6px;
+                word-wrap: break-word;
+            }
+
+            .appliedCouponViewBtn {
+                height: auto;
+                margin: 0;
+                padding: 0;
+                color: #4a4a4a;
+                font-family: "Avenir Next";
+                font-size: 12px;
+                letter-spacing: 0;
+                line-height: 16px;
+                text-decoration: underline;
+                text-transform: none;
+                font-weight: normal;
+            }
+        }
+
+        .appliedCouponBtn {
+            margin-left: auto;
+            height: 34px;
+            text-transform: none;
+            cursor: pointer;
+            padding-right: 0px;
+
+            &.remove {
+                border-radius: 8px;
+                color: #28d9aa;
+                font-family: "Avenir Next";
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 18px;
+                text-align: center;
+                padding-left: 0;
+            }
+        }
+    }
+
+    &-sidewideApplyed {
+        height: 50px;
+        padding: 0 15px;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .couponText {
+            margin-left: 10px;
+            font-family: "Avenir Next";
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 12px;
+            text-align: left;
+        }
+    }
+
+    &-sidewideNotApplyed {
+        .showCouponBtn {
+            height: 50px;
+            padding: 0 15px;
+        }
+
+        .couponText {
+            margin-left: 10px;
+            font-family: "Avenir Next";
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 12px;
+            text-align: left;
+        }
+
+        .sidewideSelectText {
+            font-family: "Avenir Next";
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 17.76px;
+            text-align: center;
+            color: black;
+        }
+    }
+
+    &-recommendedCode {
+        font-size: 13px;
+
+        font-family: "Avenir Next";
+        font-weight: 500;
+        line-height: 12px;
+
+    }
+}
+
+.otherCouponBlock {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f4fffc;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+    text-decoration: underline;
+    font-family: "Avenir Next";
+    font-weight: 500;
+    height: 35px;
+    line-height: 35px;
+}
+
+.removeCouponBtn {
+    text-transform: capitalize;
+    color: #F01136;
+}

@@ -13,6 +13,7 @@ import {
   updateCustomerDetails,
 } from "Store/MyAccount/MyAccount.action";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
+import AppConfigDispatcher from "Store/AppConfig/AppConfig.dispatcher";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -48,6 +49,8 @@ export const mapStateToProps = (state) => ({
   currentGender: state.AppState.gender,
   is_live_party_enabled: state.AppConfig.is_live_party_enabled,
   is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
+  vwoData: state.AppConfig.vwoData,
+  customer: state.MyAccountReducer.customer,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -80,6 +83,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
+  updateVWOData: () => AppConfigDispatcher.updateVWOData(dispatch),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -211,7 +215,14 @@ export class RouterContainer extends SourceRouterContainer {
     estimateEddResponse(request, true);
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const { customer: prevCustomer } = prevProps;
+    const { customer, updateVWOData } = this.props;
+
+    if (prevCustomer?.id !== customer?.id) {
+      updateVWOData();
+    }
+
     const countryCode = navigator.language.substr(0, 2);
     const currentLn = window.location.href.indexOf("://") + 3;
     const currentLang = window.location.href.substr(currentLn, 2);
@@ -232,7 +243,14 @@ export class RouterContainer extends SourceRouterContainer {
   }
 
   containerProps = () => {
-    const { isBigOffline, setCountry, setLanguage, is_live_party_enabled, is_msite_megamenu_enabled} = this.props;
+    const {
+      isBigOffline,
+      setCountry,
+      setLanguage,
+      is_live_party_enabled,
+      is_msite_megamenu_enabled,
+      vwoData,
+    } = this.props;
 
     return {
       isBigOffline,
@@ -241,6 +259,7 @@ export class RouterContainer extends SourceRouterContainer {
       setLanguage,
       is_live_party_enabled,
       is_msite_megamenu_enabled,
+      vwoData,
     };
   };
 
