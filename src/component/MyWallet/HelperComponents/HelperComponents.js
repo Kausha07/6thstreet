@@ -2,6 +2,7 @@ import CashRefundIcon from "../IconsAndImages/CashRefundIcon.svg";
 import OrderBagIcon from "../IconsAndImages/OrderBagIcon.svg";
 import GoBackIcon from "../IconsAndImages/GoBackIcon.svg";
 import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
+import GoUpArrow from "../IconsAndImages/GoUpArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState } from "react";
@@ -218,7 +219,7 @@ export function CollapsableComponent({ title, description }) {
         <div className="Heading">
           <div>{title}</div>
           <button onClick={() => setIsExpanded(!isExpanded)}>
-            <img src={GoDownArrow} />
+            <img src={isExpanded ? GoUpArrow : GoDownArrow} />
           </button>
         </div>
         {isExpanded && <div className="Content">{description}</div>}
