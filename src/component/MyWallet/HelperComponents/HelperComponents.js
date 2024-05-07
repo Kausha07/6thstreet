@@ -5,6 +5,7 @@ import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState } from "react";
+import Link from "Component/Link";
 import { formatDate } from "../../../util/Common";
 
 import "./HelperComponents.style.scss";
@@ -24,9 +25,11 @@ export function Cashback({ transaction }) {
             <div>
               <div className="LinkHeading">Cashback</div>
               {transaction?.order_increment_id && (
-                <div className="LinkSubHeading">
-                  Order#{transaction?.order_increment_id}
-                </div>
+                <Link to={`/my-account/my-orders/${transaction.order_id}`}>
+                  <div className="LinkSubHeading">
+                    Order#{transaction?.order_increment_id}
+                  </div>
+                </Link>
               )}
               <div className="LinkDetails">
                 Expires: {formatDate(transaction?.expires_at.slice(0, 10))}
@@ -62,6 +65,13 @@ export function Refund({ transaction, text }) {
             </div>
             <div>
               <div className="LinkHeading">{text}</div>
+              {transaction?.order_increment_id && (
+                <Link to={`/my-account/my-orders/${transaction.order_id}`}>
+                  <div className="LinkSubHeading">
+                    Order#{transaction?.order_increment_id}
+                  </div>
+                </Link>
+              )}
               {transaction.expires_at && (
                 <div className="LinkDetails">
                   Expires: {formatDate(transaction.expires_at.slice(0, 10))}
@@ -99,13 +109,12 @@ export function OrderPlaced({ transaction }) {
             <div>
               <div className="LinkHeading">Order placed</div>
               {transaction?.order_increment_id && (
-                <div className="LinkSubHeading">
-                  Order#{transaction?.order_increment_id}
-                </div>
+                <Link to={`/my-account/my-orders/${transaction.order_id}`}>
+                  <div className="LinkSubHeading">
+                    Order#{transaction?.order_increment_id}
+                  </div>
+                </Link>
               )}
-              {/* <div className="LinkDetails">
-                My Cash: -AED70, My Rewards:-AED30
-              </div> */}
             </div>
           </div>
           <div className="AmountExchange Deducted">{transaction.balance}</div>
