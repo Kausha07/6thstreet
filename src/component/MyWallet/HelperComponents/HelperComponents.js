@@ -23,9 +23,9 @@ export function Cashback({ transaction }) {
             </div>
             <div>
               <div className="LinkHeading">Cashback</div>
-              {transaction?.order_id && (
+              {transaction?.order_increment_id && (
                 <div className="LinkSubHeading">
-                  Order#{transaction?.order_id}
+                  Order#{transaction?.order_increment_id}
                 </div>
               )}
               <div className="LinkDetails">
@@ -98,9 +98,9 @@ export function OrderPlaced({ transaction }) {
             </div>
             <div>
               <div className="LinkHeading">Order placed</div>
-              {transaction?.order_id && (
+              {transaction?.order_increment_id && (
                 <div className="LinkSubHeading">
-                  Order#{transaction?.order_id}
+                  Order#{transaction?.order_increment_id}
                 </div>
               )}
               {/* <div className="LinkDetails">
