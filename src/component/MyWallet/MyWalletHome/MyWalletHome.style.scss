@@ -159,7 +159,6 @@
       display: flex;
       margin: auto;
       padding-inline-end: 10px;
-      inline-size: max-content;
       border-radius: 6px;
       color: white;
       margin-block-end: 40px;
@@ -171,6 +170,7 @@
           rgba(249, 100, 70, 0) 100%
         );
       .referIcon {
+        padding: 4px;
         max-inline-size: 100px;
       }
       .Heading {

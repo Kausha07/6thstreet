@@ -94,6 +94,7 @@
     line-height: 22px;
     letter-spacing: 0px;
     text-align: end;
+    margin-inline-end: 20px;
   }
   .Deducted {
     color: rgba(209, 34, 41, 1);
@@ -181,7 +182,6 @@
   border-radius: 6px;
   align-items: center;
   block-size: 80px;
-  max-inline-size: 400px;
   position: relative;
 
   .CoinIcon {
@@ -226,6 +226,7 @@
     line-height: 22px;
     letter-spacing: 0px;
     text-align: start;
+    padding-inline-end: 6px;
   }
   .Content {
     padding-block-start: 4px;
