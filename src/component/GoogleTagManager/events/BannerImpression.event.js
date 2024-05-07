@@ -9,6 +9,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BaseEvent from "./Base.event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getStore } from "Store";
 
 /**
  * Website places, from where was received event data
@@ -71,10 +72,18 @@ class BannerImpressionEvent extends BaseEvent {
     //   console.log("impression not recorded", EVENT_TYPE, impressions);
     //   return;
     // }
+    const {
+      AppConfig: {
+        vwoData: { HPP: { variationName = ""} = {} } = {},
+        abTestingConfig: {
+          HPP: { defaultUserSegment },
+        },
+      },
+    } = getStore().getState();
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id, store_code, tag, indexValue }, index) => ({
         id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : label || "",
-        name: (store_code ? store_code + "-" : "") + (label || promotion_name),
+        name: (store_code ? store_code + "-" : "") + (label || promotion_name) + (tag ? "-" + tag : ""),
         creative: tag || promotion_name || label || "",
         position: indexValue ? indexValue : index + 1,
       })
@@ -82,6 +91,7 @@ class BannerImpressionEvent extends BaseEvent {
 
     let promoName = [], promoID = [], promoIndex = [];
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const currentPageType = this.getPageType() || "";
 
     formattedImpressions.forEach((item) => {
       promoName.push(item?.name || item?.label);
@@ -99,7 +109,10 @@ class BannerImpressionEvent extends BaseEvent {
         },
       },
       gender: currentAppState?.gender?.toLowerCase(),
-      banner_type: impressions[0]?.has_video ? "video" : "image"
+      banner_type: impressions[0]?.has_video ? "video" : "image",
+      segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
+      variant_name: variationName,
+      current_page: sessionStorage.getItem("currentScreen"),
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -107,7 +120,6 @@ class BannerImpressionEvent extends BaseEvent {
         : EVENT_TYPE == "promotionClick"
           ? EVENT_MOE_PROMOTION_CLICK
           : null;
-    const currentPageType = this.getPageType() || "";
 
     if (document.readyState == ("complete" || "interactive")) {
       MOE_trackEvent(MoeEventType, {
@@ -122,7 +134,11 @@ class BannerImpressionEvent extends BaseEvent {
         screen_name: currentPageType,
         app6thstreet_platform: "Web",
         gender: currentAppState?.gender?.toLowerCase(),
-        banner_type: impressions[0]?.has_video ? "video" : "image"
+        banner_type: impressions[0]?.has_video ? "video" : "image",
+        segment_name: BrowserDatabase?.getItem("customer")?.user_segment || defaultUserSegment,
+        variant_name: variationName,
+        current_page: sessionStorage.getItem("currentScreen"),
+        position:  formattedImpressions?.length == 1 ? formattedImpressions?.[0]?.position : promoIndex,
       });
     }
   }

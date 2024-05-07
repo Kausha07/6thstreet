@@ -32,7 +32,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
     const {
         type,
         config,
-        abTestingConfig = {}
+        abTestingConfig = {},
     } = action;
 
     switch (type) {
@@ -79,12 +79,14 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
         }
 
         case SET_VWO_DATA: {
-            const { vwoData = {} } = action;
+            const { vwoData = {}, vwoData: { HPP = {} }  } = action;
+            BrowserDatabase.setItem(HPP, "HPP");
             return {
                 ...state,
                 vwoData
             }
         }
+        
 
         default:
             return state;

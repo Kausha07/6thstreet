@@ -16,3 +16,4 @@ export const setVWOConfig = (vwoData) => ({
     type: SET_VWO_DATA,
     vwoData
 })
+
