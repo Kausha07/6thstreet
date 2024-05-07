@@ -40,7 +40,8 @@ function SideWideCoupon(props) {
   } = props;
   const isArabic = checkIsArabic();
   const countryCode = getCountryFromUrl();
-  const sidewideCouponCode = config?.countries?.[countryCode]?.sidewideCouponCode || "";
+  const langCode = getLanguageFromUrl();
+  const sidewideCouponCode = config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
 
   const sendSiteWideCouponEvents = (event, coupon) => {
     MOE_trackEvent(event, { 

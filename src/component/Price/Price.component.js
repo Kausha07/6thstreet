@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
 import { currencyInTwoDigits } from "Component/Price/Price.config";
 
@@ -289,8 +289,9 @@ class Price extends PureComponent {
       finalPrice,
     } = this.props;
     const countryCode = getCountryFromUrl();
+    const langCode = getLanguageFromUrl();
     const sidewideCouponCode =
-      config?.countries[countryCode]?.sidewideCouponCode;
+    config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
     const { isArabic } = this.state;
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));

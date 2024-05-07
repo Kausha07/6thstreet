@@ -28,7 +28,7 @@ import CartNudge from "./../../route/CartPage/CartNudges/CartNudge";
 import MiniEmptyCartNudge from "./MiniEmptyCartNudge/MiniEmptyCartNudge";
 import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
 import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -174,7 +174,8 @@ export class CartOverlay extends PureComponent {
     const totalDiscount = getDiscountFromTotals(totals, "total_discount") || 0;
     const sideWideSavingPercentages = getSideWideSavingPercentages(totals);
     const countryCode = getCountryFromUrl();
-    const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode || "";
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode = config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
 
     if (
       (!coupon_code &&
