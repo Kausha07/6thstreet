@@ -22,11 +22,18 @@ export class AppConfigDispatcher {
     
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "";
-    const countryCode = getCountryFromUrl();
+    const countryCode = getCountryFromUrl()?.toLowerCase();
     const options =  {
-        country_code: countryCode,
-        platform: isMobile.any() ? 'msite' : 'desktop',
-        source: 'PWA',
+        customVariables: {
+            country_code: countryCode,
+            platform: isMobile.any() ? 'msite' : 'desktop',
+            source: 'PWA',
+        },
+        variationTargetingVariables: {
+            country_code: countryCode,
+            platform: isMobile.any() ? 'msite' : 'desktop',
+            source: 'PWA',
+        }
     }
     let SiteWideCoupon = {};
     let HPP = {}
