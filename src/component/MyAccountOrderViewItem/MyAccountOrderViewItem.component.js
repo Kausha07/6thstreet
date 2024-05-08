@@ -76,6 +76,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         int_shipment = "0",
         international_vendor = null,
         original_price,
+        unit_final_price,
       } = {},
       status,
       paymentMethod,
@@ -95,7 +96,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     const renderOtherEdd =
       paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments";
-    const discountPercentage = Math.round(100 * (1 - price / original_price));
+    const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>

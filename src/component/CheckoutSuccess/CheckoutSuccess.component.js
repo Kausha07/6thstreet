@@ -800,8 +800,8 @@ export class CheckoutSuccess extends PureComponent {
             {name === "Coupon Savings" ? (
               <span className="discountPercent">
                 {isArabic
-                  ? `(${getSideWideSavingPercentages(total_segments)}%-)`
-                  : `(-${getSideWideSavingPercentages(total_segments)}%)`}
+                  ? `(${Math.abs(getSideWideSavingPercentages(total_segments))}%-)`
+                  : `(-${Math.abs(getSideWideSavingPercentages(total_segments))}%)`}
               </span>
             ) : null}
           </span>
@@ -810,10 +810,10 @@ export class CheckoutSuccess extends PureComponent {
           {isArabic
             ? `${
                 parseFloat(price) || price === 0 ? quote_currency_code : ""
-              } ${finalPrice} ${mods?.couponSavings ? "-" : ""}`
+              } ${Math.abs(finalPrice)} ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? quote_currency_code : ""
-              } ${finalPrice}`}
+              } ${Math.abs(finalPrice)}`}
         </div>
       </div>
     );
