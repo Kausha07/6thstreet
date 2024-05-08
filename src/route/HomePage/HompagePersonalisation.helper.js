@@ -43,10 +43,9 @@ export const getUserSpecificDynamicContent = (
   variationName = "",
   abTestingConfig = {}
 ) => {
-  const variant_name =
-    variationName && variationName?.toLowerCase() !== "control"
-      ? variationName
-      : abTestingConfig?.HPP?.defaultValue; 
+  const variant_name = variationName
+    ? variationName
+    : abTestingConfig?.HPP?.defaultValue; 
   if (!dynamicContent || dynamicContent?.length === 0) {
     return [];
   }
