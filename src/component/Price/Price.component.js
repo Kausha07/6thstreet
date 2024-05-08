@@ -297,7 +297,7 @@ class Price extends PureComponent {
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
 
     if (
-      (pageType !== "PDPPage" && pageType !== "plp") ||
+      (pageType !== "PDPPage" && pageType !== "plp" && pageType !== "wishlist") ||
       discountPercentage === 0
     ) {
       return null;
