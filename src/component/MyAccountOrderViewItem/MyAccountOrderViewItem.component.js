@@ -36,13 +36,13 @@ export class MyAccountOrderViewItem extends SourceComponent {
   };
 
   renderSitewidePriceLine() {
-    const { currency, item: { price, original_price } = {} } = this.props;
-    const discountPercentage = Math.round(100 * (1 - price / original_price));
+    const { currency, item: { price, original_price, unit_final_price } = {} } = this.props;
+    const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
 
     return (
       <>
         <span className="purchasePrice">{`${formatPrice(
-          +price,
+          +unit_final_price || +price,
           currency
         )}`}</span>
         &nbsp;
