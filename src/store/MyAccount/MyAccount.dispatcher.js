@@ -154,11 +154,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           this.estimateDefaultEddResponse(dispatch, request);
         }
         dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
-      } else if (sessionStorage.getItem("EddAddressReq")) {
-        const response = sessionStorage.getItem("EddAddressRes")
-          ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+      } else if (localStorage.getItem("EddAddressReq")) {
+        const response = localStorage.getItem("EddAddressRes")
+          ? JSON.parse(localStorage.getItem("EddAddressRes"))
           : null;
-        const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+        const request = JSON.parse(localStorage.getItem("EddAddressReq"));
         dispatch(setEddResponse(response, request));
       } else {
         if (!login) {
@@ -203,11 +203,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           dispatch(setCustomerDefaultShippingAddress(null));
         }
       }
-    } else if (sessionStorage.getItem("EddAddressReq")) {
-      const response = sessionStorage.getItem("EddAddressRes")
-        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+    } else if (localStorage.getItem("EddAddressReq")) {
+      const response = localStorage.getItem("EddAddressRes")
+        ? JSON.parse(localStorage.getItem("EddAddressRes"))
         : null;
-      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      const request = JSON.parse(localStorage.getItem("EddAddressReq"));
       dispatch(setEddResponse(response, request));
       dispatch(setCustomerDefaultShippingAddress(null));
     } else {
@@ -334,8 +334,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setCustomerAddressData([]));
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
-    sessionStorage.removeItem("EddAddressReq");
-    sessionStorage.removeItem("EddAddressRes");
+    localStorage.removeItem("EddAddressReq");
+    localStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
     localStorage.removeItem("RmaId");
@@ -642,19 +642,19 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
           dispatch(setEddResponseForPDP(response?.result, request));
-          sessionStorage.setItem(
+          localStorage.setItem(
             "EddAddressResForPDP",
             JSON.stringify(response?.result),
           );
-          sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+          localStorage.setItem("EddAddressReq", JSON.stringify(request));
         } else {
           dispatch(setEddResponseForPDP({}, request));
-          sessionStorage.removeItem("EddAddressResForPDP");
+          localStorage.removeItem("EddAddressResForPDP");
         }
       });
     } catch (error) {
       dispatch(setEddResponseForPDP(null, request));
-      sessionStorage.removeItem("EddAddressResForPDP");
+      localStorage.removeItem("EddAddressResForPDP");
     }
   }
 // type --> false for call from checkout because we don't need to save this data for other pages it should be true 
@@ -669,13 +669,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           }
           if (type) {
             if (request["intl_vendors"]) {
-              sessionStorage.setItem(
+              localStorage.setItem(
                 "IntlEddAddressRes",
                 JSON.stringify(response.result),
               );
             } else {
-              sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
-              sessionStorage.setItem(
+              localStorage.setItem("EddAddressReq", JSON.stringify(request));
+              localStorage.setItem(
                 "EddAddressRes",
                 JSON.stringify(response.result),
               );
@@ -684,22 +684,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         } else {
           if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse({}));
-            sessionStorage.removeItem("IntlEddAddressRes");
+            localStorage.removeItem("IntlEddAddressRes");
           } else {
             dispatch(setEddResponse({}, request));
-            sessionStorage.removeItem("EddAddressReq");
-            sessionStorage.removeItem("EddAddressRes");
+            localStorage.removeItem("EddAddressReq");
+            localStorage.removeItem("EddAddressRes");
           }
         }
       });
     } catch (error) {
       if (request["intl_vendors"]) {
         dispatch(setIntlEddResponse(null));
-        sessionStorage.removeItem("IntlEddAddressRes");
+        localStorage.removeItem("IntlEddAddressRes");
       } else {
         dispatch(setEddResponse(null, request));
-        sessionStorage.removeItem("EddAddressReq");
-        sessionStorage.removeItem("EddAddressRes");
+        localStorage.removeItem("EddAddressReq");
+        localStorage.removeItem("EddAddressRes");
       }
     }
   }

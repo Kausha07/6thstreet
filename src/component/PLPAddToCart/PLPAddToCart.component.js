@@ -640,7 +640,7 @@ class PLPAddToCart extends PureComponent {
   getSelectedCityAreaCountry = () => {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress } = this.props;
-    const sessionData = sessionStorage.getItem("EddAddressReq");
+    const sessionData = localStorage.getItem("EddAddressReq");
     let city = "";
     let area = "";
     if(sessionData) {

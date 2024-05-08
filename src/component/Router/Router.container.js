@@ -178,11 +178,11 @@ export class RouterContainer extends SourceRouterContainer {
       this.getInternationalEdd(countryCode);
     }
 
-    if (!eddResponse && sessionStorage.getItem("EddAddressReq")) {
-      const response = sessionStorage.getItem("EddAddressRes")
-        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+    if (!eddResponse && localStorage.getItem("EddAddressReq")) {
+      const response = localStorage.getItem("EddAddressRes")
+        ? JSON.parse(localStorage.getItem("EddAddressRes"))
         : null;
-      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      const request = JSON.parse(localStorage.getItem("EddAddressReq"));
       setEddResponse(response, request);
     }
     if (!algoliaIndex) {

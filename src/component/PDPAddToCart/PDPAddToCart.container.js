@@ -512,7 +512,7 @@ export class PDPAddToCartContainer extends PureComponent {
     let {eddResponse, eddResponseForPDP } = this.props;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(this.state.productStock)[0];
     let new_item = true;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
       eddResponse["pdp"].map(eddVal => {
         if(eddVal.sku == sku) {
@@ -533,7 +533,7 @@ export class PDPAddToCartContainer extends PureComponent {
           }
         })
       })
-      sessionStorage.setItem(
+      localStorage.setItem(
         "EddAddressRes",
         JSON.stringify(obj),
       );

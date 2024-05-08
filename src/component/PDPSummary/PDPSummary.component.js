@@ -104,7 +104,7 @@ class PDPSummary extends PureComponent {
 
   // Set city area when it is stored in session, this function will be invoked incase of refresh
   getCityAreaFromStorage = (addressCityData, countryCode) => {
-    const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+    const sessionData = JSON.parse(localStorage.getItem("EddAddressReq"));
     const { city, area } = sessionData;
     const { cityEntry, areaEntry } = this.getIdFromCityArea(
       addressCityData,
@@ -211,10 +211,10 @@ class PDPSummary extends PureComponent {
     } else if (
       isSignedIn() &&
       !defaultShippingAddress &&
-      sessionStorage.getItem("EddAddressReq")
+      localStorage.getItem("EddAddressReq")
     ) {
       this.getCityAreaFromStorage(addressCityData, countryCode);
-    } else if (!isSignedIn() && sessionStorage.getItem("EddAddressReq")) {
+    } else if (!isSignedIn() && localStorage.getItem("EddAddressReq")) {
       this.getCityAreaFromStorage(addressCityData, countryCode);
     } else {
       this.setState({
@@ -264,8 +264,8 @@ class PDPSummary extends PureComponent {
     if(edd_info && edd_info.is_enable && edd_info.has_item_level) {
       const countryCode = getCountryFromUrl();
       const { addressCityData } = this.props;
-      if (sessionStorage.getItem("EddAddressReq")) {
-        const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      if (localStorage.getItem("EddAddressReq")) {
+        const sessionData = JSON.parse(localStorage.getItem("EddAddressReq"));
         const { city, area } = sessionData;
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
           addressCityData,
@@ -363,7 +363,7 @@ class PDPSummary extends PureComponent {
   getSelectedCityAreaCountry = () => {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress } = this.props;
-    const sessionData = sessionStorage.getItem("EddAddressReq");
+    const sessionData = localStorage.getItem("EddAddressReq");
     let city = "";
     let area = "";
     if(sessionData) {
