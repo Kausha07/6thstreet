@@ -1079,9 +1079,9 @@ class MyAccountOrderView extends PureComponent {
     if (!price && !allowZero) {
       return null;
     }
-    const { isTotal, isStoreCredit, isClubApparel } = mods;
+    const { isTotal, isStoreCredit, isRewardCredit, isClubApparel } = mods;
     const formatPrice =
-      isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
+      isStoreCredit || isRewardCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
 
     const {
       order: { order_currency_code: currency_code = getCurrency() },
@@ -1137,6 +1137,7 @@ class MyAccountOrderView extends PureComponent {
        // club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_amount = 0,
+        reward_currency_amount = 0,
         fulfilled_from = "",
       },
     } = this.props;
@@ -1163,6 +1164,11 @@ class MyAccountOrderView extends PureComponent {
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
                   isStoreCredit: true,
+                })
+              : null}
+            {reward_currency_amount !== 0
+              ? this.renderPriceLine(reward_currency_amount, __("My Rewards"), {
+                  isRewardCredit: true,
                 })
               : null}
             {this.props?.order?.club_apparel_amount &&
