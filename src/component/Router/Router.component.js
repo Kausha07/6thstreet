@@ -478,7 +478,7 @@ export class Router extends SourceRouter {
 
     if(!isVwoEvent && vwoData){
       console.log('checking=>', 'testDev=====>>>', vwoData );
-      const { SiteWideCoupon: { isFeatureEnabled = false } = {} } = vwoData;
+      const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
 
       let eventData = {};
 
