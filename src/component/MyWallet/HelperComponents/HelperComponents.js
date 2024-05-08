@@ -1,6 +1,8 @@
+import { isArabic } from "Util/App";
 import CashRefundIcon from "../IconsAndImages/CashRefundIcon.svg";
 import OrderBagIcon from "../IconsAndImages/OrderBagIcon.svg";
 import GoBackIcon from "../IconsAndImages/GoBackIcon.svg";
+import GoRightIcon from "../IconsAndImages/GoRightIcon.svg";
 import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import GoUpArrow from "../IconsAndImages/GoUpArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
@@ -24,11 +26,11 @@ export function Cashback({ transaction }) {
               <img src={CashRefundIcon} />
             </div>
             <div>
-              <div className="LinkHeading">Cashback</div>
+              <div className="LinkHeading">{__("Cashback")}</div>
               {transaction?.order_increment_id && (
                 <Link to={`/my-account/my-orders/${transaction.order_id}`}>
                   <div className="LinkSubHeading">
-                    Order#{transaction?.order_increment_id}
+                    {__("Order")}#{transaction?.order_increment_id}
                   </div>
                 </Link>
               )}
@@ -65,17 +67,18 @@ export function Refund({ transaction, text }) {
               <img src={CashRefundIcon} />
             </div>
             <div>
-              <div className="LinkHeading">{text}</div>
+              <div className="LinkHeading">{__("%s", text)}</div>
               {transaction?.order_increment_id && (
                 <Link to={`/my-account/my-orders/${transaction.order_id}`}>
                   <div className="LinkSubHeading">
-                    Order#{transaction?.order_increment_id}
+                    {__("Order")}#{transaction?.order_increment_id}
                   </div>
                 </Link>
               )}
               {transaction.expires_at && (
                 <div className="LinkDetails">
-                  Expires: {formatDate(transaction.expires_at.slice(0, 10))}
+                  {__("Expires")}:{" "}
+                  {formatDate(transaction.expires_at.slice(0, 10))}
                 </div>
               )}
             </div>
@@ -108,11 +111,11 @@ export function OrderPlaced({ transaction }) {
               <img src={OrderBagIcon} />
             </div>
             <div>
-              <div className="LinkHeading">Order placed</div>
+              <div className="LinkHeading">{__("Order placed")}</div>
               {transaction?.order_increment_id && (
                 <Link to={`/my-account/my-orders/${transaction.order_id}`}>
                   <div className="LinkSubHeading">
-                    Order#{transaction?.order_increment_id}
+                    {__("Order")}#{transaction?.order_increment_id}
                   </div>
                 </Link>
               )}
@@ -126,13 +129,14 @@ export function OrderPlaced({ transaction }) {
 }
 
 export function TransactionHeading({ setCurrentScreen, currentScreen }) {
+  const isLanguageArabic = isArabic();
   return (
     <>
       <div className="TransactionHeading">
         <button className="BackBtn" onClick={() => setCurrentScreen("home")}>
-          <img src={GoBackIcon} />
+          <img src={isLanguageArabic ? GoRightIcon  : GoBackIcon} />
         </button>
-        <div className="Heading">Your Transactions</div>
+        <div className="Heading">{__('Your Transactions')}</div>
       </div>
       <div className="TransactionBtnsContainer">
         <button
@@ -143,7 +147,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
           }
           onClick={() => setCurrentScreen("all")}
         >
-          All
+          {__("All")}
         </button>
         <button
           className={
@@ -153,7 +157,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
           }
           onClick={() => setCurrentScreen("my-cash")}
         >
-          My Cash
+          {__("My Cash")}
         </button>
         <button
           className={
@@ -163,7 +167,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
           }
           onClick={() => setCurrentScreen("rewards")}
         >
-          My Rewards
+          {__("My Rewards")}
         </button>
       </div>
     </>
@@ -179,8 +183,8 @@ export function ExpiringSoon({ expiry, balance }) {
             <img src={InfoIcon} />
           </div>
           <div className="ExpiringText">
-            My Cash Balance of {balance} expires in
-            <span className="Days">{expiry} Days</span>
+            {__("My Cash Balance of %s expires in", balance)}
+            <span className="Days">{expiry} {__('Days')}</span>
           </div>
         </div>
       </div>
@@ -198,11 +202,11 @@ export function EarnedCashReward({ rewardEarned }) {
           </div>
           <div className="CashText">
             <div className="CashHeading">
-              You earned a cash of AED {rewardEarned}
+              {__("You earned a cash of AED %s", rewardEarned)}
             </div>
             <div className="CashDetails">
-              (The cash will be credited in your wallet after the return window
-              for this order closes)
+              __('(The cash will be credited in your wallet after the return
+              window for this order closes)')
             </div>
           </div>
         </div>

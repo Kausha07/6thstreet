@@ -47,7 +47,7 @@ export default function MyWalletHomeBase() {
               <>
                 <MyWalletHome setCurrentScreen={setCurrentScreen} />
                 <div>
-                  <h7 className="FaqHeading">FAQs</h7>
+                  <h7 className="FaqHeading">{__("FAQs")}</h7>
                 </div>
                 {faqsData.map((faq) => {
                   if (language == "EN")
@@ -63,7 +63,6 @@ export default function MyWalletHomeBase() {
                       description={faq?.description_ar}
                     />
                   );
-                  //
                 })}
               </>
             )}

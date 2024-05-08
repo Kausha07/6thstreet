@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Loader from "Component/Loader";
+import { isArabic } from "Util/App";
 import {
   getWalletBalance,
   getTransactionHistory,
@@ -31,6 +32,7 @@ import CashRefundIcon from "./../IconsAndImages/CashRefundIcon.svg";
 import WalletIcon from "./../IconsAndImages/WalletIcon.svg";
 import test4 from "./../IconsAndImages/test4.svg";
 import GoRightIcon from "./../IconsAndImages/GoRightIcon.svg";
+import GoBackIcon from "./../IconsAndImages/GoBackIcon.svg";
 import WalletMainIcon from "./../IconsAndImages/WalletMainIcon.svg";
 import isMobile from "Util/Mobile";
 
@@ -45,6 +47,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const [transactionalBalance, setTransactionalBalance] = useState(null);
   const [allTransactionHistory, setAllTransactionHistory] = useState(null);
 
+  const isLanguageArabic = isArabic();
   const fetchWalletBalance = async () => {
     try {
       setIsBalanceLoading(true);
@@ -135,7 +138,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
                 <div className="Amount">{transactionalBalance}</div>
               )}
               <div className="RightIcon">
-                <img src={GoRightIcon} />
+                <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
               </div>
             </button>
           </div>
@@ -162,7 +165,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
 
               <div className="RightIcon">
-                <img src={GoRightIcon} />
+                <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
               </div>
             </button>
           </div>

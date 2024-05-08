@@ -42,10 +42,10 @@ export function UseMyWallet(props) {
         <div className="UseMyWallet">
           <Loader isLoading={isLoading} />
           <div>
-            <div className="Heading">My Rewards</div>
+            <div className="Heading">{__("My Rewards")}</div>
             <div className="SubHeading">
-              Eligible to use{" "}
-              <span className="boldAmount"> {eligibleAmount} </span> of
+              {__("Eligible to use")}{" "}
+              <span className="boldAmount"> {eligibleAmount} </span> {__("of")}
               <span className="boldAmount"> {myWallet?.current_balance}</span>
             </div>
           </div>
