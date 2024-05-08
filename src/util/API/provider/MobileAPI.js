@@ -5,6 +5,7 @@ import { getUUID } from "Util/Auth";
 import { doFetch } from '../helper/Fetch';
 import { getQueryParam } from "Util/Url";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
+import isMobile from "Util/Mobile";
 
 class MobileAPI {
     async _fetch(method, relativeURL, body = {}, header={}) {
@@ -28,7 +29,8 @@ class MobileAPI {
                 'Request-Source': 'PWA',
                 ...tokenHeader,
                 ...header,
-                userId,
+                'Userid': userId,
+                'Request-Platform': isMobile.any() ? 'msite' : 'desktop',
             },
             ...payload({ body: JSON.stringify(body) })
         };

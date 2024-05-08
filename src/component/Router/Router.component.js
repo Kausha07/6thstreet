@@ -488,7 +488,7 @@ export class Router extends SourceRouter {
           ...eventData,
           [item.campaignName] : {
               vwo: item.vwo,
-              value: key !== "HPP" ? item.variationName : item.variationName === "1" ? 'Control' : `Variation-${item.variationName - 1}`,
+              val: key !== "HPP" ? item.variationName : `${item.variationName}` === "1" ? 'c' : `v${item.variationName - 1}`,
           }
         }
       }
