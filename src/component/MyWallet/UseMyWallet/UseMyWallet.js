@@ -32,8 +32,8 @@ export function UseMyWallet(props) {
     setIsWalletBalanceApplied(() => !isWalletBalanceApplied);
   };
 
-  useEffect(async () => {
-    await getReward();
+  useEffect(() => {
+    getReward();
   }, []);
 
   return (

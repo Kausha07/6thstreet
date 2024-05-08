@@ -617,9 +617,9 @@ export class Checkout extends SourceCheckout {
       QPayOrderDetails,
       KnetDetails,
       KNETOrderDetails,
-      orderDetailsCartTotal: {
-        total_wallet_earned = 0
-      } = {},
+      // orderDetailsCartTotal: {
+      //   total_wallet_earned = 0
+      // } = {},
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -633,7 +633,7 @@ export class Checkout extends SourceCheckout {
     if (!isFailed) {
       return (
         <CheckoutSuccess
-          walletAmountEarned={total_wallet_earned}
+          // walletAmountEarned={total_wallet_earned}
           orderID={orderID}
           incrementID={incrementID}
           isFailed={isFailed}
