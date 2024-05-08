@@ -4,6 +4,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getUUID } from "Util/Auth";
 import { doFetch } from '../helper/Fetch';
 import { merge } from '../helper/Object';
+import isMobile from "Util/Mobile";
 
 class MagentoAPI {
     makeRequest(type, pathname, body, userOptions={}) {
@@ -15,7 +16,8 @@ class MagentoAPI {
                 'Content-Type': 'application/json',
                 'X-App-Version': '2.23.0',
                 'Request-Source': 'PWA',
-                userId,
+                'Userid': userId,
+                'Request-Platform': isMobile.any() ? 'msite' : 'desktop',
             }
         };
 

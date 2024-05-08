@@ -5,6 +5,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getUUID, setUUID } from "Util/Auth";
 import { v4 as uuidv4 } from "uuid";
 import Logger from 'Util/Logger';
+import isMobile from "Util/Mobile";
 
 export class AppConfigDispatcher {
 
@@ -19,10 +20,14 @@ export class AppConfigDispatcher {
         userId = getUUID();
     }
     
-    const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "feature_test_sitewide_coupon";
+    const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "";
     const countryCode = getCountryFromUrl();
-    const options = {countryCode};
+    const options =  {
+        country_code: countryCode,
+        platform: isMobile.any() ? 'msite' : 'desktop',
+        source: 'PWA',
+    }
     let SiteWideCoupon = {};
     let HPP = {}
 
@@ -39,22 +44,23 @@ export class AppConfigDispatcher {
                 console.log('checking=>', 'testDev--isFeatureEnabled=====>>>', isFeatureEnabled, "==>>", options,);
 
                 //  may be will read coupon code from here
-            const enable_sitewide_coupon = 
-                vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable_sitewide_coupon', `${userId}`, options);
+            const enableSitewideCoupon = 
+                vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
 
-                console.log('checking=>', 'testDev--enablesitewide=====>>>', enable_sitewide_coupon );
+                console.log('checking=>', 'testDev--enablesitewide=====>>>', enableSitewideCoupon );
 
             const HPPvariationName = vwoClientInstance?.activate(
               HPPCampaignName,
-              `${userId}`
+              `${userId}`,
+              options
             );
     
-            console.log('checking=>', 'testDef-sitewideVariationName=====>>>', sitewideVariationName );
+            console.log('checking=>', 'testDef-sitewideVariationName=====>>>', sitewideVariationName, "=HPPvariationName==>", HPPvariationName );
 
             SiteWideCoupon = {
-              isFeatureEnabled: isFeatureEnabled || sitewideVariationName ? isFeatureEnabled : abTestingConfig?.SiteWideCoupon?.varible?.[0]?.defaultValue,
-              enable_sitewide_coupon,
-              variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "Control",
+              isFeatureEnabled: enableSitewideCoupon ? enableSitewideCoupon : false,
+              enableSitewideCoupon,
+              variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
               vwo: sitewideVariationName ? '1' : '0',
               campaignName: siteWideCampaignName,
             };
