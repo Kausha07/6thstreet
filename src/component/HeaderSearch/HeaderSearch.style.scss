@@ -55,7 +55,7 @@
   @include before-desktop {
     position: absolute;
     top: 75px;
-    padding: 0 20px;
+    // padding: 0 20px;
   }
 
   &-Clear {
@@ -143,15 +143,15 @@
     }
   }
 
-  .Form {
-    width: 100%;
+  #header-search {
+    width: 65%;
     @include tablet {
       width: 372px;
     }
 
     @include before-desktop {
       border-radius: 10px;
-      width: 372px;
+      // width: 372px;
       background-color: var(--gray);
       height: 36px;
       display: flex;
@@ -167,7 +167,7 @@
     }
   }
 
-  .Field {
+  #header-search .Field {
     margin: 0;
     width: 100%;
 

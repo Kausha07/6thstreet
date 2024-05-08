@@ -1,0 +1,181 @@
+.deliveryAddressMainBlock {
+  .deliveryAddressOuterBlock {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: #4a4a4a;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+
+    .deliveryAddressPopUp {
+      height: 500px;
+      width: 100%;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffff;
+      padding: 30px 20px;
+      z-index: 100;
+      border-radius: 12px;
+    }
+
+    .deliveryAddressInnerBlock {
+      .deliveryAddressUpperInnerBlock {
+        .deliveryTextwithAddNewButton {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .deliveryText {
+            font-family: Avenir Next;
+            font-weight: 600;
+            text-transform: initial;
+          }
+
+          .addnewButton {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 42px;
+            min-width: 110px;
+            border: 1px solid #0b92d3;
+            font-family: Avenir Next;
+            font-size: 12px;
+            font-weight: 500;
+            color: #0b92d3;
+            border-radius: 10px;
+            text-transform: initial;
+            font-family: Avenir Next;
+          }
+        }
+
+        .paragraphText {
+          margin: 10px 0;
+          font-family: Avenir Next;
+          //   font-size: 12px;
+          font-weight: 400;
+          line-height: 18px;
+          color: #616161;
+        }
+      }
+
+      .allAddressAndEditBlock {
+        height: 250px;
+        overflow-y: scroll;
+        padding-bottom: 20px;
+
+        .deliveryAddressInfoBlock {
+          display: flex;
+          justify-content: space-between;
+          border-top: 1px solid #dedede;
+          padding: 20px 0;
+
+          .nameAndCityAreaBlock {
+            padding-left: 40px;
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              z-index: 1;
+            }
+
+            &::before {
+              top: 0;
+              left: 0;
+              width: 22px;
+              height: 22px;
+              border-radius: 50%;
+              border: 1px solid #979797;
+              background: #ffffff;
+            }
+
+            &::after {
+              opacity: 0;
+            }
+
+            &_isSelected {
+              &::after {
+                opacity: 1;
+                top: 0;
+                left: 0;
+                width: 22px;
+                height: 22px;
+                background: url(../Icons/BlueTick/icon.svg) no-repeat;
+                transform: none;
+                -webkit-transform: none;
+              }
+
+              &::before {
+                opacity: 0;
+              }
+            }
+
+            .nameWithDefaultText {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+
+              .nameBlock {
+                font-family: Avenir Next;
+                font-size: 16px;
+                font-weight: 600;
+                text-transform: uppercase;
+              }
+
+              .defaultText {
+                width: 60px;
+                height: 20px;
+                border-radius: 4px;
+                opacity: 0px;
+                background: #ebebeb;
+                text-align: center;
+                font-size: 12px;
+                font-weight: 500;
+                color: #565656;
+                line-height: 20px;
+              }
+            }
+
+            .cityAreaInfo {
+              margin-top: 5px;
+              .street,
+              .city,
+              .number {
+                font-family: Avenir Next;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 16px;
+                margin-top: 5px;
+              }
+            }
+          }
+        }
+      }
+
+      .deliverHereBlock {
+        .deliverHereButton {
+          width: 90%;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          text-transform: uppercase;
+          background: #000000;
+          color: #ffffff;
+          font-family: Avenir Next;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 15px;
+          text-align: center;
+          height: 55px;
+          z-index: 96;
+          border-radius: 5px;
+          margin: 25px auto;
+        }
+      }
+    }
+  }
+}

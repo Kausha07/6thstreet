@@ -19,6 +19,7 @@ import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 import { brandSearchClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
+import CityArea from "Component/CityArea/index";
 
 export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
@@ -204,6 +205,7 @@ class HeaderSearch extends PureComponent {
           onSubmit={this.onSubmit}
           ref={this.searchRef}
           autocomplete="off"
+          block="searchForm"
         >
           <Field
             id="search-field"
@@ -303,6 +305,11 @@ class HeaderSearch extends PureComponent {
     );
   }
 
+  renderCityArea() {
+    const { renderMySignInPopup } = this.props;
+    return <CityArea renderMySignInPopup={renderMySignInPopup} />;
+  }
+
   render() {
     const { isArabic, showSearch } = this.state;
     const { isPDP, isPDPSearchVisible, isPLP, showMegaMenuHeaderSearchStyle = false } = this.props;
@@ -325,6 +332,7 @@ class HeaderSearch extends PureComponent {
           }}
         >
           <div block="HeaderSearch" mods={{ isArabic, isPLP}} style={mobileMegaMenuStyle}>
+            {!showSearch && this.renderCityArea()}
             {this.renderField()}
           </div>
         </ClickOutside>

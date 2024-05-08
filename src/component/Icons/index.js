@@ -32,7 +32,9 @@ import Offer from "./Offer";
 import Coupon from "./Coupon";
 import PlayButton from "./PlayButton";
 import { tamaraLogo } from "./Tamara";
-
+import BlueTick from "./BlueTick";
+import BluePlus from "./BluePlus";
+import EditPencil from "./EditPencil";
 
 export {
   Account,
@@ -68,5 +70,8 @@ export {
   Offer,
   Coupon,
   PlayButton,
-  tamaraLogo
+  tamaraLogo,
+  BlueTick,
+  BluePlus,
+  EditPencil,
 };
