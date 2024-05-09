@@ -2,6 +2,7 @@ import Field from "Component/Field";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
+import { getCurrency } from "Util/App";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
 import "./UseMyWallet.style.scss";
 
@@ -18,6 +19,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export function UseMyWallet(props) {
   const [isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
+  const [currencyCode, setCurrencyCode] = useState("");
   const {
     toggleMyWallet,
     getReward,
@@ -34,6 +36,10 @@ export function UseMyWallet(props) {
 
   useEffect(() => {
     getReward();
+    const currency = getCurrency();
+    if (currency) {
+      setCurrencyCode(currency);
+    }
   }, []);
 
   return (
@@ -45,7 +51,12 @@ export function UseMyWallet(props) {
             <div className="Heading">{__("My Rewards")}</div>
             <div className="SubHeading">
               {__("Eligible to use")}{" "}
-              <span className="boldAmount"> {eligibleAmount} </span> {__("of")}
+              <span className="boldAmount">
+                {" "}
+                {currencyCode}
+                {eligibleAmount}
+              </span>{" "}
+              {__("of")}{" "}
               <span className="boldAmount"> {myWallet?.current_balance}</span>
             </div>
           </div>
