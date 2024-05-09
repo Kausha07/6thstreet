@@ -873,7 +873,7 @@ class PDPSummary extends PureComponent {
       ? true
       : false;
 
-      if (+simple_products?.[selectedSizeCode]?.quantity !== 0) {
+      if (+simple_products?.[sku]?.quantity === 0) {
         return null;
       }
     return (
