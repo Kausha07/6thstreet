@@ -1478,7 +1478,7 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       incrementID,
       initialTotals,
-      walletAmountEarned,
+      orderID,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1514,7 +1514,7 @@ export class CheckoutSuccess extends PureComponent {
           )}
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
-          <EarnedCashReward rewardEarned={walletAmountEarned}/>
+          <EarnedCashReward rewardEarned={null} orderID={orderID}/>
           {this.renderReferralBanner()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
