@@ -2,7 +2,7 @@ import { isArabic } from "Util/App";
 import CashRefundIcon from "../IconsAndImages/CashRefundIcon.svg";
 import OrderBagIcon from "../IconsAndImages/OrderBagIcon.svg";
 import GoBackIcon from "../IconsAndImages/GoBackIcon.svg";
-import GoRightIcon from "../IconsAndImages/GoRightIcon.svg";
+import GoRightDarkIcon from "../IconsAndImages/GoRightDarkIcon.svg";
 import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import GoUpArrow from "../IconsAndImages/GoUpArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
@@ -134,7 +134,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
     <>
       <div className="TransactionHeading">
         <button className="BackBtn" onClick={() => setCurrentScreen("home")}>
-          <img src={isLanguageArabic ? GoRightIcon : GoBackIcon} />
+          <img src={isLanguageArabic ? GoRightDarkIcon : GoBackIcon} />
         </button>
         <div className="Heading">{__("Your Transactions")}</div>
       </div>
