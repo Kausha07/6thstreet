@@ -7,10 +7,10 @@ import GoDownArrow from "../IconsAndImages/GoDownArrow.svg";
 import GoUpArrow from "../IconsAndImages/GoUpArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "Component/Link";
 import { formatDate } from "../../../util/Common";
-
+import { getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import "./HelperComponents.style.scss";
 
 export function Cashback({ transaction }) {
@@ -134,9 +134,9 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
     <>
       <div className="TransactionHeading">
         <button className="BackBtn" onClick={() => setCurrentScreen("home")}>
-          <img src={isLanguageArabic ? GoRightIcon  : GoBackIcon} />
+          <img src={isLanguageArabic ? GoRightIcon : GoBackIcon} />
         </button>
-        <div className="Heading">{__('Your Transactions')}</div>
+        <div className="Heading">{__("Your Transactions")}</div>
       </div>
       <div className="TransactionBtnsContainer">
         <button
@@ -184,7 +184,9 @@ export function ExpiringSoon({ expiry, balance }) {
           </div>
           <div className="ExpiringText">
             {__("My Cash Balance of %s expires in", balance)}
-            <span className="Days">{expiry} {__('Days')}</span>
+            <span className="Days">
+              {expiry} {__("Days")}
+            </span>
           </div>
         </div>
       </div>
@@ -192,17 +194,33 @@ export function ExpiringSoon({ expiry, balance }) {
   );
 }
 
-export function EarnedCashReward({ rewardEarned }) {
+export function EarnedCashReward({ rewardEarned, orderID }) {
+  const [rewardCreditEarned, setRewardCreditsEarned] = useState();
+  useEffect(() => {
+    async function getOrderDetails() {
+      try {
+        const responseData = await getNewOrderData(orderID);
+        if (responseData?.data?.total_wallet_earned) {
+          setRewardCreditsEarned(responseData?.data?.total_wallet_earned);
+        }
+      } catch (error) {}
+    }
+    if (rewardEarned === null && orderID) {
+      getOrderDetails();
+    } else {
+      setRewardCreditsEarned(rewardEarned);
+    }
+  }, []);
   return (
     <>
-      {rewardEarned > 0 && rewardEarned && (
+      {rewardCreditEarned > 0 && rewardCreditEarned && (
         <div className="EarnedCash">
           <div className="CoinIcon">
             <img src={CoinsIcon} />
           </div>
           <div className="CashText">
             <div className="CashHeading">
-              {__("You earned a cash of AED %s", rewardEarned)}
+              {__("You earned a cash of AED %s", rewardCreditEarned)}
             </div>
             <div className="CashDetails">
               __('(The cash will be credited in your wallet after the return
