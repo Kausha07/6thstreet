@@ -477,7 +477,7 @@ export class Router extends SourceRouter {
     const { isVwoEvent } = this.state;
 
     if(!isVwoEvent && vwoData){
-      console.log('checking=>', 'testDev=====>>>', vwoData );
+      console.log('vwoData ', vwoData );
       const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
 
       let eventData = {};
@@ -492,7 +492,6 @@ export class Router extends SourceRouter {
           }
         }
       }
-      console.log('checking=>', 'eventDataeventData=====>>>', eventData );
 
       Event.dispatch(EVENT_Track_USER_VARIANT, {
         campaign_variant: JSON.stringify(eventData)

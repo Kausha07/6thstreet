@@ -40,29 +40,19 @@ export class AppConfigDispatcher {
 
     // Get Logged in User Variations from VWO tool
     try {
-        console.log('checking=>', 'testDev--userID=====>>>', `${userId}`, "==>>", vwoClientInstance );
         if (userId && vwoClientInstance) {
-    
+
             const sitewideVariationName = vwoClientInstance.getVariation(siteWideCampaignName, `${userId}`, options);
-            
             const isFeatureEnabled = 
                 vwoClientInstance.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
-
-                console.log('checking=>', 'testDev--isFeatureEnabled=====>>>', isFeatureEnabled, "==>>", options,);
-
                 //  may be will read coupon code from here
             const enableSitewideCoupon = 
                 vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
-
-                console.log('checking=>', 'testDev--enablesitewide=====>>>', enableSitewideCoupon );
-
             const HPPvariationName = vwoClientInstance?.activate(
               HPPCampaignName,
               `${userId}`,
               options
             );
-    
-            console.log('checking=>', 'testDef-sitewideVariationName=====>>>', sitewideVariationName, "=HPPvariationName==>", HPPvariationName );
 
             SiteWideCoupon = {
               isFeatureEnabled: enableSitewideCoupon ? enableSitewideCoupon : false,
