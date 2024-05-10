@@ -427,6 +427,10 @@
       font-weight: var(--fw-regular);
     }
   }
+
+  &-DiscountCouponSideWide {
+    font-weight: var(--fw-regular);
+  }
 }
 .Overlay {
   &_isVisible {
@@ -454,4 +458,10 @@ div.CartOverlay.Overlay {
   background-color: #ffffff;
   //   box-shadow: 0 0 6px 0 var(--BlackOpacityOf1);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.sidewideSavingPercentages {
+  display: inline;
+  color: #D12229;
+  font-weight: 500;
 }

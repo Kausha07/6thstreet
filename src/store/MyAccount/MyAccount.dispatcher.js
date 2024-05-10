@@ -15,6 +15,7 @@ import {
   setAddressLoader,
   setVueTrendingBrandsBannerActive,
   setUserIdForVueTrendingBrands,
+  setSignInIsLoading,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -322,6 +323,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   logout(_, dispatch) {
     dispatch(updateCustomerSignInStatus(false));
+    dispatch(setSignInIsLoading(false));
     // dispatch(updateGuestUserEmail(""));
     deleteAuthorizationToken();
     deleteMobileAuthorizationToken();
@@ -400,6 +402,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     try {
       await this.handleMobileAuthorizationOTP(dispatch, options);
       dispatch(updateCustomerSignInStatus(true));
+      dispatch(setSignInIsLoading(true));
       this.signInCommonBlock(dispatch);
       return true;
     } catch ([e]) {
@@ -413,6 +416,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       try {
         await this.handleMobileAuthorization(dispatch, options);
         dispatch(updateCustomerSignInStatus(true));
+        dispatch(setSignInIsLoading(true));
         this.signInCommonBlock(dispatch);
         return true;
       } catch ([e]) {
@@ -431,6 +435,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         await this.handleMobileAuthorization(dispatch, options);
         dispatch(updateCustomerSignInStatus(true));
+        dispatch(setSignInIsLoading(true));
 
         this.signInCommonBlock(dispatch);
         return true;

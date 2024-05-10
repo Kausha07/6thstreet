@@ -35,6 +35,27 @@ export class MyAccountOrderViewItem extends SourceComponent {
     isRatingProccessing: false
   };
 
+  renderSitewidePriceLine() {
+    const { currency, item: { price, original_price, unit_final_price } = {} } = this.props;
+    const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
+
+    return (
+      <>
+        <span className="purchasePrice">{`${formatPrice(
+          +unit_final_price || +price,
+          currency
+        )}`}</span>
+        &nbsp;
+        <span className="delBasePrice">{`${formatPrice(
+          +original_price,
+          currency
+        )}`}</span>
+        &nbsp;
+        <span className="discountPerCheck">{`(-${discountPercentage}%)`}</span>
+      </>
+    );
+  }
+
 
   renderDetails() {
     let {
@@ -53,11 +74,18 @@ export class MyAccountOrderViewItem extends SourceComponent {
         cross_border = 0,
         ctc_store_name = "",
         int_shipment = "0",
-        international_vendor = null
+        international_vendor = null,
+        original_price,
+        unit_final_price,
       } = {},
       status,
       paymentMethod,
       international_shipping_fee,
+      item,
+      orderDetailsCartTotal: {
+        site_wide_applied = 0,
+        discount_code = "",
+      } = {},
     } = this.props;
     const isIntlBrand =
       (parseInt(cross_border) === 1 &&
@@ -68,6 +96,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     const renderOtherEdd =
       paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments";
+    const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -97,7 +126,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
         </div>
         <p block="MyAccountReturnSuccessItem" elem="Price">
           <span block="MyAccountReturnSuccessItem" elem="PriceRegular">
-            {`${formatPrice(+price, currency)}`}
+            {discountPercentage && (site_wide_applied || discount_code)
+              ? this.renderSitewidePriceLine()
+              : `${formatPrice(+price, currency)}`}
           </span>
         </p>
         {!!ctc_store_name && (

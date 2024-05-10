@@ -8,6 +8,7 @@ import {
   updateCartItem,
   setCheckoutDetails,
   setCartCoupon,
+  setIsCouponRequest,
 } from "Store/Cart/Cart.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -19,6 +20,7 @@ import {
   removeCouponCode,
   removeProductFromCart,
   updateProductInCart,
+  siteWideCouponUpdate,
 } from "Util/API/endpoint/Cart/Cart.enpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
@@ -357,11 +359,17 @@ export class CartDispatcher {
     } = getStore().getState();
 
     try {
-      await removeCouponCode({ cartId, couponCode });
+      dispatch(setIsCouponRequest(true));
+      const resp = await removeCouponCode({ cartId, couponCode });
       await this.getCartTotals(dispatch, cartId);
-
-      dispatch(showNotification("success", __("Coupon was removed!")));
+      dispatch(setIsCouponRequest(false));
+      if(resp && typeof resp === "string") {
+        dispatch(showNotification("error", resp));
+      }else {
+        dispatch(showNotification("success", __("Coupon was removed!")));
+      }
     } catch (e) {
+      dispatch(setIsCouponRequest(false));
       dispatch(
         showNotification(
           "error",
@@ -386,6 +394,38 @@ export class CartDispatcher {
       Logger.log(e);
     }
   }
+
+  async updateSidewideCoupon(dispatch, quoteId, flag, is_guest) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
+    try {
+      dispatch(setIsCouponRequest(true));
+      const Response = await siteWideCouponUpdate({ quoteId, flag, is_guest });
+      if(Response) {
+        await this.getCartTotals(dispatch, cartId);
+      }
+      if(!Response?.status){
+        dispatch(showNotification("error", Response?.msg ));
+      }else if(Response?.status && flag ) {
+        dispatch(showNotification("success", __("Coupon was applied!")));
+      } else {
+        dispatch(showNotification("success", __("Coupon was removed!")));
+      }
+      dispatch(setIsCouponRequest(false));
+      return Response;
+    } catch (e) {
+      dispatch(
+        showNotification(
+          "error",
+          __("The coupon code isn't valid. Verify the code and try again.")
+        )
+      );
+      dispatch(setIsCouponRequest(false));
+      Logger.log(e);
+    }
+  }
+  
 }
 
 export default new CartDispatcher();
