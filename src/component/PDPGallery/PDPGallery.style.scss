@@ -2,6 +2,12 @@
   --crumb-background-color: #9b9b9b;
 }
 
+// @mixin element-color($color) {
+//   background: url('data:image/svg+xml, <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(%23clip0_442_13702)"><path d="M6.23917 2.9884L1.43919 0.288411C1.34619 0.236212 1.23279 0.237412 1.14099 0.290811C1.04859 0.344811 0.992188 0.443211 0.992188 0.550011V5.94999C0.992188 6.05679 1.04859 6.15519 1.14099 6.20919C1.18779 6.23619 1.23999 6.24999 1.29219 6.24999C1.34259 6.24999 1.39359 6.23739 1.43919 6.21159L6.23917 3.5116C6.33337 3.4582 6.39217 3.3586 6.39217 3.25C6.39217 3.1414 6.33337 3.0418 6.23917 2.9884Z" fill="#{$color}"/></g><defs><clipPath id="clip0_442_13702"><rect width="6" height="6" fill="white" transform="translate(0.692383 0.25)"/></clipPath></defs></svg>');
+//   // background-image: url('data:image/svg+xml;utf8,<svg ...><g stroke="#{$color}" ... /></g></svg>');
+// }
+
+
 .PDPGallery {
   --gallery-crumbs-height: auto;
   height: auto;
@@ -127,6 +133,7 @@
       grid-gap: 5px;
       justify-content: left;
       padding: 0px 20px;
+
     }
   }
 
@@ -245,6 +252,9 @@
       height: auto;
     }
   }
+
+ 
+  
 }
 
 .PDP {
@@ -269,4 +279,56 @@
       }
     }
   }
+
+  &._newDesign{
+    .PDPGallery{
+      margin-bottom: 15px;
+      .Slider-Crumbs{
+        grid-gap: 6px;
+      }
+    }
+    .BackArrow{
+      top: 15px;
+    }
+    .OverlayIcons{
+      top: 20px;
+    }
+
+    .Slider{
+      &-Wrapper{
+        margin-bottom: 10px;
+      }
+      &-Crumbs{
+        justify-content: center;
+        bottom: 0;
+      }
+      &-Video{
+        
+        .Slider{
+          &-Crumb{
+            
+            background: url(./icons/play.svg);
+            width: 7px;
+            height: 7px;
+            background-size:contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 100%;
+            &_isActive{
+              background: url(./icons/play-active.svg);
+              height: 8px;
+              width: 8px;
+              background-size:contain;
+              background-position: center;
+              background-repeat: no-repeat;
+              
+            }
+          }
+  
+        }
+      }
+    }
+  }
 }
+

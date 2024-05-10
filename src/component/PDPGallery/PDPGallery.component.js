@@ -29,8 +29,10 @@ import { getCurrency } from "Util/App";
 import fallbackImage from "../../style/icons/fallback.png";
 import { Share } from "../Icons";
 import { showNotification } from "Store/Notification/Notification.action";
+
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
+  isNewDesign:state.PDP.isNewDesign
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -42,6 +44,8 @@ export const mapDispatchToProps = (dispatch) => ({
   showErrorNotification: (error) =>
     dispatch(showNotification("error", error[0].message)),
 });
+
+const newDesign = false;
 
 class PDPGallery extends PureComponent {
   static propTypes = {
@@ -73,7 +77,7 @@ class PDPGallery extends PureComponent {
       prod_360_video: React.createRef(),
     };
   }
-
+  
   componentWillUnmount() {
     const { scrolledSlide } = this.state;
     const {
@@ -89,7 +93,7 @@ class PDPGallery extends PureComponent {
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     }
   }
-
+  
   onBackButtonClick = () => {
     const { location } = browserHistory;
     browserHistory.goBack();
@@ -296,6 +300,7 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
+    
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -306,11 +311,13 @@ class PDPGallery extends PureComponent {
     return <PDPGalleryTag tag={prod_tag_2} />;
   }
   renderSlider() {
-    const { gallery, currentIndex, onSliderChange } = this.props;
+    const { gallery, currentIndex, onSliderChange} = this.props;
+   
 
     if (!gallery.length) {
       return null;
     }
+    
 
     return (
       <Slider
@@ -319,6 +326,7 @@ class PDPGallery extends PureComponent {
         mix={{ block: "PDPGallery", elem: "Slider" }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
+       
       >
         {this.renderGallery()}
         {this.renderVideos()}
@@ -332,18 +340,19 @@ class PDPGallery extends PureComponent {
     return Object.keys(videos)
       .filter((key) => !!videos[key])
       .map((key, index) => (
-        <video
-          key={index}
-          data-index={index}
-          block="Video"
-          ref={this.videoRef[key]}
-          height="534"
-          src={videos[key]}
-          type="video/mp4"
-          controls={!isMobile.any()}
-          disablepictureinpicture
-          playsinline
-        />
+        
+          <video
+            key={index}
+            data-index={index}
+            block="Video"
+            ref={this.videoRef[key]}
+            height="534"
+            src={videos[key]}
+            type="video/mp4"
+            controls={!isMobile.any()}
+            disablepictureinpicture
+            playsinline
+          />
       ));
   }
 
@@ -638,13 +647,15 @@ class PDPGallery extends PureComponent {
 
   render() {
     const { openGalleryOverlay, isArabic } = this.state;
-    const { renderMySignInPopup } = this.props;
+    const { renderMySignInPopup,isNewDesign } = this.props;
+   
     return (
-      <div block="PDPGallery">
+      <div block='PDPGallery'>
         {openGalleryOverlay ? (
           this.renderGalleryOverlay()
         ) : (
           <>
+         
             {this.renderBackButton()}
             {this.renderCrumbs()}
             <div block="OverlayIcons" mods={{ isArabic }}>
@@ -654,6 +665,7 @@ class PDPGallery extends PureComponent {
             </div>
           </>
         )}
+          
         <button
           ref={this.overlaybuttonRef}
           block="PDPGallery"
@@ -664,7 +676,7 @@ class PDPGallery extends PureComponent {
           {this.renderSlider()}
           {this.renderGalleryTag()}
         </button>
-        {this.renderVideoButtons()}
+        {!isNewDesign && this.renderVideoButtons()}
       </div>
     );
   }

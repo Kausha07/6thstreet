@@ -7,7 +7,8 @@ import {
     SET_DISPLAY_SEARCH,
     SET_BRAND_INFO_DATA,
     SET_BRAND_BUTTON_CLICK,
-    SET_VUE_TRENDING_BRAND_CLICK
+    SET_VUE_TRENDING_BRAND_CLICK,
+    SET_NEW_DESIGN
 } from './PDP.action';
 
 export const getInitialState = () => ({
@@ -19,12 +20,12 @@ export const getInitialState = () => ({
     displaySearch: false,
     brandInfoData: '',
     brandButtonClick : false,
-    vueTrendingBrandClick: false
+    vueTrendingBrandClick: false,
+    isNewDesign:true
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
     const { type } = action;
-
     switch (type) {
         case SET_PDP_DATA:
             const {
@@ -41,7 +42,7 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 product,
                 options,
                 nbHits,
-                isLoading:true,
+                isLoading:true
             };
 
         case SET_PDP_GALLERY_IMAGE_INDEX:
@@ -96,6 +97,13 @@ export const PDPReducer = (state = getInitialState(), action) => {
             return {
                 ...state,
                 vueTrendingBrandClick
+            };
+
+        case SET_NEW_DESIGN:
+            const { isNewDesign } = action;
+            return {
+                ...state,
+                isNewDesign
             };
 
         default:

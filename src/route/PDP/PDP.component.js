@@ -27,6 +27,7 @@ import { getPdpSectionConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   prevPath: state.PLP.prevPath,
+  isNewDesign:state.PDP.isNewDesign
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -34,6 +35,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+    gnisNewDesign:(isNew) => PDPDispatcher.getIsNewDesign(dispatch,isNew)
+
 });
 
 class PDP extends PureComponent {
@@ -55,6 +58,8 @@ class PDP extends PureComponent {
   componentDidMount() {
     this.renderVueHits();
     this.renderPDPPageSection();
+  
+    
   }
 
   async renderPDPPageSection(){
@@ -63,6 +68,7 @@ class PDP extends PureComponent {
       this.setState({
         PDPJSON:response.data
       });
+      this.props.gnisNewDesign(response.newDesign);
     } catch (e) {
       Logger.log(e);
     }
@@ -214,11 +220,12 @@ class PDP extends PureComponent {
   
 
   renderPDP() {
-    const {PDPJSON} = this.state;
+    const {PDPJSON,} = this.state;
+    const {isNewDesign} = this.props;
     return (
       <>
         {this.renderMetaData()}
-        <div block="PDP" onClick={this.onPDPPageClicked}>
+        <div block={`PDP ${isNewDesign ? '_newDesign':''}`} onClick={this.onPDPPageClicked}>
           {
             PDPJSON.map((data, index) => {
               
