@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
@@ -10,6 +11,10 @@ import HeaderCart from "Component/HeaderCart";
 import { isArabic } from 'Util/App';
 
 import './MyAccountMobileHeader.style.scss';
+
+export const mapStateToProps = (state) => ({
+    isWalletEnabled: state.AppConfig.isWalletV1Enabled,
+});
 
 class MyAccountMobileHeader extends PureComponent {
     static propTypes = {
@@ -39,15 +44,19 @@ class MyAccountMobileHeader extends PureComponent {
     }
 
     renderStoreCredits() {
+        const { isWalletEnabled } = this.props;
         return (
             <>
-                <Link
-                  block="MyAccountMobileHeader"
-                  elem="StoreCreditLink"
-                  to="/my-account/storecredit/info"
-                >
-                    <StoreCredit />
-                </Link>
+                { !isWalletEnabled ?
+                    <Link
+                        block="MyAccountMobileHeader"
+                        elem="StoreCreditLink"
+                        to="/my-account/storecredit/info"
+                    >
+                        <StoreCredit />
+                    </Link> :<div>
+                        {/* placeholder tag */}
+                    </div> }
                 { this.renderChangeStore() }
             </>
         );
@@ -111,4 +120,4 @@ class MyAccountMobileHeader extends PureComponent {
     }
 }
 
-export default MyAccountMobileHeader;
+export default connect(mapStateToProps, null)(MyAccountMobileHeader);

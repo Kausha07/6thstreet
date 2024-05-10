@@ -96,7 +96,7 @@ export class StoreCredit extends PureComponent {
             {label}
           </label>
           <div>
-            Available Credit: {this.renderAmount()}
+            {__("Available Credit")}: {this.renderAmount()}
           </div>
         </div>
         {canApply && this.renderCheckbox(checkboxId)}
