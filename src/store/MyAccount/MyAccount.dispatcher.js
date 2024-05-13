@@ -658,9 +658,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
   }
 // type --> false for call from checkout because we don't need to save this data for other pages it should be true 
-  estimateEddResponse(dispatch, request, type) {
+  async estimateEddResponse(dispatch, request, type) {
     try {
-      MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+      await MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
           if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse(response?.result));

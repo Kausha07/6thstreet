@@ -13,7 +13,9 @@ export const CityAreaSelectionPopUp = (props) => {
     addressCityData,
     showHideCityAreaSelection,
     showCityAreaSelectionPopUp,
+    autoPopulateCityArea,
   } = props;
+
   const [isCityButtonActive, setCityButtonActive] = useState(true);
   const [isAreaButtonActive, setAreaButtonActive] = useState(false);
   const [selectedCity, setSelectedCity] = useState("");
@@ -70,6 +72,9 @@ export const CityAreaSelectionPopUp = (props) => {
   const changeArea = (val) => {
     setSelectedArea(val);
     setCityAreaSearchedText("");
+    showHideCityAreaSelection(false);
+    let selectedAddress = { area: val, city: selectedCity };
+    autoPopulateCityArea(selectedAddress);
   };
 
   const handleCityAreaText = (e) => {

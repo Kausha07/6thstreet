@@ -3,7 +3,6 @@ import { BluePlus, EditPencil } from "Component/Icons/index";
 import "./DeliveryAddressPopUp.style";
 
 export const DeliveryAddressPopUp = (props) => {
-  const [clickedAddressIdx, setClickedAddressIdx] = useState(0);
   const {
     showHidePOPUP,
     showPopUp,
@@ -11,7 +10,12 @@ export const DeliveryAddressPopUp = (props) => {
     editSelectedAddress,
     addNewAddress,
     defaultShippingAddress,
+    autoPopulateCityArea,
   } = props;
+
+  const [selectedAddress, setSelectedAddress] = useState(
+    defaultShippingAddress ? defaultShippingAddress : {}
+  );
 
   const wrapperRef = createRef();
 
@@ -42,8 +46,8 @@ export const DeliveryAddressPopUp = (props) => {
     }
   };
 
-  const changeAddress = (idx) => {
-    setClickedAddressIdx(idx);
+  const changeAddress = (address) => {
+    setSelectedAddress(address);
   };
 
   const onEditButtonClick = (address) => {
@@ -52,6 +56,11 @@ export const DeliveryAddressPopUp = (props) => {
 
   const onAddNewClick = () => {
     addNewAddress();
+  };
+
+  const onDeliveryHereButtonClicked = async () => {
+    await autoPopulateCityArea(selectedAddress);
+    showHidePOPUP(false);
   };
 
   const render = () => {
@@ -88,20 +97,18 @@ export const DeliveryAddressPopUp = (props) => {
                       lastname,
                       phone,
                       street,
+                      id,
                     } = address;
                     return (
                       <div
                         block="deliveryAddressInfoBlock"
                         id={index}
-                        onClick={() => changeAddress(index)}
+                        onClick={() => changeAddress(address)}
                       >
                         <div
                           block="nameAndCityAreaBlock"
                           mods={{
-                            isSelected:
-                              default_shipping ||
-                              (!defaultShippingAddress &&
-                                clickedAddressIdx === index),
+                            isSelected: selectedAddress?.id === id,
                           }}
                         >
                           <div block="nameWithDefaultText">
@@ -125,7 +132,7 @@ export const DeliveryAddressPopUp = (props) => {
                             <div block="number">{phone}</div>
                           </div>
                         </div>
-                        {clickedAddressIdx === index && (
+                        {selectedAddress?.id === id && (
                           <div
                             block="editBlock"
                             onClick={() => onEditButtonClick(address)}
@@ -137,7 +144,10 @@ export const DeliveryAddressPopUp = (props) => {
                     );
                   })}
               </div>
-              <div block="deliverHereBlock">
+              <div
+                block="deliverHereBlock"
+                onClick={onDeliveryHereButtonClicked}
+              >
                 <button block="deliverHereButton">{__("Delivery Here")}</button>
               </div>
             </div>
