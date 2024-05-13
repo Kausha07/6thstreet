@@ -535,6 +535,8 @@
     }
   }
   &._newDesign{
-    margin-top: - 50px;
+    @include mobile() {
+      margin-top: -52px;
+    }
   }
 }

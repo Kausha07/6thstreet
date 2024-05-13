@@ -42,6 +42,11 @@ import Event, {
 import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
+import { connect } from "react-redux";
+export const mapStateToProps = (state) => ({
+  isNewDesign:state.PDP.isNewDesign
+});
+
 class PDPSummary extends PureComponent {
   constructor(props) {
     super(props);
@@ -1335,7 +1340,8 @@ class PDPSummary extends PureComponent {
       },
       edd_info,
       intlEddResponse,
-      renderSummary
+      renderSummary,
+      isNewDesign
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
@@ -1393,7 +1399,7 @@ class PDPSummary extends PureComponent {
                   {this.renderPriceAndPDPSummaryHeader()}
                 </div>
                   {
-                    timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+                    !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
                   }
               </div>
             )
@@ -1470,4 +1476,4 @@ class PDPSummary extends PureComponent {
   }
 }
 
-export default PDPSummary;
+export default connect(mapStateToProps)(PDPSummary);

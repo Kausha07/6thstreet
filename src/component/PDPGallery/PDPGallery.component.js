@@ -30,6 +30,9 @@ import fallbackImage from "../../style/icons/fallback.png";
 import { Share } from "../Icons";
 import { showNotification } from "Store/Notification/Notification.action";
 
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js";
+import timerIcon from "./icons/flash_Sale.svg";
+
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.PDP.isNewDesign
@@ -644,12 +647,25 @@ class PDPGallery extends PureComponent {
       </>
     );
   }
+  renderSaleBlock = () => {
+    const { isArabic } = this.state;
+    const {timer_start_time, timer_end_time} = this.props;
+    
+    const newinfoText = __('Flash sale! Limited Time only!');
+    return(
+            timer_start_time && timer_end_time &&  <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
+      
+    )
+
+  }
 
   render() {
     const { openGalleryOverlay, isArabic } = this.state;
     const { renderMySignInPopup,isNewDesign } = this.props;
    
     return (
+      <>
+        {isMobile.any() && isNewDesign && this.renderSaleBlock()}
       <div block='PDPGallery'>
         {openGalleryOverlay ? (
           this.renderGalleryOverlay()
@@ -678,6 +694,7 @@ class PDPGallery extends PureComponent {
         </button>
         {!isNewDesign && this.renderVideoButtons()}
       </div>
+      </>
     );
   }
 }
