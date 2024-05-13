@@ -14,6 +14,7 @@ import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
 import SelectedIcon from './icons/selected.png';
 const AMEX = 'amex';
+import CreditCardSwipeToDelete from "Component/CreditCardSwipeToDelete";
 class CreditCard extends PureComponent {
     static propTypes = {
         supported_networks: PropTypes.array,
@@ -353,18 +354,38 @@ class CreditCard extends PureComponent {
         );
     }
 
+    checkisExpired(expires_at) {
+        const date1 = new Date();
+        const date2 = new Date(expires_at);
+        return date1 > date2
+    }
+
     renderSavedCards(savedCards) {
         const { isArabic } = this.state;
+        const { deleteCreditCard } = this.props;
         return (
             <div block="SavedCards" elem="Container" style={{ gridTemplateColumns: `repeat(${savedCards.length}, 220px)` }}>
                 {
                     savedCards.map((item) => {
-                        const { entity_id, selected, details } = item;
+                        const { entity_id, selected, details, expires_at } = item;
                         const { maskedCC, bin = "000000", expirationDate, scheme = "" } = details;
                         let cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
+                        const isExpired = this.checkisExpired(expires_at);
 
                         if (isArabic) {
                             cardNum = `${maskedCC} **** **** ${bin.substr(0, 4)}`;
+                        }
+
+                        if (isExpired) {
+                          return (
+                            <CreditCardSwipeToDelete
+                              item={item}
+                              renderMiniCard={this.renderMiniCard}
+                              deleteCreditCard={deleteCreditCard}
+                              isArabic={isArabic}
+                              key={cardNum}
+                            />
+                          );
                         }
 
                         if (selected) {

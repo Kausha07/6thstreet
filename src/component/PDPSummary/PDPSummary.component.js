@@ -29,7 +29,7 @@ import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddMessage } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
 import address from "./icons/address.png";
-import addressBlack from "./icons/address_black.png";
+import addressBlack from "./icons/address_black.svg";
 import Image from "Component/Image";
 import "./PDPSummary.style";
 import Event, {
@@ -1060,7 +1060,7 @@ class PDPSummary extends PureComponent {
     return (
       <>
         {this.renderPDPSummaryHeader()}
-        <div block="ShareAndWishlistButtonContainer">
+        <div block="ShareAndWishlistButtonContainer" className={`${this.state.isArabic ? "isArabic": ""}`}>
           <ShareButton
             title={document.title}
             text={`Hey check this out: ${document.title}`}
@@ -1093,7 +1093,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <div block="PriceContainer">
-        <Price price={price} renderSpecialPrice={true} />
+        <Price price={price} renderSpecialPrice={true} pageType="PDPPage" />
         {isMobile.any() && this.renderPDPSummaryHeader()}
         {!edd_info || (edd_info && !edd_info.has_cross_border_enabled) && additional_shipping_info ? (
           <span block="AdditionShippingInformation">
@@ -1401,10 +1401,10 @@ class PDPSummary extends PureComponent {
         {inventory_level_cross_border &&
           this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
-        {this.renderTammaraWidget()}
-        {this.renderTabby()}
         {/* { this.renderColors() } */}
         {this.renderAddToCartSection()}
+        {this.renderTammaraWidget()}
+        {this.renderTabby()}
         {this.renderPDPTags()}
         {this.renderAvailableItemsSection()}
       </div>

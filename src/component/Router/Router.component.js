@@ -9,6 +9,9 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import Event, {
+  EVENT_Track_USER_VARIANT,
+} from "Util/Event";
 // import NoMatch from "Route/NoMatch";
 
 import {
@@ -28,17 +31,22 @@ import {
   INFLUENCER,
   INFLUENCER_COLLECTION,
   INFLUENCER_STORE,
+  MEGAMENU,
+  BRANDSMENU,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
+import isMobile from "Util/Mobile";
 
 const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
 const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
 const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Route/UrlRewrites"));
 const VuePLP = lazy(() => import(/* webpackChunkName: 'VuePLP' */ "Route/VuePLP/VuePLP.component"));
 const LiveExperience = lazy(() => import(/* webpackChunkName: 'LiveExperience' */ "Route/LiveExperience"));
+const MobileMegaMenu = lazy(() => import(/* webpackChunkName: 'MobileMegaMenu' */ "Route/MobileMegaMenu/MobileMegaMenu.component"));
+const MegaMenuBrands = lazy(() => import(/* webpackChunkName: 'MegaMenuBrands'*/ "Route/MegaMenuBrands/MegaMenuBrands.component"))
 const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
 const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
 const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
@@ -113,6 +121,7 @@ export class Router extends SourceRouter {
     ...SourceRouter.state,
     isArabic: false,
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html|influencer.html)/",
+    isVwoEvent: false,
   };
 
 
@@ -336,6 +345,32 @@ export class Router extends SourceRouter {
     {
       component: (
         <SentryRoute
+          path={withStoreRegex("megamenu")}
+          render={(props) => (
+            <GTMRouteWrapper route={MEGAMENU}>
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MobileMegaMenu {...props} /> : <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("brands-menu")}
+          render={(props) => (
+            <GTMRouteWrapper route={BRANDSMENU}>
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MegaMenuBrands {...props} />: <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 90,
+    },
+    {
+      component: (
+        <SentryRoute
           path={withStoreRegex("influencer")}
           exact
           render={(props) => (
@@ -434,6 +469,35 @@ export class Router extends SourceRouter {
 
     if (language) {
       setLanguage(language);
+    }
+  }
+
+  componentDidUpdate() {
+    const { vwoData } = this.props;
+    const { isVwoEvent } = this.state;
+
+    if(!isVwoEvent && vwoData){
+      console.log('vwoData ', vwoData );
+      const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
+
+      let eventData = {};
+
+      for (const key in vwoData) {
+        const item = vwoData[key];
+        eventData = {
+          ...eventData,
+          [item.campaignName] : {
+              vwo: item.vwo,
+              val: key !== "HPP" ? item.variationName : `${item.variationName}` === "1" ? 'c' : `v${item.variationName - 1}`,
+          }
+        }
+      }
+
+      Event.dispatch(EVENT_Track_USER_VARIANT, {
+        campaign_variant: JSON.stringify(eventData)
+      });
+
+      this.setState({isVwoEvent: true})
     }
   }
 

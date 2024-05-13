@@ -48,6 +48,7 @@ import {
 import Clear from "./icons/close-black.png";
 import searchIcon from "./icons/search-black.svg";
 import { HistoryType } from "Type/Common";
+import { isMsiteMegaMenuRoute, isMsiteMegaMenuCategoriesRoute, isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
@@ -55,6 +56,7 @@ export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   gender: state.AppState.gender,
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+  is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -121,8 +123,8 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderRightIconsContainer() {
-    const { isArabic } = this.state;
-    if (this.isPDP() && isMobile.any()) {
+    const { isArabic, showPLPSearch } = this.state;
+    if ((this.isPDP() && isMobile.any()) || (showPLPSearch && isMsiteMegaMenuRoute())) {
       return null;
     }
     return (
@@ -217,6 +219,9 @@ class HeaderMainSection extends NavigationAbstract {
       clearInterval(this.interval);
       this.interval = setInterval(this.tick, delay);
     }
+    if(this.props.location.pathname !== prevProps.location.pathname) {
+      this.getPlaceholderText();
+    }
   }
 
   componentWillUnmount() {
@@ -244,6 +249,18 @@ class HeaderMainSection extends NavigationAbstract {
   isPDP() {
     const { type } = this.state;
     return TYPE_PRODUCT === type;
+  }
+
+  getPlaceholderText = () => {
+    if(isMobile.any() || isMobile.tablet()) {
+      if(isMsiteMegaMenuBrandsRoute()) {
+        return __("Search for Brands");
+      } else {
+        return __("What are you looking for?");
+      } 
+    } else {
+      return __("Search for items, brands, inspiration and styles");
+    }
   }
 
   getPageType() {
@@ -324,13 +341,18 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderGenderSwitcher() {
-    const { changeMenuGender, activeOverlay } = this.props;
+    const { changeMenuGender, activeOverlay, is_msite_megamenu_enabled = false } = this.props;
     const { showPLPSearch, isArabic } = this.state;
     const pathNamesIncludesArrow = [
       "/influencer.html/Collection",
       "/influencer.html/Store",
     ];
-    if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
+    if (
+      !isMsiteMegaMenuRoute() &&
+      !is_msite_megamenu_enabled &&
+      isMobile.any() &&
+      activeOverlay === MOBILE_MENU_SIDEBAR_ID
+    ) {
       return null;
     }
     return (this.isPLP() ||
@@ -351,6 +373,9 @@ class HeaderMainSection extends NavigationAbstract {
   renderLogo() {
     const { isArabic, showPLPSearch } = this.state;
     const { changeMenuGender } = this.props;
+    if (isMsiteMegaMenuRoute() && isMobile.any()) {
+      return null;
+    }
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
@@ -406,13 +431,17 @@ class HeaderMainSection extends NavigationAbstract {
       "/influencer.html/Collection",
       "/influencer.html/Store",
     ];
-    if (this.isPDP() && isMobile.any()) {
+    if (
+      (this.isPDP() ||
+      isMsiteMegaMenuCategoriesRoute()) &&
+      isMobile.any()
+    ) {
       return null;
     }
     return this.isPLP() ||
       this.isPDP() ||
       showPLPSearch ||
-      pathNamesIncludesArrow.includes(location.pathname) ? (
+      pathNamesIncludesArrow.includes(location.pathname) || isMsiteMegaMenuBrandsRoute() ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={history.goBack}>
           <p>{__("Back")}</p>
@@ -795,6 +824,7 @@ class HeaderMainSection extends NavigationAbstract {
     const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     let isPDP = this.isPDP();
+    const showMegaMenuHeaderSearchStyle = isMsiteMegaMenuRoute();
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
         <div block="HeaderSearchSection" mods={{ isPDPSearchVisible, isPDP }}>
@@ -806,6 +836,8 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
+            showMegaMenuHeaderSearchStyle={showMegaMenuHeaderSearchStyle}
+            PlaceholderText={this.getPlaceholderText()}
           />
         </div>
       );

@@ -1,0 +1,34 @@
+.nested-categories-list-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+    .nested-categories-list {
+        display: flex;
+        flex-direction: row;
+        height: 40px;
+        align-items: center;
+
+        .Image {
+            .LazyLoad-wrapper {
+                .Image-Image {
+                    width: 40px !important;
+                    height: 100%;
+                }
+            }
+        }
+
+        .categriesImage {
+            width:33.33px;
+            height: 26px;
+        }
+
+        .categoryLabel {
+            margin: 0px 20px;
+            font-family: 'Avenir Next';
+            font-weight: 400;
+            font-size: 14px;
+            color: #606060;
+        }
+    }
+}

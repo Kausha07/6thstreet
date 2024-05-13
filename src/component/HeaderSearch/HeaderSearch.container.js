@@ -16,6 +16,9 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { isMsiteMegaMenuBrandsRoute, saveBrandRecentSearch } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 export const mapStateToProps = (state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
@@ -67,6 +70,7 @@ export class HeaderSearchContainer extends PureComponent {
     return null;
   };
 
+
   async onSearchSubmit() {
     const { history, indexCodeRedux } = this.props;
     const { search } = this.state;
@@ -102,6 +106,10 @@ export class HeaderSearchContainer extends PureComponent {
             }
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
+        const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+        if(isBrandsMenu){
+          saveBrandRecentSearch(search);
+        }
         this.logRecentSearch(search);
         const eventData = { search: search, indexCodeRedux: indexCodeRedux };
         Event.dispatch(EVENT_GTM_SEARCH, eventData);
@@ -211,6 +219,8 @@ export class HeaderSearchContainer extends PureComponent {
       isPDPSearchVisible,
       isPLP,
       handleHomeSearchClick,
+      showMegaMenuHeaderSearchStyle,
+      PlaceholderText,
     } = this.props;
     const { search } = this.state;
 
@@ -222,6 +232,8 @@ export class HeaderSearchContainer extends PureComponent {
       isPDPSearchVisible,
       isPLP,
       handleHomeSearchClick,
+      showMegaMenuHeaderSearchStyle,
+      PlaceholderText,
     };
   };
 
@@ -244,7 +256,10 @@ export class HeaderSearchContainer extends PureComponent {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         search_term: SearchValue || "",
+        gender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+        current_page: sessionStorage.getItem("currentScreen"),
         app6thstreet_platform: "Web",
+        screen_name: sessionStorage.getItem("currentScreen"),
       });
       if (sessionStorage.hasOwnProperty("Searched_value")) {
         sessionStorage.removeItem("Searched_value");
@@ -258,8 +273,12 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   render() {
+    const {
+      AppState: { gender },
+    } = getStore().getState();
+    const genderValue = isArabic() ? getGenderInArabic(gender) : gender; 
     return (
-      <HeaderSearch {...this.containerFunctions} {...this.containerProps()} />
+      <HeaderSearch {...this.containerFunctions} {...this.containerProps()} gender={genderValue} />
     );
   }
 }

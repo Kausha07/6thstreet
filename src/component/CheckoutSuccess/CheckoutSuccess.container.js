@@ -36,6 +36,7 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
 import { Config } from "Util/API/endpoint/Config/Config.type";
+import { getCountryFromUrl } from "Util/Url";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -57,6 +58,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -257,7 +259,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed, country } = this.props;
+    const { isFailed, country, config, orderDetailsCartTotal, vwoData } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -265,7 +269,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isFailed,
       isMobileVerification,
-      country
+      country,
+      isSidewideCouponEnabled,
+      orderDetailsCartTotal,
     };
   };
 

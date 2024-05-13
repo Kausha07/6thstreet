@@ -19,6 +19,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
+import CartTotal from "Component/CartTotal";
 
 import "./CheckoutShipping.style";
 
@@ -77,7 +78,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         items = [],
       },
       international_shipping_fee,
+      config,
+      vwoData,
     } = this.props;
+
     let inventory_level_cross_border = false;
     items?.map((item) => {
       if (
@@ -88,6 +92,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         inventory_level_cross_border = true;
       }
     });
+    
+    const { isMobile } = this.state;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+
+    if (isSidewideCouponEnabled && isMobile ) {
+      return (
+        <CartTotal
+          pageType="CheckoutPage"
+          block="CheckoutOrderSummary"
+        />
+      );
+    }
 
     if (total !== {}) {
       const grandTotal = getFinalPrice(total, currency_code);
