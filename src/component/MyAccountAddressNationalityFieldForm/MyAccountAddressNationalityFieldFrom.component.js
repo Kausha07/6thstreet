@@ -6,8 +6,8 @@ export const mapStateToProps = (state) => ({
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
 });
 
-const MyAccountAddressNationalityFieldFrom = ({ isArabic: isArabicfun }) => {
-  const [nationality, setNationality] = useState("");
+const MyAccountAddressNationalityFieldFrom = ({ isArabic: isArabicfun, is_nationality_mandatory = false }) => {
+  const [nationality, setNationality] = useState("12345667");
   const [isNationalityClick, setNationalityClick] = useState(true);
   const [validationError, setValidationError] = useState(false);
   const handleChange = (value) => {
@@ -70,6 +70,8 @@ const MyAccountAddressNationalityFieldFrom = ({ isArabic: isArabicfun }) => {
             pattern={isNationalityClick ? "[0-9]*" : "[a-zA-Z0-9]*"}
             validation={["notEmpty", "onlyCharacters"]}
             onChange={handleChange} // Adding onChange event here
+            required={is_nationality_mandatory}
+            validationErrorMessage={__("Please provide national ID number for custom clearance")}
           />
           {validationError ? (
             <div block="custom-clearance-text" elem="Message">

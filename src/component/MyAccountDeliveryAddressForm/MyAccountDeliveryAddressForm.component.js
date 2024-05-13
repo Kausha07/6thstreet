@@ -398,7 +398,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       },
       nationalId: {
         validation: ["notEmpty", "onlyCharacters"],
-        maxLength : 9,
+        placeholder: __("National ID / Passport Number kirankumar"),
+        maxLength : 12,
       },
       default_common: {
         type: "toggle",
