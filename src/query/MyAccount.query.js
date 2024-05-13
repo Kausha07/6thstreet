@@ -13,6 +13,7 @@ export class MyAccountQuery extends SourceMyAccountQuery {
             'suffix',
             'email',
             'referral_coupon',
+            'user_segment',
             'default_billing',
             'default_shipping',
             'dob',

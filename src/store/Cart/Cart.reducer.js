@@ -14,7 +14,8 @@ import {
     UPDATE_CART_ITEM,
     UPDATE_TOTALS,
     SET_DETAIL_STEP,
-    SET_CART_COUPON
+    SET_CART_COUPON,
+    SET_COUPON_REQUEST
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
@@ -28,7 +29,8 @@ export const getInitialState = () => ({
     isLoading: true,
     cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
     isMinicartOpen: false,
-    checkoutDetails:false
+    checkoutDetails:false,
+    isCouponRequest: false,
 });
 
 const updateCartItem = (cartItems, newItem) => {
@@ -209,6 +211,15 @@ export const CartReducer = (state = getInitialState(), action) => {
             ...state,
             cartCoupons
         };
+    
+    case SET_COUPON_REQUEST:
+        const { currState } = action;
+
+        return{
+            ...state,
+            isCouponRequest : currState,
+        };
+        
     default:
         return state;
     }
