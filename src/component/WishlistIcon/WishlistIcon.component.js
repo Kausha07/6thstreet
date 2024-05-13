@@ -75,6 +75,7 @@ class WishlistIcon extends PureComponent {
       product_position,
       indexCodeRedux,
     } = this.props;
+
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
@@ -99,12 +100,15 @@ class WishlistIcon extends PureComponent {
       }
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
         product: {
-          brand: wishListItem.product.brand_name,
+          brand: wishListItem?.product.brand_name ?? "",
           category: "",
-          id: wishListItem.product.sku,
-          name: wishListItem.product.name,
-          price: wishListItem.product.price,
-          variant: wishListItem.product.color,
+          id: wishListItem?.product?.sku ?? "",
+          name: wishListItem?.product?.name ?? "",
+          price: wishListItem.product?.price ?? "",
+          variant: wishListItem?.product?.color ?? "",
+          categories: wishListItem?.product?.categories?? "",
+          variant_availability: wishListItem?.product?.in_stock ?? "", 
+          quantity: parseInt(wishListItem?.qty ?? 0),
         },
       });
       const prodPriceObject = wishListItem?.product?.price[0];
@@ -170,7 +174,6 @@ class WishlistIcon extends PureComponent {
           name: EVENT_SIGN_IN_SCREEN_VIEWED,
           category: "user_login",
           action: EVENT_SIGN_IN_SCREEN_VIEWED,
-          popupSource: "Wishlist",
         };
         Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
       }
@@ -202,10 +205,17 @@ class WishlistIcon extends PureComponent {
           id: skuFromProps,
           name: data.name,
           price: itemPrice,
+          discount: (
+            (data?.price[0][Object.keys(data?.price[0])]["6s_base_price"] ?? 0) - 
+            (data?.price[0][Object.keys(data?.price[0])]["6s_special_price"] ?? 0)
+            ) ?? 0,
           variant: data.color,
+          variant_availability: data.in_stock,
           isFilters: isFilters ? "Yes" : "No",
           productPosition: product_position || "",
           colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
+          categories: data?.categories,
+          variant_availability: data?.in_stock
         },
       });
     }

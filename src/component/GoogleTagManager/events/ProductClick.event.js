@@ -57,36 +57,47 @@ class ProductClickEvent extends BaseEvent {
     this.pushEventData({
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
+        currency: this.getCurrencyCode(),
         click: {
-          actionField: { list: product.listName ? product.listName : "Others" },
+          actionField: { list: product?.listName ? product?.listName : "Others" },
           products: [
             {
-              name: product.name ? product.name : "",
-              id: product.sku ? product.sku : "",
-              price: product.price[0][Object.keys(product.price[0])].default
-                ? product.price[0][Object.keys(product.price[0])].default
-                : product.price[0][Object.keys(product.price[0])][
-                    "6s_special_price"
-                  ]
-                ? product.price[0][Object.keys(product.price[0])][
-                    "6s_special_price"
-                  ]
-                : 0,
-              brand: product.brand_name ? product.brand_name : "",
-              category: product.product_type_6s
-                ? product.product_type_6s
-                : product.category && typeof product.category == "string"
-                ? product.category
-                : "",
-              variant: product.color ? product.color : "",
-              position: product.product_Position
-                ? product.product_Position
-                : product.position
-                ? product.position
-                : "",
+              name: product?.name ?? "",
+              id: product?.sku ?? "",
+              price: product?.price[0][Object.keys(product?.price[0])]["6s_special_price"] ?? 0,
+              brand: product?.brand_name ??  "",
+              category:  product?.categories?.level1?.[0] ?? "",
+              category2: product?.categories?.level2?.[0] ?? "",
+              category3: product?.categories?.level3?.[0] ?? "",
+              category4: product?.categories?.level4?.[0] ?? "",
+              category5: product?.categories?.level5?.[0] ?? "",
+              variant: product?.color ?? "",
+              position: product?.product_Position ?? product?.position ?? "",
             },
           ],
         },
+       items : [
+        {
+          item_name: product?.name ?? "",
+          item_id: product?.sku ?? "",
+          item_brand: product?.brand_name ?? "",
+          item_category: product?.categories?.level1?.[0] ?? "",
+          item_category2: product?.categories?.level2?.[0] ?? "",
+          item_category3: product?.categories?.level3?.[0] ?? "",
+          item_category4: product?.categories?.level4?.[0] ?? "",
+          item_category5: product?.categories?.level5?.[0] ?? "",
+          item_variant: product?.color ?? "",
+          item_list_name: product?.listName ?? "",
+          item_list_id: '',
+          price: product?.price[0][Object.keys(product?.price[0])]["6s_special_price"] ?? 0,
+          discount: (
+            (product?.price[0][Object.keys(product?.price[0])]["6s_base_price"] ?? 0) - 
+            (product?.price[0][Object.keys(product?.price[0])]["6s_special_price"] ?? 0)
+            ) ?? 0,
+          quantity: 1,
+          index: product?.product_Position ?? product?.position ?? ""
+        }
+       ]
       },
     });
   }

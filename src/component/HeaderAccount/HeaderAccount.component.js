@@ -190,7 +190,6 @@ class HeaderAccount extends PureComponent {
             name: EVENT_SIGN_IN_SCREEN_VIEWED,
             category: "user_login",
             action: EVENT_SIGN_IN_SCREEN_VIEWED,
-            popupSource: "Footer Menu",
           };
           Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
         } else {
@@ -204,7 +203,6 @@ class HeaderAccount extends PureComponent {
             name: EVENT_SIGN_IN_SCREEN_VIEWED,
             category: "user_login",
             action: EVENT_SIGN_IN_SCREEN_VIEWED,
-            popupSource: "Account Icon",
           };
           Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
         }

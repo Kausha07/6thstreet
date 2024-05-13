@@ -377,7 +377,7 @@ export class PDPAddToCartContainer extends PureComponent {
     } = prevProps;
     const {
       totals: { total = null },
-      product: { size_uk = [], size_eu = [], size_us = [],sku,name },
+      product: { size_uk = [], size_eu = [], size_us = [],sku,name, brand_name, price, color, categories_without_path },
     } = this.props;
     const {
       productAdded,
@@ -408,6 +408,7 @@ export class PDPAddToCartContainer extends PureComponent {
       prev_selectedSizeType !== selectedSizeType ) &&
       !isAddToCartClicked
     ) {
+      const currency_code = getCurrency();
       const eventData = {
         name: EVENT_SELECT_SIZE,
         size_type: selectedSizeType,
@@ -415,6 +416,20 @@ export class PDPAddToCartContainer extends PureComponent {
         product_name: name,
         product_id: sku,
         action: "select_size_no_option",
+        currency: currency_code || "",
+        price:price?.[0]?.[Object.keys(price?.[0])]?.["6s_special_price"] ?? 0,
+        discount :(
+          (price?.[0]?.[Object.keys(price?.[0])]?.["6s_base_price"] ?? 0) - 
+          (price?.[0]?.[Object.keys(price?.[0])]?.["6s_special_price"] ?? 0)
+         ) ?? 0,
+        brand_name: brand_name, 
+        categories: categories_without_path,
+        color: color,
+        item_category: categories_without_path?.[0] ?? "",
+        item_category2: categories_without_path?.[1] ?? "",
+        item_category3: categories_without_path?.[2] ?? "",
+        item_category4: categories_without_path?.[3] ?? "",
+        item_category5: categories_without_path?.[4] ?? "",
       };
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
       this.sendMoEImpressions(EVENT_SELECT_SIZE);
@@ -557,6 +572,7 @@ export class PDPAddToCartContainer extends PureComponent {
         objectID,
         product_type_6s,
         categories = {},
+        in_stock,
       },
       product,
       addProductToCart,
@@ -650,10 +666,15 @@ export class PDPAddToCartContainer extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: (basePrice - itemPrice),
           brand: brand_name,
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 
@@ -734,10 +755,15 @@ export class PDPAddToCartContainer extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: (basePrice - itemPrice),
           brand: brand_name,
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 
