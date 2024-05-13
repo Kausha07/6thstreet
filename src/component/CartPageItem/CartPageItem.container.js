@@ -59,7 +59,9 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   totals: state.CartReducer.cartTotals,
   couponsItems: state.CartReducer.cartCoupons,
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";

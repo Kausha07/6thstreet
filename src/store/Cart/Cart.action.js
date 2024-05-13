@@ -10,10 +10,16 @@ export const SET_MINICART_OPEN = "SET_MINICART_OPEN";
 export const SET_DETAIL_STEP = "SET_DETAIL_STEP";
 export const RESET_CART = "RESET_CART";
 export const SET_CART_COUPON = "SET_CART_COUPON";
+export const SET_COUPON_REQUEST = "SET_COUPON_REQUEST"
 
 export const setCheckoutDetails = (checkoutDetails) => ({
   type: SET_DETAIL_STEP,
   checkoutDetails,
+});
+
+export const setIsCouponRequest = (currState) => ({
+  type: SET_COUPON_REQUEST,
+  currState,
 });
 
 export const setCartId = (cartId) => ({

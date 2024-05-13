@@ -164,9 +164,21 @@ export class SuccessCheckoutItem extends PureComponent {
     const {
       country,
       currency_code,
-      item: { row_total, basePrice },
+      item: {
+        row_total,
+        basePrice,
+        discount_amount = 0,
+        full_item_info: { row_total: row_totalforAllQuantities },
+        qty,
+      },
+      checkoutPageSiteWide,
+      checkoutPageCouponCode,
     } = this.props;
     const { isArabic } = this.state;
+
+    const finalPrice = row_total
+    ? row_totalforAllQuantities - discount_amount
+    : basePrice - discount_amount;
 
     let price = [
       {
@@ -175,13 +187,23 @@ export class SuccessCheckoutItem extends PureComponent {
           "6s_special_price": row_total,
           default: row_total,
           default_formated: `${currency_code} ${row_total}`,
+          finalPrice: finalPrice,
+          discount_amount,
+          newFinalPrice: finalPrice/qty,
         },
       },
     ];
 
     return (
       <div block="SuccessCheckoutItem" elem="Price" mods={{ isArabic }}>
-        <Price price={price} renderSpecialPrice={false} cart={true} />
+        <Price
+          price={price}
+          renderSpecialPrice={true}
+          cart={true}
+          pageType="checkoutSuccess"
+          checkoutPageCouponCode={checkoutPageCouponCode}
+          checkoutPageSiteWide={checkoutPageSiteWide}
+        />
       </div>
     );
   }

@@ -36,7 +36,8 @@ export const mapStateToProps = (state) => ({
   is_exchange_enabled: state.AppConfig.is_exchange_enabled,
   ctcReturnEnabled:state.AppConfig.ctcReturnEnabled,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
-  isProductRatingEnabled: state.AppConfig.isProductRatingEnabled
+  isProductRatingEnabled: state.AppConfig.isProductRatingEnabled,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -102,7 +103,20 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order, productsRating } = this.state;
-    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee , isProductRatingEnabled} = this.props;
+    const {
+      history,
+      country,
+      eddResponse,
+      edd_info,
+      is_exchange_enabled,
+      international_shipping_fee,
+      isProductRatingEnabled,
+      config,
+      vwoData,
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =
+      vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
 
     return {
       isLoading,
@@ -114,6 +128,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       international_shipping_fee,
       productsRating,
       isProductRatingEnabled,
+      isSidewideCouponEnabled,
     };
   };
 

@@ -65,7 +65,7 @@ import {
   sendEventMoreAttributeSelected,
 } from "Route/PLP/utils/PLP.helper";
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
-
+import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const BreadcrumbsDispatcher = import(
@@ -366,6 +366,7 @@ export class PLPContainer extends PureComponent {
     let category_2 = checkCategories ? Categories_level.shift() : "";
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
+    hppPlpScreenViewTrackingEvent();
     MOE_trackEvent(EVENT_MOE_VIEW_PLP_ITEMS, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -383,7 +384,8 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
-      isFilters: isFilters ? "Yes" : "No"
+      isFilters: isFilters ? "Yes" : "No",
+      prev_screen_name: sessionStorage.getItem("prevScreen")
     });
     this.setState({ categoryloaded: false });
   }

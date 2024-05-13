@@ -99,6 +99,8 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export class CartItemContainer extends PureComponent {
@@ -180,6 +182,8 @@ export class CartItemContainer extends PureComponent {
     edd_info:this.props.edd_info,
     defaultEddResponse:this.props.defaultEddResponse,
     international_shipping_fee: this.props.international_shipping_fee,
+    config: this.props.config,
+    vwoData: this.props.vwoData,
   });
 
   /**

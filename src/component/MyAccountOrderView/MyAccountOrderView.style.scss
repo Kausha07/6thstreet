@@ -394,6 +394,9 @@
       &-Text {
         font-size: 13px;
         font-weight: var(--fw-regular);
+        &_isArabic {
+          display: flex;
+        }
       }
 
       &-Price {
@@ -420,6 +423,14 @@
       span {
         font-size: 12px;
         color: var(--color-nobel);
+      }
+    }
+
+    &_couponSavings {
+      .MyAccountOrderView {
+        &-Price {
+          color: #13CA75;
+        }
       }
     }
   }
@@ -580,4 +591,8 @@ h2.prodDetailTitle {
 .MyAccountOrderView-AccordionWrapper_isArabic .subTitle{
   padding-left: 0;
   padding-right: 35px;
+}
+
+.discountPercent {
+  color: red;
 }

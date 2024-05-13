@@ -455,6 +455,14 @@
         min-height: 274px;
       }
     }
+
+    &-sidewideCoupon {
+      text-align: left;
+      font-size: 12px;
+      &_isArabic {
+        text-align: right;
+      }
+    }
   }
 
   .tagsForMsiteProduct {
