@@ -10,6 +10,8 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
+import MyAccountAddressNationalityFieldForm from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
+import { getStore } from "Store";
 
 import "./CheckoutAddressBook.style.scss";
 
@@ -214,21 +216,46 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       </div>
     );
   }
-
+  renderCustomClearanceField = () => {
+    const {
+      AppConfig: { is_nationality_visible = false },
+    } = getStore().getState();
+    console.log('test kiran --->is_nationality_visible', '1111guest user checking ===>',getStore().getState());
+    return (<>
+      {this.renderGuestContent()}
+      {is_nationality_visible && <div block="custom-clearance-guest-user">
+        <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
+      </div>}
+    </>)
+  }
   renderContent() {
     const { isSignedIn, isClickAndCollect, clickAndCollectStatus } = this.props;
     if (isSignedIn && !clickAndCollectStatus) {
       return this.renderSignedInContent();
     }
 
-    return this.renderGuestContent();
+    return this.renderCustomClearanceField();
   }
 
   render() {
-    const { isBilling,PickUpAddress } = this.props;
+    const { isBilling,PickUpAddress, isSignedIn } = this.props; 
+    const {
+      AppConfig: { is_nationality_visible = false },
+    } = getStore().getState();
+    console.log('test kiran --->is_nationality_visible', '2222 render checking ===>',getStore().getState());
     return (
       <div block="CheckoutAddressBook" mods={{ isBilling }}>
         {!PickUpAddress && this.renderHeading()}
+        {isSignedIn && is_nationality_visible && (
+          <div block="checkoutAddressBookCustomClearanceContainer">
+            <h3 className="custom-clearance-header">
+              {__("Customs Clearance Information")}
+            </h3>
+            <div block="checkoutAddressBookCustomClearance">
+              <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
+            </div>
+          </div>
+        )}
         {this.renderContent()}
       </div>
     );

@@ -20,7 +20,9 @@ import { isArabic } from "Util/App";
 import { PHONE_CODES } from "./MyAccountAddressFieldForm.config";
 
 import "./MyAccountAddressFieldForm.style";
+import MyAccountAddressNationalityFieldFrom from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
 import isMobile from "Util/Mobile";
+import { getStore } from "Store"
 export class MyAccountAddressFieldForm extends PureComponent {
   onFormSuccess() {}
 
@@ -84,6 +86,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
     const { newForm } = this.props;
     const fromTitle = newForm ? __("New Address") : __("Edit Address");
     const region = region_id === undefined ? region_string : region_id;
+    const {
+      AppConfig: { is_nationality_visible },
+    } = getStore().getState();
     return (
       <div block="MyAccountAddressFieldForm" elem="Fields">
         <div block="MyAccountAddressFieldForm" elem="Header">
@@ -139,7 +144,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
             {this.renderCurrentPhoneCode(value)}
           </div>
         </div>
-
+        {is_nationality_visible && <MyAccountAddressNationalityFieldFrom isArabic={isArabic} />}
         <div
           block="MyAccountAddressFieldForm"
           elem="FieldWrapper"

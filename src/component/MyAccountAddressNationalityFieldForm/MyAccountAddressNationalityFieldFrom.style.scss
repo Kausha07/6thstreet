@@ -1,0 +1,110 @@
+.nationality-field-container {
+  .MyAccountAddressForm {
+    .nationality-id-input-field {
+      .custom-clearance-text {
+        &-Message {
+          font-family: Avenir Next;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 16px;
+          text-align: initial;
+          color: red;
+          padding: 5px 0px;
+        }
+      }
+
+      .Form {
+        input {
+          width: 100%;
+        }
+        .show-validation-message {
+          border: 1px solid red;
+        }
+      }
+      .Field_type_text {
+        input {
+          width: 100%;
+        }
+      } 
+    }
+  }
+
+  .MyAccountCustomerForm {
+    &-Nationality-Radio {
+      display: flex;
+      flex-direction: row;
+      .Field {
+        span {
+          padding: 0px 25px 0px 5px;
+        }
+      }
+
+      .Field [type="radio"] {
+        +label {
+          border-radius: 50%;
+          height: 15px;
+          position: relative;
+          width: 15px;
+
+          @include after-mobile() {
+            height: 14px;
+            width: 14px;
+          }
+
+          &:hover {
+            &::after {
+              --checkmark-color: var(--black-color);
+            }
+          }
+
+          &::after {
+            border-radius: 50%;
+            bottom: 0;
+            height: 0.5rem;
+            left: 0;
+            margin: auto;
+            right: 0;
+            top: 0;
+            transition-property: background-color, box-shadow;
+            width: 0.5rem;
+            will-change: background-color, box-shadow;
+          }
+        }
+
+        &:disabled+label {
+          color: var(--dark-gray);
+          cursor: auto;
+        }
+
+        &:checked+label {
+          --primary-base-color: var(--black-color);
+
+          &:after {
+            display: none;
+          }
+        }
+
+        &:not(:checked)+label+span {
+          color: black;
+        }
+
+        &:focus {
+          +label {
+            &::after {
+              --checkmark-color: var(--black-color);
+            }
+          }
+        }
+      }
+
+      .nation-id-number {
+        font-family: Avenir Next;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16px;
+        text-align: initial;
+        color: #000000;
+      }
+    }
+  }
+}

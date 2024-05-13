@@ -396,6 +396,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         placeholder: __("Street Address"),
         ...clearValue,
       },
+      nationalId: {
+        validation: ["notEmpty", "onlyCharacters"],
+        maxLength : 9,
+      },
       default_common: {
         type: "toggle",
         label: __("Make default"),
