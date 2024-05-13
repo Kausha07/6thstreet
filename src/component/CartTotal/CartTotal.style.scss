@@ -1,0 +1,73 @@
+.CartPage {
+    &-SummaryItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0 5px;
+        @include mobile {
+            padding: 3px 0 3px;
+        }
+        .CartPage {
+            &-Text {
+                font-size: 14px;
+                font-weight: var(--fw-regular);
+            }
+            
+            &-Price {
+                font-size: 13px;
+                font-weight: var(--fw-regular);
+                .freeShipping{
+                    color: #B2B2B2;
+                    margin-right: 5px;
+
+                    &_isArabic{
+                        margin-right: initial;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+        &::before {
+            content: none;
+        }
+        &_divider {
+            border-top: 1px solid var(--color-soft-gray);
+            padding: 10px 0px;
+            margin-top: 10px;
+            .CartPage {
+                &-Text {
+                    font-size: 15px;
+                    font-weight: var(--fw-regular);
+                }
+                &-Price {
+                    font-size: 15px;
+                    font-weight: var(--fw-bold);
+                }
+            }
+        }
+        &_subtotalOnly {
+            .CartPage {
+                &-Text {
+                    font-size: 15px;
+                    font-weight: var(--fw-regular);
+                }
+                &-Price {
+                    font-size: 15px;
+                    font-weight: var(--fw-bold);
+                }
+            }
+        }
+        &_couponSavings {
+            .CartPage {
+                &-Price {
+                    font-size: 13px;
+                    font-weight: var(--fw-demi);
+                    color: #13CA75;
+                }
+            }
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+        margin-bottom: 0px;
+    }
+}

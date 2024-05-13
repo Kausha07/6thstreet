@@ -28,6 +28,7 @@ export const SET_NEW_ADDRESS_SAVED ="SET_NEW_ADDRESS_SAVED";
 export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
 export const SET_LAST_OFFSET_LIMIT_OF_MYORDERS =
   "SET_LAST_OFFSET_LIMIT_OF_MYORDERS";
+export const SET_SIGNIN_IS_LOADING_STATUS = "SET_SIGNIN_IS_LOADING_STATUS";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -122,3 +123,8 @@ export const setLastLimit = (limit) => ({
   type: SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
   limit,
 });
+
+export const setSignInIsLoading = (isLoading) => ({
+  type: SET_SIGNIN_IS_LOADING_STATUS,
+  isLoading
+})

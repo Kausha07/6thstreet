@@ -274,7 +274,7 @@
 @include mobile {
   .DynamicContentGrid {
     &-Grid{
-      grid-gap: 15px;
+      grid-gap: 8px;
     }
     margin: 0 10px;
     .CategoryItem {

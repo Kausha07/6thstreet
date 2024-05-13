@@ -46,6 +46,7 @@ import {
   updatePLPInitialFilters,
   setPrevPath,
   setBrandurl,
+  setColourVarientsButtonClick,
 } from "Store/PLP/PLP.action";
 
 import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -64,7 +65,7 @@ import {
   sendEventMoreAttributeSelected,
 } from "Route/PLP/utils/PLP.helper";
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
-
+import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const BreadcrumbsDispatcher = import(
@@ -116,6 +117,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
   setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+  setColourVarientsButtonClick: (colourVarientsButtonClick) =>
+    dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -363,6 +366,7 @@ export class PLPContainer extends PureComponent {
     let category_2 = checkCategories ? Categories_level.shift() : "";
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
+    hppPlpScreenViewTrackingEvent();
     MOE_trackEvent(EVENT_MOE_VIEW_PLP_ITEMS, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -380,14 +384,15 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
-      isFilters: isFilters ? "Yes" : "No"
+      isFilters: isFilters ? "Yes" : "No",
+      prev_screen_name: sessionStorage.getItem("prevScreen")
     });
     this.setState({ categoryloaded: false });
   }
 
   componentDidMount() {
     const { menuCategories = [], prevPath = null,
-      impressions, catalogue_from_algolia } = this.props;
+      impressions, catalogue_from_algolia, setColourVarientsButtonClick, } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -414,6 +419,8 @@ export class PLPContainer extends PureComponent {
     catalogue_from_algolia
       ? this.getBrandDetailsByAloglia()
       : this.getBrandDetailsByCatalogueApi()
+    
+    setColourVarientsButtonClick(false);
   }
 
   getCategory() {
@@ -1200,21 +1207,21 @@ export class PLPContainer extends PureComponent {
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
     const staticMetaData =
-      getCategoryLevel.length == 5 && metaContent
+      getCategoryLevel?.length == 5 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
-        : getCategoryLevel.length == 4 && metaContent
+        : getCategoryLevel?.length == 4 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]
-        : getCategoryLevel.length == 3 && metaContent
+        : getCategoryLevel?.length == 3 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]
-        : getCategoryLevel.length == 2 && metaContent
+        : getCategoryLevel?.length == 2 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
-        : getCategoryLevel.length == 1 && metaContent
+        : getCategoryLevel?.length == 1 && metaContent
         ? metaContent?.[getCategoryLevel[0]]
         : null;
     const PLPMetaTitle =

@@ -26,6 +26,7 @@ import {
   SET_NEW_ADDRESS_SAVED,
   SET_SELECTED_ADDRESS_ID,
   SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
+  SET_SIGNIN_IS_LOADING_STATUS
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -76,6 +77,13 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         isSignedIn: status,
       };
+
+    case SET_SIGNIN_IS_LOADING_STATUS: 
+      return {
+        ...state,
+        isLoading
+      }
+
     case SET_ADDRESS_LOADING_STATUS:
       return {
         ...state,

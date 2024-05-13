@@ -1,6 +1,10 @@
 .HeaderGenders {
   display: flex;
   justify-content: center;
+  @include mobile {
+    justify-content: space-around;
+    overflow-x: scroll;
+  }
   
   @include before-desktop {
     display: none;
@@ -40,6 +44,32 @@
             border-right: 0;
           }
         }
+      }
+    }
+  }
+}
+
+.mobileMegaMenuHeaderGender {
+  @include mobile {
+    width: 100%;
+    justify-content: space-evenly;
+    top: 45px !important;
+    height: auto;
+    border-bottom: 0.6px solid darkgray;
+    padding-bottom: 12px !important;
+    padding-top: 20px !important;
+    .GenderButton-Button {
+      padding-bottom:24px !important;
+      font-family: 'Avenir Next';
+      font-weight: 400;
+      font-size: 15px;
+      color:#00000066;
+  
+      &_isCurrentGender {
+        border-bottom: 3px solid black !important;
+        border-radius: 3px;
+        font-weight: 700;
+        color: #000000;
       }
     }
   }

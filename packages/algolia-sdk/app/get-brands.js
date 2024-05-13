@@ -1,8 +1,9 @@
-import { searchParams } from "./config";
-export default function getBrands(gender = "", options = {}) {
+import { searchParams,megamenuSearchParams } from "./config";
+export default function getBrands(gender = "", megamenuBrands = false, options = {}) {
   const { index, client, env } = options;
   return new Promise((resolve, reject) => {
-    const newSearchParams = Object.assign({}, searchParams);
+    const newSearchParamsResult = megamenuBrands ? megamenuSearchParams : searchParams;
+    const newSearchParams = Object.assign({}, newSearchParamsResult);
     const queries = [];
     if (gender === "Boy,Girl" || gender === "أولاد,بنات") {
       newSearchParams.facetFilters = [
