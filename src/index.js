@@ -47,7 +47,10 @@ const vwoInit = async () => {
     console.error("vwo tool initialisation error: ",err);
   }
 };
-vwoInit();
+if(!window.__isBOT__) {
+  vwoInit();
+}
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
   integrations: [
