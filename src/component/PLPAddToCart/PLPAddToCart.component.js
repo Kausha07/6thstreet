@@ -142,7 +142,7 @@ class PLPAddToCart extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      product: { name, sku, size_eu, size_uk, size_us, simple_products = [] },
+      product: { name, sku, size_eu, size_uk, size_us, simple_products = [], brand_name, color, categories, price },
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
 
@@ -167,6 +167,7 @@ class PLPAddToCart extends PureComponent {
         selectedSizeCode !== prevState?.selectedSizeCode ||
         selectedSizeType !== prevState?.selectedSizeType
       ) {
+        const currency_code = getCurrency();
         const eventData = {
           name: EVENT_SELECT_SIZE,
           size_type: selectedSizeType,
@@ -174,6 +175,20 @@ class PLPAddToCart extends PureComponent {
           product_name: name,
           product_id: sku,
           action: "select_size_no_option",
+          brand_name: brand_name, 
+          currency: currency_code || "",
+          price:price?.[0]?.[Object.keys(price?.[0])]?.["6s_special_price"] ?? 0,
+          discount :(
+            (price?.[0]?.[Object.keys(price?.[0])]?.["6s_base_price"] ?? 0) - 
+            (price?.[0]?.[Object.keys(price?.[0])]?.["6s_special_price"] ?? 0)
+          ) ?? 0,
+          brand_name: brand_name, 
+          color: color,
+          item_category: categories?.level1?.[0] ?? "",
+          item_category2: categories?.level2?.[0] ?? "",
+          item_category3: categories?.level3?.[0] ?? "",
+          item_category4: categories?.level4?.[0] ?? "",
+          item_category5: categories?.level5?.[0] ?? "",
         };
         Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
         this.sendMoEImpressions(EVENT_SELECT_SIZE);
@@ -784,6 +799,8 @@ class PLPAddToCart extends PureComponent {
         simple_products,
         international_vendor = null,
         cross_border = 0,
+        categories = {},
+        in_stock
       },
       addProductToCart,
       showNotification,
@@ -907,6 +924,7 @@ class PLPAddToCart extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: basePrice - itemPrice,
           brand: brand_name,
           category: product_type_6s,
           variant: color,
@@ -914,6 +932,10 @@ class PLPAddToCart extends PureComponent {
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
           colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 
@@ -972,6 +994,7 @@ class PLPAddToCart extends PureComponent {
           name,
           id: configSKU,
           price: itemPrice,
+          discount: basePrice - itemPrice,
           brand: brand_name,
           category: product_type_6s,
           variant: color,
@@ -979,6 +1002,10 @@ class PLPAddToCart extends PureComponent {
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
           colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+          size: optionValue,
+          size_id: optionId,
+          categories: categories, 
+          variant_availability: in_stock
         },
       });
 

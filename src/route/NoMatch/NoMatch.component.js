@@ -28,7 +28,7 @@ import isMobile from "Util/Mobile";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import DynamicContent from "Component/DynamicContent";
-import Event, { EVENT_PAGE_NOT_FOUND, MOE_trackEvent } from "Util/Event";
+import Event, { EVENT_PAGE_NOT_FOUND, EVENT_GTM_PAGE_NOT_FOUND, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = () => ({});
@@ -66,7 +66,7 @@ export class NoMatch extends PureComponent {
   componentDidUpdate() {
     const { isLoading } = this.state;
     if (isLoading) {
-      Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
+      Event.dispatch(EVENT_GTM_PAGE_NOT_FOUND, location.pathname || "");
       MOE_trackEvent(EVENT_PAGE_NOT_FOUND, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),

@@ -25,6 +25,7 @@ import {
   SET_NEW_ADDRESS_CLICKED,
   SET_NEW_ADDRESS_SAVED,
   SET_SELECTED_ADDRESS_ID,
+  SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
   SET_SIGNIN_IS_LOADING_STATUS
 } from "./MyAccount.action";
 
@@ -51,6 +52,7 @@ export const initialState = {
   addNewAddressClicked: false,
   newAddressSaved: false,
   addressIDSelected: null,
+  myOrderLastOffsetLimit: {},
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -224,6 +226,13 @@ export const MyAccountReducer = (state = initialState, action) => {
     return {
       ...state,
       addressIDSelected,
+    };
+
+    case SET_LAST_OFFSET_LIMIT_OF_MYORDERS:
+      const { limit } = action;
+    return {
+      ...state,
+      myOrderLastOffsetLimit: limit,
     };
 
     default:

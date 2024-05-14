@@ -1,4 +1,8 @@
-import Event, { EVENT_GTM_PDP_TRACKING } from "Util/Event";
+import Event, { 
+  EVENT_GTM_PDP_TRACKING , 
+  EVENT_SELECT_SIZE, 
+  EVENT_GO_TO_SIZE_CHART
+} from "Util/Event";
 import BaseEvent from "./Base.event";
 
 /**
@@ -40,25 +44,47 @@ class PDPTrackingEvent extends BaseEvent {
   handler(data) {
     const eventName = data.name;
     const EventAction = data.action ? data.action : eventName;
-    if(eventName){
-    this.pushEventData({
-      event: eventName,
-      eventCategory: "pdp_tracking",
-      eventAction: EventAction,
-      ...(data.product_id && { productId: data.product_id }),
-      ...(data.product_name && { productName: data.product_name }),
-      ...(data.stockStatus && { stockStatus: data.stockStatus }),
-      ...(data.size_type && { size_type: data.size_type }),
-      ...(data.size_value && { size_value: data.size_value }),
-      ...(data.imagesScrolled && { imagesScrolled: data.imagesScrolled }),
-      UserType:
-        this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      CustomerID: this.getCustomerId(),
-      PageType: this.getPageType(),
-    });
+    
+    if (eventName) {
+      const eventData = {
+        event: eventName,
+        eventCategory: "pdp_tracking",
+        eventAction: EventAction,
+        ...(data.product_id && { productId: data.product_id }),
+        ...(data.product_name && { productName: data.product_name }),
+        ...(data.stockStatus && { stockStatus: data.stockStatus }),
+        ...(data.size_type && { size_type: data.size_type }),
+        ...(data.size_value && { size_value: data.size_value }),
+        ...(data.imagesScrolled && { imagesScrolled: data.imagesScrolled }),
+        UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
+      };
+  
+      if (eventName === EVENT_SELECT_SIZE || eventName == EVENT_GO_TO_SIZE_CHART) {
+          eventData.product_sku = data?.product_id ?? "",
+          eventData.ecommerce = {
+            currency: data?.currency ?? "",
+            items: [
+              {
+                  item_name: data?.product_name ?? "",
+                  item_id: data?.product_id ?? "",
+                  item_brand: data?.brand_name ?? "",
+                  item_category: data?.item_category ?? "",
+                  item_category2: data?.item_category2 ?? "",
+                  item_category3: data?.item_category3 ?? "",
+                  item_category4: data?.item_category4?? "",
+                  item_category5: data?.item_category5 ?? "",
+                  item_variant: data?.color ?? "",
+                  price: data?.price ?? "",
+                  discount: data?.discount ?? "",
+                  item_size:  data?.size_value ?? "",
+                  item_size_type:  data?.size_type ?? "",
+              }
+          ]
+        };
+      }  
+      this.pushEventData(eventData);
     }
   }
-
   getCustomerId() {
     return this.isSignedIn()
       ? this.getAppState().MyAccountReducer.customer.id || ""

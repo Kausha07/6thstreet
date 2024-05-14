@@ -26,6 +26,8 @@ export const SET_USER_ID_FOR_VUE_TRENDING_BRANDS = "SET_USER_ID_FOR_VUE_TRENDING
 export const SET_NEW_ADDRESS_CLICKED = "SET_NEW_ADDRESS_CLICKED";
 export const SET_NEW_ADDRESS_SAVED ="SET_NEW_ADDRESS_SAVED";
 export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
+export const SET_LAST_OFFSET_LIMIT_OF_MYORDERS =
+  "SET_LAST_OFFSET_LIMIT_OF_MYORDERS";
 export const SET_SIGNIN_IS_LOADING_STATUS = "SET_SIGNIN_IS_LOADING_STATUS";
 
 export const setIsMobileTabActive = (isActive) => ({
@@ -115,6 +117,11 @@ export const setNewAddressSaved = (newAddressSaved) => ({
 export const setSelectedAddressID = (addressIDSelected) => ({
   type: SET_SELECTED_ADDRESS_ID,
   addressIDSelected,
+});
+
+export const setLastLimit = (limit) => ({
+  type: SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
+  limit,
 });
 
 export const setSignInIsLoading = (isLoading) => ({

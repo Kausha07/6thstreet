@@ -1,4 +1,4 @@
-import Event, { EVENT_PRODUCT_IMPRESSION } from "Util/Event";
+import Event, { EVENT_GTM_VIEW_ITEM_LIST } from "Util/Event";
 
 import BaseEvent from "./Base.event";
 
@@ -38,7 +38,7 @@ class ProductImpressionEvent extends BaseEvent {
     // Home
     Event.observer(EVENT_PRODUCT_LIST_IMPRESSION, (impression) => {
       //if (document.readyState == ("complete" || "interactive"  )){
-      this.handle(EVENT_PRODUCT_IMPRESSION, impression);
+      this.handle(EVENT_GTM_VIEW_ITEM_LIST, impression);
       //}
     });
   }
@@ -52,6 +52,7 @@ class ProductImpressionEvent extends BaseEvent {
   handler(EVENT_TYPE, impressions = []) {
     const storage = this.getStorage();
     let isFilters = false;
+    let queryId = null;
     const formattedImpressions = impressions.map(
       (
         {
@@ -61,13 +62,14 @@ class ProductImpressionEvent extends BaseEvent {
           brand_name,
           color,
           sku,
-          product_type_6s,
           category,
+          categories,
           price,
           list,
           product_Position,
           position,
           productQueryID,
+          in_stock
         },
         index
       ) => ({
@@ -78,7 +80,11 @@ class ProductImpressionEvent extends BaseEvent {
             ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
             : "",
         brand: brand_name ? brand_name : "",
-        category: product_type_6s || category || "",
+        category:  categories?.level1?.[0] ?? "",
+        category2: categories?.level2?.[0] ?? "",
+        category3: categories?.level3?.[0] ?? "",
+        category4: categories?.level4?.[0] ?? "",
+        category5: categories?.level5?.[0] ?? "",
         variant: color || "",
         list: list || "Others",
         position: product_Position
@@ -87,6 +93,7 @@ class ProductImpressionEvent extends BaseEvent {
           ? position
           : index + 1 || "",
         queryId: productQueryID ? productQueryID : null,
+        variant_availability: in_stock
       })
     );
 
@@ -95,16 +102,41 @@ class ProductImpressionEvent extends BaseEvent {
         isFilters = true;
       }
     });
+  
+    // Find the first non-null queryId
+   const firstQueryIdItem = formattedImpressions.find(item => item.queryId !== null);
+   if (firstQueryIdItem) {
+     queryId = firstQueryIdItem.queryId;
+   }
 
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
-      event: "productImpression",
+      event: EVENT_GTM_VIEW_ITEM_LIST,
       ecommerce: {
+        currency: this.getCurrencyCode(),
         currencyCode: this.getCurrencyCode(),
         impressions: formattedImpressions,
+        items: formattedImpressions.map((item, index) => ({
+          item_name: item.name,
+          item_id: item.id,
+          item_brand: item.brand,
+          item_category: item.category,
+          item_category2: item.category2,
+          item_category3: item.category3,
+          item_category4: item.category4,
+          item_category5: item.category5,
+          item_variant: item.variant,
+          item_list_name: item.list,
+          item_list_id: '',
+          price: item.price,
+          index: item.position,
+          variant_availability: item.variant_availability
+        }))
       },
-      isFilters: isFilters ? "Yes" : "No",
+      is_filter: isFilters ? "Yes" : "No",
+      query_id: queryId,
+
     });
   }
 }

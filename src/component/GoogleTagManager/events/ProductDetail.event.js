@@ -72,12 +72,30 @@ class ProductDetailEvent extends BaseEvent {
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
       ecommerce: {
+        currency: this.getCurrencyCode(),
         detail: {
           // actionField: {
           //   list: "Category page",
           // },
           products: [product],
         },
+        items: [
+          {
+            item_name: product?.name,
+            item_id: product?.skuFromProps,
+            item_brand: product?.brand,
+            item_category: product?.category,
+            item_variant: product?.variant,
+            price: product?.price,
+            item_category: product?.categories?.level1?.[0] ?? "",
+            item_category2:product?.categories?.level2?.[0] ?? "",
+            item_category3:product?.categories?.level3?.[0] ?? "",
+            item_category4:product?.categories?.level4?.[0] ?? "",
+            item_category5:product?.categories?.level5?.[0] ?? "",
+            discount: product?.discount ?? "",
+            variant_availability: product?.variant_availability ?? ""
+          }
+        ]
       },
     });
   }
