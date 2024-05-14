@@ -50,10 +50,10 @@ export function UseMyWallet(props) {
           <div>
             <div className="Heading">{__("My Rewards")}</div>
             <div className="SubHeading">
-              {__("Eligible to use")}{" "}
+              {__("Eligible to use")}
               <span className="boldAmount">
                 {" "}
-                {currencyCode}
+                {currencyCode}{" "}
                 {eligibleAmount}
               </span>{" "}
               {__("of")}{" "}
