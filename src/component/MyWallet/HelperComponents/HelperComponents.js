@@ -67,7 +67,21 @@ export function Refund({ transaction, text }) {
               <img src={CashRefundIcon} />
             </div>
             <div>
-              <div className="LinkHeading">{__("%s", text)}</div>
+              {text === "Reward" && (
+                <div className="LinkHeading">{__("Reward")}</div>
+              )}
+              {text === "Refund" && (
+                <div className="LinkHeading">{__("Refund")}</div>
+              )}
+              {text === "Updated" && (
+                <div className="LinkHeading">{__("Updated")}</div>
+              )}
+              {text === "Referred" && (
+                <div className="LinkHeading">{__("Referred")}</div>
+              )}
+              {text === "Revert" && (
+                <div className="LinkHeading">{__("Revert")}</div>
+              )}
               {transaction?.order_increment_id && (
                 <Link to={`/my-account/my-orders/${transaction.order_id}`}>
                   <div className="LinkSubHeading">
