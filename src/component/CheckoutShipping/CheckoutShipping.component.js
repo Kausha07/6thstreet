@@ -381,11 +381,11 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     return isMobile ? (
       <>
         <span
-          style={{ paddingRight: "10px", fontWeight: "bold", fontSize: "16px" }}
+          style={{ paddingRight: "10px", fontWeight: "500", fontSize: "12px" }}
         >
           +
         </span>{" "}
-        {__("New address")}
+        {__("Add New")}
       </>
     ) : (
       __("Add new address")
@@ -415,26 +415,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       this.openNewForm();
     }
 
-    if (isSignedIn() && !checkClickAndCollect() && addresses.length > 0) {
-      return (
-        <div
-          block="MyAccountAddressBook"
-          elem="NewAddressWrapper"
-          mods={{ formContent, isArabic, isCountryNotAddressAvailable }}
-        >
-          <button
-            block="MyAccountAddressBook"
-            elem="NewAddress"
-            mix={{
-              block: "button primary small",
-            }}
-            onClick={this.openNewForm}
-          >
-            {this.renderButtonLabel()}
-          </button>
-        </div>
-      );
-    }
 
     return null;
   };
@@ -500,7 +480,37 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       />
     );
   }
-
+  renderAddNewAddressButton = () => {
+    const {
+      addresses,
+      checkClickAndCollect,
+    } = this.props;
+    const { formContent, isArabic } = this.state;
+    const isCountryNotAddressAvailable =
+      !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
+      !isMobile.any();
+    if (isSignedIn() && !checkClickAndCollect() && addresses.length > 0) {
+      return (
+        <div
+          block="MyAccountAddressBook"
+          elem="NewAddressWrapper"
+          mods={{ formContent, isArabic, isCountryNotAddressAvailable }}
+        >
+          <button
+            block="MyAccountAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={this.openNewForm}
+          >
+            {this.renderButtonLabel()}
+          </button>
+        </div>
+      );
+    }
+    return null;
+  }
   render() {
     const {
       onShippingSuccess,
@@ -528,14 +538,15 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           }
         >
           {isSignedIn() && !checkClickAndCollect() ? (
-            <>
+            <div block="header-new-address-container">
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">
                 {checkClickAndCollect()
                   ? "Please confirm your contact details"
                   : __("Where can we send your order?")}
-              </h4>
-            </>
+              </h4 >
+              {this.renderAddNewAddressButton()}
+            </div>
           ) : null}
           {this.renderAddressBook()}
           <div>

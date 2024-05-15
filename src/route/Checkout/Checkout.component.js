@@ -46,6 +46,10 @@ import {
   FREE,
   CHECKOUT_APPLE_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+export const mapStateToProps = (state) => ({
+  is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
+})
+
 export const mapDispatchToProps = (dispatch) => ({
   selectPaymentMethod: (code) =>
     CheckoutDispatcher.selectPaymentMethod(dispatch, code),
@@ -698,6 +702,7 @@ export class Checkout extends SourceCheckout {
       },
       config: { countries },
       config,
+      is_nationality_mandatory = false,
     } = this.props;
 
     let platform = "";
@@ -729,6 +734,7 @@ export class Checkout extends SourceCheckout {
           isClickAndCollect={isClickAndCollect}
           renderGuestForm={this.renderGuestForm.bind(this)}
           handleClickNCollectPayment={handleClickNCollectPayment}
+          is_nationality_mandatory={is_nationality_mandatory}
         />
       </div>
     );
@@ -998,4 +1004,4 @@ export class Checkout extends SourceCheckout {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Checkout);
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

@@ -592,12 +592,8 @@
         }
     }
     &-DeliveryMessageGuest {
-        // margin: 0 auto 24px !important;
-        // text-align: center !important;
         font-size: 18px;
         font-weight: 600;
-        // width: 60vw;
-        // min-width: 240px;
         display: block !important;
         @include desktop {
             display: none !important;

@@ -216,11 +216,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       </div>
     );
   }
-  renderCustomClearanceField = () => {
+  renderGuestUserCustomClearanceField = () => {
     const {
       AppConfig: { is_nationality_visible = false },
     } = getStore().getState();
-    console.log('test kiran --->is_nationality_visible', '1111guest user checking ===>',getStore().getState());
     return (<>
       {this.renderGuestContent()}
       {is_nationality_visible && <div block="custom-clearance-guest-user">
@@ -228,35 +227,38 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       </div>}
     </>)
   }
+
+  renderSignInCustomClearanceField = () => {
+    const {
+      AppConfig: { is_nationality_visible = false },
+    } = getStore().getState();
+    const { isSignedIn } = this.props;
+    return isSignedIn && is_nationality_visible ? (<div block="checkoutAddressBookCustomClearanceContainer">
+      <h3 className="custom-clearance-header">
+        {__("Customs Clearance Information")}
+      </h3>
+      <div block="checkoutAddressBookCustomClearance">
+        <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
+      </div>
+    </div>) : null;
+  }
   renderContent() {
     const { isSignedIn, isClickAndCollect, clickAndCollectStatus } = this.props;
     if (isSignedIn && !clickAndCollectStatus) {
       return this.renderSignedInContent();
     }
 
-    return this.renderCustomClearanceField();
+    return this.renderGuestUserCustomClearanceField();
   }
 
   render() {
-    const { isBilling,PickUpAddress, isSignedIn } = this.props; 
-    const {
-      AppConfig: { is_nationality_visible = false },
-    } = getStore().getState();
-    console.log('test kiran --->is_nationality_visible', '2222 render checking ===>',getStore().getState());
+    const { isBilling,PickUpAddress } = this.props; 
     return (
       <div block="CheckoutAddressBook" mods={{ isBilling }}>
         {!PickUpAddress && this.renderHeading()}
-        {isSignedIn && is_nationality_visible && (
-          <div block="checkoutAddressBookCustomClearanceContainer">
-            <h3 className="custom-clearance-header">
-              {__("Customs Clearance Information")}
-            </h3>
-            <div block="checkoutAddressBookCustomClearance">
-              <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
-            </div>
-          </div>
-        )}
+        {!this.state.isMobile && this.renderSignInCustomClearanceField()}
         {this.renderContent()}
+        {this.state.isMobile && this.renderSignInCustomClearanceField()}
       </div>
     );
   }

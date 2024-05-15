@@ -45,6 +45,8 @@
           height: 15px;
           position: relative;
           width: 15px;
+          box-shadow: rgb(209, 211, 212) 0px 0px 0px 0.5px;
+          border:none;
 
           @include after-mobile() {
             height: 14px;
@@ -52,8 +54,10 @@
           }
 
           &:hover {
+            border-color: white !important;
             &::after {
               --checkmark-color: var(--black-color);
+              border-color:white ;
             }
           }
 
@@ -78,7 +82,7 @@
 
         &:checked+label {
           --primary-base-color: var(--black-color);
-
+          border: 3px solid #ffffff;
           &:after {
             display: none;
           }
