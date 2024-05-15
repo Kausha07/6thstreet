@@ -1,9 +1,10 @@
-import Field from "Component/Field";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { getCurrency } from "Util/App";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
+import CrossIcon from "./../IconsAndImages/CrossIcon.svg";
+import SelectIcon from "./../IconsAndImages/SelectIcon.svg";
 import "./UseMyWallet.style.scss";
 
 export const mapStateToProps = (state) => ({
@@ -28,10 +29,10 @@ export function UseMyWallet(props) {
     isLoading,
     isWalletEnabled,
   } = props;
-  const checkboxId = "My_wallet_applied";
+
   const handleCheckboxChange = () => {
+    setIsWalletBalanceApplied(!isWalletBalanceApplied);
     toggleMyWallet(!isWalletBalanceApplied);
-    setIsWalletBalanceApplied(() => !isWalletBalanceApplied);
   };
 
   useEffect(() => {
@@ -53,24 +54,22 @@ export function UseMyWallet(props) {
               {__("Eligible to use")}
               <span className="boldAmount">
                 {" "}
-                {currencyCode}{" "}
-                {eligibleAmount}
+                {currencyCode} {eligibleAmount}
               </span>{" "}
               {__("of")}{" "}
               <span className="boldAmount"> {myWallet?.current_balance}</span>
             </div>
           </div>
           <div>
-            <Field
-              block="StoreCredit"
-              elem="Toggle"
-              type="toggle"
-              id={checkboxId}
-              name={checkboxId}
-              value={checkboxId}
-              checked={isWalletBalanceApplied}
-              onClick={handleCheckboxChange}
-            />
+            <div className="toggle-switch" onClick={handleCheckboxChange}>
+              <div
+                className={`switch ${isWalletBalanceApplied ? "on" : "off"}`}
+              >
+                <div className="toggle">
+                  <img src={isWalletBalanceApplied ? SelectIcon : CrossIcon} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
