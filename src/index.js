@@ -34,7 +34,7 @@ window.__isBOT__ = pattern.test(navigator.userAgent);
 //vwo a/b testing tool integration on application loading
 const vwoInit = async () => {
   try {
-    if(vwoSdk) {
+    if(wondow.vwoSdk) {
       const settingsFile = await vwoSdk?.getSettingsFile(
         process.env.REACT_APP_VWO_AB_TOOL_ACCOUNT_ID,
         process.env.REACT_APP_VWO_AB_TOOL_SDK_KEY
