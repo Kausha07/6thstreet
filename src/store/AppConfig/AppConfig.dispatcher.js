@@ -23,17 +23,27 @@ export class AppConfigDispatcher {
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "hpp";
     const countryCode = getCountryFromUrl()?.toLowerCase();
+
+    // const ipResponse = await fetch('https://api.ipify.org/?format=json'');
+    // const ipAddressData = await ipResponse.json();
+    // console.log("===>",ipAddressData);
     const options =  {
         customVariables: {
             country_code: countryCode,
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
+            user_id: userId,
+            is_loggedin: customer?.id ? true : false
         },
         variationTargetingVariables: {
             country_code: countryCode,
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
-        }
+            user_id: userId,
+            is_loggedin: customer?.id ? true : false
+        },
+        userAgent: window?.navigator?.userAgent,
+        // userIpAddress: ipAddressData?.ip
     }
     let SiteWideCoupon = {};
     let HPP = {}
@@ -65,7 +75,20 @@ export class AppConfigDispatcher {
                 variationName: HPPvariationName ? HPPvariationName : abTestingConfig?.HPP?.defaultValue,
                 vwo: HPPvariationName ? '1' : '0',
                 campaignName: HPPCampaignName,
-            } 
+            }
+            
+            const pushData = {
+                "swc": {
+                    "vwo":  SiteWideCoupon.vwo,
+                    "val": SiteWideCoupon.variationName
+                },
+                "hpp": {
+                    "vwo": HPP.vwo,
+                    "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`}
+            }
+            console.log("PushData====>", { ...pushData, ...options.customVariables });
+            window.vwoClientInstance?.push({ ...pushData, ...options.customVariables }, `${userId}`);
+            
             return { SiteWideCoupon, HPP };
         } else {
             return {
