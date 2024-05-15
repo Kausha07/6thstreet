@@ -2,6 +2,7 @@ import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { getCurrency } from "Util/App";
+import { getLanguageFromUrl } from "Util/Url";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
 import CrossIcon from "./../IconsAndImages/CrossIcon.svg";
 import SelectIcon from "./../IconsAndImages/SelectIcon.svg";
@@ -29,6 +30,8 @@ export function UseMyWallet(props) {
     isLoading,
     isWalletEnabled,
   } = props;
+
+  const countryCode = getLanguageFromUrl().toUpperCase();
 
   const handleCheckboxChange = () => {
     setIsWalletBalanceApplied(!isWalletBalanceApplied);
@@ -65,7 +68,11 @@ export function UseMyWallet(props) {
               <div
                 className={`switch ${isWalletBalanceApplied ? "on" : "off"}`}
               >
-                <div className="toggle">
+                <div
+                  className={
+                    countryCode == "AR" ? "toggle toggleAr" : "toggle toggleEn"
+                  }
+                >
                   <img src={isWalletBalanceApplied ? SelectIcon : CrossIcon} />
                 </div>
               </div>
