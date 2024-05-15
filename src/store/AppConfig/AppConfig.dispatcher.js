@@ -23,7 +23,7 @@ export class AppConfigDispatcher {
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "hpp";
     const countryCode = getCountryFromUrl()?.toLowerCase();
-
+    const userAgent = window?.navigator?.userAgent;
     // const ipResponse = await fetch('https://api.ipify.org/?format=json'');
     // const ipAddressData = await ipResponse.json();
     // console.log("===>",ipAddressData);
@@ -42,7 +42,7 @@ export class AppConfigDispatcher {
             user_id: userId,
             is_loggedin: customer?.id ? true : false
         },
-        userAgent: window?.navigator?.userAgent,
+        userAgent: userAgent,
         // userIpAddress: ipAddressData?.ip
     }
     let SiteWideCoupon = {};
@@ -86,8 +86,8 @@ export class AppConfigDispatcher {
                     "vwo": HPP.vwo,
                     "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`}
             }
-            console.log("PushData====>", { ...pushData, ...options.customVariables });
-            window.vwoClientInstance?.push({ ...pushData, ...options.customVariables }, `${userId}`);
+            console.log("vwo event",{ ...pushData, ...options.customVariables, userAgent });
+            window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
             
             return { SiteWideCoupon, HPP };
         } else {
