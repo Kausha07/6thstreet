@@ -21,34 +21,44 @@ export class AppConfigDispatcher {
     }
     
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
-    const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "";
+    const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "hpp";
     const countryCode = getCountryFromUrl()?.toLowerCase();
+    const userAgent = window?.navigator?.userAgent;
+    // const ipResponse = await fetch('https://api.ipify.org/?format=json'');
+    // const ipAddressData = await ipResponse.json();
+    // console.log("===>",ipAddressData);
     const options =  {
         customVariables: {
             country_code: countryCode,
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
+            user_id: userId,
+            is_loggedin: customer?.id ? true : false
         },
         variationTargetingVariables: {
             country_code: countryCode,
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
-        }
+            user_id: userId,
+            is_loggedin: customer?.id ? true : false
+        },
+        userAgent: userAgent,
+        // userIpAddress: ipAddressData?.ip
     }
     let SiteWideCoupon = {};
     let HPP = {}
 
     // Get Logged in User Variations from VWO tool
     try {
-        if (userId && vwoClientInstance) {
+        if (userId && window.vwoClientInstance) {
 
-            const sitewideVariationName = vwoClientInstance.getVariation(siteWideCampaignName, `${userId}`, options);
+            const sitewideVariationName = window.vwoClientInstance?.getVariation(siteWideCampaignName, `${userId}`, options);
             const isFeatureEnabled = 
-                vwoClientInstance.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
+            window.vwoClientInstance?.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
                 //  may be will read coupon code from here
             const enableSitewideCoupon = 
-                vwoClientInstance.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
-            const HPPvariationName = vwoClientInstance?.activate(
+            window.vwoClientInstance?.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
+            const HPPvariationName = window.vwoClientInstance?.activate(
               HPPCampaignName,
               `${userId}`,
               options
@@ -66,8 +76,35 @@ export class AppConfigDispatcher {
                 vwo: HPPvariationName ? '1' : '0',
                 campaignName: HPPCampaignName,
             }
-
-            return {SiteWideCoupon, HPP };
+            
+            const pushData = {
+                "swc": {
+                    "vwo":  SiteWideCoupon.vwo,
+                    "val": SiteWideCoupon.variationName
+                },
+                "hpp": {
+                    "vwo": HPP.vwo,
+                    "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`}
+            }
+            console.log("vwo event",{ ...pushData, ...options.customVariables, userAgent });
+            window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
+            
+            return { SiteWideCoupon, HPP };
+        } else {
+            return {
+                SiteWideCoupon : {
+                    isFeatureEnabled: false,
+                    enableSitewideCoupon: false,
+                    variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                    vwo: '0',
+                    campaignName: siteWideCampaignName,
+                },
+                HPP : {
+                    variationName: abTestingConfig?.HPP?.defaultValue,
+                    vwo: '0',
+                    campaignName: HPPCampaignName,
+                } 
+            }
         }
     } catch (e) {
         console.error("vwo varition error", e);

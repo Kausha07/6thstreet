@@ -484,11 +484,13 @@ export class Router extends SourceRouter {
 
       for (const key in vwoData) {
         const item = vwoData[key];
-        eventData = {
-          ...eventData,
-          [item.campaignName] : {
-              vwo: item.vwo,
-              val: key !== "HPP" ? item.variationName : `${item.variationName}` === "1" ? 'c' : `v${item.variationName - 1}`,
+        if(item?.campaignName) {
+          eventData = {
+            ...eventData,
+            [item.campaignName] : {
+                vwo: item.vwo,
+                val: key !== "HPP" ? item.variationName : `${item.variationName}` === "1" ? 'c' : `v${item.variationName - 1}`,
+            }
           }
         }
       }
