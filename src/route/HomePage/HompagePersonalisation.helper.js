@@ -62,7 +62,7 @@ export const homePageScreenViewTrackingEvent = (
   abTestingConfig
 ) => {
   const variantName = variant_name 
-    ? `${variant_name}` === "1" ? 'c' : `v${item.variationName - 1}`
+    ? `${variant_name}` === "1" ? 'c' : `v${variant_name - 1}`
     : abTestingConfig?.HPP?.defaultValue;
   const userSegment = user_segment
     ? user_segment
