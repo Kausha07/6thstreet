@@ -33,8 +33,9 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { fetchConsolidatedVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
-import { getUUIDToken, isSignedIn } from "Util/Auth";
+import { getUUIDToken, isSignedIn, getUUID } from "Util/Auth";
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 import {
   influencerStorePageBreadcrumbsText,
   influencerCollectionPageBreadcrumbsText,
@@ -439,12 +440,13 @@ export class PDPContainer extends PureComponent {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
       const userID = customer && customer.id ? customer.id : null;
-      const madUUid = userData?.USER_DATA?.deviceUuid || getUUIDToken();
+      const madUUid = userData?.USER_DATA?.deviceUuid || getUUID();
       const vuePayload = {
         user_id: userID,
         product_id: sku,
         mad_uuid: madUUid,
         widget_type: [],
+        Platform: isMobile.any() ? "PWA" : "Desktop"
       };
 
       pdpWidgetsData.forEach((element) => {
@@ -744,17 +746,20 @@ export class PDPContainer extends PureComponent {
         ? product?.price[Object.keys(product?.price)[0]]["6s_special_price"]
         : null;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    return (
-      <PDP
-        {...this.containerProps()}
-        {...this.props}
-        dataForVueCall={{
-          sourceProdID: product?.sku,
-          sourceCatgID: product?.product_type_6s,
-          prodPrice: prodPrice,
-        }}
-      />
-    );
+    if(product && typeof(product) === "object" && Object.keys(product).length !== 0) {
+      return (
+        <PDP
+          {...this.containerProps()}
+          {...this.props}
+          dataForVueCall={{
+            sourceProdID: product?.sku,
+            sourceCatgID: product?.product_type_6s,
+            prodPrice: prodPrice,
+          }}
+        />
+      );
+    }
+    return null;
   }
 }
 
