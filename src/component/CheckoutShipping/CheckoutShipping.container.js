@@ -37,6 +37,8 @@ export const mapDispatchToProps = (dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
   setNewAddressFromClick: (val) => dispatch(setNewAddressClicked(val)),
+  updateAddress: (address_id, address) =>
+    CheckoutDispatcher.updateAddress(dispatch, address_id, address),
 });
 
 export const mapStateToProps = (state) => ({
@@ -48,6 +50,8 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   addressLoader: state.MyAccountReducer.addressLoader,
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
+  typeOfIdentity: state.MyAccountReducer.type_of_identity,
+  identityNumber: state.MyAccountReducer.identity_number,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
@@ -71,31 +75,59 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
     notSavedAddress: this.notSavedAddress.bind(this),
+    onIdentityNumberChange: this.onIdentityNumberChange.bind(this),
+    onTypeOfIdentityChange: this.onTypeOfIdentityChange.bind(this)
   };
 
   static defaultProps = {
     guestEmail: "",
+  };
+  
+  state = {
+    type_of_identity: 0,
+    identity_number : "",
+    validationError: false,
+    isNationalityClick: true,
+  }
+
+  onIdentityNumberChange(value) {
+    const isValidInput =
+      (this.state.type_of_identity == 0 && /^\d{0,12}$/.test(value)) ||
+      (this.state.type_of_identity == 1 && /^[a-zA-Z0-9]*$/.test(value));
+
+    this.setState({ identity_number : value, validationError: !isValidInput });
+  };
+
+  onTypeOfIdentityChange (typeOfIdentityValue){
+    if(typeOfIdentityValue == 0) {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : true });
+    }else {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
+    }
   };
 
   async handleClickNCollectPayment(fields) {
     const {
       totals: { items = [] },
     } = this.props;
-    let storeNo = items[0].extension_attributes.click_to_collect_store;
+    let storeNo = items[0]?.extension_attributes?.click_to_collect_store;
     const getStoreAddressResponse = await getStoreAddress(storeNo);
     let addressField = getStoreAddressResponse.data;
     let inputFields = {
-      city: camelCase(addressField.city || ""),
-      country_id: addressField.country,
-      firstname: fields.firstname,
-      guest_email: fields.guest_email,
-      lastname: fields.lastname,
-      phonecode: fields.phonecode,
-      postcode: camelCase(addressField.area || ""),
-      region_id: camelCase(addressField.area || ""),
-      street: addressField.address,
-      telephone: fields.telephone,
+      city: camelCase(addressField?.city || ""),
+      country_id: addressField?.country,
+      firstname: fields?.firstname,
+      guest_email: fields?.guest_email,
+      lastname: fields?.lastname,
+      phonecode: fields?.phonecode,
+      postcode: camelCase(addressField?.area || ""),
+      region_id: camelCase(addressField?.area || ""),
+      street: addressField?.address,
+      telephone: fields?.telephone,
+      type_of_identity: this.state?.type_of_identity || 0,
+      identity_number: this.state?.identity_number || ""
     };
+    console.log('test kiran --->', 'handleClickNCollectPayment checking ===>',addressField,inputFields);
     this.onShippingSuccess(inputFields);
   }
 
@@ -136,9 +168,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       street,
       phonecode = "",
       postcode,
+      type_of_identity,
+      identity_number,
     } = address;
     const { validateAddress } = this.props;
-
     return validateAddress({
       area: region ?? postcode,
       city,
@@ -147,6 +180,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode: region ?? postcode,
       region: region ?? postcode,
       street: Array.isArray(street) ? street[0] : street,
+      type_of_identity: type_of_identity || this.state?.type_of_identity,
+      identity_number: identity_number || this.state?.identity_number,
     });
   }
 
@@ -172,8 +207,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       telephone = "",
       street,
       phonecode = "",
+      type_of_identity,
+      identity_number,
     } = address;
-
+    console.log("test kiran estimateShipping", address, this.props);
     setLoading(true);
 
     const canEstimate = !Object.values(address).some(
@@ -197,6 +234,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         postcode: region_id,
         phone: phonecode + telephone,
         telephone: phonecode + telephone,
+        type_of_identity : type_of_identity || this.state.type_of_identity,
+        identity_number : identity_number || this.state.identity_number,
       },
       isValidted
     );
@@ -463,8 +502,16 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       selectedCustomerAddressId && !this.checkClickAndCollect()
         ? this._getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
+    const {
+      city,
+      street,
+      country_id,
+      telephone,
+      postcode,
+      type_of_identity = this.state?.type_of_identity || 0,
+      identity_number = this.state?.identity_number || "",
+    } = shippingAddress;
 
-    const { city, street, country_id, telephone, postcode } = shippingAddress;
     const shippingAddressMapped = {
       ...shippingAddress,
       street: Array.isArray(street) ? street[0] : street,
@@ -475,7 +522,26 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       region: city,
       region_id: 0,
       address_id: isCTC ? null : selectedCustomerAddressId,
+      type_of_identity: type_of_identity,
+      identity_number: identity_number,
     };
+    // on checkout page, set update identity-number and type_of_identity store in the respective address
+    if ((this.state.type_of_identity == 0 || typeof this.state.type_of_identity == 1)&& this.state.identity_number?.length) {
+      const updatedAddress = {
+        firstname: shippingAddress?.firstname,
+        lastname: shippingAddress?.lastname,
+        street: shippingAddress?.street,
+        city: shippingAddress?.city,
+        area: postcode,
+        phone:shippingAddress?.telephone,
+        country_code: shippingAddress?.country_id,
+        default_shipping: shippingAddress?.default_shipping,
+        identity_number: identity_number,
+        type_of_identity: type_of_identity,
+        id: selectedCustomerAddressId,
+      };
+      this.props.updateAddress(selectedCustomerAddressId, updatedAddress);
+    }
 
     const {
       carrier_code: shipping_carrier_code,

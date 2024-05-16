@@ -220,28 +220,63 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     const {
       AppConfig: { is_nationality_visible = false },
     } = getStore().getState();
-    return (<>
-      {this.renderGuestContent()}
-      {is_nationality_visible && <div block="custom-clearance-guest-user">
-        <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
-      </div>}
-    </>)
-  }
+    const type_of_identity = {
+      value: this.props.type_of_identity,
+      onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+    };
+    const identity_number = {
+      value: this.props.identity_number,
+      onIdentityNumberChange: this.props.onIdentityNumberChange,
+      validationError: this.state.validationError,
+    };
+    return (
+      <>
+        {this.renderGuestContent()}
+        {is_nationality_visible && (
+          <div block="custom-clearance-guest-user">
+            <MyAccountAddressNationalityFieldForm
+              isArabic={isArabic}
+              isCheckoutPage={true}
+              type_of_identity={type_of_identity}
+              identity_number={identity_number}
+            />
+          </div>
+        )}
+      </>
+    );
+  };
 
   renderSignInCustomClearanceField = () => {
     const {
       AppConfig: { is_nationality_visible = false },
     } = getStore().getState();
     const { isSignedIn } = this.props;
-    return isSignedIn && is_nationality_visible ? (<div block="checkoutAddressBookCustomClearanceContainer">
-      <h3 className="custom-clearance-header">
-        {__("Customs Clearance Information")}
-      </h3>
-      <div block="checkoutAddressBookCustomClearance">
-        <MyAccountAddressNationalityFieldForm isArabic={isArabic} />
+    console.log('test kiran ---> renderSignInCustomClearanceField', ' 1234checking ===>',this.props);
+    const type_of_identity = {
+      value: this.props.type_of_identity,
+      onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+    };
+    const identity_number = {
+      value: this.props.identity_number,
+      onIdentityNumberChange: this.props.onIdentityNumberChange,
+      validationError: this.state.validationError,
+    };
+    return isSignedIn && is_nationality_visible ? (
+      <div block="checkoutAddressBookCustomClearanceContainer">
+        <h3 className="custom-clearance-header">
+          {__("Customs Clearance Information")}
+        </h3>
+        <div block="checkoutAddressBookCustomClearance">
+          <MyAccountAddressNationalityFieldForm
+            isArabic={isArabic}
+            isCheckoutPage={true}
+            type_of_identity={type_of_identity}
+            identity_number={identity_number}
+          />
+        </div>
       </div>
-    </div>) : null;
-  }
+    ) : null;
+  };
   renderContent() {
     const { isSignedIn, isClickAndCollect, clickAndCollectStatus } = this.props;
     if (isSignedIn && !clickAndCollectStatus) {

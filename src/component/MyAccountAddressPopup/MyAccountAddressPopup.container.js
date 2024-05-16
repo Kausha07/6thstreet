@@ -125,6 +125,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       telephone = "",
       street,
       phonecode = "",
+      type_of_identity = 0,
+      identity_number = "",
     } = address;
     const { validateAddress } = this.props;
 
@@ -136,6 +138,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       postcode: region ?? region_id,
       region: region ?? region_id,
       street: Array.isArray(street) ? street[0] : street,
+      type_of_identity: type_of_identity,
+      identity_number: identity_number
     });
   }
 
@@ -252,6 +256,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       street,
       city,
       telephone,
+      type_of_identity = this.props?.type_of_identity || 0,
+      identity_number = this.props?.identity_number || "",
     } = address;
     const newAddress = {
       firstname: firstname,
@@ -262,11 +268,14 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       phone: telephone,
       country_code: country_id,
       default_shipping: default_shipping,
+      type_of_identity: type_of_identity,
+      identity_number: identity_number,
     };
     return { newAddress };
   }
 
   render() {
+    console.log('test kiran --->', 'getNewAddressField checking ===>',this.props);
     return (
       <MyAccountAddressPopup
         {...this.props}

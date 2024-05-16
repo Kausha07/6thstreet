@@ -40,7 +40,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderLoading: false,
     isButtondisabled: false,
   };
-
+  componentDidMount() {
+    console.log('test kiran --->', 'kiranchecking ===>');
+  }
   renderButtonsPlaceholder() {
     return __("Proceed to secure payment");
   }
@@ -355,6 +357,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           openForm={this.openForm}
           showCards={this.showCards}
           customer={customer}
+          type_of_identity={this.props.type_of_identity}
+          identity_number={this.props.identity_number}
         />
       </div>
     );
@@ -477,6 +481,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         isClickAndCollect={isClickAndCollect}
         clickAndCollectStatus={checkClickAndCollect()}
         customer={customer}
+        type_of_identity={this.props.type_of_identity}
+        identity_number={this.props.identity_number}
+        onIdentityNumberChange={this.props.onIdentityNumberChange}
+        onTypeOfIdentityChange={this.props.onTypeOfIdentityChange}
       />
     );
   }
@@ -539,12 +547,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         >
           {isSignedIn() && !checkClickAndCollect() ? (
             <div block="header-new-address-container">
-              <h3>{__("Delivering to")}</h3>
-              <h4 block="CheckoutShipping" elem="DeliveryMessage">
-                {checkClickAndCollect()
-                  ? "Please confirm your contact details"
-                  : __("Where can we send your order?")}
-              </h4 >
+              <div>
+                <h3>{__("Delivering to")}</h3>
+                <h4 block="CheckoutShipping" elem="DeliveryMessage">
+                  {checkClickAndCollect()
+                    ? "Please confirm your contact details"
+                    : __("Where can we send your order?")}
+                </h4 >
+              </div>
               {this.renderAddNewAddressButton()}
             </div>
           ) : null}

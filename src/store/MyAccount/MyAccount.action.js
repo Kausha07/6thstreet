@@ -26,6 +26,8 @@ export const SET_USER_ID_FOR_VUE_TRENDING_BRANDS = "SET_USER_ID_FOR_VUE_TRENDING
 export const SET_NEW_ADDRESS_CLICKED = "SET_NEW_ADDRESS_CLICKED";
 export const SET_NEW_ADDRESS_SAVED ="SET_NEW_ADDRESS_SAVED";
 export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
+export const SET_TYPE_OF_IDENTITY = "SET_TYPE_OF_IDENTITY";
+export const SET_IDENTITY_NUMBER = "SET_IDENTITY_NUMBER";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -114,4 +116,14 @@ export const setNewAddressSaved = (newAddressSaved) => ({
 export const setSelectedAddressID = (addressIDSelected) => ({
   type: SET_SELECTED_ADDRESS_ID,
   addressIDSelected,
+});
+
+export const setTypeOfIdentity = (type_of_identity) => ({
+  type: SET_TYPE_OF_IDENTITY,
+  type_of_identity,
+});
+
+export const setIdentityNumber = (identity_number) => ({
+  type: SET_IDENTITY_NUMBER,
+  identity_number
 });

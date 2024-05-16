@@ -24,7 +24,9 @@ import {
   SET_USER_ID_FOR_VUE_TRENDING_BRANDS,
   SET_NEW_ADDRESS_CLICKED,
   SET_NEW_ADDRESS_SAVED,
-  SET_SELECTED_ADDRESS_ID
+  SET_SELECTED_ADDRESS_ID,
+  SET_TYPE_OF_IDENTITY,
+  SET_IDENTITY_NUMBER
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -50,6 +52,8 @@ export const initialState = {
   addNewAddressClicked: false,
   newAddressSaved: false,
   addressIDSelected: null,
+  type_of_identity: 0,
+  identity_number: "",
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -66,6 +70,8 @@ export const MyAccountReducer = (state = initialState, action) => {
     PdpEddAddress,
     defaultEddResponse,
     citiesData,
+    type_of_identity,
+    identity_number,
   } = action;
 
   switch (action.type) {
@@ -96,9 +102,14 @@ export const MyAccountReducer = (state = initialState, action) => {
         addressCityData: citiesData,
       };
     case SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS:
+      // const { type_of_identity : typeOfIdentity = "0", identity_number : identityNumber = ""  } = defaultaddress;
+      const typeOfIdentity = defaultaddress?.type_of_identity;
+      const identityNumber = defaultaddress?.identity_number;
       return {
         ...state,
         defaultShippingAddress: defaultaddress,
+        type_of_identity:typeOfIdentity || 0,
+        identity_number: identityNumber || ""
       };
     case SET_EDD_RESPONSE:
       return {
@@ -218,6 +229,19 @@ export const MyAccountReducer = (state = initialState, action) => {
       addressIDSelected,
     };
 
+    case SET_TYPE_OF_IDENTITY: {
+      return {
+        ...state,
+        type_of_identity,
+      }
+    };
+
+    case SET_IDENTITY_NUMBER: {
+      return {
+        ...state,
+        identity_number,
+      }
+    };
     default:
       return state;
   }

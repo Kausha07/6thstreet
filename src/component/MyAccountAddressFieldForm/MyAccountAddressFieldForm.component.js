@@ -79,6 +79,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
       region_id,
       region_string,
       default_common,
+      identity_number,
+      type_of_identity
     } = this.fieldMap;
 
     this.getCitiesData();
@@ -144,7 +146,13 @@ export class MyAccountAddressFieldForm extends PureComponent {
             {this.renderCurrentPhoneCode(value)}
           </div>
         </div>
-        {is_nationality_visible && <MyAccountAddressNationalityFieldFrom isArabic={isArabic} />}
+        {is_nationality_visible && (
+          <MyAccountAddressNationalityFieldFrom
+            isArabic={isArabic}
+            identity_number={identity_number}
+            type_of_identity={type_of_identity}
+          />
+        )}
         <div
           block="MyAccountAddressFieldForm"
           elem="FieldWrapper"
