@@ -118,7 +118,7 @@ export default function RewardsTransactions() {
                 )}
 
                 {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
-                  <Refund transaction={transaction} text={"Reward"} />
+                  <Cashback transaction={transaction} />
                 )}
 
                 {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (

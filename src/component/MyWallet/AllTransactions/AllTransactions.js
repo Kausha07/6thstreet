@@ -106,7 +106,7 @@ export default function AllTransactions() {
                 )}
               {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT &&
                 transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                  <Refund transaction={transaction} text={"Revert"} />
+                  <Refund transaction={transaction} text={"Refund"} />
                 )}
               {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED &&
                 transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
@@ -129,7 +129,7 @@ export default function AllTransactions() {
 
               {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
                 transaction.type == PROMOTIONAL_HISTORY_TYPE && (
-                  <Refund transaction={transaction} text={"Reward"} />
+                  <Cashback transaction={transaction} />
                 )}
 
               {transaction.action == ACTION_PROMOTIONAL_REFUND &&

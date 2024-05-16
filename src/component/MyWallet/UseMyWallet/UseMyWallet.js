@@ -6,6 +6,7 @@ import { getLanguageFromUrl } from "Util/Url";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
 import CrossIcon from "./../IconsAndImages/CrossIcon.svg";
 import SelectIcon from "./../IconsAndImages/SelectIcon.svg";
+import { EligibiltyPopup } from "../HelperComponents/HelperComponents.js";
 import "./UseMyWallet.style.scss";
 
 export const mapStateToProps = (state) => ({
@@ -22,6 +23,9 @@ export const mapDispatchToProps = (dispatch) => ({
 export function UseMyWallet(props) {
   const [isWalletBalanceApplied, setIsWalletBalanceApplied] = useState(false);
   const [currencyCode, setCurrencyCode] = useState("");
+  const [isEligiblityPopUpVisible, setIsEligiblityPopUpVisible] =
+    useState(false);
+
   const {
     toggleMyWallet,
     getReward,
@@ -53,7 +57,12 @@ export function UseMyWallet(props) {
           <Loader isLoading={isLoading} />
           <div>
             <div className="Heading">{__("My Rewards")}</div>
-            <div className="SubHeading">
+            <div
+              className="SubHeading"
+              onClick={() =>
+                setIsEligiblityPopUpVisible(!isEligiblityPopUpVisible)
+              }
+            >
               {__("Eligible to use")}
               <span className="boldAmount">
                 {" "}
@@ -62,6 +71,13 @@ export function UseMyWallet(props) {
               {__("of")}{" "}
               <span className="boldAmount"> {myWallet?.current_balance}</span>
             </div>
+            {isEligiblityPopUpVisible && (
+              <EligibiltyPopup
+                setIsVisible={setIsEligiblityPopUpVisible}
+                percentage={myWallet?.redeem_limit_percentage}
+                amount={myWallet?.max_redeemable_amount}
+              />
+            )}
           </div>
           <div>
             <div className="toggle-switch" onClick={handleCheckboxChange}>

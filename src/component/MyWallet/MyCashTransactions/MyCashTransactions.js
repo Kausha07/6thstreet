@@ -102,7 +102,7 @@ export default function MyCashTransactions() {
                 <Refund transaction={transaction} text={"Updated"} />
               )}
               {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT && (
-                <Refund transaction={transaction} text={"Revert"} />
+                <Refund transaction={transaction} text={"Refund"} />
               )}
               {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED && (
                 <Refund transaction={transaction} text={"Referred"} />

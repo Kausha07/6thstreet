@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "Component/Loader";
 import { isArabic } from "Util/App";
+import { showNotification } from "Store/Notification/Notification.action";
 import {
   getWalletBalance,
   getTransactionHistory,
@@ -25,12 +27,10 @@ import {
   ACTION_TRANSACTIONAL_REFUND,
   ACTION_TRANSACTIONAL_PAYMENT_REVERT,
 } from "./../MyWalletConfig/MyWalletConfig.js";
-import referralIcon from "./../IconsAndImages/referralIcon.svg";
 import MyRewardsIcon from "./../IconsAndImages/MyRewardsIcon.svg";
-import OrderBagIcon from "./../IconsAndImages/OrderBagIcon.svg";
 import CashRefundIcon from "./../IconsAndImages/CashRefundIcon.svg";
-import WalletIcon from "./../IconsAndImages/WalletIcon.svg";
-import test4 from "./../IconsAndImages/test4.svg";
+import VoucherIcon from "./../IconsAndImages/VoucherIcon.svg";
+import CopyIcon from "./../IconsAndImages/CopyIcon.svg";
 import GoRightIcon from "./../IconsAndImages/GoRightIcon.svg";
 import GoBackIcon from "./../IconsAndImages/GoBackIcon.svg";
 import WalletMainIcon from "./../IconsAndImages/WalletMainIcon.svg";
@@ -48,6 +48,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const [allTransactionHistory, setAllTransactionHistory] = useState(null);
 
   const isLanguageArabic = isArabic();
+  const walletCashbackCoupon = useSelector(
+    (state) => state.AppConfig.walletCashbackCoupon
+  );
+  const dispatch = useDispatch();
+
   const fetchWalletBalance = async () => {
     try {
       setIsBalanceLoading(true);
@@ -87,6 +92,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
   useEffect(() => {
     fetchTransactionHistory();
   }, []);
+
+  function copyReferralCode() {
+    dispatch(showNotification("success", __("Coupon copied to clipboard")));
+    navigator.clipboard.writeText(walletCashbackCoupon);
+  }
 
   // useEffect(() => {
   //   getRewardsDetails();
@@ -171,15 +181,15 @@ export default function MyWalletHome({ setCurrentScreen }) {
           </div>
           <div className="ReferNEarnLink">
             <div className="referIcon">
-              <img src={referralIcon} />
+              <img src={VoucherIcon} />
             </div>
             <div>
-              <div className="Heading">{__("Refer and Earn")}</div>
+              <div className="Heading">{__("Shop now to earn rewards")}</div>
               <div className="SubHeading">
-                {__("Refer to your friends and get cash today")}
-                {/* <span className="GoRight">
-                  <img src={GoRightIcon} />
-                </span> */}
+                {__("Coupon: ")} {walletCashbackCoupon}
+                <span onClick={() => copyReferralCode()}>
+                  <img className="CopyIcon" src={CopyIcon} alt="copy" />
+                </span>
               </div>
             </div>
           </div>
@@ -203,7 +213,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
                   )}
                 {transaction.action == ACTION_TRANSACTIONAL_PAYMENT_REVERT &&
                   transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
-                    <Refund transaction={transaction} text={"Revert"} />
+                    <Refund transaction={transaction} text={"Refund"} />
                   )}
                 {transaction.action == ACTION_TRANSACTIONAL_REFERRAL_ADDED &&
                   transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
@@ -226,7 +236,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
 
                 {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
                   transaction.type == PROMOTIONAL_HISTORY_TYPE && (
-                    <Refund transaction={transaction} text={"Reward"} />
+                    <Cashback transaction={transaction} />
                   )}
                 {transaction.action == ACTION_PROMOTIONAL_REFUND &&
                   transaction.type === PROMOTIONAL_HISTORY_TYPE && (

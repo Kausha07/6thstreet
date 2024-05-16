@@ -46,6 +46,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 isVIPEnabled: config.countries[getCountryCode]?.isVipEnabled || false,
                 isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false,
                 isWalletV1Enabled: config.countries[getCountryCode]?.is_wallet_v1_enabled || false,
+                walletCashbackCoupon: config.countries[getCountryCode]?.cashback_coupon || false, 
                 isProductRatingEnabled: config.countries[getCountryCode]?.isProductRatingEnabled || false,
             };
 

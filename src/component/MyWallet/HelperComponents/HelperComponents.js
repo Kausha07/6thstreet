@@ -10,6 +10,7 @@ import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState, useEffect } from "react";
 import Link from "Component/Link";
 import { formatDate } from "../../../util/Common";
+import ClickOutside from "Component/ClickOutside";
 import { getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import "./HelperComponents.style.scss";
 
@@ -260,6 +261,30 @@ export function CollapsableComponent({ title, description }) {
         </div>
         {isExpanded && <div className="Content">{description}</div>}
       </div>
+    </>
+  );
+}
+
+export function EligibiltyPopup({ setIsVisible, percentage, amount }) {
+  const isLanguageArabic = isArabic();
+  return (
+    <>
+      <ClickOutside onClick={() => setIsVisible(false)}>
+        <div>
+          <div className={"nudge-container"}>
+            <div className="nudge-content">
+              {__("Elgible to use")}
+              <span className="percentage">
+                {" "}
+                {percentage}
+                {"%"}{" "}
+              </span>
+              {__("of the order value up to")}{" "}
+              <span className="amount">{amount}</span>
+            </div>
+          </div>
+        </div>
+      </ClickOutside>
     </>
   );
 }
