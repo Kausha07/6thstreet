@@ -42,6 +42,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const isMobileValue = isMobile.any() || isMobile.tablet();
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [balanceResponse,setBalanceResponse ] = useState({});
   const [promotionalBalance, setPromotionalBalance] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [transactionalBalance, setTransactionalBalance] = useState(null);
@@ -58,6 +59,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
       setIsBalanceLoading(true);
       const responseBalance = await getWalletBalance();
       if (responseBalance && responseBalance.success) {
+        setBalanceResponse(responseBalance?.data);
         setPromotionalBalance(responseBalance?.data?.promotional_balance);
         setTotalBalance(responseBalance?.data?.total_balance);
         setTransactionalBalance(responseBalance?.data?.transaction_balance);
@@ -141,15 +143,19 @@ export default function MyWalletHome({ setCurrentScreen }) {
             <button
               className="GoTo"
               onClick={() => setCurrentScreen("my-cash")}
+              disabled={!balanceResponse?.my_cash_history_available}
             >
               {isBalanceLoading ? (
                 <Loader isLoading={isBalanceLoading} />
               ) : (
                 <div className="Amount">{transactionalBalance}</div>
               )}
-              <div className="RightIcon">
-                <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
-              </div>
+              {
+                balanceResponse?.my_cash_history_available && 
+                <div className="RightIcon">
+                  <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
+                </div>
+              }
             </button>
           </div>
           <div className="WalletLink">
@@ -167,16 +173,20 @@ export default function MyWalletHome({ setCurrentScreen }) {
             <button
               className="GoTo"
               onClick={() => setCurrentScreen("rewards")}
+              disabled={!balanceResponse?.my_reward_history_available}
             >
               {isBalanceLoading ? (
                 <Loader isLoading={isBalanceLoading} />
               ) : (
                 <div className="Amount">{promotionalBalance}</div>
               )}
-
-              <div className="RightIcon">
-                <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
-              </div>
+              {
+                balanceResponse?.my_reward_history_available &&
+                <div className="RightIcon">
+                  <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
+                </div>
+              }
+             
             </button>
           </div>
           <div className="ReferNEarnLink">

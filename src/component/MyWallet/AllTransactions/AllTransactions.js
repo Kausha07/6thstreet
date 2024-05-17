@@ -139,7 +139,7 @@ export default function AllTransactions() {
                 )}
 
               {transaction.action == ACTION_PROMOTIONAL_REFUND &&
-                transaction.type === PROMOTIONAL_HISTORY_TYPE && (
+                transaction.type === PROMOTIONAL_HISTORY_TYPE &&  transaction?.expires_at != null &&(
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
               <hr className="HoriRow" />

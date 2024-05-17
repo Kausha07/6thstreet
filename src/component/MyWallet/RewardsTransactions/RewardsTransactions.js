@@ -131,7 +131,7 @@ export default function RewardsTransactions() {
                   <Refund transaction={transaction} text={"Reward"} />
                 )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REFUND && (
+                {transaction.action == ACTION_PROMOTIONAL_REFUND &&  transaction?.expires_at != null &&(
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
                 <hr className="HoriRow" />
