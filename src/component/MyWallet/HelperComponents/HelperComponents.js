@@ -56,6 +56,34 @@ export function Cashback({ transaction }) {
   );
 }
 
+export function RewardsExpired({ transaction }) {
+  return (
+    <>
+      <div className="transactionPill">
+        <div className="date">
+          {formatDate(transaction?.created_at.slice(0, 10))}
+        </div>
+        <div className="WalletLink">
+          <div className="LinkImgText">
+            <div className="Icon">
+              <img src={MyRewardsIcon} />
+            </div>
+            <div>
+              <div className="LinkHeading Expired">{__("Rewards Expired")}</div>
+            </div>
+          </div>
+          <div
+            className="AmountExchange Expired"
+          >
+            {transaction?.balance}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+
 export function Refund({ transaction, text }) {
   return (
     <>

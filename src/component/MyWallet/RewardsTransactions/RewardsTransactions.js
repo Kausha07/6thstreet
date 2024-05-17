@@ -4,6 +4,7 @@ import {
   Cashback,
   Refund,
   ExpiringSoon,
+  RewardsExpired,
 } from "../HelperComponents/HelperComponents";
 import { useState, useEffect } from "react";
 import { getTransactionHistory } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
@@ -113,6 +114,11 @@ export default function RewardsTransactions() {
             <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
             {rewardHistory.map((transaction) => (
               <>
+               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN || 
+              transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS || 
+              transaction.action == ACTION_PROMOTIONAL_REFUND && transaction?.expires_at == null && (
+                  <RewardsExpired transaction={transaction} />
+                )}
                 {transaction.action == ACTION_PROMOTIONAL_ORDER && (
                   <OrderPlaced transaction={transaction} />
                 )}
