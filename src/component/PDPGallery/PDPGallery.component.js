@@ -48,7 +48,6 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(showNotification("error", error[0].message)),
 });
 
-const newDesign = false;
 
 class PDPGallery extends PureComponent {
   static propTypes = {
@@ -665,13 +664,15 @@ class PDPGallery extends PureComponent {
    
     return (
       <>
-        {isMobile.any() && isNewDesign && this.renderSaleBlock()}
+        {
+            /* Mobile Flash sale block */
+            isNewDesign && isMobile.any() && this.renderSaleBlock()
+        }
       <div block='PDPGallery'>
         {openGalleryOverlay ? (
           this.renderGalleryOverlay()
         ) : (
           <>
-         
             {this.renderBackButton()}
             {this.renderCrumbs()}
             <div block="OverlayIcons" mods={{ isArabic }}>
@@ -689,6 +690,10 @@ class PDPGallery extends PureComponent {
           mods={{ isArabic }}
           onClick={this.showGalleryOverlay}
         >
+          {
+            /* Desktop Flash sale block */
+            isNewDesign && !isMobile.any() && this.renderSaleBlock()
+          }
           {this.renderSlider()}
           {this.renderGalleryTag()}
         </button>

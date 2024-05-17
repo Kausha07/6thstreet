@@ -68,9 +68,7 @@ class PDP extends PureComponent {
       this.setState({
         PDPJSON:response.data
       });
-      isMobile.any() && this.props.gnisNewDesign(response.newDesign);
-      !isMobile.any() && this.props.gnisNewDesign(!response.newDesign);
-   
+      this.props.gnisNewDesign(response.newDesign);
     } catch (e) {
       Logger.log(e);
     }

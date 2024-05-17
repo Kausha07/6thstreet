@@ -280,6 +280,9 @@
       .Slider-Crumbs{
         grid-gap: 6px;
       }
+      &-OverlayButton{
+        position: relative;
+      }
     }
     .BackArrow{
       top: 15px;
@@ -290,6 +293,21 @@
     .saleBlock{
       background: #000000;
       padding: 5px 0;
+      @include desktop{
+        position: absolute;
+        top:0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+
+      }
+      &_isArabic{
+        right: 0;
+        left: auto;
+      }
+      .TimerTitle{
+        text-transform: none;
+      }
       .PLPOrPDPTimer,
       .isPLPorPDPBox{
         background-color: #000;
@@ -301,6 +319,7 @@
         b{
           font-size: 12px;
           line-height: 12px;
+          font-weight: 600;
         }
       }
       .PLPOrPDPTimer{
