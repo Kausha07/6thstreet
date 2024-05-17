@@ -1,0 +1,228 @@
+@-webkit-keyframes widthLeftToright {
+    0% {
+       max-width: 0;
+    }
+
+    to {
+        max-width: 100%;
+    }
+}
+@keyframes widthLeftToright {
+    0% {
+        max-width: 0;
+     }
+ 
+     to {
+         max-width: 100%;
+     }
+}
+@mixin ratingFontSize{
+    @include mobile {
+        font-size: 13px;
+        line-height: 17px;
+        font-weight: 500;
+    }
+    @include desktop {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 500;
+    }
+}
+.ratings{
+    display: inline-block;
+    @include mobile{
+        position: absolute;
+        left: 10px;
+        bottom: 25px;
+        
+    }
+    &-summary{
+        background: #fff;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        border:1px solid #DEDEDE; 
+        cursor: pointer;
+        @include mobile{
+            padding: 4px;
+            border-radius: 15px;
+            width: 75px;
+        }
+        @include desktop{
+            padding: 5px;
+            
+        }
+        &-count,
+        &-text,
+        &-separator,
+        &-rating{
+            @include ratingFontSize();
+            .ratings-icon{
+                margin-left: 2px;
+            }
+
+        }
+        &-separator{
+            margin: 0 3px;
+            color :#DEDEDE;
+
+        }
+    }
+    &-detailPop{
+        background: #fff;
+        padding: 20px;
+        display: inline-block;
+        width: 100%;
+        &-title{
+            font-size: 18px;
+            line-height: 18px;
+            font-size: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+    }
+    &-Info{
+        display: flex;
+        justify-content: space-evenly;
+        align-items:center
+    }
+    &-avg{
+        display: flex;
+        width: 38%;
+        flex-direction: column;
+        align-items: center;
+        
+        &-title{
+            font-size: 32px;
+            line-height: 32px;
+            font-weight: 500;
+            color: #000;
+            display: flex;
+            margin-bottom: 5px;
+            span{
+                margin-right: 3px;
+            }
+        }
+        &-separator{
+            height: 150px;
+            border: 1px solid #E7E7E7;
+            background: #E7E7E7;
+            margin: 0 18px;
+        }
+        &-text{
+            font-size: 12px;
+            line-height: 18px;
+            color: #979797;
+        }
+    }
+    &-starList{
+        display: flex;
+        flex-direction: column;
+        width: 58%;
+    }
+    &-starItem{
+        display: flex;
+        width: 100%;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: flex-start;
+        &:last-child{
+            margin-bottom: 0;
+        }
+        &-text{
+            font-size: 12px;
+            line-height: 17px;
+        }
+
+        &-bar{
+            width: 140px;
+            height: 5px;
+            background: #D9D9D9;
+            max-width: 75%;
+            margin: 0 6px;
+            position: relative;
+            &Selected{
+                height: 5px;
+                width: 0;
+                background: #28D9AA;
+                display:inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                -webkit-animation-duration: .5s;
+                animation-duration: .5s;
+                -webkit-animation-delay: .25s;
+                animation-delay: .25s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+                -webkit-animation-name: widthLeftToright;
+                animation-name: widthLeftToright;
+            }
+        }
+        .ratings-icon{
+            margin-left: 2px;
+        }
+    }
+    &-totalReview{
+        &-count,
+        &-text{
+            @include ratingFontSize();
+            color: #777777;
+        }
+        &-text{
+            margin-left: 2px;
+            @include mobile{
+                display: none;
+            }
+        }
+
+    }
+
+    &-icon{
+        width: 10px;
+        &_isLarge{
+            width: 20px;
+        }
+        &_isSmall{
+            width: 7px;
+        }
+    }
+    &-detailPop{
+        &_isArabic{
+            .ratings{
+                &-summary{
+                    &-rating{
+                        .ratings-icon{
+                            margin-right: 2px;
+                        }
+                    }
+                }
+                &-starItem {
+                    .ratings-icon{
+                        margin-left: 0;
+                        margin-right: 2px;
+                    }
+                    &-bar{
+                        &Selected{
+                            left: auto;
+                            right: 0;
+                        }
+                    }
+                }
+                &-totalReview{
+                    &-text{
+                        margin-left: 0;
+                        margin-right: 2px;
+                    }
+                }
+                &-avg-title {
+                    span{
+                        margin-right: 0;
+                        margin-left: 3px;
+                    }
+                }
+    
+            }
+        }
+    }
+}

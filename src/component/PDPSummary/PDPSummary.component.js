@@ -43,6 +43,7 @@ import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import { connect } from "react-redux";
+import Ratings from 'Component/Ratings/Ratings';
 export const mapStateToProps = (state) => ({
   isNewDesign:state.PDP.isNewDesign
 });
@@ -1397,6 +1398,7 @@ class PDPSummary extends PureComponent {
               <div block="PriceAndPDPSummaryHeaderAndTimer">
                 <div block="PriceAndPDPSummaryHeader">
                   {this.renderPriceAndPDPSummaryHeader()}
+                  {isNewDesign && !isMobile && <Ratings />}
                 </div>
                   {
                     !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
