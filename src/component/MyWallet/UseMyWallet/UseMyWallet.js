@@ -54,7 +54,6 @@ export function UseMyWallet(props) {
     const {
       Cart: { cartId },
     } = getStore().getState();
-    console.log("test cartid", cartId);
 
     try {
       if (!isWalletBalanceApplied) {
@@ -119,6 +118,10 @@ export function UseMyWallet(props) {
                 amount={myWallet?.max_redeemable_amount}
               />
             )}
+            <div className="expiring">
+              {myWallet?.expiring_amount} {__("is expiring in")}{" "}
+              {myWallet?.expires_within_days} days
+            </div>
           </div>
           <div>
             <div className="toggle-switch" onClick={handleCheckboxChange}>
