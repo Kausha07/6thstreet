@@ -42,7 +42,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const isMobileValue = isMobile.any() || isMobile.tablet();
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
-  const [balanceResponse,setBalanceResponse ] = useState({});
+  const [balanceResponse, setBalanceResponse] = useState({});
   const [promotionalBalance, setPromotionalBalance] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [transactionalBalance, setTransactionalBalance] = useState(null);
@@ -100,6 +100,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
     navigator.clipboard.writeText(walletCashbackCoupon);
   }
 
+  function extractNumberFromString(value) {
+    if (value) return Number(value.replace(/٫/g, ".").replace(/[^0-9.]/g, ""));
+    return 0;
+  }
+
   // useEffect(() => {
   //   getRewardsDetails();
   // }, []);
@@ -113,7 +118,13 @@ export default function MyWalletHome({ setCurrentScreen }) {
             : "WalletContainer"
         }
       >
-        <div className="WalletMainTop">
+        <div
+          className={
+            extractNumberFromString(totalBalance)
+              ? "WalletMainTop"
+              : "WalletMainTop ZeroBalance"
+          }
+        >
           <div className="SlantBackground"></div>
           <div className="TotalBalance">
             <div className="Heading">{__("Total Available Balance")}</div>
@@ -150,12 +161,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
               ) : (
                 <div className="Amount">{transactionalBalance}</div>
               )}
-              {
-                balanceResponse?.my_cash_history_available && 
+              {balanceResponse?.my_cash_history_available && (
                 <div className="RightIcon">
                   <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
                 </div>
-              }
+              )}
             </button>
           </div>
           <div className="WalletLink">
@@ -180,13 +190,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
               ) : (
                 <div className="Amount">{promotionalBalance}</div>
               )}
-              {
-                balanceResponse?.my_reward_history_available &&
+              {balanceResponse?.my_reward_history_available && (
                 <div className="RightIcon">
                   <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
                 </div>
-              }
-             
+              )}
             </button>
           </div>
           <div className="ReferNEarnLink">
@@ -196,19 +204,25 @@ export default function MyWalletHome({ setCurrentScreen }) {
             <div>
               <div className="Heading">{__("Shop now to earn rewards")}</div>
               <div className="SubHeading">
-                {__("Coupon")}{" :"} {walletCashbackCoupon}
+                {__("Coupon")}
+                {" :"} {walletCashbackCoupon}
                 <span onClick={() => copyReferralCode()}>
                   <img className="CopyIcon" src={CopyIcon} alt="copy" />
                 </span>
               </div>
             </div>
           </div>
-          <div className="TransactionHeading">
-            <div className="Heading">{__("All Transaction")}</div>
-            <button className="ViewAll" onClick={() => setCurrentScreen("all")}>
-              {__("View all")}
-            </button>
-          </div>
+          {allTransactionHistory?.count > 0 && (
+            <div className="TransactionHeading">
+              <div className="Heading">{__("All Transaction")}</div>
+              <button
+                className="ViewAll"
+                onClick={() => setCurrentScreen("all")}
+              >
+                {__("View all")}
+              </button>
+            </div>
+          )}
 
           {allTransactionHistory?.history.map((transaction) => {
             return (
