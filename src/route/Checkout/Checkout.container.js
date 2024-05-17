@@ -810,9 +810,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         newAddressAdded: isSignedIn ? newAddressSaved : true,
         isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
       });
-      if (this.getCheckoutStepNumber() == "2") {
-        Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
-      }
     }
     if (isInitial) {
       this.setState({ initialGTMSent: true });

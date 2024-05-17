@@ -43,17 +43,14 @@ class AutheneticationEvent extends BaseEvent {
       eventCategory: data.category ? data.category : data.name,
       eventAction: data.action ? data.action : data.name,
       ...(data.failReason && { failReason: data.failReason }),
-      ...(data.loginMode && { loginMode: data.loginMode }),
+      ...(data.login_mode && { login_mode: data.login_mode }),
       ...(data.attemptNumber && { attemptNumber: data.attemptNumber }),
-      ...(data.popupSource && { PopupSource: data.popupSource }),
       UserType:
         data.name == "login"
           ? "Logged In"
           : this.getCustomerId().toString().length > 0
           ? "Logged In"
           : "Logged Out",
-      CustomerID: this.getCustomerId(),
-      PageType: this.getPageType(),
       ClientID: this.getGAID(),
     });
   }

@@ -34,7 +34,7 @@ window.__isBOT__ = pattern.test(navigator.userAgent);
 //vwo a/b testing tool integration on application loading
 const vwoInit = async () => {
   try {
-    if(vwoSdk) {
+    if(window.vwoSdk) {
       const settingsFile = await vwoSdk?.getSettingsFile(
         process.env.REACT_APP_VWO_AB_TOOL_ACCOUNT_ID,
         process.env.REACT_APP_VWO_AB_TOOL_SDK_KEY
@@ -47,7 +47,10 @@ const vwoInit = async () => {
     console.error("vwo tool initialisation error: ",err);
   }
 };
-vwoInit();
+if(!window.__isBOT__) {
+  vwoInit();
+}
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
   integrations: [

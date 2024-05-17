@@ -307,6 +307,7 @@ export class CartItemContainer extends PureComponent {
           optionValue,
           color,
           qty,
+          availability,
           product: { name } = {},
           full_item_info: {
             config_sku,
@@ -315,6 +316,9 @@ export class CartItemContainer extends PureComponent {
             product_type_6s,
             original_price,
             size_option,
+            size_value,
+            discount_amount, 
+            itemPrice
           },
           full_item_info,
         },
@@ -327,16 +331,19 @@ export class CartItemContainer extends PureComponent {
        }).catch(() => {
         this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);
       });
-
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
           name,
           id: config_sku || sku,
-          price: row_total,
+          price: itemPrice,
           brand: brand_name,
-          category: product_type_6s || category,
+          category: category,
           variant: color,
           quantity: qty,
+          size: size_value,
+          size_option: size_option, 
+          variant_availability: availability, 
+          discount: discount_amount
         },
       });
       // vue analytics

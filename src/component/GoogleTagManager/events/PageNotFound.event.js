@@ -1,4 +1,4 @@
-import Event, { EVENT_PAGE_NOT_FOUND } from "Util/Event";
+import Event, { EVENT_GTM_PAGE_NOT_FOUND } from "Util/Event";
 
 import BaseEvent from "./Base.event";
 
@@ -29,8 +29,8 @@ class PageNotFoundEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_PAGE_NOT_FOUND, (url) => {
-      this.handle(EVENT_PAGE_NOT_FOUND, url);
+    Event.observer(EVENT_GTM_PAGE_NOT_FOUND, (url) => {
+      this.handle(EVENT_GTM_PAGE_NOT_FOUND, url);
     });
   }
   handler(EVENT_TYPE, url) {
@@ -39,9 +39,6 @@ class PageNotFoundEvent extends BaseEvent {
     }
     this.pushEventData({
       event: EVENT_TYPE,
-      ecommerce: {
-        url: url,
-      },
     });
   }
 }

@@ -262,7 +262,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       category:
         event == EVENT_RESEND_VERIFICATION_CODE ? message : eventCategory(),
       ...((event == EVENT_LOGIN_DETAILS_ENTERED || event == EVENT_LOGIN) && {
-        loginMode: message,
+        login_mode: message,
       }),
       ...((event == EVENT_OTP_VERIFICATION_SUCCESSFUL ||
         event == EVENT_LOGIN) && {
