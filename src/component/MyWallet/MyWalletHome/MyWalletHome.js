@@ -186,7 +186,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
             <div>
               <div className="Heading">{__("Shop now to earn rewards")}</div>
               <div className="SubHeading">
-                {__("Coupon: ")} {walletCashbackCoupon}
+                {__("Coupon")}{" :"} {walletCashbackCoupon}
                 <span onClick={() => copyReferralCode()}>
                   <img className="CopyIcon" src={CopyIcon} alt="copy" />
                 </span>

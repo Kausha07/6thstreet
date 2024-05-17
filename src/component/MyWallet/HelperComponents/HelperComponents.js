@@ -1,5 +1,6 @@
 import { isArabic } from "Util/App";
 import CashRefundIcon from "../IconsAndImages/CashRefundIcon.svg";
+import MyRewardsIcon from "../IconsAndImages/MyRewardsIcon.svg";
 import OrderBagIcon from "../IconsAndImages/OrderBagIcon.svg";
 import GoLeftIcon2 from "../IconsAndImages/GoLeftIcon2.svg";
 import GoRightIcon2 from "../IconsAndImages/GoRightIcon2.svg";
@@ -24,7 +25,7 @@ export function Cashback({ transaction }) {
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
-              <img src={CashRefundIcon} />
+              <img src={MyRewardsIcon} />
             </div>
             <div>
               <div className="LinkHeading">{__("Cashback")}</div>
