@@ -75,36 +75,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
     notSavedAddress: this.notSavedAddress.bind(this),
-    onIdentityNumberChange: this.onIdentityNumberChange.bind(this),
-    onTypeOfIdentityChange: this.onTypeOfIdentityChange.bind(this)
+    onIdentityNumberChange: this.props.onIdentityNumberChange,
+    onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
   };
 
   static defaultProps = {
     guestEmail: "",
   };
   
-  state = {
-    type_of_identity: 0,
-    identity_number : "",
-    validationError: false,
-    isNationalityClick: true,
-  }
-
-  onIdentityNumberChange(value) {
-    const isValidInput =
-      (this.state.type_of_identity == 0 && /^\d{0,12}$/.test(value)) ||
-      (this.state.type_of_identity == 1 && /^[a-zA-Z0-9]*$/.test(value));
-
-    this.setState({ identity_number : value, validationError: !isValidInput });
-  };
-
-  onTypeOfIdentityChange (typeOfIdentityValue){
-    if(typeOfIdentityValue == 0) {
-      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : true });
-    }else {
-      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
-    }
-  };
 
   async handleClickNCollectPayment(fields) {
     const {
@@ -124,10 +102,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       region_id: camelCase(addressField?.area || ""),
       street: addressField?.address,
       telephone: fields?.telephone,
-      type_of_identity: this.state?.type_of_identity || 0,
-      identity_number: this.state?.identity_number || ""
+      type_of_identity: this.props?.type_of_identity || 0,
+      identity_number: this.props?.identity_number || ""
     };
-    console.log('test kiran --->', 'handleClickNCollectPayment checking ===>',addressField,inputFields);
     this.onShippingSuccess(inputFields);
   }
 
@@ -180,8 +157,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode: region ?? postcode,
       region: region ?? postcode,
       street: Array.isArray(street) ? street[0] : street,
-      type_of_identity: type_of_identity || this.state?.type_of_identity,
-      identity_number: identity_number || this.state?.identity_number,
+      type_of_identity: type_of_identity || this.props?.type_of_identity,
+      identity_number: identity_number || this.props?.identity_number,
     });
   }
 
@@ -210,7 +187,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       type_of_identity,
       identity_number,
     } = address;
-    console.log("test kiran estimateShipping", address, this.props);
     setLoading(true);
 
     const canEstimate = !Object.values(address).some(
@@ -234,8 +210,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         postcode: region_id,
         phone: phonecode + telephone,
         telephone: phonecode + telephone,
-        type_of_identity : type_of_identity || this.state.type_of_identity,
-        identity_number : identity_number || this.state.identity_number,
+        type_of_identity : type_of_identity || this.props.type_of_identity,
+        identity_number : identity_number || this.props.identity_number,
       },
       isValidted
     );
@@ -508,8 +484,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       country_id,
       telephone,
       postcode,
-      type_of_identity = this.state?.type_of_identity || 0,
-      identity_number = this.state?.identity_number || "",
+      type_of_identity = this.props?.type_of_identity || 0,
+      identity_number = this.props?.identity_number || "",
     } = shippingAddress;
 
     const shippingAddressMapped = {
@@ -526,7 +502,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       identity_number: identity_number,
     };
     // on checkout page, set update identity-number and type_of_identity store in the respective address
-    if ((this.state.type_of_identity == 0 || typeof this.state.type_of_identity == 1)&& this.state.identity_number?.length) {
+    if ((this.props?.type_of_identity == 0 || this.props?.type_of_identity == 1)&& this.props?.identity_number?.length) {
       const updatedAddress = {
         firstname: shippingAddress?.firstname,
         lastname: shippingAddress?.lastname,

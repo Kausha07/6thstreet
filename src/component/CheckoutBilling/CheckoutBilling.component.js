@@ -231,6 +231,10 @@ export class CheckoutBilling extends SourceCheckoutBilling {
           addresses={addresses}
           onAddressSelect={onAddressSelect}
           isBilling
+          type_of_identity={this.props.type_of_identity}
+          identity_number={this.props.identity_number}
+          onIdentityNumberChange={this.props.onIdentityNumberChange}
+          onTypeOfIdentityChange={this.props.onTypeOfIdentityChange}
         />
       </>
     );

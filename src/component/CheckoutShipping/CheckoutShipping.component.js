@@ -40,9 +40,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderLoading: false,
     isButtondisabled: false,
   };
-  componentDidMount() {
-    console.log('test kiran --->', 'kiranchecking ===>');
-  }
   renderButtonsPlaceholder() {
     return __("Proceed to secure payment");
   }
@@ -357,8 +354,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           openForm={this.openForm}
           showCards={this.showCards}
           customer={customer}
-          type_of_identity={this.props.type_of_identity}
-          identity_number={this.props.identity_number}
+          type_of_identity={this.props?.type_of_identity}
+          identity_number={this.props?.identity_number}
         />
       </div>
     );

@@ -101,7 +101,28 @@ export class Checkout extends SourceCheckout {
     processingLoader: false,
     careemPayInfo:{},
     careemPayStatus: "",
+    type_of_identity: 0,
+    identity_number : "",
+    validationError: false,
+    isNationalityClick: true,
   };
+
+  onIdentityNumberChange = (value) => {
+    const isValidInput =
+      (this.state.type_of_identity == 0 && /^\d{0,12}$/.test(value)) ||
+      (this.state.type_of_identity == 1 && /^[a-zA-Z0-9]*$/.test(value));
+
+    this.setState({ identity_number : value, validationError: !isValidInput });
+  };
+
+  onTypeOfIdentityChange = (typeOfIdentityValue) => {
+    if(typeOfIdentityValue == 0) {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : true });
+    }else {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
+    }
+  };
+
   getArabicCityArea = (city, area) => {
     const { addressCityData } = this.props;
     let finalArea = area;
@@ -469,7 +490,7 @@ export class Checkout extends SourceCheckout {
       addresses,
       isClubApparelEnabled
     } = this.props;
-    const { isArabic, cashOnDeliveryFee } = this.state;
+    const { isArabic, cashOnDeliveryFee, type_of_identity = 0, identity_number = "", validationError } = this.state;
 
     const { 
       couponsItems=[],
@@ -517,6 +538,11 @@ export class Checkout extends SourceCheckout {
           couponLists={couponLists}
           applyCouponToCart={applyCouponToCart}
           isClubApparelEnabled={isClubApparelEnabled}
+          type_of_identity={type_of_identity}
+          identity_number={identity_number}
+          validationError={validationError}
+          onIdentityNumberChange={this.onIdentityNumberChange}
+          onTypeOfIdentityChange={this.onTypeOfIdentityChange}
         />
       </>
     );
@@ -713,7 +739,7 @@ export class Checkout extends SourceCheckout {
     }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
-    const { continueAsGuest, isArabic } = this.state;
+    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
@@ -735,6 +761,10 @@ export class Checkout extends SourceCheckout {
           renderGuestForm={this.renderGuestForm.bind(this)}
           handleClickNCollectPayment={handleClickNCollectPayment}
           is_nationality_mandatory={is_nationality_mandatory}
+          identity_number={identity_number}
+          validationError={validationError}
+          onIdentityNumberChange={this.onIdentityNumberChange}
+          onTypeOfIdentityChange={this.onTypeOfIdentityChange}
         />
       </div>
     );
