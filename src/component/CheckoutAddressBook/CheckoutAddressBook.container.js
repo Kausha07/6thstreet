@@ -77,12 +77,23 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   }
 
   componentDidMount() {
-    const { onAddressSelect, setSelectedAddressID, addresses = [],onIdentityNumberChange = ()=>{},onTypeOfIdentityChange = ()=>{}} = this.props;
+    const {
+      onAddressSelect,
+      setSelectedAddressID,
+      addresses = [],
+      onIdentityNumberChange = () => {},
+      onTypeOfIdentityChange = () => {},
+    } = this.props;
     const { selectedAddressId } = this.state;
-    const selectedAddress = addresses?.filter(({id}) => id === selectedAddressId);
-    const typeOfIdentity = selectedAddress?.[0]?.type_of_identity ? selectedAddress?.[0]?.type_of_identity : 0;
-    const identityNumber =  selectedAddress?.[0]?.identity_number ? selectedAddress?.[0]?.identity_number : "";
-    console.log('test kiran --->', 'kiranvalues checking ===>',this.props,selectedAddressId,selectedAddress);
+    const selectedAddress = addresses?.filter(
+      ({ id }) => id === selectedAddressId
+    );
+    const typeOfIdentity = selectedAddress?.[0]?.type_of_identity
+      ? selectedAddress?.[0]?.type_of_identity
+      : 0;
+    const identityNumber = selectedAddress?.[0]?.identity_number
+      ? selectedAddress?.[0]?.identity_number
+      : "";
     onTypeOfIdentityChange(typeOfIdentity);
     onIdentityNumberChange(identityNumber);
     onAddressSelect(selectedAddressId);
@@ -105,9 +116,15 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       requestCustomerData();
     }
     if (selectedAddressId !== prevSelectedAddressId) {
-      const selectedAddress = addresses?.filter(({id}) => id === selectedAddressId);
-      const typeOfIdentity = selectedAddress?.[0]?.type_of_identity ? selectedAddress?.[0]?.type_of_identity : 0;
-    const identityNumber =  selectedAddress?.[0]?.identity_number ? selectedAddress?.[0]?.identity_number : "";
+      const selectedAddress = addresses?.filter(
+        ({ id }) => id === selectedAddressId
+      );
+      const typeOfIdentity = selectedAddress?.[0]?.type_of_identity
+        ? selectedAddress?.[0]?.type_of_identity
+        : 0;
+      const identityNumber = selectedAddress?.[0]?.identity_number
+        ? selectedAddress?.[0]?.identity_number
+        : "";
       setSelectedAddressID(selectedAddressId);
       onAddressSelect(selectedAddressId);
       this.estimateShipping(selectedAddressId);

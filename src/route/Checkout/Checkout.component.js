@@ -761,6 +761,7 @@ export class Checkout extends SourceCheckout {
           renderGuestForm={this.renderGuestForm.bind(this)}
           handleClickNCollectPayment={handleClickNCollectPayment}
           is_nationality_mandatory={is_nationality_mandatory}
+          type_of_identity={type_of_identity}
           identity_number={identity_number}
           validationError={validationError}
           onIdentityNumberChange={this.onIdentityNumberChange}

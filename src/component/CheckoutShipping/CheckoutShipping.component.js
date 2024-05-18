@@ -251,7 +251,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   renderActions() {
     const { isPaymentLoading } = this.props;
     const { isButtondisabled } = this.state;
-
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
         {this.renderTotals()}
@@ -478,10 +477,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         isClickAndCollect={isClickAndCollect}
         clickAndCollectStatus={checkClickAndCollect()}
         customer={customer}
-        type_of_identity={this.props.type_of_identity}
-        identity_number={this.props.identity_number}
-        onIdentityNumberChange={this.props.onIdentityNumberChange}
-        onTypeOfIdentityChange={this.props.onTypeOfIdentityChange}
+        type_of_identity={this.props?.type_of_identity}
+        identity_number={this.props?.identity_number}
+        onIdentityNumberChange={this.props?.onIdentityNumberChange}
+        onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
       />
     );
   }

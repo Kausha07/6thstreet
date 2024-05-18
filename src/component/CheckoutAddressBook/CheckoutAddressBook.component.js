@@ -221,13 +221,13 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       AppConfig: { is_nationality_visible = false },
     } = getStore().getState();
     const type_of_identity = {
-      value: this.props.type_of_identity,
-      onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+      value: this.props?.type_of_identity,
+      onTypeOfIdentityChange: this.props?.onTypeOfIdentityChange,
     };
     const identity_number = {
-      value: this.props.identity_number,
-      onIdentityNumberChange: this.props.onIdentityNumberChange,
-      validationError: this.state.validationError,
+      value: this.props?.identity_number,
+      onIdentityNumberChange: this.props?.onIdentityNumberChange,
+      validationError: this.props?.validationError,
     };
     return (
       <>
@@ -251,15 +251,14 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       AppConfig: { is_nationality_visible = false },
     } = getStore().getState();
     const { isSignedIn } = this.props;
-    console.log('test kiran ---> renderSignInCustomClearanceField', ' 1234checking ===>',this.props);
     const type_of_identity = {
-      value: this.props.type_of_identity,
-      onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+      value: this.props?.type_of_identity,
+      onTypeOfIdentityChange: this.props?.onTypeOfIdentityChange,
     };
     const identity_number = {
-      value: this.props.identity_number,
-      onIdentityNumberChange: this.props.onIdentityNumberChange,
-      validationError: this.state.validationError,
+      value: this.props?.identity_number,
+      onIdentityNumberChange: this.props?.onIdentityNumberChange,
+      validationError: this.props?.validationError,
     };
     return isSignedIn && is_nationality_visible ? (
       <div block="checkoutAddressBookCustomClearanceContainer">

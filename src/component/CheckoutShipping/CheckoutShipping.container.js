@@ -50,8 +50,6 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   addressLoader: state.MyAccountReducer.addressLoader,
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
-  typeOfIdentity: state.MyAccountReducer.type_of_identity,
-  identityNumber: state.MyAccountReducer.identity_number,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {

@@ -1331,5 +1331,14 @@
     "Oops! We couldn't find the brand you are looking for": "عذراً! لم نستطع إيجاد العلامة التجارية التي تبحث عنها",
     "No result found": "لا يوجد نتائج بحث",
     "Debit/Credit Card Added Successfully": "تمت إضافة بطاقة الائتمان/ بطاقة السحب بنجاح",
-    "Are you sure you want to remove this card?": "هل أنت متأكد من رغبتك في حذف البطاقة؟"
+    "Are you sure you want to remove this card?": "هل أنت متأكد من رغبتك في حذف البطاقة؟",
+    "Please provide National ID No. for custom clearance": "",
+    "Please provide National ID number for custom clearance": "",
+    "Please provide Passport No. for custom clearance": "",
+    "Please provide Passport number for custom clearance": "",
+    "National ID number": "",
+    "Passport Number":"",
+    "Enter the National/Passport number": "",
+    "Add New": "",
+    "Customs Clearance Information": ""
 }

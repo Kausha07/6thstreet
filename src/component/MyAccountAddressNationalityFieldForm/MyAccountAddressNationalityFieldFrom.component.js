@@ -3,36 +3,21 @@ import { connect } from "react-redux";
 import isMobile from "Util/Mobile";
 import Field from "Component/Field";
 import "./MyAccountAddressNationalityFieldFrom.style.scss";
-import {
-  setTypeOfIdentity,
-  setIdentityNumber,
-} from "Store/MyAccount/MyAccount.action";
 
 const mapStateToProps = (state) => ({
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
-  typeOfIdentityStore: state.MyAccountReducer.type_of_identity,
-  identityNumberStore: state.MyAccountReducer.identity_number,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setTypeOfIdentity: (typeOfIdentity) =>
-    dispatch(setTypeOfIdentity(typeOfIdentity)),
-  setIdentityNumber: (identityNumber) =>
-    dispatch(setIdentityNumber(identityNumber)),
 });
 
 const MyAccountAddressNationalityFieldFrom = ({
   isArabic: isArabicfun,
-  typeOfIdentityStore,
-  identityNumberStore,
   isCheckoutPage = false,
   is_nationality_mandatory = false,
   type_of_identity: {
-    value: typeOfIdentity = typeOfIdentityStore,
+    value: typeOfIdentity = 0,
     onTypeOfIdentityChange = () => {},
   } = {},
   identity_number: {
-    value: identityNumber = identityNumberStore,
+    value: identityNumber = "",
     onIdentityNumberChange = () => {},
   } = {},
 }) => {
@@ -63,15 +48,13 @@ const MyAccountAddressNationalityFieldFrom = ({
       if (isMobile.any()) {
         return __("Please provide Passport No. for custom clearance");
       }
-      return __("Please provide Passport ID number for custom clearance");
+      return __("Please provide Passport number for custom clearance");
     }
   };
   const handleTypeOfIdentityChange = (typeOfIdentity) => {
-    setTypeOfIdentity(typeOfIdentity);
     onTypeOfIdentityChange(typeOfIdentity);
   };
   const handleNationalityFieldChange = (value) => {
-    setIdentityNumber(value); // redux to store identity number
     onIdentityNumberChange(value);
   };
   const validationArray = validationCheck();
@@ -136,5 +119,5 @@ const MyAccountAddressNationalityFieldFrom = ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(MyAccountAddressNationalityFieldFrom);

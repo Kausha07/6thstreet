@@ -24,6 +24,7 @@
       .Field_type_text {
         input {
           width: 100%;
+          text-transform: initial;
         }
       } 
     }
@@ -39,6 +40,14 @@
         }
       }
 
+      &_isArabic {
+        .Field {
+          span {
+            padding: 0px 5px 0px 25px;
+          }
+        }
+      }
+      
       .Field [type="radio"] {
         +label {
           border-radius: 50%;
