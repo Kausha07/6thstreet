@@ -29,6 +29,7 @@ export default function AllTransactions() {
   const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [page, setPage] = useState(1);
+  const [fetchMore, setfetchMore] = useState(true);
   const type = ALL_HISTORY_TYPE;
   const LIMIT = 10;
 
@@ -37,6 +38,7 @@ export default function AllTransactions() {
       try {
         //type can be eaither all/transactional/promotional
         if (allHistory?.length == 0 || allHistory?.length < totalTransactions) {
+          console.log("test conditon ", allHistory?.length , totalTransactions)
           setIsLoading(true);
           const responseHistory = await getTransactionHistory(
             type,
@@ -50,6 +52,12 @@ export default function AllTransactions() {
             ]);
 
             setTotalTransactions(responseHistory?.data?.count);
+            if(responseHistory?.data?.count > allHistory?.length){
+              setfetchMore(true);
+            }else{
+              setfetchMore(false);
+            }
+
             if (isFirstFetchLoading) {
               setIsFirstFetchLoading(false);
             }
@@ -63,19 +71,49 @@ export default function AllTransactions() {
     fetchMyCashHistory();
   }, [page]);
 
+  
+  function handleScroll() {
+    const windowHeight =
+      "innerHeight" in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const { body } = document;
+    const html = document.documentElement;
+    const footerHeight = 300;
+    // !isMobile ? 300 : 0;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    if (
+      windowBottom + footerHeight >= docHeight &&
+      !isLoading 
+      && fetchMore
+    ) {
+      setIsLoading(true);
+      setPage((oldPage) => oldPage + 1);
+    }
+  };
+
   // Handle scroll inside mycash history container
   useEffect(() => {
-    function handleScroll(event) {
-      const { scrollTop, clientHeight, scrollHeight } = event.target;
-      if (scrollHeight - scrollTop === clientHeight) {
-        setPage((oldPage) => oldPage + 1);
-      }
-    }
-    const element = document.getElementById("all-history");
-    element.addEventListener("scroll", handleScroll);
+    //not being used currently as it was used for 
+    // function handleScroll1(event) {
+    //   const { scrollTop, clientHeight, scrollHeight } = event.target;
+    //   if (scrollHeight - scrollTop === clientHeight) {
+    //     setPage((oldPage) => oldPage + 1);
+    //   }
+    // }
+    // const element = document.getElementById("all-history");
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      element.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 

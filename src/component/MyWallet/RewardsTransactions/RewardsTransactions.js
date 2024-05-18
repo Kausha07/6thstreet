@@ -76,22 +76,22 @@ export default function RewardsTransactions() {
 
   // Handle scroll inside rewards history container
   useEffect(() => {
-    function handleScroll(event) {
-      const { scrollTop, clientHeight, scrollHeight } = event.target;
+    // function handleScroll(event) {
+    //   const { scrollTop, clientHeight, scrollHeight } = event.target;
 
-      if (scrollHeight - scrollTop === clientHeight) {
-        setPage((oldPage) => oldPage + 1);
-      }
-    }
+    //   if (scrollHeight - scrollTop === clientHeight) {
+    //     setPage((oldPage) => oldPage + 1);
+    //   }
+    // }
 
     const element = document.getElementById("reward-history");
-    element.addEventListener("scroll", handleScroll);
+    // element.addEventListener("scroll", handleScroll);
 
     if (isLoading || !hasMore) {
       return;
     }
     return () => {
-      element.removeEventListener("scroll", handleScroll);
+      // element.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
