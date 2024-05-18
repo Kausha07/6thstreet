@@ -29,6 +29,7 @@ import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
 import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { setColourVarientsButtonClick } from "Store/PLP/PLP.action";
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import { customerType } from "Type/Account";
 import { HistoryType } from "Type/Common";
@@ -84,6 +85,8 @@ export const mapStateToProps = (state) => {
     wishListProducts: state.WishlistReducer.items,
     totalsForProduct: state.CartReducer.cartItems,
     isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+    isCouponRequest: state.CartReducer.isCouponRequest,
+    vwoData: state.AppConfig.vwoData,
   };
 };
 
@@ -106,6 +109,8 @@ export const mapDispatchToProps = (dispatch) => ({
   getTabbyInstallment: (price) =>
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  setColourVarientsButtonClick: (colourVarientsButtonClick) =>
+  dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 export class CartPageContainer extends PureComponent {
@@ -200,6 +205,7 @@ export class CartPageContainer extends PureComponent {
       totals: { items = [] },
       showNotification,
       location: { state: { errorState: propErrorState } = {} },
+      setColourVarientsButtonClick,
     } = this.props;
 
     if (isSignedIn() && items?.length !== 0) {
@@ -247,6 +253,8 @@ export class CartPageContainer extends PureComponent {
       );
       this.setState({ errorState: true });
     }
+
+    setColourVarientsButtonClick(false);
   }
 
   getCartWidgetsVueData() {
@@ -580,6 +588,9 @@ export class CartPageContainer extends PureComponent {
     const cartWidgetApiData = this.state.cartWidgetApiData;
     const youMayAlsoLikeData = this.state.youMayAlsoLikeData;
     const lookingForThisData = this.state.lookingForThisData;
+    const { vwoData } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return cartWidgetApiData && youMayAlsoLikeData ? (
       <CartPage
         {...this.props}
@@ -589,6 +600,7 @@ export class CartPageContainer extends PureComponent {
         youMayAlsoLikeData={youMayAlsoLikeData}
         lookingForThisData={lookingForThisData}
         tabMap={tabMap}
+        isSidewideCouponEnabled={isSidewideCouponEnabled}
       />
     ) : (
       <CartPage
@@ -599,6 +611,7 @@ export class CartPageContainer extends PureComponent {
         cartWidgetApiData={[]}
         youMayAlsoLikeData={[]}
         tabMap={tabMap}
+        isSidewideCouponEnabled={isSidewideCouponEnabled}
       />
     );
   }

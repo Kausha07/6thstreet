@@ -15,6 +15,7 @@ import CDN from "../../util/API/provider/CDN";
 import SearchSuggestion from "./SearchSuggestion.component";
 import { TRENDING_BRANDS_ENG, TRENDING_BRANDS_AR } from "../../util/Common/index";
 import { isArabic } from "Util/App";
+import { getCountryFromUrl } from "Util/Url";
 
 
 export const mapStateToProps = (state) => ({
@@ -26,6 +27,9 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
   suggestionEnabled: state.AppConfig.suggestionEnabled,
+  config: state.AppConfig.config,
+  megaMenuBrands: state.CategoriesListReducer.megaMenuBrands,
+  is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -352,9 +356,14 @@ export class SearchSuggestionContainer extends PureComponent {
       isPDPSearchVisible,
       prevPath,
       suggestionEnabled,
+      config: { countries = {} },
+      megaMenuBrands,
+      is_msite_megamenu_enabled = false
     } = this.props;
     const isEmpty = search === "";
     const inNothingFound = data?.brands?.length + data?.products?.length === 0;
+    const countryCode = getCountryFromUrl();
+
     return {
       searchString: search,
       brands: data?.brands || [],
@@ -378,6 +387,8 @@ export class SearchSuggestionContainer extends PureComponent {
       exploreMoreData,
       suggestionEnabled,
       // wishlistData,
+      is_msite_megamenu_enabled,
+      megaMenuBrands,
     };
   };
   containerFunctions = {

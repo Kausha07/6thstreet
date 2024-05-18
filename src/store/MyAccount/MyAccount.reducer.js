@@ -24,7 +24,9 @@ import {
   SET_USER_ID_FOR_VUE_TRENDING_BRANDS,
   SET_NEW_ADDRESS_CLICKED,
   SET_NEW_ADDRESS_SAVED,
-  SET_SELECTED_ADDRESS_ID
+  SET_SELECTED_ADDRESS_ID,
+  SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
+  SET_SIGNIN_IS_LOADING_STATUS
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -50,6 +52,7 @@ export const initialState = {
   addNewAddressClicked: false,
   newAddressSaved: false,
   addressIDSelected: null,
+  myOrderLastOffsetLimit: {},
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -74,6 +77,13 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         isSignedIn: status,
       };
+
+    case SET_SIGNIN_IS_LOADING_STATUS: 
+      return {
+        ...state,
+        isLoading
+      }
+
     case SET_ADDRESS_LOADING_STATUS:
       return {
         ...state,
@@ -216,6 +226,13 @@ export const MyAccountReducer = (state = initialState, action) => {
     return {
       ...state,
       addressIDSelected,
+    };
+
+    case SET_LAST_OFFSET_LIMIT_OF_MYORDERS:
+      const { limit } = action;
+    return {
+      ...state,
+      myOrderLastOffsetLimit: limit,
     };
 
     default:

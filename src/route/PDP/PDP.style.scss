@@ -98,7 +98,7 @@
     }
   }
   .EddParentWrapper {
-    margin: 10px 0px 34px 0px;
+    margin: 10px 0px;
     &-isIntlBrand {
       margin-bottom: 0px;
     }
@@ -115,7 +115,7 @@
 
     .SelectedAreaWrapper {
       flex-direction: row !important;
-
+      height: 20px;
       &_isArabic {
         .SelectAreaText {
           margin-right: 8px;
@@ -241,6 +241,13 @@
         }
       }
     }
+    &.SelectedAreaWrapper {
+      .Image {
+        top: -25px;
+        height: 40px;
+        width: 40px;
+      }
+    }
 
     .Image {
       bottom: 10px;
@@ -319,11 +326,11 @@
       }
     }
     .EddMessMargin {
-      margin-left: 28px;
+      margin-left: 50px;
     }
     .isArabic {
       margin-left: 0px;
-      margin-right: 28px;
+      margin-right: 50px;
     }
   }
   @include mobile() {

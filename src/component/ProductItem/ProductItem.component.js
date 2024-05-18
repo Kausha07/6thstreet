@@ -370,11 +370,39 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderExclusiveMobile(gallery_image_urls_flag) {
+    const {
+      product: { promotion },
+    } = this.props;
+
+    let TagStyle = {};
+    if (gallery_image_urls_flag && !isMobile.any()) {
+      TagStyle = {
+        bottom: "0px",
+        zIndex: 1,
+      };
+    }
+
+    if (promotion !== undefined && promotion !== "") {
+      return promotion !== null ? (
+        <span block="ExclusiveMobile" style={TagStyle}>
+          {" "}
+          {promotion}{" "}
+        </span>
+      ) : null;
+    }
+
+    return null;
+  }
   // gallery_image_urls_flag : true when crowsel is visible
   renderExclusive(gallery_image_urls_flag) {
     const {
       product: { promotion },
     } = this.props;
+
+    if(isMobile.any()){
+      return null;
+    }
 
     let TagStyle = {};
     if(gallery_image_urls_flag && !isMobile.any()) {
@@ -412,43 +440,85 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  generateInputField = (val, index) => {
+    const {
+      product = {},
+      product: { sku = "", color = "", color_hex = "", },
+    } = this.props;
+    const productAlsoAvailableColors = (
+      product &&
+      Object.keys(product)?.length > 0 &&
+      Array.isArray(product?.["6s_also_available_color"])
+        ? product?.["6s_also_available_color"]?.length > 0
+        : product?.["6s_also_available_color"]
+    )
+      ? [sku, ...Object.keys(product?.["6s_also_available_color"])]
+      : [];
+
+    const colorKey = productAlsoAvailableColors?.[index];
+    const background =
+      product?.["6s_also_available_color"]?.[colorKey]?.color || color_hex;
+    const colorArray = [
+      "#ffffff",
+      "#FFFFFF",
+      "#F7E7CE",
+      "#fbfdea",
+      "#e1e1de",
+      "#efe6c6",
+      "#e3dac9",
+    ];
+    const isBorderColor = colorArray?.includes(background?.toLowerCase());
+    const zIndex = index === 0 ? 1 : -index;
+    return (
+      <input
+        block="radio-input"
+        type="radio"
+        name={colorKey}
+        id={colorKey}
+        value={colorKey}
+        onChange={this.onChangeTheme}
+        style={{
+          background,
+          border: isBorderColor && "0.2px solid #000000",
+          "z-index": `${zIndex}`,
+        }}
+      />
+    );
+  };
+
   renderColorVariantsMobile = () => {
-    const { product = {} } = this.props;
+    const {
+      product = {},
+      product: { sku = "" },
+    } = this.props;
     const { isdark, isArabic } = this.state;
     const productAlsoAvailableColors = product?.["6s_also_available_color"]
       ? Object.keys(product?.["6s_also_available_color"])
       : [];
-  
-    const generateInputField = (index) => {
-      const colorKey = productAlsoAvailableColors[index];
-      const background = product?.["6s_also_available_color"]?.[colorKey]?.color || "";
-  
-      return (
-        <input
-          block="radio-input"
-          type="radio"
-          name={colorKey}
-          id={colorKey}
-          value={colorKey }
-          onChange={this.onChangeTheme}
-          style={{ background, boxShadow : '0px 0px 0px 0.5px #D1D3D4' }}
-        />
-      );
-    };
-  
-    return (this.getInstockColorVarientsCount() > 0 && productAlsoAvailableColors?.length > 0 )? (
-      <div block="PLPMobileColorVarients" mods={{ isArabic }}>
-        {productAlsoAvailableColors?.length === 1 ? (
-          <div block="radio-label">{generateInputField(0)}</div>
+
+    const allAvailableColors = [sku, ...productAlsoAvailableColors].slice(0, 3);
+
+    return this.getInstockColorVarientsCount() > 0 &&
+      allAvailableColors?.length > 0 ? (
+      <div
+        block="PLPMobileColorVarients"
+        mods={{ isArabic }}
+        onClick={() => this.props.setColourVarientsButtonClick(true)}
+      >
+        {allAvailableColors?.length === 1 ? (
+          <div block="radio-label">
+            {this.generateInputField(productAlsoAvailableColors?.[0], 0)}
+          </div>
         ) : (
           <div block="radio-label multi-color">
-            {generateInputField(0)}
-            {generateInputField(productAlsoAvailableColors?.length - 1)}
+            {allAvailableColors?.map(this.generateInputField)}
           </div>
         )}
-        <span block="colorVarientCounts" mods={{ isArabic }}>
-          {this.getInstockColorVarientsCount()}{" "}
-        </span>
+        {this.getInstockColorVarientsCount() > 3 && (
+          <span block="colorVarientCounts" mods={{ isArabic }}>
+            {"+"}
+          </span>
+        )}
       </div>
     ) : null;
   };
@@ -535,7 +605,7 @@ class ProductItem extends PureComponent {
             imageScroller={this.state.imageScroller}
             thumbnail_url={thumbnail_url}
           />
-          {this.renderExclusive(true)}
+          {!isMobile.any() && this.renderExclusive(true)}
         </div>
         ) :null}
         {(!isMobile.any() || (isMobile.any() && requireGalleryImageUrl.length === 0)) && <div style={{display: this.state.showImageScroller ? "none" : "block"}}>
@@ -971,6 +1041,12 @@ class ProductItem extends PureComponent {
         {isMobile.any() &&
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}
+        
+        {isMobile.any() &&  pageType !== "cartSlider" &&(
+          <div className="tagsForMsiteProduct">
+            {this.renderExclusiveMobile(true)}
+          </div>
+        )}
       </li>
     );
   }

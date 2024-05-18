@@ -59,7 +59,9 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   totals: state.CartReducer.cartTotals,
   couponsItems: state.CartReducer.cartCoupons,
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -207,6 +209,7 @@ export class CartItemContainer extends PureComponent {
           payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item.full_item_info.international_vendor: null}
           payload["qty"] = parseInt(item?.full_item_info?.available_qty);
           payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+          payload["brand"] = item?.full_item_info?.brand_name;
           items.push(payload);
         }
       });
@@ -413,6 +416,7 @@ export class CartItemContainer extends PureComponent {
           sku,
           color,
           qty,
+          availability,
           product: { name } = {},
           full_item_info: {
             config_sku,
@@ -422,6 +426,7 @@ export class CartItemContainer extends PureComponent {
             size_value,
             itemPrice,
             original_price,
+            discount_amount
           },
         },
         prevPath = null,
@@ -435,16 +440,19 @@ export class CartItemContainer extends PureComponent {
         .catch(() => {
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);
         });
-
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
           name,
-          id: sku,
+          id: config_sku || sku,
           price: itemPrice,
           brand: brand_name,
           category: category,
           variant: color,
           quantity: qty,
+          size: size_value,
+          size_option: size_option, 
+          variant_availability: availability, 
+          discount: discount_amount
         },
       });
 

@@ -8,6 +8,10 @@
         overflow-y: auto;
     }
 
+    @include mobile {
+        line-height:0px;
+    }
+
     &-Button {
         display: block;
         text-transform: none;

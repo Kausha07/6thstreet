@@ -11,7 +11,7 @@
             justify-content: left;
             padding: 0px 10px;
             bottom: 13px !important;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
     }
 
@@ -29,8 +29,8 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background-color: #131212;
-        margin: 0 2px;
+        background-color: rgba(0, 0, 0, 0.5);
+        margin: 0 2px !important;
         cursor: pointer;
         transition: background-color 0.2s ease;
 

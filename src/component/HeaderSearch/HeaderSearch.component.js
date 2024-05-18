@@ -17,6 +17,8 @@ import Event, {
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import { brandSearchClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
@@ -78,11 +80,16 @@ class HeaderSearch extends PureComponent {
     }
 
     if (showSearch && !prevShowSearch) {
+      if(isMsiteMegaMenuBrandsRoute()) {
+        brandSearchClickEvent({ gender: this.props?.gender });
+      }
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
       MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),
+        gender: this.props?.gender,
+        current_page: sessionStorage.getItem("currentScreen"),
         isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
@@ -129,6 +136,10 @@ class HeaderSearch extends PureComponent {
       },
     } = this.searchRef;
 
+    if(isMsiteMegaMenuBrandsRoute()){
+      return;
+    }
+
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
     submitBtn.blur();
@@ -161,7 +172,10 @@ class HeaderSearch extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: search || "",
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender: this.props?.gender,
       app6thstreet_platform: "Web",
+      screen_name: sessionStorage.getItem("currentScreen") || "",
     });
   };
   closeSearch = () => {
@@ -180,7 +194,7 @@ class HeaderSearch extends PureComponent {
   };
 
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP, PlaceholderText } =
       this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
     return (
@@ -199,11 +213,7 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={
-              isMobile.any() || isMobile.tablet()
-                ? __("What are you looking for?")
-                : __("Search for items, brands, inspiration and styles")
-            }
+            placeholder={PlaceholderText}
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}
@@ -294,8 +304,17 @@ class HeaderSearch extends PureComponent {
   }
 
   render() {
-    const { isArabic } = this.state;
-    const { isPDP, isPDPSearchVisible, isPLP } = this.props;
+    const { isArabic, showSearch } = this.state;
+    const { isPDP, isPDPSearchVisible, isPLP, showMegaMenuHeaderSearchStyle = false } = this.props;
+    const mobileMegaMenuStyle = showMegaMenuHeaderSearchStyle
+      ? {
+          top: "5px",
+          width: showSearch ? "90%" : "75%",
+          left: isArabic ? (showSearch ? "0" : "15%") : "10%",
+          height: "39px",
+          padding: "5px 0px 0px 0px"
+        }
+      : {};
 
     return (
       <>
@@ -305,7 +324,7 @@ class HeaderSearch extends PureComponent {
             isPDP ? null : this.closeSearch();
           }}
         >
-          <div block="HeaderSearch" mods={{ isArabic, isPLP }}>
+          <div block="HeaderSearch" mods={{ isArabic, isPLP}} style={mobileMegaMenuStyle}>
             {this.renderField()}
           </div>
         </ClickOutside>

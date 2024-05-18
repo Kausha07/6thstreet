@@ -48,8 +48,6 @@ class TopNavigationEvent extends BaseEvent {
           this.getCustomerId().toString().length > 0
             ? "Logged In"
             : "Logged Out",
-        CustomerID: this.getCustomerId(),
-        PageType: this.getPageType(),
       });
     } else {
       this.pushEventData({
@@ -60,8 +58,6 @@ class TopNavigationEvent extends BaseEvent {
           this.getCustomerId().toString().length > 0
             ? "Logged In"
             : "Logged Out",
-        CustomerID: this.getCustomerId(),
-        PageType: this.getPageType(),
       });
     }
   }

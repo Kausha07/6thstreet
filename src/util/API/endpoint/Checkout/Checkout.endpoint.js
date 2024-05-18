@@ -76,5 +76,5 @@ export const careemPayCreateInvoice = ({data}) =>
 export const createOrderCareemPay = ({ data }) =>
   MobileAPI.post("/create-order2", data) || {};
 
-  export const getNewOrderData = (orderID) =>
-    MobileAPI.get(`orders/${orderID}`) || {};
+export const getNewOrderData = (orderID) =>
+  MobileAPI.get(`orders/${orderID}`) || {};

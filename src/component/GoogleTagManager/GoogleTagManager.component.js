@@ -7,7 +7,9 @@ import MyAccountDispatcher, {
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
+  EVENT_GTM_VIEW_PROMOTION,
   EVENT_PRODUCT_IMPRESSION,
+  EVENT_GTM_VIEW_ITEM_LIST,
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_CLEAR_SEARCH,
   EVENT_GTM_GO_TO_SEARCH,
@@ -22,7 +24,7 @@ import {
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_CLICK_RECOMMENDATION_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
-  EVENT_PAGE_NOT_FOUND,
+  EVENT_GTM_PAGE_NOT_FOUND,
   EVENT_GTM_SEARCH,
   EVENT_GTM_FOOTER,
   EVENT_GTM_COUPON,
@@ -52,6 +54,10 @@ import {
   EVENT_MYORDERPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_CHANNEL,
+  EVENT_CATEGORY_EXPANDED,
+  EVENT_MOE_CATEGORIES_TAB_ICON,
+  EVENT_Track_USER_VARIANT,
+  EVENT_HOME_SCREEN_VIEW,
 
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -119,23 +125,27 @@ import ProductRating from "./events/ProductRating.event";
 import ProductRatingClear from "./events/ProductRatingClear.event";
 import MyOrder from "./events/MyOrder.event";
 import MyOrderChannel from "./events/MyOrderChannel.event";
+import MegaMenuEvent from "./events/MegaMenuEvents/MegaMenuEvent.event";
+import CategoriesTabEvent from "./events/MegaMenuEvents/CategoriesTabEvent.event";
+import TrackUserVariant from "./events/TrackUserVariant.event";
+import HomeScreenViewEvent from "./events/HomeScreenView.event";
 
 /**
  * Event list
  */
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
-export const EVENT_PRODUCT_CLICK = "productClick";
+export const EVENT_PRODUCT_CLICK = "select_item";
 export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
-export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
-export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
-export const EVENT_ADD_TO_CART = "addToCart";
+export const EVENT_ADD_TO_WISHLIST = "add_to_wishlist";
+export const EVENT_REMOVE_FROM_WISHLIST = "remove_from_wishlist";
+export const EVENT_ADD_TO_CART = "add_to_cart";
 export const EVENT_EDD_VISIBILITY = "eddVisibility";
 export const EVENT_EDD_TRACK_ON_ORDER = "eddTrackOnOrder";
-export const EVENT_REMOVE_FROM_CART = "removeFromCart";
-export const EVENT_PRODUCT_DETAIL = "productdetail";
-export const EVENT_PURCHASE = "checkout-complete";
-export const EVENT_CHECKOUT = "checkout";
+export const EVENT_REMOVE_FROM_CART = "remove_from_cart";
+export const EVENT_PRODUCT_DETAIL = "view_item";
+export const EVENT_PURCHASE = "purchase";
+export const EVENT_CHECKOUT = "begin_checkout";
 export const EVENT_CHECKOUT_OPTION = "checkoutOption";
 export const EVENT_BANNER_CLICK = "bannerClick";
 export const EVENT_GTM_BRANDS_CLICK = "brandsClick";
@@ -198,8 +208,8 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_BRANDS_CLICK]: BrandsClickEvent,
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
-    [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
-    [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
+    [EVENT_GTM_VIEW_PROMOTION]: BannerImpressionEvent,
+    [EVENT_GTM_VIEW_ITEM_LIST]: ProductImpressionEvent,
     [EVENT_GTM_CANCEL_SEARCH]: CancelSearchEvent,
     [EVENT_GTM_CLEAR_SEARCH]: ClearSearchEvent,
     [EVENT_GTM_GO_TO_SEARCH]: GoToSearchEvent,
@@ -214,7 +224,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CLICK_TOP_SEARCHES_CLICK]: TopSearchesClickEvent,
     [EVENT_CLICK_RECOMMENDATION_CLICK]: RecommendedClickEvent,
     [EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK]: SearchSuggestionProductClickEvent,
-    [EVENT_PAGE_NOT_FOUND]: PageNotFoundEvent,
+    [EVENT_GTM_PAGE_NOT_FOUND]: PageNotFoundEvent,
     [EVENT_GTM_SEARCH]: SearchResultEvent,
     [EVENT_GTM_FOOTER]: FooterEvent,
     [EVENT_GTM_COUPON]: CouponEvent,
@@ -245,6 +255,10 @@ class GoogleTagManager extends PureComponent {
     [EVENT_MYORDERPAGE_VISIT] :MyOrder,
     [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
     [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
+    [EVENT_CATEGORY_EXPANDED]: MegaMenuEvent,
+    [EVENT_MOE_CATEGORIES_TAB_ICON]:CategoriesTabEvent,
+    [EVENT_Track_USER_VARIANT]: TrackUserVariant,
+    [EVENT_HOME_SCREEN_VIEW]: HomeScreenViewEvent,
 
   };
 
@@ -484,17 +498,16 @@ class GoogleTagManager extends PureComponent {
       ? BrowserDatabase.getItem("uuid")
       : null;
     const isVipCustomer =
-      isSignedIn() &&
-      this.props?.state?.MyAccountReducer?.customer?.vipCustomer || false;
+      (isSignedIn() &&
+        this.props?.state?.MyAccountReducer?.customer?.vipCustomer) ||
+      false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
         UserType: isSignedIn() ? "Logged In" : "Logged Out",
-        CustomerID: null,
-        PageType: null,
-        SearchTerm: null,
+        search_term: null,
         BannerName: null,
       });
       const additionalDetails = {
@@ -504,20 +517,16 @@ class GoogleTagManager extends PureComponent {
         ...(!data?.prev_screen_name && {
           prev_screen_name: sessionStorage.getItem("prevScreen") || null,
         }),
-        ...({
+        ...{
           country: getCountryFromUrl().toUpperCase(),
-        }),
-        ...({
-          language: getLanguageFromUrl().toLowerCase(), 
-        }),
+        },
+        ...{
+          language: getLanguageFromUrl().toLowerCase(),
+        },
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
         }),
-        ...(data?.CustomerID === undefined && {
-          CustomerID: isCustomerID,
-        }),
         vip_customer: isVipCustomer || false,
-        uuid: uuid,
         device_id: uuid,
         user_id: isCustomerID,
       };

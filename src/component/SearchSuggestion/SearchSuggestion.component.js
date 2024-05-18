@@ -40,6 +40,10 @@ import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
+import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions, saveBrandRecentSearch, getBrandUrl } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 var ESCAPE_KEY = 27;
 
@@ -268,6 +272,11 @@ class SearchSuggestion extends PureComponent {
   // common function for top search, recent search, query suggestion search.
   onSearchQueryClick = (search) => {
     const { closeSearch, setPrevPath } = this.props;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+
+    if(isBrandsMenu){
+      saveBrandRecentSearch(search);
+    }
     this.logRecentSearches(search);
     setPrevPath(window.location.href);
     closeSearch();
@@ -367,6 +376,34 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderMobileQuerySuggestion = (querySuggestion) => {
+    const { name = "", name_ar= "", objectID= "", url_path= "" } = querySuggestion;
+    const { searchString= "" } = this.props;
+    const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
+    const { isArabic } = this.state;
+    return (
+      <li>
+        <Link
+          to={{
+            pathname: `/${getBrandUrl(name)}.html?q=${encodeURIComponent(
+              name
+            )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+              name
+            )}&dFR[gender][0]=${capitalizeFirstLetter(
+              requestedGender(isArabic ? getGenderInArabic(gender): gender)
+            )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`
+          }}
+          key={i}
+          onClick={() => this.onSearchQueryClick(name, gender, url_path)}
+        >
+          <div className="suggestion-details-box">
+            {getHighlightedText(name, searchString)}
+          </div>
+        </Link>
+      </li>
+    );
+  }
+
   renderQuerySuggestion = (querySuggestions, i) => {
     const { query, label, indexCodeRedux } = querySuggestions;
     const { searchString, products = [] } = this.props;
@@ -391,7 +428,10 @@ class SearchSuggestion extends PureComponent {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
         });
       } else {
         Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, eventData);
@@ -399,7 +439,10 @@ class SearchSuggestion extends PureComponent {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
         });
       }
       this.onSearchQueryClick(query)
@@ -436,8 +479,53 @@ class SearchSuggestion extends PureComponent {
     return <li>{suggestionContent()}</li>;
   };
 
-  renderQuerySuggestions() {
-    const { querySuggestions = [] } = this.props;
+  renderQuerySuggestions(isMegaMenu = false) {
+    const { 
+      querySuggestions = [],
+      is_msite_megamenu_enabled = false,
+      megaMenuBrands = {},
+      searchString= "",
+     } = this.props;
+    const typeSuggetions = getBrandSuggetions(megaMenuBrands, searchString )
+
+    if(isMegaMenu) {
+      if (!typeSuggetions?.length) {
+        if(typeSuggetions?.length === 0 && searchString && searchString.length > 3)
+        MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: searchString || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+          app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
+        });
+        return (
+          <div
+            block="SearchSuggestion"
+            elem="Item"
+            className="NoBrandSearchSuggestions"
+          >
+            <div block="noResultFound">{__("No result found")}</div>
+            <p>{__("Oops! We couldn't find the brand you are looking for")}</p>
+          </div>
+        );
+      }
+      return (
+        <div block="SearchSuggestion" elem="Item"
+          className={
+            is_msite_megamenu_enabled && isMegaMenu ? "newSearchSuggestionMsite" : ""
+          }
+        >
+          {typeSuggetions?.length > 0 ? (
+            <ul>
+              {typeSuggetions?.slice(0, 5).map(this.renderMobileQuerySuggestion)}
+            </ul>
+          ) : null}
+        </div>
+      );
+    }
+
     return (
       <div block="SearchSuggestion" elem="Item">
         {querySuggestions?.length > 0 ? (
@@ -574,8 +662,20 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderSuggestions() {
-    const { products = [],querySuggestions, suggestionEnabled = false } = this.props;
+    const {
+      products = [],
+      querySuggestions,
+      suggestionEnabled = false,
+    } = this.props;
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+
+    if (isMobile && isBrandsMenu) {
+      return (
+        <>{suggestionEnabled ? this.renderQuerySuggestions(true) : null}</>
+      );
+    }
+
     return (
       <>
         {suggestionEnabled ? this.renderQuerySuggestions(): null}
@@ -973,7 +1073,7 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
-        <h2>{__("Recent searches")}</h2>
+        <h2>{__("Recent Searches")}</h2>
         <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
           {recentSearches.map(this.renderRecentSearch)}
         </ul>
@@ -989,6 +1089,27 @@ class SearchSuggestion extends PureComponent {
   };
 
   renderEmptySearch() {
+    const { isArabic, isMobile } = this.state;
+    const {
+      recentSearches = [],
+      trendingBrands = [],
+      recentSearchesBrands = [],
+      is_msite_megamenu_enabled = false,
+    } = this.props;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+    if (isBrandsMenu && isMobile && is_msite_megamenu_enabled) {
+      return (
+        <>
+          <MobileRecentSearches
+            isArabic={isArabic}
+            recentSearches={recentSearches}
+            trendingBrands={trendingBrands}
+            recentSearchesBrands={recentSearchesBrands}
+          />
+        </>
+      );
+    }
+
     return (
       <>
         {this.renderRecentSearches()}
@@ -1010,7 +1131,18 @@ class SearchSuggestion extends PureComponent {
       inNothingFound,
       querySuggestions = [],
       searchString,
+      is_msite_megamenu_enabled = false
     } = this.props;
+
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+    if (isBrandsMenu && isMobile && is_msite_megamenu_enabled) {
+      if (searchString.length > 0) {
+        return this.renderSuggestions();
+      } else {
+        return this.renderEmptySearch();
+      }
+    }
+
 
     if (!isActive) {
       return null;
@@ -1029,7 +1161,7 @@ class SearchSuggestion extends PureComponent {
     if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 2) {
+    if (searchString.length > 0) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();
@@ -1074,13 +1206,14 @@ class SearchSuggestion extends PureComponent {
   render() {
     const { isPDPSearchVisible, suggestionEnabled } = this.props;
     const { isArabic } = this.state;
+    const isBrandsMenu = isMsiteMegaMenuRoute() ;
     // const { isPDPSearchVisible } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div
           block="SearchSuggestion"
           elem="Content"
-          mods={{ isPDPSearchVisible }}
+          mods={{ isPDPSearchVisible, isBrandsMenu }}
         >
           {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}

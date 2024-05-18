@@ -1,4 +1,5 @@
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import Image from "Component/Image";
 import { MyAccountReturnCreateListItem as SourceComponent } from "Component/MyAccountReturnCreateListItem/MyAccountReturnCreateListItem.component";
 import { isArabic } from "Util/App";
@@ -14,10 +15,15 @@ import {
   STATUS_SUCCESS,
   translateArabicStatus,
 } from "./MyAccountOrderListItem.config";
+import { setLastLimit } from "Store/MyAccount/MyAccount.action";
 
 import "./MyAccountOrderListItem.style";
 import { EVENT_MOE_ORDER_ITEM_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
+export const mapDispatchToProps = (dispatch) => ({
+  setLastLimit: (Lastlimit) => dispatch(setLastLimit(Lastlimit)),
+});
 
 class MyAccountOrderListItem extends SourceComponent {
   handleClick = () => {
@@ -31,6 +37,10 @@ class MyAccountOrderListItem extends SourceComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
+    });
+    this.props.setLastLimit({
+      id: this.props.increment_id,
+      currentOffset: this.props.currentOffset,
     });
   };
 
@@ -214,7 +224,11 @@ class MyAccountOrderListItem extends SourceComponent {
     }
 
     return (
-      <button block="MyAccountOrderListItem" onClick={this.handleClick}>
+      <button
+        block="MyAccountOrderListItem"
+        onClick={this.handleClick}
+        id={this.props.increment_id}
+      >
         {this.renderHeading()}
         {this.renderContent()}
         {this.renderOrderStatus()}
@@ -223,4 +237,6 @@ class MyAccountOrderListItem extends SourceComponent {
   }
 }
 
-export default withRouter(MyAccountOrderListItem);
+export default withRouter(
+  connect(null, mapDispatchToProps)(MyAccountOrderListItem)
+);

@@ -55,6 +55,8 @@ import CartPageSliders from "Component/CartPageSliders/index.js";
 import { getShippingFees } from "Util/Common/index";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import TamaraWidget from "Component/TamaraWidget/TamaraWidget";
+import SideWideCoupon from "Component/SideWideCoupon";
+import CartTotal from "Component/CartTotal";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -407,7 +409,9 @@ export class CartPage extends PureComponent {
     const {
       totals: { coupon_code },
       couponsItems = [],
-      totals
+      totals,
+      isSidewideCouponEnabled,
+      isCouponRequest,
     } = this.props;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
@@ -423,7 +427,12 @@ export class CartPage extends PureComponent {
         {!this.state?.isCouponPopupOpen ? (
           <>
             <div block="cartCouponBlock">
-              {coupon_code ? (
+              {isSidewideCouponEnabled ? (
+                <>
+                <SideWideCoupon handleRemoveCode={this.handleRemoveCode} />
+                <Loader isLoading={isCouponRequest} />
+                </>
+              ) : coupon_code ? (
                 <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
                   <div block="appliedCouponDetail">
                     <span block="showCouponBtnLeftBlock">
@@ -455,6 +464,11 @@ export class CartPage extends PureComponent {
                 </button>
               )}
             </div>
+            {isSidewideCouponEnabled ? (
+              <div block="otherCouponBlock" onClick={this.openCouponPopup}>
+                {__("View other available coupons")}
+              </div>
+            ) : null}
             {this.state?.isCouponDetialPopupOpen && (
               <CartCouponDetail
                 couponDetail={this.state}
@@ -677,7 +691,8 @@ export class CartPage extends PureComponent {
         international_shipping_amount = 0,
         items = [],
       },
-      international_shipping_fee
+      international_shipping_fee,
+      isSidewideCouponEnabled,
     } = this.props;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -703,6 +718,14 @@ export class CartPage extends PureComponent {
         inventory_level_cross_border = true;
       }
     });
+    if(isSidewideCouponEnabled) {
+      return(
+        <CartTotal 
+          pageType="CartPage"
+          block="CartPage"
+        />
+      )
+    }
     if (discount != 0) {
       return (
         <div block="CartPage" elem="OrderTotals">

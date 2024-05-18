@@ -80,6 +80,7 @@ import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 import { getDefaultEddMessage } from "Util/Date/index";
+import { getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -257,7 +258,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       KnetDetails: {},
       guestAutoSignIn: false,
       addressLoader: true,
-      orderDetailsCartTotal: null,
+      orderDetailsCartTotal: {},
     };
   }
 
@@ -392,7 +393,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async getOrderDetails (paymentData) {
-    const { orderID} = paymentData || this.state;
+    const { orderID} = paymentData;
     const responseData = await getNewOrderData(orderID);
     const order = responseData?.data;
     this.setState({ orderDetailsCartTotal: order });
@@ -623,6 +624,30 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getQPayData();
     this.getTabbyData();
     getCouponList();
+
+    if (QPAY_CHECK || TABBY_CHECK || KNET_CHECK || TAMARA_CHECK) {
+      let paymentData = {};
+
+      if (TAMARA_CHECK) {
+        const { order_id, increment_id } = TAMARA_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (TABBY_CHECK) {
+        const { order_id, increment_id } = TABBY_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (KNET_CHECK) {
+        const { order_id, increment_id } = KNET_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      } else if (QPAY_CHECK) {
+        const { order_id, increment_id } = QPAY_CHECK;
+        paymentData.orderID = order_id;
+        paymentData.incrementID = increment_id;
+      }
+
+      this.getOrderDetails(paymentData);
+    }
   }
 
   componentDidCatch(error, info) {
@@ -711,24 +736,27 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       return;
     }
 
-    if (
-      Object.keys(totals).length &&
-      total === 0 &&
-      checkoutStep !== DETAILS_STEP
-    ) {
-      const totalSum = total_segments.reduce((acc, item) => {
-        if (item.code === "msp_cashondelivery") {
-          return acc + 0;
-        } else {
-          return acc + item.value;
-        }
-      }, 0);
+    // We dont have to check cart is invalid or not and
+    // inside cart many field are incresed with new implementation of side wide coupon
 
-      if (totalSum + discount !== 0) {
-        showErrorNotification(__("Your cart is invalid"));
-        history.push("/");//check if error 
-      }
-    }
+    // if (
+    //   Object.keys(totals).length &&
+    //   total === 0 &&
+    //   checkoutStep !== DETAILS_STEP
+    // ) {
+    //   const totalSum = total_segments.reduce((acc, item) => {
+    //     if (item.code === "msp_cashondelivery") {
+    //       return acc + 0;
+    //     } else {
+    //       return acc + item.value;
+    //     }
+    //   }, 0);
+
+    //   if (totalSum + discount !== 0) {
+    //     showErrorNotification(__("Your cart is invalid"));
+    //     history.push("/");
+    //   }
+    // }
 
     // if guest checkout is disabled and user is not logged in => throw him to homepage
     if (!guest_checkout && !isSignedIn()) {
@@ -782,9 +810,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         newAddressAdded: isSignedIn ? newAddressSaved : true,
         isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
       });
-      if (this.getCheckoutStepNumber() == "2") {
-        Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
-      }
     }
     if (isInitial) {
       this.setState({ initialGTMSent: true });

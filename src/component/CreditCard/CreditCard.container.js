@@ -23,7 +23,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
     selectSavedCard: (entity_id) => CreditCardDispatcher.selectSavedCard(dispatch, entity_id),
-    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value)
+    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value),
+    deleteCreditCard: (gatewayToken) => CreditCardDispatcher.deleteCreditCard(dispatch, gatewayToken)
 });
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
@@ -41,7 +42,8 @@ export class CreditCardContainer extends PureComponent {
         getCardLogo: this.getCardLogo.bind(this),
         toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
         selectSavedCard: this.selectSavedCard.bind(this),
-        cardNumberValidator: this.cardNumberValidator
+        cardNumberValidator: this.cardNumberValidator,
+        deleteCreditCard: this.deleteCreditCard,
     };
 
     containerProps = () => {
@@ -121,6 +123,10 @@ export class CreditCardContainer extends PureComponent {
             const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition, expInput), expInput);
             element.selectionEnd = position + (countCurrent - countPrevious);
         }
+    }
+
+    deleteCreditCard = (gatewayToken) => {
+        this.props.deleteCreditCard(gatewayToken);
     }
 
     expDateValidator(isMonth, value = '') {

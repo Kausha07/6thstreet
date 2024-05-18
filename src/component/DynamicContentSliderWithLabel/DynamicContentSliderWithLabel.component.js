@@ -18,6 +18,10 @@ import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.c
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
+import { megaMenuCarousalEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
+import { isMsiteMegaMenuCategoriesRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getStore } from "Store";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -28,7 +32,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         link: PropTypes.string,
         plp_config: PropTypes.shape({}), // TODO: describe
       })
-    ).isRequired,
+    ),
   };
 
   constructor(props) {
@@ -95,6 +99,18 @@ class DynamicContentSliderWithLabel extends PureComponent {
     this.registerViewPortEvent();
     this.showWidgetPostRender()
   }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props?.gender !== prevProps?.gender &&
+      isMsiteMegaMenuCategoriesRoute() &&
+      this.props?.megeMenuHorizontalSliderData &&
+      this.props?.megeMenuHorizontalSliderData?.length > 0 &&
+      isMobile.any()
+    ) {
+      this.sendImpressions();
+    }
+  }
+  
   componentWillUnmount() {
     this.timerStartRef.current && clearTimeout(this.timerStartRef.current);
     this.timerEndRef.current && clearTimeout(this.timerEndRef.current);
@@ -133,19 +149,20 @@ class DynamicContentSliderWithLabel extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+      const { items = [] } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+
+    Event.dispatch( HOME_PAGE_BANNER_IMPRESSIONS,items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -173,19 +190,34 @@ class DynamicContentSliderWithLabel extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+    const { items = [], megamenuType, megeMenuHorizontalSliderData = []  } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+    if(megamenuType) {
+      megeMenuHorizontalSliderData.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_name: item?.label || "",
+          tag: item?.itemName || "",
+          url:item?.image_url || "",
+          link:item?.link || '',
+          store_code: item?.label || "",
+          indexValue: index + 1,
+          default_Index: getIndexId || 0,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    } else {
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
+      });
+
+    }
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, megamenuType ? megeMenuHorizontalSliderData : items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -200,26 +232,51 @@ class DynamicContentSliderWithLabel extends PureComponent {
     });
   };
 
-  onclick = (item) => {
-    const { index } = this.props;
+  onclick = (item, i = 0) => {
+    const { index = 0, megamenuType = false, gender = "women" } = this.props;
+    const {
+      AppConfig: {
+        vwoData: { HPP: { variationName = ""} = {} } = {},
+        abTestingConfig: {
+          HPP: { defaultUserSegment },
+        },
+      },
+    } = getStore().getState();
     let banner = {
-      link: item.link,
-      promotion_name: item.promotion_name,
+      link: item?.link,
+      promotion_name: item?.promotion_name,
+      segment_name: BrowserDatabase.getItem("customer")?.user_segment || defaultUserSegment,
+      variant_name: variationName,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
+    if(megamenuType && item?.label) {
+      megaMenuCarousalEvent({
+        gender: gender,
+        prev_screen_name: sessionStorage.getItem("prevScreen"),
+        banner_label: item?.label,
+        banner_position: i+1,
+      });
+    }
+    (!megamenuType) && this.props?.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderSliderWithLabel = (item, i) => {
-    const { link, text, url, plp_config, height, width, text_align } = item;
+    const { link = "", text, url, plp_config, height, width, text_align, image_url = "",label ="" } = item;
+    const { megamenuType = false, gender = "women" } = this.props;
     const { isArabic } = this.state;
-    let parseLink = link;
-    const wd = `${width.toString()}px`;
-    const ht = `${height.toString()}px`;
+    let parseLink = megamenuType && (label === "Brands" || i === 0) ? `/brands-menu` : formatCDNLink(link);
+    const wd = `${width?.toString()}px`;
+    const ht = `${height?.toString()}px`;
+    const modifiedText = text ? text : megamenuType && label ? label : null;
+    const modifiedItem = megamenuType ? {
+      promotion_id: `${modifiedText}_${i+1}`,
+      promotion_name: modifiedText,
+      ...item
+    } : item;
     return (
       <div
         block="SliderWithLabel"
@@ -228,7 +285,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         key={i * 10}
       >
         <Link
-          to={formatCDNLink(parseLink)}
+          to={parseLink}
           key={i * 10}
           block="SliderWithLabel"
           elem="Link"
@@ -236,20 +293,19 @@ class DynamicContentSliderWithLabel extends PureComponent {
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
-            this.onclick(item);
+            this.onclick(modifiedItem, i);
           }}
         >
           <Image
-            lazyLoad={true}
-            src={url}
+            src={megamenuType ? image_url : url}
             alt={text}
             block="Image"
             style={{ maxWidth: wd }}
           />
         </Link>
-        {text ? (
-          <div block="SliderText" style={{ textAlign: text_align }}>
-            {text}
+        {modifiedText ? (
+          <div block={`SliderText${megamenuType ? " megaMenuSliderText": ""}`} style={{ textAlign: text_align }}>
+            {modifiedText}
           </div>
         ) : null}
       </div>
@@ -450,6 +506,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
       items = [],
       trendingBrands = [],
       trendingCategories = [],
+      megeMenuHorizontalSliderData = [],
+      megamenuType = false,
       title,
     } = this.props;
     return (
@@ -471,6 +529,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
             trendingCategories.map(
               this.renderSliderWithLabelTrendingCategories
             )}
+          {megamenuType
+            ? megeMenuHorizontalSliderData?.map(this.renderSliderWithLabel)
+            : null
+          }
           {items.map(this.renderSliderWithLabel)}
           <div className="SliderHelper"></div>
         </div>
@@ -506,7 +568,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
-    const { index, start_time, end_time } = this.props;
+    const { index = 0, start_time, end_time } = this.props;
 
     if (start_time && end_time) {
       if (!this.state.isHideWidget) {

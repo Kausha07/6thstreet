@@ -70,14 +70,12 @@ class CouponEvent extends BaseEvent {
         event: event.name,
         eventCategory: "checkout_tracking",
         eventAction: event.name,
-        couponCode: event.coupon,
+        coupon: event.coupon,
         products: formattedImpressions,
         UserType:
           this.getCustomerId().toString().length > 0
             ? "Logged In"
             : "Logged Out",
-        CustomerID: this.getCustomerId(),
-        PageType: this.getPageType(),
         discount: event?.discount,
         tax: event?.tax,
         sub_total: event?.sub_total,

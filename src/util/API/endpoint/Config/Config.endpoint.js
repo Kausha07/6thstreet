@@ -27,3 +27,15 @@ export const getBottomNavigationConfig = () => {
     const directory = process.env.REACT_APP_BOTTOM_NAVIGATION_CONFIG_DIR;
     return indexConfig(CDN.get(`${directory}/${configFile}`));
 }
+
+export const getABTestingConfig = () => {
+  try {
+    const configFile = "abtestConfig.json";
+    const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
+    const abTestConfigResponse = CDN.get(`${directory}/${configFile}`);
+    return abTestConfigResponse;
+  } catch (error) {
+    console.error("Error fetching homepage personalisation config file", error);
+    return null;
+  }
+};

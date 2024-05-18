@@ -36,6 +36,7 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
 import { Config } from "Util/API/endpoint/Config/Config.type";
+import { getCountryFromUrl } from "Util/Url";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -57,6 +58,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -257,7 +259,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed, country } = this.props;
+    const { isFailed, country, config, orderDetailsCartTotal, vwoData } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -265,7 +269,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isFailed,
       isMobileVerification,
-      country
+      country,
+      isSidewideCouponEnabled,
+      orderDetailsCartTotal,
     };
   };
 
@@ -312,9 +318,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       name: name,
       screen: "checkout",
       prevScreen: "checkout",
-      ...(data.failedReason && { failedReason: data?.failedReason }),
-      ...(data?.mode && { loginMode: data?.mode }),
-      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
+      ...(data.failed_reason && { failed_reason: data?.failed_reason }),
+      ...(data?.mode && { login_mode: data?.mode }),
     };
     if (newSignUpEnabled){
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
@@ -352,7 +357,7 @@ export class CheckoutSuccessContainer extends PureComponent {
             } else {
               if (newSignUpEnabled) {
                 const eventAdditionalData = {
-                  failedReason: "Wrong Verification Code. Please re-enter",
+                  failed_reason: "Wrong Verification Code. Please re-enter",
                 };
                 this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
               }
@@ -380,7 +385,7 @@ export class CheckoutSuccessContainer extends PureComponent {
           } else {
             if (newSignUpEnabled) {
               const eventAdditionalData = {
-                failedReason:
+                failed_reason:
                   "Verification failed. Please enter valid verification code",
               };
               this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
@@ -421,8 +426,8 @@ export class CheckoutSuccessContainer extends PureComponent {
           if (newSignUpEnabled) {
             this.sendEvents(EVENT_OTP_VERIFY);
             const eventAdditionalData = shouldLoginWithOtpOnEmail
-              ? { mode: "Email", isPhone: false }
-              : { mode: "Phone", isPhone: true };
+              ? { mode: "Email", }
+              : { mode: "Phone", };
             this.sendEvents(EVENT_LOGIN, eventAdditionalData);
           }          
           try {
@@ -443,7 +448,7 @@ export class CheckoutSuccessContainer extends PureComponent {
           showNotification("error", response);
           if (newSignUpEnabled) {
             const eventAdditionalData = {
-              failedReason: response,
+              failed_reason: response,
             };
             this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
           }
@@ -456,7 +461,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       console.error("Error while creating customer", err);
       if (newSignUpEnabled) {
         const eventAdditionalData = {
-          failedReason: err ? err : "Error while creating customer",
+          failed_reason: err ? err : "Error while creating customer",
         };
         this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
       }

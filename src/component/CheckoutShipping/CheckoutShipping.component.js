@@ -11,7 +11,7 @@ import { getFinalPrice } from "Component/Price/Price.config";
 import { SHIPPING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutShipping as SourceCheckoutShipping } from "SourceComponent/CheckoutShipping/CheckoutShipping.component";
 import { customerType } from "Type/Account";
-import { getCurrency, isArabic } from "Util/App";
+import { getCurrency, isArabic, getDiscountFromTotals } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { ThreeDots } from "react-loader-spinner";
@@ -19,6 +19,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
+import CartTotal from "Component/CartTotal";
 
 import "./CheckoutShipping.style";
 
@@ -74,8 +75,36 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         currency_code = getCurrency(),
         total_segments: totals = [],
         shipping_fee = 0,
+        items = [],
       },
+      international_shipping_fee,
+      config,
+      vwoData,
     } = this.props;
+
+    let inventory_level_cross_border = false;
+    items?.map((item) => {
+      if (
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
+        parseInt(item.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
+    
+    const { isMobile } = this.state;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+
+    if (isSidewideCouponEnabled && isMobile ) {
+      return (
+        <CartTotal
+          pageType="CheckoutPage"
+          block="CheckoutOrderSummary"
+        />
+      );
+    }
 
     if (total !== {}) {
       const grandTotal = getFinalPrice(total, currency_code);
@@ -86,7 +115,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             <ul>
               <div block="Checkout" elem="Subtotals">
                 {this.renderPriceLine(subTotal, __("Subtotal"))}
-                {this.renderPriceLine(shipping_fee || __("FREE"), __("Shipping fee"))}
+                {(!inventory_level_cross_border ||
+                  !international_shipping_fee) &&
+                  this.renderPriceLine(
+                    getDiscountFromTotals(totals, "shipping") || __("FREE"),
+                    __("Shipping Charges")
+                  )}
+                {international_shipping_fee &&
+                  inventory_level_cross_border &&
+                  this.renderPriceLine(
+                    getDiscountFromTotals(totals, "intl_shipping") ||
+                      __("FREE"),
+                    __("International Shipping Fee")
+                  )}
                 {couponCode || (discount && discount != 0)
                   ? this.renderPriceLine(discount, __("Discount"))
                   : null}
@@ -103,7 +144,17 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             {this.renderPriceLine(subTotal, __("Subtotal"), {
               subtotalOnly: true,
             })}
-            {this.renderPriceLine(shipping_fee || __("FREE"), __("Shipping fee"))}
+            {(!inventory_level_cross_border || !international_shipping_fee) &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "shipping") || __("FREE"),
+                __("Shipping Charges")
+              )}
+            {international_shipping_fee &&
+              inventory_level_cross_border &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "intl_shipping") || __("FREE"),
+                __("International Shipping Fee")
+              )}
             {this.renderPriceLine(grandTotal, __("Total Amount"), {
               divider: true,
             })}

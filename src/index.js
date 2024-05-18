@@ -21,7 +21,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { render } from "react-dom";
 import { createBrowserHistory } from "history";
 import * as Sentry from "@sentry/react";
-
+// const vwoSdk = require('vwo-node-sdk');
 import App from "Component/App";
 
 const history = createBrowserHistory();
@@ -30,6 +30,26 @@ const pattern = /bot/i;
 window.__DEV__ = process.env.NODE_ENV === "development";
 window.__useragent__ = navigator.userAgent;
 window.__isBOT__ = pattern.test(navigator.userAgent);
+
+//vwo a/b testing tool integration on application loading
+const vwoInit = async () => {
+  try {
+    if(window.vwoSdk) {
+      const settingsFile = await vwoSdk?.getSettingsFile(
+        process.env.REACT_APP_VWO_AB_TOOL_ACCOUNT_ID,
+        process.env.REACT_APP_VWO_AB_TOOL_SDK_KEY
+      );
+      window.vwoClientInstance = await vwoSdk?.launch({
+        settingsFile,
+      });
+    }
+  }catch(err) {
+    console.error("vwo tool initialisation error: ",err);
+  }
+};
+if(!window.__isBOT__) {
+  vwoInit();
+}
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,

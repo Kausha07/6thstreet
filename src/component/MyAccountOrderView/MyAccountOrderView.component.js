@@ -154,7 +154,8 @@ class MyAccountOrderView extends PureComponent {
       international_shipping_fee,
       productsRating,
       updateRating,
-      isProductRatingEnabled
+      isProductRatingEnabled,
+      order,
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -193,6 +194,7 @@ class MyAccountOrderView extends PureComponent {
           itemStatus = {itemStatus}
           updateRating = {updateRating}
           isProductRatingEnabled = {isProductRatingEnabled}
+          orderDetailsCartTotal={order}
         />
       </>
     );
@@ -1075,7 +1077,17 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
+  getCouponSavings() {
+    const {
+      order: { total_mrp = 0, total_discount = 0 },
+    } = this.props;
+    let discountPercentage = Math.round(100 * (total_discount / total_mrp));
+
+    return discountPercentage;
+  }
+
   renderPriceLine(price, name, mods = {}, allowZero = false) {
+    const { isArabic } = this.state;
     if (!price && !allowZero) {
       return null;
     }
@@ -1091,7 +1103,7 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
-        <strong block="MyAccountOrderView" elem="Text">
+        <strong block="MyAccountOrderView" elem="Text" mods={{ isArabic }}>
           {name}
           {isTotal && (
             <>
@@ -1099,11 +1111,27 @@ class MyAccountOrderView extends PureComponent {
               <span>{__("(Taxes included)")}</span>
             </>
           )}
+          {name === "Coupon Savings" || name === "توفير الكوبون" ? (
+            <>
+              &nbsp;
+              <span className="discountPercent">
+                {isArabic
+                  ? `(${this.getCouponSavings()}%-)`
+                  : `(-${this.getCouponSavings()}%)`}
+              </span>
+            </>
+          ) : null}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && parseInt(finalPrice) === 0
             ? __("FREE")
-            : `${currency_code} ${finalPrice}`}
+            : isArabic
+            ? `${currency_code} ${Math.abs(finalPrice)} ${
+                mods?.couponSavings ? "-" : ""
+              }`
+            : `${mods?.couponSavings ? "-" : ""} ${currency_code} ${Math.abs(
+                finalPrice
+              )}`}
         </strong>
       </li>
     );
@@ -1123,6 +1151,7 @@ class MyAccountOrderView extends PureComponent {
       </>
     );
   }
+
   renderPaymentSummary() {
     const {
       order: {
@@ -1139,7 +1168,10 @@ class MyAccountOrderView extends PureComponent {
         international_shipping_amount = 0,
         reward_currency_amount = 0,
         fulfilled_from = "",
+        total_mrp= 0,
+        total_discount= 0,
       },
+      isSidewideCouponEnabled,
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
@@ -1148,9 +1180,16 @@ class MyAccountOrderView extends PureComponent {
       <div block="MyAccountOrderView" elem="OrderTotals">
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
-            {this.renderPriceLine(subTotal, __("Subtotal"))}
+            {isSidewideCouponEnabled
+              ? this.renderPriceLine(total_mrp, __("Total MRP"))
+              : this.renderPriceLine(subTotal, __("Subtotal"))}
+            {isSidewideCouponEnabled
+              ? this.renderPriceLine(total_discount, __("Coupon Savings"), {
+                  couponSavings: true,
+                })
+              : null}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
-              this.renderPriceLine(shipping_amount, __("Shipping"), {
+              this.renderPriceLine(shipping_amount, __("Shipping fee"), {
                 divider: true,
               })}
             {fulfilled_from === "International" &&
@@ -1164,6 +1203,7 @@ class MyAccountOrderView extends PureComponent {
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
                   isStoreCredit: true,
+                  couponSavings: true,
                 })
               : null}
             {reward_currency_amount !== 0
@@ -1179,7 +1219,7 @@ class MyAccountOrderView extends PureComponent {
                   { isClubApparel: true }
                 )
               : null}
-            {parseFloat(discount_amount) !== 0
+            {parseFloat(discount_amount) !== 0 && !isSidewideCouponEnabled
               ? this.renderPriceLine(discount_amount, __("Discount"))
               : null}
             {parseFloat(tax_amount) !== 0
