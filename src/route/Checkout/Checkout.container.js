@@ -80,7 +80,6 @@ import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 import { getDefaultEddMessage } from "Util/Date/index";
-import { getNewOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
