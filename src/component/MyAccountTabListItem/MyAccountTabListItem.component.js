@@ -3,6 +3,9 @@ import { isArabic } from "Util/App";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { getWalletBalance } from "Util/API/endpoint/Wallet/Wallet.endpoint";
+import "./MyAccountTabListItem.component.style.scss";
+
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -23,11 +26,32 @@ export const mapDispatchToProps = (dispatch) => ({
 export class MyAccountTabListItem extends SourceMyAccountTabListItem {
   state = {
     isArabic: isArabic(),
+    totalWalletBalance: null,
   };
 
   static propTypes = {
     updateBreadcrumbs: PropTypes.func.isRequired,
     breadcrumbs: PropTypes.array.isRequired,
+  };
+
+  componentDidMount() {
+    const {
+      tabEntry: [, { name }],
+    } = this.props;
+    if (name === __("My Wallet")) {
+      this.fetchWalletBalance();
+    }
+  }
+
+  fetchWalletBalance = async () => {
+    try {
+      const responseBalance = await getWalletBalance();
+      if (responseBalance && responseBalance.success) {
+        this.setState({
+          totalWalletBalance: responseBalance?.data?.total_balance,
+        });
+      }
+    } catch (error) {}
   };
 
   updateBreadcrumbs(breadcrumburl, name) {
@@ -46,7 +70,6 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
         url: "/",
         name: __("Home"),
       },
-
     ];
 
     updateBreadcrumbs(breadcrumbs);
@@ -59,8 +82,7 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
       changeActiveTab,
     } = this.props;
     const tabImageId = tabEntry[0];
-    const { isArabic } = this.state;
-
+    const { isArabic, totalWalletBalance } = this.state;
     return (
       <li
         block={
@@ -89,6 +111,12 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
               <div>{__("Payments")}</div>
               {/* {isMobile.any() ? <StoreCredit /> : null} */}
             </div>
+          ) : name === __("My Wallet") ? (
+            <span>
+              {" "}
+              {__("My Wallet")}{" "}
+              <span className="WalletBalance"> {totalWalletBalance} </span>
+            </span>
           ) : (
             name
           )}
