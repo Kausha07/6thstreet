@@ -105,6 +105,7 @@ export class Checkout extends SourceCheckout {
     identity_number : "",
     validationError: false,
     isNationalityClick: true,
+    isIdentityNumberModified: false,
   };
 
   onIdentityNumberChange = (value) => {
@@ -233,6 +234,14 @@ export class Checkout extends SourceCheckout {
 
           showError(__("Something went wrong"));
         });
+    }
+    if (
+      prevState?.identity_number !== this.state?.identity_number ||
+      prevState?.type_of_identity !== this.state?.type_of_identity
+    ) {
+      this.setState({ isIdentityNumberModified: true });
+    } else {
+      this.setState({ isIdentityNumberModified: false });
     }
   }
 
@@ -739,7 +748,7 @@ export class Checkout extends SourceCheckout {
     }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
-    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false } = this.state;
+    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false, isIdentityNumberModified = false } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
@@ -766,6 +775,7 @@ export class Checkout extends SourceCheckout {
           validationError={validationError}
           onIdentityNumberChange={this.onIdentityNumberChange}
           onTypeOfIdentityChange={this.onTypeOfIdentityChange}
+          isIdentityNumberModified={isIdentityNumberModified}
         />
       </div>
     );

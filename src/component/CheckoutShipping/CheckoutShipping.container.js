@@ -23,6 +23,10 @@ import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint
 import { camelCase } from "Util/Common";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import { setNewAddressClicked } from "Store/MyAccount/MyAccount.action";
+export const MyAccountDispatcherDefalut = import(
+  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+  "Store/MyAccount/MyAccount.dispatcher"
+);
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -39,6 +43,10 @@ export const mapDispatchToProps = (dispatch) => ({
   setNewAddressFromClick: (val) => dispatch(setNewAddressClicked(val)),
   updateAddress: (address_id, address) =>
     CheckoutDispatcher.updateAddress(dispatch, address_id, address),
+  requestCustomerData: () =>
+    MyAccountDispatcherDefalut.then(({ default: dispatcher }) =>
+      dispatcher.requestCustomerData(dispatch)
+    ),
 });
 
 export const mapStateToProps = (state) => ({
@@ -500,7 +508,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       identity_number: identity_number,
     };
     // on checkout page, set update identity-number and type_of_identity store in the respective address
-    if ((this.props?.type_of_identity == 0 || this.props?.type_of_identity == 1)&& this.props?.identity_number?.length) {
+    if (this.props?.isIdentityNumberModified) {
       const updatedAddress = {
         firstname: shippingAddress?.firstname,
         lastname: shippingAddress?.lastname,
@@ -514,7 +522,17 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         type_of_identity: type_of_identity,
         id: selectedCustomerAddressId,
       };
-      this.props.updateAddress(selectedCustomerAddressId, updatedAddress);
+      try {
+        const newPromise = new Promise((resolve, reject) => {
+          resolve(
+            this.props.updateAddress(selectedCustomerAddressId, updatedAddress)
+          );
+        }).then(() => {
+          this.props?.requestCustomerData();
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     const {
