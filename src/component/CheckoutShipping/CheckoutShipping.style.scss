@@ -132,6 +132,12 @@
                 background: var(--my-acc-background);
               }
             }
+            @include mobile {
+              font-size:12px;
+              min-width: 87px;
+              height: 31px;
+              margin: 0px;
+            }
           }
         }
 
@@ -201,6 +207,20 @@
 }
 
 .CheckoutShipping {
+  .header-new-address-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 30px;
+    @include mobile {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin: -45px auto 15px !important;
+    }
+  }
   .CheckoutAddressBook {
     &-Wrapper {
       padding: 30px 20px;
@@ -238,11 +258,12 @@
   }
   &-DeliveryMessage {
     font-weight: 600;
-    width: 60vw;
-    padding: 0 !important;
-    margin: -45px auto 24px !important;
-    font-size: 18px;
-    text-align: center;
+    font-size: 16px;
+    font-family: "Avenir Next";
+    line-height: 24.59px;
+    top: 0px;
+    margin: 0px;
+
     display: block !important;
     @include desktop {
       display: none !important;

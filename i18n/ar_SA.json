@@ -1336,5 +1336,14 @@
     "Recommended code: ": "الكود الموصى به",
     "OFF": "خصم",
     "CODE:": "الكود",
-    "Total MRP": "السعر"
+    "Total MRP": "السعر",
+    "Please provide National ID No. for custom clearance": "",
+    "Please provide National ID number for custom clearance": "",
+    "Please provide Passport No. for custom clearance": "",
+    "Please provide Passport number for custom clearance": "",
+    "National ID number": "",
+    "Passport Number":"",
+    "Enter the National/Passport number": "",
+    "Add New": "",
+    "Customs Clearance Information": ""
 }
