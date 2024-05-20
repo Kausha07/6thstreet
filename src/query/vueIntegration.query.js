@@ -4,6 +4,7 @@ import MobileAPI from "Util/API/provider/MobileAPI";
 import isMobile from "Util/Mobile";
 
 export const SPAM_PROTECTION_DELAY = 200;
+export const SPAM_PROTECTION_DELAY_PAGEVIEW =1000;
 
 export class VueIntegrationQueries {
   /**
@@ -20,8 +21,10 @@ export class VueIntegrationQueries {
   }
 
   async vueAnalayticsLogger(payload) {
-    const { event_name = "" } = payload;
-    if (this.spamProtection(SPAM_PROTECTION_DELAY, event_name)) {
+    const { event_name = "", params: {pageType= ""} ={} } = payload;
+    const key = pageType? `${event_name}_${pageType}` : event_name;
+    const delay = event_name === "pageView" ? SPAM_PROTECTION_DELAY_PAGEVIEW : SPAM_PROTECTION_DELAY
+    if (this.spamProtection(delay, key)) {
       return;
     }
     const newParams = {...payload?.params, Platform: isMobile.any() ? "PWA" : "Desktop" }
