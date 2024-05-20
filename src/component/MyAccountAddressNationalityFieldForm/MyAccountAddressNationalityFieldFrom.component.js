@@ -111,6 +111,10 @@ const MyAccountAddressNationalityFieldFrom = ({
             }
             validationErrorMessage={errorMessage}
           />
+          {(identityNumber?.length === 0) ||
+            (!validationError && (
+              <p block="text-box-message">{errorMessage}</p>
+            ))}
         </div>
       </fieldset>
     </div>
