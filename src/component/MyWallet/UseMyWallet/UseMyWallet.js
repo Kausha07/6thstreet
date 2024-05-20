@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { getCurrency } from "Util/App";
 import { getLanguageFromUrl } from "Util/Url";
 import MyWalletDispatcher from "Store/MyWallet/MyWallet.dispatcher";
+import { isDiscountApplied } from "Util/App";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CrossIcon from "./../IconsAndImages/CrossIcon.svg";
 import SelectIcon from "./../IconsAndImages/SelectIcon.svg";
@@ -20,6 +21,7 @@ export const mapStateToProps = (state) => ({
   isLoading: state.MyWalletReducer.isLoading,
   myWallet: state.MyWalletReducer.myWallet,
   isWalletEnabled: state.AppConfig.isWalletV1Enabled,
+  cartTotals: state.Cart.cartTotals,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -45,6 +47,7 @@ export function UseMyWallet(props) {
     isWalletEnabled,
     updateTotals,
     showNotification,
+    cartTotals,
   } = props;
 
   const countryCode = getLanguageFromUrl().toUpperCase();
@@ -87,6 +90,10 @@ export function UseMyWallet(props) {
     const currency = getCurrency();
     if (currency) {
       setCurrencyCode(currency);
+    }
+    const isRewardsApplied = isDiscountApplied(cartTotals, "reward");
+    if (isRewardsApplied) {
+      setIsWalletBalanceApplied(true);
     }
   }, []);
 
