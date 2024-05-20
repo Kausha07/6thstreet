@@ -306,8 +306,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderCityArea() {
-    const { renderMySignInPopup } = this.props;
-    return <CityArea renderMySignInPopup={renderMySignInPopup} />;
+    return <CityArea />;
   }
 
   render() {

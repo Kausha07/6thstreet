@@ -10,16 +10,30 @@
     z-index: 100;
 
     .cityAreaSelectionPopUp {
-      height: 561px;
-      width: 100%;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #ffffff;
-      padding: 30px 20px;
-      z-index: 100;
-      border-radius: 12px;
+      @include mobile {
+        height: 561px;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffffff;
+        padding: 30px 20px;
+        z-index: 100;
+        border-radius: 12px;
+      }
+
+      @include desktop {
+        width: 412px;
+        height: 600px;
+        background: #ffffff;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 40px 30px;
+        border-radius: 12px;
+      }
 
       .cityAreaSelectionInnerBlock {
         .cityAreaButtons {
@@ -94,8 +108,15 @@
         .cityAreaList {
           ul {
             margin: 20px 0;
-            height: 300px;
             overflow-y: scroll;
+
+            @include mobile {
+              height: 300px;
+            }
+
+            @include desktop {
+              height: 375px;
+            }
 
             li::before {
               content: "";

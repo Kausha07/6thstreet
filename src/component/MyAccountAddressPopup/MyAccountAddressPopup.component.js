@@ -26,6 +26,12 @@ import {
 import './MyAccountAddressPopup.style';
 
 export class MyAccountAddressPopup extends PureComponent {
+
+    constructor(props){
+        super(props);
+        this.addressPopup = React.createRef();
+    }
+    
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         handleAddress: PropTypes.func.isRequired,
@@ -52,6 +58,32 @@ export class MyAccountAddressPopup extends PureComponent {
     
         return null;
     }
+
+    componentDidMount() {
+        const {
+          payload: { displayType = "" },
+        } = this.props;
+    
+        if (displayType) {
+          window.addEventListener("mousedown", this.closePopupOnOutsideClick);
+        }
+      }
+    
+    closePopupOnOutsideClick = (e) => {
+        const {
+          payload: { displayType = "" },
+          closeForm,
+        } = this.props;
+    
+        if (
+          displayType &&
+          this.addressPopup.current &&
+          !this.addressPopup?.current?.contains(e?.target)
+        ) {
+          e.preventDefault();
+          closeForm();
+        }
+    };
 
     componentDidUpdate(prevProps, _) {
         const { payload = {} } = this.props;
@@ -85,7 +117,7 @@ export class MyAccountAddressPopup extends PureComponent {
 
     renderAddressForm(form) {
         const {
-            payload: { address }, customer, closeForm, handleAddress, isExchange
+            payload: { address,  displayType = "" }, customer, closeForm, handleAddress, isExchange
         } = this.props;
         const { defaultChecked, mobileDeleteNotice } = this.state;
 
@@ -110,6 +142,7 @@ export class MyAccountAddressPopup extends PureComponent {
                     customer={customer}
                     defaultChecked={defaultChecked}
                     changeDefaultShipping={this.changeDefaultShipping}
+                    displayType={displayType}
                 />
             </>
         );
@@ -208,6 +241,7 @@ export class MyAccountAddressPopup extends PureComponent {
             <div
                 id={ADDRESS_POPUP_ID}
                 mix={{ block: 'MyAccountAddressPopup', mods: { isArabic } }}
+                ref={this.addressPopup}
             >
                 <Loader isLoading={isLoading} />
                 {formContent ? this.renderContent() : null}

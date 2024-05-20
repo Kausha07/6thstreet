@@ -46,6 +46,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     if (!isSignedIn()) {
       renderMyAccountOverlay();
       toggleRegisterScreen(false);
+      showHidePOPUP(false)
     }
   };
 
@@ -53,6 +54,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     if (!isSignedIn()) {
       renderMyAccountOverlay();
       toggleRegisterScreen(true);
+      showHidePOPUP(false);
     }
   };
 

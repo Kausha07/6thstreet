@@ -10,6 +10,7 @@ import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstr
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 import { connect } from "react-redux";
+import CityArea from "Component/CityArea/index";
 
 import "./HeaderTopBar.style";
 
@@ -189,6 +190,7 @@ class HeaderTopBar extends NavigationAbstract {
     return (
       <Fragment key="store-switcher">
         <div block="Switcher">
+          <CityArea />
           <LanguageSwitcher />
           <CountrySwitcher />
         </div>

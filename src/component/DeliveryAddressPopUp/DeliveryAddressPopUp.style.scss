@@ -10,16 +10,29 @@
     z-index: 100;
 
     .deliveryAddressPopUp {
-      height: 500px;
-      width: 100%;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #ffffff;
-      padding: 30px 20px;
-      z-index: 100;
-      border-radius: 12px;
+      @include mobile {
+        height: 500px;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffffff;
+        padding: 30px 20px;
+        z-index: 100;
+        border-radius: 12px;
+      }
+
+      @include desktop {
+        width: 569px;
+        height: 740px;
+        background: #ffffff;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px 20px;
+      }
     }
 
     .deliveryAddressInnerBlock {
@@ -49,6 +62,11 @@
             border-radius: 10px;
             text-transform: initial;
             font-family: Avenir Next;
+
+            .plusIconImage {
+              height: 16px;
+              width: 16px;
+            }
           }
         }
 
@@ -63,9 +81,17 @@
       }
 
       .allAddressAndEditBlock {
-        height: 250px;
+        @include mobile {
+          height: 250px;
+          padding-bottom: 20px;
+        }
+
+        @include desktop {
+          height: 500px;
+          padding-bottom: 20px;
+        }
+
         overflow-y: scroll;
-        padding-bottom: 20px;
 
         .deliveryAddressInfoBlock {
           display: flex;
@@ -174,6 +200,10 @@
           z-index: 96;
           border-radius: 5px;
           margin: 25px auto;
+
+          @include desktop {
+            width: 335px;
+          }
         }
       }
     }

@@ -5,8 +5,13 @@ import address from "Component/PDPSummary/icons/address_black.svg";
 import "./DeliveryAddressPopUpWhenNoAddress.style.scss";
 
 export const DeliveryAddressPopUpWhenNoAddress = (props) => {
-  const { showHideCityAreaSelection, showPopUp, showHidePOPUP, addNewAddress } =
-    props;
+  const {
+    showHideCityAreaSelection,
+    showPopUp,
+    showHidePOPUP,
+    addNewAddress,
+    customer,
+  } = props;
 
   const wrapperRef = createRef();
 
@@ -38,6 +43,7 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
   };
 
   const render = () => {
+    const { firstname = "", lastname = "" } = customer;
     return (
       <div block="deliveryAddressPopUpWhenNoAddressBlock">
         <div block="deliveryAddressPopUpWhenNoAddressOuterBlock">
@@ -47,7 +53,9 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
               ref={wrapperRef}
             >
               <div block="greetingToUser">
-                <h1>{__("Hello, Kanagaraj Mani")}</h1>
+                <h1>
+                  {__("Hello,")} {firstname} {lastname}
+                </h1>
               </div>
               <div block="deliveryNote">
                 <p>

@@ -1,25 +1,46 @@
 .deliveryAddressPopUpWhenNoAddressBlock {
   .deliveryAddressPopUpWhenNoAddressOuterBlock {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background: #4a4a4a;
-    left: 0;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    @include mobile {
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      background: #4a4a4a;
+      left: 0;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    @include desktop {
+      position: absolute;
+      top: 15px;
+      right: 0;
+      z-index: 100;
+    }
 
     .deliveryAddressPopUpWhenNoAddressPopUp {
-      height: 300px;
-      width: 100%;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #ffffff;
-      padding: 10px 20px;
-      z-index: 100;
-      border-radius: 12px;
+      @include mobile {
+        height: 300px;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffffff;
+        padding: 10px 20px;
+        z-index: 100;
+        border-radius: 12px;
+      }
+
+      @include desktop {
+        width: 364px;
+        height: 270px;
+        background: #ffffff;
+        padding: 10px 20px;
+        z-index: 100;
+        border-radius: 4px;
+        border: 1px solid #d1d3d4;
+      }
     }
 
     .deliveryAddressPopUpWhenNoAddressInnerBlock {
@@ -43,7 +64,7 @@
       }
 
       .addNewAddressButton {
-        margin: 25px 0;
+        margin: 20px 0;
         button {
           height: 40px;
           width: 100%;
@@ -86,7 +107,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        margin: 25px 0;
+        margin: 20px 0;
 
         img {
           width: 25px !important;

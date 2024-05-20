@@ -434,6 +434,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   renderDiscart() {
+    const { displayType = "" } = this.props;
+
+    if (displayType === "desktopPopUp") {
+      return null;
+    }
+    
     return (
       <button block="MyAccountBtn" elem="Discart" onClick={this.closeField}>
         {__("Cancel")}

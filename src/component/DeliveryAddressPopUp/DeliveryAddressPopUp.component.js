@@ -75,7 +75,7 @@ export const DeliveryAddressPopUp = (props) => {
                     {__("Where should we deliver your order?")}
                   </h1>
                   <button block="addnewButton" onClick={onAddNewClick}>
-                    <img src={BluePlus} alt="plus icon" />
+                    <img src={BluePlus} alt="plus icon" block="plusIconImage"/>
                     {__("Add New")}
                   </button>
                 </div>
@@ -113,8 +113,7 @@ export const DeliveryAddressPopUp = (props) => {
                         >
                           <div block="nameWithDefaultText">
                             <div block="nameBlock">
-                              {firstname}
-                              {lastname}
+                              {firstname} {lastname}
                             </div>
                             {default_shipping && (
                               <div block="defaultText">{"Default"}</div>

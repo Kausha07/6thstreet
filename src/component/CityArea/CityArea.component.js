@@ -77,6 +77,22 @@ export const CityArea = (props) => {
   //   }
   // }, [cartItems]);
 
+  useEffect(() => {
+    const request = JSON.parse(localStorage?.getItem("EddAddressReq"));
+
+    if (!request && !isSignedIn) {
+      setShowPopUp(true);
+
+      const timeoutId = setTimeout(() => {
+        setShowPopUp(false);
+      }, 5000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, []);
+
+
+
   const editSelectedAddress = (address) => {
     setAddAndEditAddressButtonClicked(true);
     openForm();
@@ -84,6 +100,7 @@ export const CityArea = (props) => {
       action: EDIT_ADDRESS,
       title: __("Edit address"),
       address,
+      displayType: !isMobile.any() ? "desktopPopUp" : "",
     });
     showHidePOPUP(false);
   };
@@ -95,6 +112,7 @@ export const CityArea = (props) => {
       action: ADD_ADDRESS,
       title: __("Add new address"),
       address: {},
+      displayType: !isMobile.any() ? "desktopPopUp" : "",
     });
     showHidePOPUP(false);
   };
@@ -117,27 +135,30 @@ export const CityArea = (props) => {
     if (!addAndEditAddressButtonClicked) {
       return null;
     }
-    return (
-      <div
-        block="MyAccountAddressBook"
-        elem="ContentWrapper"
-        mods={{ formContent }}
-      >
-        <button
+
+    if (formContent) {
+      return (
+        <div
           block="MyAccountAddressBook"
-          elem="backButton"
-          mods={{ isArabic: isArabic() }}
-          onClick={showCards}
-        />
-        <MyAccountAddressPopup
-          formContent={formContent}
-          closeForm={closeForm}
-          openForm={openForm}
-          showCards={showCards}
-          customer={customer}
-        />
-      </div>
-    );
+          elem="ContentWrapper"
+          mods={{ formContent }}
+        >
+          <button
+            block="MyAccountAddressBook"
+            elem="backButton"
+            mods={{ isArabic: isArabic() }}
+            onClick={showCards}
+          />
+          <MyAccountAddressPopup
+            formContent={formContent}
+            closeForm={closeForm}
+            openForm={openForm}
+            showCards={showCards}
+            customer={customer}
+          />
+        </div>
+      );
+    }
   };
 
   const toggleRegisterScreen = (value) => {
@@ -258,9 +279,17 @@ export const CityArea = (props) => {
   };
 
   const renderAddressPopUp = () => {
-    const countryWiseAddresses = addresses?.filter(
-      (obj) => obj?.country_code === getCountryFromUrl()
-    );
+    const countryWiseAddresses = addresses
+      ?.filter((obj) => obj?.country_code === getCountryFromUrl())
+      .sort((a, b) => {
+        if (a.default_shipping === true && b.default_shipping !== true) {
+          return -1;
+        }
+        if (a.default_shipping !== true && b.default_shipping === true) {
+          return 1;
+        }
+        return 0;
+      });
 
     if (countryWiseAddresses && countryWiseAddresses?.length > 0) {
       return (
@@ -281,12 +310,13 @@ export const CityArea = (props) => {
           showPopUp={showPopUp}
           showHideCityAreaSelection={showHideCityAreaSelection}
           addNewAddress={addNewAddress}
+          customer={customer}
         />
       );
     }
   };
 
-  const popUpForMobile = () => {
+  const cityAreaPopUp = () => {
     if (!isSignedIn) {
       return (
         <SignInSignUpWithCityAreaPopup
@@ -299,18 +329,6 @@ export const CityArea = (props) => {
       );
     } else {
       return renderAddressPopUp();
-    }
-  };
-
-  const popUpForDesktop = () => {
-    return null;
-  };
-
-  const cityAreaPopUp = () => {
-    if (isMobile.any()) {
-      return popUpForMobile();
-    } else {
-      return popUpForDesktop();
     }
   };
 
