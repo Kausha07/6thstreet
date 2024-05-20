@@ -1,3 +1,4 @@
+import Loader from "Component/Loader";
 import { Oval } from "react-loader-spinner";
 import {
   OrderPlaced,
@@ -28,6 +29,7 @@ export default function AllTransactions() {
   const [allHistory, setAllHistory] = useState([]);
   const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
   const [totalTransactions, setTotalTransactions] = useState(0);
+  const [isloaderShown, setIsLoaderShown] = useState(false);
   const [page, setPage] = useState(1);
   const [fetchMore, setfetchMore] = useState(true);
   const type = ALL_HISTORY_TYPE;
@@ -37,9 +39,13 @@ export default function AllTransactions() {
     const fetchMyCashHistory = async () => {
       try {
         //type can be eaither all/transactional/promotional
-        if (allHistory?.length == 0 || allHistory?.length < totalTransactions) {
-          console.log("test conditon ", allHistory?.length , totalTransactions)
+        if (
+          allHistory?.length == 0 ||
+          allHistory?.length != totalTransactions
+        ) {
+          console.log("test conditon ", allHistory?.length, totalTransactions);
           setIsLoading(true);
+          setIsLoaderShown(true);
           const responseHistory = await getTransactionHistory(
             type,
             page,
@@ -52,9 +58,9 @@ export default function AllTransactions() {
             ]);
 
             setTotalTransactions(responseHistory?.data?.count);
-            if(responseHistory?.data?.count > allHistory?.length){
+            if (responseHistory?.data?.count > allHistory?.length) {
               setfetchMore(true);
-            }else{
+            } else {
               setfetchMore(false);
             }
 
@@ -62,16 +68,17 @@ export default function AllTransactions() {
               setIsFirstFetchLoading(false);
             }
             setIsLoading(false);
+            setIsLoaderShown(false);
           }
         }
       } catch (error) {
         setIsLoading(false);
+        setIsLoaderShown(false);
       }
     };
     fetchMyCashHistory();
   }, [page]);
 
-  
   function handleScroll() {
     const windowHeight =
       "innerHeight" in window
@@ -90,19 +97,20 @@ export default function AllTransactions() {
     );
     const windowBottom = windowHeight + window.pageYOffset;
 
-    if (
-      windowBottom + footerHeight >= docHeight &&
-      !isLoading 
-      && fetchMore
-    ) {
+    if (windowBottom + footerHeight >= docHeight && !isLoading && fetchMore) {
       setIsLoading(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isLoading) {
       setPage((oldPage) => oldPage + 1);
     }
-  };
+  }, [isLoading]);
 
   // Handle scroll inside mycash history container
   useEffect(() => {
-    //not being used currently as it was used for 
+    //not being used currently as it was used for
     // function handleScroll1(event) {
     //   const { scrollTop, clientHeight, scrollHeight } = event.target;
     //   if (scrollHeight - scrollTop === clientHeight) {
@@ -120,6 +128,7 @@ export default function AllTransactions() {
   return (
     <>
       <div id="all-history" className="HistoryContainer">
+        <Loader isLoading={isloaderShown} />
         {isFirstFetchLoading ? (
           <div className="LoaderClass">
             <Oval
@@ -135,11 +144,12 @@ export default function AllTransactions() {
           allHistory &&
           allHistory.map((transaction) => (
             <>
-              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN || 
-              transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS || 
-              transaction.action == ACTION_PROMOTIONAL_REFUND && transaction?.expires_at == null && (
-                  <RewardsExpired transaction={transaction} />
-                )}
+              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
+                transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
+                (transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                  transaction?.expires_at == null && (
+                    <RewardsExpired transaction={transaction} />
+                  ))}
               {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
                 transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
                   <OrderPlaced transaction={transaction} />
@@ -177,7 +187,8 @@ export default function AllTransactions() {
                 )}
 
               {transaction.action == ACTION_PROMOTIONAL_REFUND &&
-                transaction.type === PROMOTIONAL_HISTORY_TYPE &&  transaction?.expires_at != null &&(
+                transaction.type === PROMOTIONAL_HISTORY_TYPE &&
+                transaction?.expires_at != null && (
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
               <hr className="HoriRow" />
