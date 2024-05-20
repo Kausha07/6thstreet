@@ -236,12 +236,10 @@ export class Checkout extends SourceCheckout {
         });
     }
     if (
-      prevState?.identity_number !== this.state?.identity_number ||
-      prevState?.type_of_identity !== this.state?.type_of_identity
+     ( prevState?.identity_number !== this.state?.identity_number ||
+      prevState?.type_of_identity !== this.state?.type_of_identity) && !this.state.isIdentityNumberModified
     ) {
       this.setState({ isIdentityNumberModified: true });
-    } else {
-      this.setState({ isIdentityNumberModified: false });
     }
   }
 

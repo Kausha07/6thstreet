@@ -275,7 +275,6 @@ export class MyAccountAddressPopupContainer extends PureComponent {
   }
 
   render() {
-    console.log('test kiran --->', 'getNewAddressField checking ===>',this.props);
     return (
       <MyAccountAddressPopup
         {...this.props}
