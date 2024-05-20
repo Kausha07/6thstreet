@@ -129,12 +129,12 @@ export default function AllTransactions() {
                 )}
 
               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN &&
-                transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                transaction.type == PROMOTIONAL_HISTORY_TYPE &&  transaction?.expires_at != null &&(
                   <Refund transaction={transaction} text={"Reward"} />
                 )}
 
               {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
-                transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                transaction.type == PROMOTIONAL_HISTORY_TYPE && transaction?.expires_at != null &&(
                   <Cashback transaction={transaction} />
                 )}
 

@@ -123,11 +123,11 @@ export default function RewardsTransactions() {
                   <OrderPlaced transaction={transaction} />
                 )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
+                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && transaction?.expires_at != null (
                   <Cashback transaction={transaction} />
                 )}
 
-                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
+                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && transaction?.expires_at != null (
                   <Refund transaction={transaction} text={"Reward"} />
                 )}
 
