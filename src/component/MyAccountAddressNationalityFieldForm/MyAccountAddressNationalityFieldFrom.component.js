@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import isMobile from "Util/Mobile";
 import Field from "Component/Field";
+import { showNotification } from "Store/Notification/Notification.action";
 import "./MyAccountAddressNationalityFieldFrom.style.scss";
 
 const mapStateToProps = (state) => ({
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  showErrorNotification: (error) => dispatch(showNotification("error", error)),
+})
 const MyAccountAddressNationalityFieldFrom = ({
   isArabic: isArabicfun,
   isCheckoutPage = false,
@@ -20,6 +24,7 @@ const MyAccountAddressNationalityFieldFrom = ({
     value: identityNumber = "",
     onIdentityNumberChange = () => {},
   } = {},
+  showErrorNotification
 }) => {
   const isArabic = isArabicfun();
   const [validationError, setValidationError] = useState(false);
@@ -35,6 +40,7 @@ const MyAccountAddressNationalityFieldFrom = ({
   };
   const handleInvalid = (event) => {
     event.preventDefault();
+    showErrorNotification(__("Please enter valid number"));
     setValidationError(true);
   };
 
@@ -86,7 +92,7 @@ const MyAccountAddressNationalityFieldFrom = ({
           <Field
             type="radio"
             id="nation-id-number"
-            label={__("National ID Number")}
+            label={__("National ID number")}
             name="nationalId"
             value={"Oman ID"}
             onClick={() => handleTypeOfIdentityChange(0)}
@@ -117,20 +123,13 @@ const MyAccountAddressNationalityFieldFrom = ({
             maxLength={typeOfIdentity == 0 ? 9 : 15}
             pattern={typeOfIdentity == 0 ? "[0-9]*" : "[a-zA-Z0-9]*"}
             validation={validationArray}
+            required={isRequired}
             onChange={handleNationalityFieldChange}
             onInvalid={handleInvalid}
-            required={isRequired}
-            message={
-              (isRequired && identityNumber?.length === 0) || validationError
-                ? errorMessage
-                : ""
-            }
+            message={validationError ? errorMessage : ""}
             validationErrorMessage={errorMessage}
           />
-          {(identityNumber?.length === 0) ||
-            (!validationError && (
-              <p block="text-box-message">{errorMessage}</p>
-            ))}
+          {!validationError && <p block="text-box-message">{errorMessage}</p>}
         </div>
       </fieldset>
     </div>
@@ -139,5 +138,5 @@ const MyAccountAddressNationalityFieldFrom = ({
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(MyAccountAddressNationalityFieldFrom);
