@@ -1559,7 +1559,7 @@ export class CheckoutSuccess extends PureComponent {
             {store_credit_amount !== 0
               ? this.renderSitewidePriceLine(
                   store_credit_amount,
-                  __("Store Credit"),
+                  __("My Cash"),
                   {
                     isStoreCredit: true,
                     couponSavings: true,

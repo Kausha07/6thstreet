@@ -227,7 +227,7 @@ export function ExpiringSoon({ expiry, balance }) {
             <img src={InfoIcon} />
           </div>
           <div className="ExpiringText">
-            {__("My Cash Balance of %s expires in", balance)}
+            {__("My Reward Balance of %s expires in", balance)}
             <span className="Days">
               {expiry} {__("Days")}
             </span>

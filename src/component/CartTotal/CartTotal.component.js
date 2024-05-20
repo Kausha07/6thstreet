@@ -86,11 +86,11 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {isArabic
             ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
-                name === "Store Credit" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice
+                name === "My Cash" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice
               } ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? currency_code : ""
-              } ${name === "Store Credit" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice}`}
+              } ${name === "My Cash" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice}`}
         </strong>
       </li>
     );
@@ -168,7 +168,7 @@ function CartTotal(props) {
             )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
-            __("Store Credit"),
+            __("My Cash"),
             { couponSavings: true }
           )}
           {renderPriceLine(
