@@ -406,6 +406,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           customer={customer}
           type_of_identity={this.props?.type_of_identity}
           identity_number={this.props?.identity_number}
+          onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
+          onIdentityNumberChange={this.props?.onIdentityNumberChange}
         />
       </div>
     );

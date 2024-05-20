@@ -199,6 +199,14 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     const { newAddress } = this.getNewAddressField(address);
     newAddress.id = id;
     const apiResult = updateAddress(id, newAddress);
+    if (
+      Object.keys(address).length > 0 &&
+      address?.type_of_identity &&
+      address?.identity_number
+    ) {
+      this.props?.onIdentityNumberChange(address?.identity_number);
+      this.props?.onTypeOfIdentityChange(address?.type_of_identity);
+    }
 
     if (apiResult) {
       apiResult.then(this.handleAfterAction, this.handleError).then(showCards);

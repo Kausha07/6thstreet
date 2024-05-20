@@ -86,7 +86,7 @@ const MyAccountAddressNationalityFieldFrom = ({
           <Field
             type="radio"
             id="nation-id-number"
-            label={__("National ID number")}
+            label={__("National ID Number")}
             name="nationalId"
             value={"Oman ID"}
             onClick={() => handleTypeOfIdentityChange(0)}
@@ -113,11 +113,13 @@ const MyAccountAddressNationalityFieldFrom = ({
             block="nationality-input-text-box"
             className={validationError ? "show-validation-message" : ""}
             value={identityNumber}
+            minLength={1}
             maxLength={typeOfIdentity == 0 ? 9 : 15}
             pattern={typeOfIdentity == 0 ? "[0-9]*" : "[a-zA-Z0-9]*"}
             validation={validationArray}
             onChange={handleNationalityFieldChange}
             onInvalid={handleInvalid}
+            required={isRequired}
             message={
               (isRequired && identityNumber?.length === 0) || validationError
                 ? errorMessage
