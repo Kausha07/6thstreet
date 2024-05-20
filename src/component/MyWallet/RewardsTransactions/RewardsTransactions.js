@@ -114,26 +114,30 @@ export default function RewardsTransactions() {
             <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
             {rewardHistory.map((transaction) => (
               <>
-               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN || 
-              transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS || 
-              transaction.action == ACTION_PROMOTIONAL_REFUND && transaction?.expires_at == null && (
-                  <RewardsExpired transaction={transaction} />
-                )}
+                {(transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
+                  transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
+                  transaction.action == ACTION_PROMOTIONAL_REFUND) &&
+                  transaction?.expires_at == null && (
+                    <RewardsExpired transaction={transaction} />
+                  )}
                 {transaction.action == ACTION_PROMOTIONAL_ORDER && (
                   <OrderPlaced transaction={transaction} />
                 )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && transaction?.expires_at != null (
-                  <Cashback transaction={transaction} />
-                )}
+                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
+                  transaction?.expires_at != null && (
+                    <Cashback transaction={transaction} />
+                  )}
 
-                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && transaction?.expires_at != null (
-                  <Refund transaction={transaction} text={"Reward"} />
-                )}
+                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN &&
+                  transaction?.expires_at != null && (
+                    <Refund transaction={transaction} text={"Reward"} />
+                  )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REFUND &&  transaction?.expires_at != null &&(
-                  <Refund transaction={transaction} text={"Refund"} />
-                )}
+                {transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                  transaction?.expires_at != null && (
+                    <Refund transaction={transaction} text={"Refund"} />
+                  )}
                 <hr className="HoriRow" />
               </>
             ))}

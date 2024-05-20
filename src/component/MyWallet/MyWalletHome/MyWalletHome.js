@@ -12,6 +12,7 @@ import {
   OrderPlaced,
   Cashback,
   Refund,
+  RewardsExpired,
 } from "../HelperComponents/HelperComponents.js";
 import {
   ALL_HISTORY_TYPE,
@@ -227,12 +228,12 @@ export default function MyWalletHome({ setCurrentScreen }) {
           {allTransactionHistory?.history.map((transaction) => {
             return (
               <>
-                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
+                {(transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
                   transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
-                  (transaction.action == ACTION_PROMOTIONAL_REFUND &&
-                    transaction?.expires_at == null && (
-                      <RewardsExpired transaction={transaction} />
-                    ))}
+                  transaction.action == ACTION_PROMOTIONAL_REFUND) &&
+                  transaction?.expires_at == null && (
+                    <RewardsExpired transaction={transaction} />
+                  )}
                 {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
                   transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
                     <OrderPlaced transaction={transaction} />
