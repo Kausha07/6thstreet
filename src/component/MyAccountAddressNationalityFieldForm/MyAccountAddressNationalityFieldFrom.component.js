@@ -57,9 +57,23 @@ const MyAccountAddressNationalityFieldFrom = ({
   const handleNationalityFieldChange = (value) => {
     onIdentityNumberChange(value);
   };
+
+  const getPlaceHolderMessage = () => {
+    if (isMobile.any()) {
+      if (typeOfIdentity == 0) {
+        return __("ENTER NATIONAL ID NUMBER");
+      } else {
+        return __("ENTER PASSPORT NUMBER");
+      }
+    } else {
+      return __("Enter the National/Passport number");
+    }
+  };
+
   const validationArray = validationCheck();
   const isRequired = validationArray.includes("notEmpty");
   const errorMessage = nationalityErrorMessages();
+  const placeholderMessage = getPlaceHolderMessage();
   
   return (
     <div block="nationality-field-container">
@@ -95,7 +109,7 @@ const MyAccountAddressNationalityFieldFrom = ({
           <Field
             type="text"
             name="nationality-number"
-            placeholder={__("Enter the National/Passport number")}
+            placeholder={placeholderMessage}
             block="nationality-input-text-box"
             className={validationError ? "show-validation-message" : ""}
             value={identityNumber}
