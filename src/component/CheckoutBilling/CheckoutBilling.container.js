@@ -963,7 +963,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     if (reward) {
       LineItems.push({
-        label: __("My Wallet"),
+        label: __("My Rewards"),
         amount: reward,
       });
     }

@@ -1342,6 +1342,8 @@ export class CheckoutSuccess extends PureComponent {
         this.setState({ paymentTitle: __("Club Apparel") });
       } else if (getDiscountFromTotals(total_segments, "customerbalance")) {
         this.setState({ paymentTitle: __("My Cash") });
+      } else if (getDiscountFromTotals(total_segments, "reward")) {
+        this.setState({ paymentTitle: __("My Rewards") });
       }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
