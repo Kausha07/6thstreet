@@ -227,6 +227,12 @@ export default function MyWalletHome({ setCurrentScreen }) {
           {allTransactionHistory?.history.map((transaction) => {
             return (
               <>
+                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
+                  transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
+                  (transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                    transaction?.expires_at == null && (
+                      <RewardsExpired transaction={transaction} />
+                    ))}
                 {transaction.action == ACTION_TRANSACTIONAL_ORDER &&
                   transaction.type === TRANSACTIONAL_HISTORY_TYPE && (
                     <OrderPlaced transaction={transaction} />
@@ -254,16 +260,19 @@ export default function MyWalletHome({ setCurrentScreen }) {
                   )}
 
                 {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN &&
-                  transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                  transaction.type == PROMOTIONAL_HISTORY_TYPE &&
+                  transaction?.expires_at != null && (
                     <Refund transaction={transaction} text={"Reward"} />
                   )}
 
                 {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS &&
-                  transaction.type == PROMOTIONAL_HISTORY_TYPE && (
+                  transaction.type == PROMOTIONAL_HISTORY_TYPE &&
+                  transaction?.expires_at != null && (
                     <Cashback transaction={transaction} />
                   )}
                 {transaction.action == ACTION_PROMOTIONAL_REFUND &&
-                  transaction.type === PROMOTIONAL_HISTORY_TYPE && (
+                  transaction.type === PROMOTIONAL_HISTORY_TYPE &&
+                  transaction?.expires_at != null && (
                     <Refund transaction={transaction} text={"Refund"} />
                   )}
                 <hr className="HoriRow" />
