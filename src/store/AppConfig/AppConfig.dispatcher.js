@@ -145,10 +145,9 @@ export class AppConfigDispatcher {
     }
 
     // this function run at the time of user sign in or sign out
-    async updateVWOData(dispatch) {
+    async updateVWOData(dispatch, config={}) {
         try {
             const customer = BrowserDatabase.getItem("customer") || {};
-            const config = await getConfig();
             const abTestingConfigData = await getABTestingConfig();
             const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
             dispatch(setABTestingConfig(abTestingConfigData));
