@@ -513,11 +513,13 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
-              __("My Cash")
+              __("My Cash"),
+              { couponSavings: true }
             )}
               {this.renderPriceLine(
               getDiscountFromTotals(totals, "reward"),
-              __("My Rewards")
+              __("My Rewards"), 
+              { couponSavings: true }
             )}
             {this.props?.isClubApparelEnabled ? this.renderPriceLine(
               getDiscountFromTotals(totals, "clubapparel"),
