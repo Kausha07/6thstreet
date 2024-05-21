@@ -49,49 +49,44 @@ export class AppConfigDispatcher {
     let SiteWideCoupon = {};
     let HPP = {};
 
-    // if VWO is disabled from default.json then return
+    // if sitewide is disabled from default.json then do not call VWO for sitewide
     const country = getCountryFromUrl();
-    const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;
-    if(!isSiteWideCall) {
-        return {
-            SiteWideCoupon : {
-                isFeatureEnabled: false,
-                enableSitewideCoupon: false,
-                variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
-                vwo: '0',
-                campaignName: siteWideCampaignName,
-            },
-            HPP : {
-                variationName: abTestingConfig?.HPP?.defaultValue,
-                vwo: '0',
-                campaignName: HPPCampaignName,
-            } 
-        }
-    }
+    const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;    
 
     // Get Logged in User Variations from VWO tool
     try {
         if (userId && window.vwoClientInstance) {
+            if(isSiteWideCall) {
+                const sitewideVariationName = 
+                 window.vwoClientInstance?.getVariation(siteWideCampaignName, `${userId}`, options);
+                const isFeatureEnabled = 
+                 window.vwoClientInstance?.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
+                const enableSitewideCoupon = 
+                 window.vwoClientInstance?.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
+                
+                SiteWideCoupon = {
+                    isFeatureEnabled: enableSitewideCoupon ? enableSitewideCoupon : false,
+                    enableSitewideCoupon,
+                    variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                    vwo: sitewideVariationName ? '1' : '0',
+                    campaignName: siteWideCampaignName,
+                };
+            } else {
+                SiteWideCoupon = {
+                    isFeatureEnabled: false,
+                    enableSitewideCoupon: false,
+                    variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                    vwo: '0',
+                    campaignName: siteWideCampaignName,
+                };
+            }
 
-            const sitewideVariationName = window.vwoClientInstance?.getVariation(siteWideCampaignName, `${userId}`, options);
-            const isFeatureEnabled = 
-            window.vwoClientInstance?.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
-                //  may be will read coupon code from here
-            const enableSitewideCoupon = 
-            window.vwoClientInstance?.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
             const HPPvariationName = window.vwoClientInstance?.activate(
               HPPCampaignName,
               `${userId}`,
               options
             );
-
-            SiteWideCoupon = {
-              isFeatureEnabled: enableSitewideCoupon ? enableSitewideCoupon : false,
-              enableSitewideCoupon,
-              variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
-              vwo: sitewideVariationName ? '1' : '0',
-              campaignName: siteWideCampaignName,
-            };
+            
             HPP = {
                 variationName: HPPvariationName ? HPPvariationName : abTestingConfig?.HPP?.defaultValue,
                 vwo: HPPvariationName ? '1' : '0',
@@ -153,8 +148,9 @@ export class AppConfigDispatcher {
     async updateVWOData(dispatch) {
         try {
             const customer = BrowserDatabase.getItem("customer") || {};
+            const config = await getConfig();
             const abTestingConfigData = await getABTestingConfig();
-            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData ) || null;
+            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
             dispatch(setABTestingConfig(abTestingConfigData));
             vwoData ? dispatch(setVWOConfig(vwoData)) : null;
         } catch (e) {
