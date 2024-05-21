@@ -1,9 +1,5 @@
 import { Oval } from "react-loader-spinner";
-import {
-  OrderPlaced,
-  Refund,
-  Cashback,
-} from "../HelperComponents/HelperComponents";
+import { OrderPlaced, Refund } from "../HelperComponents/HelperComponents";
 import { useState, useEffect } from "react";
 import { getTransactionHistory } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 import {
@@ -93,8 +89,8 @@ export default function MyCashTransactions() {
           </div>
         ) : (
           myCashHistory &&
-          myCashHistory.map((transaction) => (
-            <>
+          myCashHistory.map((transaction, index) => (
+            <div key={index}>
               {transaction.action == ACTION_TRANSACTIONAL_ORDER && (
                 <OrderPlaced transaction={transaction} />
               )}
@@ -111,7 +107,7 @@ export default function MyCashTransactions() {
                 <Refund transaction={transaction} text={"Refund"} />
               )}
               <hr className="HoriRow" />
-            </>
+            </div>
           ))
         )}
       </div>

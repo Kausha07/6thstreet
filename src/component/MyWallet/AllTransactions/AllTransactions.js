@@ -95,8 +95,8 @@ export default function AllTransactions() {
           </div>
         ) : (
           allHistory &&
-          allHistory.map((transaction) => (
-            <>
+          allHistory.map((transaction, index) => (
+            <div key={index}>
               {(transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
                 transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
                 transaction.action == ACTION_PROMOTIONAL_REFUND) &&
@@ -147,7 +147,7 @@ export default function AllTransactions() {
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
               <hr className="HoriRow" />
-            </>
+            </div>
           ))
         )}
       </div>

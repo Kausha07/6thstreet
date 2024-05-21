@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { useSelector } from "react-redux";
 import MyWalletHome from "./MyWalletHome/MyWalletHome";
-import YourTransactions from "./YourTransactions/YourTransactions";
 import MyCashTransactions from "./MyCashTransactions/MyCashTransactions";
 
 import RewardsTransactions from "./RewardsTransactions/RewardsTransactions";
@@ -13,7 +12,6 @@ import {
 } from "./HelperComponents/HelperComponents";
 import { getFAQsJson } from "./../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 
-import GoBackIcon from "./IconsAndImages/GoBackIcon.svg";
 import "./MyWalletHomeBase.style.scss";
 
 export default function MyWalletHomeBase() {
@@ -47,21 +45,23 @@ export default function MyWalletHomeBase() {
               <>
                 <MyWalletHome setCurrentScreen={setCurrentScreen} />
                 <div>
-                  <h7 className="FaqHeading">{__("FAQs")}</h7>
+                  <div className="FaqHeading">{__("FAQs")}</div>
                 </div>
-                {faqsData.map((faq) => {
-                  if (language == "EN")
-                    return (
-                      <CollapsableComponent
-                        title={faq?.title}
-                        description={faq?.description}
-                      />
-                    );
+                {faqsData.map((faq, index) => {
                   return (
-                    <CollapsableComponent
-                      title={faq?.title_ar}
-                      description={faq?.description_ar}
-                    />
+                    <div key={index}>
+                      {language == "EN" ? (
+                        <CollapsableComponent
+                          title={faq?.title}
+                          description={faq?.description}
+                        />
+                      ) : (
+                        <CollapsableComponent
+                          title={faq?.title_ar}
+                          description={faq?.description_ar}
+                        />
+                      )}
+                    </div>
                   );
                 })}
               </>

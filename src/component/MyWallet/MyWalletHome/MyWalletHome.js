@@ -6,7 +6,6 @@ import { showNotification } from "Store/Notification/Notification.action";
 import {
   getWalletBalance,
   getTransactionHistory,
-  getRewardsDetails,
 } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 import {
   OrderPlaced,
@@ -106,10 +105,6 @@ export default function MyWalletHome({ setCurrentScreen }) {
     return 0;
   }
 
-  // useEffect(() => {
-  //   getRewardsDetails();
-  // }, []);
-
   return (
     <div className="">
       <div
@@ -136,14 +131,14 @@ export default function MyWalletHome({ setCurrentScreen }) {
             )}
           </div>
           <div className="WalletIcon">
-            <img src={WalletMainIcon} />
+            <img src={WalletMainIcon} alt="wallet" />
           </div>
         </div>
         <div className="WalletMainTwo">
           <div className="WalletLink">
             <div className="LinkImgText">
               <div className="Icon">
-                <img src={CashRefundIcon} />
+                <img src={CashRefundIcon} alt="refund" />
               </div>
               <div>
                 <div className="MyCash">{__("My Cash")}</div>
@@ -164,7 +159,10 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
               {balanceResponse?.my_cash_history_available && (
                 <div className="RightIcon">
-                  <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
+                  <img
+                    src={isLanguageArabic ? GoBackIcon : GoRightIcon}
+                    alt="go-back"
+                  />
                 </div>
               )}
             </button>
@@ -172,7 +170,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
           <div className="WalletLink">
             <div className="LinkImgText">
               <div className="Icon">
-                <img src={MyRewardsIcon} />
+                <img src={MyRewardsIcon} alt="rewards" />
               </div>
               <div>
                 <div className="MyCash">{__("My Rewards")}</div>
@@ -193,14 +191,17 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
               {balanceResponse?.my_reward_history_available && (
                 <div className="RightIcon">
-                  <img src={isLanguageArabic ? GoBackIcon : GoRightIcon} />
+                  <img
+                    src={isLanguageArabic ? GoBackIcon : GoRightIcon}
+                    alt="go-back"
+                  />
                 </div>
               )}
             </button>
           </div>
           <div className="ReferNEarnLink">
             <div className="referIcon">
-              <img src={VoucherIcon} />
+              <img src={VoucherIcon} alt="voucher" />
             </div>
             <div>
               <div className="Heading">{__("Shop now to earn rewards")}</div>
@@ -225,9 +226,9 @@ export default function MyWalletHome({ setCurrentScreen }) {
             </div>
           )}
 
-          {allTransactionHistory?.history.map((transaction) => {
+          {allTransactionHistory?.history.map((transaction, index) => {
             return (
-              <>
+              <div key={index}>
                 {(transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
                   transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
                   transaction.action == ACTION_PROMOTIONAL_REFUND) &&
@@ -277,7 +278,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
                     <Refund transaction={transaction} text={"Refund"} />
                   )}
                 <hr className="HoriRow" />
-              </>
+              </div>
             );
           })}
         </div>

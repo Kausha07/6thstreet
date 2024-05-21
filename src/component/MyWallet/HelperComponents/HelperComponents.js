@@ -25,7 +25,7 @@ export function Cashback({ transaction }) {
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
-              <img src={MyRewardsIcon} />
+              <img src={MyRewardsIcon} alt="rewards" />
             </div>
             <div>
               <div className="LinkHeading">{__("Cashback")}</div>
@@ -66,23 +66,18 @@ export function RewardsExpired({ transaction }) {
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
-              <img src={MyRewardsIcon} />
+              <img src={MyRewardsIcon} alt="rewards" />
             </div>
             <div>
               <div className="LinkHeading Expired">{__("Rewards Expired")}</div>
             </div>
           </div>
-          <div
-            className="AmountExchange Expired"
-          >
-            {transaction?.balance}
-          </div>
+          <div className="AmountExchange Expired">{transaction?.balance}</div>
         </div>
       </div>
     </>
   );
 }
-
 
 export function Refund({ transaction, text }) {
   return (
@@ -94,7 +89,7 @@ export function Refund({ transaction, text }) {
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
-              <img src={CashRefundIcon} />
+              <img src={CashRefundIcon} alt="refund" />
             </div>
             <div>
               {text === "Reward" && (
@@ -152,7 +147,7 @@ export function OrderPlaced({ transaction }) {
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
-              <img src={OrderBagIcon} />
+              <img src={OrderBagIcon} alt="order" />
             </div>
             <div>
               <div className="LinkHeading">{__("Order placed")}</div>
@@ -178,7 +173,10 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
     <>
       <div className="TransactionHeading">
         <button className="BackBtn" onClick={() => setCurrentScreen("home")}>
-          <img src={isLanguageArabic ? GoRightIcon2 : GoLeftIcon2} />
+          <img
+            src={isLanguageArabic ? GoRightIcon2 : GoLeftIcon2}
+            alt="goBack"
+          />
         </button>
         <div className="Heading">{__("Your Transactions")}</div>
       </div>
@@ -224,7 +222,7 @@ export function ExpiringSoon({ expiry, balance }) {
       <div className="ExpiringSoonContainer">
         <div className="ExpiringSoon">
           <div className="InfoIcon">
-            <img src={InfoIcon} />
+            <img src={InfoIcon} alt="info" />
           </div>
           <div className="ExpiringText">
             {__("My Reward Balance of %s expires in", balance)}
@@ -260,7 +258,7 @@ export function EarnedCashReward({ rewardEarned, orderID }) {
       {rewardCreditEarned > 0 && rewardCreditEarned && (
         <div className="EarnedCash">
           <div className="CoinIcon">
-            <img src={CoinsIcon} />
+            <img src={CoinsIcon} alt="coins" />
           </div>
           <div className="CashText">
             <div className="CashHeading">
@@ -285,7 +283,10 @@ export function CollapsableComponent({ title, description }) {
         <div className="Heading">
           <div>{title}</div>
           <button onClick={() => setIsExpanded(!isExpanded)}>
-            <img src={isExpanded ? GoUpArrow : GoDownArrow} />
+            <img
+              src={isExpanded ? GoUpArrow : GoDownArrow}
+              alt="open-or-close"
+            />
           </button>
         </div>
         {isExpanded && <div className="Content">{description}</div>}
