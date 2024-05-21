@@ -1,16 +1,36 @@
 import { Field } from "Util/Query";
 import { LOCALES } from "Util/Url/Url.config";
 import MobileAPI from "Util/API/provider/MobileAPI";
+import isMobile from "Util/Mobile";
+
+export const SPAM_PROTECTION_DELAY = 200;
+export const SPAM_PROTECTION_DELAY_PAGEVIEW =1000;
+
 export class VueIntegrationQueries {
   /**
    * log vue analytics query
    * @return {Field}
    */
 
+  lastEventTime = {};
+
+  spamProtection(delay, type = "default") {
+    const previousEventTime = this.lastEventTime[type] || 0;
+    this.lastEventTime[type] = Date.now();
+    return previousEventTime + delay > this.lastEventTime[type];
+  }
+
   async vueAnalayticsLogger(payload) {
+    const { event_name = "", params: {pageType= ""} ={} } = payload;
+    const key = pageType? `${event_name}_${pageType}` : event_name;
+    const delay = event_name === "pageView" ? SPAM_PROTECTION_DELAY_PAGEVIEW : SPAM_PROTECTION_DELAY
+    if (this.spamProtection(delay, key)) {
+      return;
+    }
+    const newParams = {...payload?.params, Platform: isMobile.any() ? "PWA" : "Desktop" }
     const locale = this.getLocaleFromUrl();
     try {
-      await MobileAPI.post(`/vue/analytics`, payload);
+      await MobileAPI.post(`/vue/analytics`, { ...payload, params: newParams });
     }
     catch(err){
       console.error("Error", err);
