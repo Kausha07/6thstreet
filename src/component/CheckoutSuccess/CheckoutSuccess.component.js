@@ -876,20 +876,16 @@ export class CheckoutSuccess extends PureComponent {
                 : __("Cash on Delivery Fee")
             )
           : null}
-        {isSidewideCouponEnabled
-          ? this.renderDiscountPriceLine(
-              getDiscountFromTotals(total_segments, "customerbalance"),
-              __("My Cash"),
-              { couponSavings: true }
-            )
-          : this.renderPriceLine(
-              getDiscountFromTotals(total_segments, "customerbalance"),
-              __("My Cash")
-            )}
-          {this.renderPriceLine(
-            getDiscountFromTotals(total_segments, "reward"),
-            __("My Rewards")
-          )}
+        {this.renderDiscountPriceLine(
+            getDiscountFromTotals(total_segments, "customerbalance"),
+            __("My Cash"),
+            { couponSavings: true }
+        )}
+        {this.renderDiscountPriceLine(
+          getDiscountFromTotals(total_segments, "reward"),
+          __("My Rewards"),
+            { couponSavings: true }
+        )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
@@ -1445,7 +1441,7 @@ export class CheckoutSuccess extends PureComponent {
             </>
           )}
         </strong>
-        <strong block="MyAccountOrderView" elem="Price">
+        <strong block="MyAccountOrderView" elem="Price" mods={mods}>
           {currency_code} {finalPrice}
         </strong>
       </li>
@@ -1601,6 +1597,7 @@ export class CheckoutSuccess extends PureComponent {
         msp_cod_amount = 0,
         tax_amount = 0,
         customer_balance_amount = 0,
+        reward_currency_amount = 0,
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_charges= 0,
@@ -1625,9 +1622,16 @@ export class CheckoutSuccess extends PureComponent {
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
                   __("My Cash"),
-                  { isStoreCredit: true }
+                  { isStoreCredit: true , couponSavings: true }
                 )
               : null}
+            { reward_currency_amount !== 0
+              ?  this.renderPriceLineQPAY(
+                reward_currency_amount,
+                __("My Rewards"),
+                { isStoreCredit: true, couponSavings: true  }
+              )
+            : null}
             {this.props?.order?.club_apparel_amount &&
             parseFloat(this.props?.order?.club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(

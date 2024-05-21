@@ -574,7 +574,16 @@
         }
       }
     }
-
+ 
+    .MyAccountOrderView {
+      &-Price {
+        font-weight: var(--fw-demi);
+        &_isStoreCredit {
+          color: #13CA75;
+        }
+      }
+    }
+    
     .Addresses {
       .Address {
         padding: 15px 0;
