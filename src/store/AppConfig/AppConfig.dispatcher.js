@@ -11,7 +11,8 @@ export class AppConfigDispatcher {
 
     getUserVWOVariation = async (
     customer,
-    abTestingConfig = {}
+    abTestingConfig = {},
+    config= {},
     ) => {
     let userId = customer?.id ? customer?.id : getUUID();
     // If user is not loged in and UUID is also not created then below code will run
@@ -46,7 +47,27 @@ export class AppConfigDispatcher {
         // userIpAddress: ipAddressData?.ip
     }
     let SiteWideCoupon = {};
-    let HPP = {}
+    let HPP = {};
+
+    // if VWO is disabled from default.json then return
+    const country = getCountryFromUrl();
+    const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;
+    if(!isSiteWideCall) {
+        return {
+            SiteWideCoupon : {
+                isFeatureEnabled: false,
+                enableSitewideCoupon: false,
+                variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                vwo: '0',
+                campaignName: siteWideCampaignName,
+            },
+            HPP : {
+                variationName: abTestingConfig?.HPP?.defaultValue,
+                vwo: '0',
+                campaignName: HPPCampaignName,
+            } 
+        }
+    }
 
     // Get Logged in User Variations from VWO tool
     try {
@@ -119,7 +140,7 @@ export class AppConfigDispatcher {
             const gtmConfig = this.getGtmConfig();
             const abTestingConfigData = await getABTestingConfig();
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
-            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData ) || null;
+            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
             dispatch(setAppConfig(appConfig));
             dispatch(setABTestingConfig(abTestingConfigData));
             vwoData ? dispatch(setVWOConfig(vwoData)) : null;
