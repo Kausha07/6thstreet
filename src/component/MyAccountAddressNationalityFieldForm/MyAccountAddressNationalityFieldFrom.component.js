@@ -40,7 +40,11 @@ const MyAccountAddressNationalityFieldFrom = ({
   };
   const handleInvalid = (event) => {
     event.preventDefault();
-    showErrorNotification(__("Please enter valid number"));
+    if(typeOfIdentity == 0) {
+      showErrorNotification(__("Invalid National ID number entered"));
+    }else {
+      showErrorNotification(__("Invalid Passport number entered"));
+    }
     setValidationError(true);
   };
 
@@ -72,7 +76,7 @@ const MyAccountAddressNationalityFieldFrom = ({
         return __("ENTER PASSPORT NUMBER");
       }
     } else {
-      return __("Enter the National/Passport number");
+      return __("Enter the National ID/Passport number");
     }
   };
 
@@ -92,7 +96,7 @@ const MyAccountAddressNationalityFieldFrom = ({
           <Field
             type="radio"
             id="nation-id-number"
-            label={__("National ID number")}
+            label={__("National ID Number")}
             name="nationalId"
             value={"Oman ID"}
             onClick={() => handleTypeOfIdentityChange(0)}

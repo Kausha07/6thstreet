@@ -202,7 +202,9 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     if (
       Object.keys(address).length > 0 &&
       address?.type_of_identity &&
-      address?.identity_number
+      address?.identity_number &&
+      this.props?.onIdentityNumberChange &&
+      this.props?.onTypeOfIdentityChange
     ) {
       this.props?.onIdentityNumberChange(address?.identity_number);
       this.props?.onTypeOfIdentityChange(address?.type_of_identity);

@@ -1343,10 +1343,12 @@
     "Please provide Passport number for custom clearance": "يرجى تقديم رقم جواز السفر للتخليص الجمركي",
     "National ID Number": "رقم الهوية الوطنية",
     "Passport Number":"رقم جواز السفر",
-    "Enter the National/Passport number": "أدخل الرقم الوطني/رقم جواز السفر",
+    "Enter the National ID/Passport number": "أدخل الرقم الوطني/رقم جواز السفر",
     "ENTER NATIONAL ID NUMBER": "أدخل رقم الهوية الوطنية",
     "ENTER PASSPORT NUMBER": "أدخل رقم جواز السفر الوطني",
     "Add New": "أضف جديد",
     "Customs Clearance Information": "معلومات التخليص الجمركي",
-    "Please enter valid number": "يرجى إدخال رقم صالح"
+    "Please enter valid number": "يرجى إدخال رقم صالح",
+    "Invalid Passport number entered": "رقم جواز السفر الذي أدخلته غير صحيح",
+    "Invalid National ID number entered": "رقم الهوية الوطنية الذي أدخلته غير صحيح"
 }
