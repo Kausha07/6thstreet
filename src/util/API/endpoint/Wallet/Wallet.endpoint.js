@@ -10,16 +10,15 @@ export const getTransactionHistory = (type, page, limit) => {
   );
 };
 
-export const getRewardsDetails = () =>
-  MobileAPI.get("wallet/rewards?locale=en-ae");
+export const getRewardsDetails = () => MobileAPI.get("wallet/rewards");
 
 export const applyRewards = (cartId) =>
-  MobileAPI.post("wallet/rewards?locale=en-ae", { cartId });
+  MobileAPI.post("wallet/rewards", { cartId });
 
 export const removeReward = (cartId) =>
-  MobileAPI.delete(`wallet/rewards?locale=en-ae&cartId=${cartId}`);
+  MobileAPI.delete(`wallet/rewards?cartId=${cartId}`);
 
-export const getReward = () => MobileAPI.get("wallet/rewards?locale=en-ae");
+export const getReward = () => MobileAPI.get("wallet/rewards");
 
 export const getFAQsJson = () => {
   const configFile = "faq.json";
