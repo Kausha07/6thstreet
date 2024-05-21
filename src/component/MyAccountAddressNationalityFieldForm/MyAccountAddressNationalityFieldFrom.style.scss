@@ -45,14 +45,14 @@
       flex-direction: row;
       .Field {
         span {
-          padding: 0px 25px 0px 5px;
+          padding: 0px 15px 0px 5px;
         }
       }
 
       &_isArabic {
         .Field {
           span {
-            padding: 0px 5px 0px 25px;
+            padding: 0px 5px 0px 15px;
           }
         }
       }

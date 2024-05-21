@@ -584,17 +584,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       >
         {this.renderOpenPopupButton()}
         {isSignedIn() ? this.renderAddAdress() : null}
-        <Form
-          id={SHIPPING_STEP}
-          mix={{ block: "CheckoutShipping" }}
-          onSubmitError={onShippingError}
-          onSubmitSuccess={
-            !checkClickAndCollect()
-              ? onShippingSuccess
-              : handleClickNCollectPayment
-          }
-        >
-          {isSignedIn() && !checkClickAndCollect() ? (
+        {isSignedIn() && !checkClickAndCollect() ? (
             <div block="header-new-address-container">
               <div>
                 <h3>{__("Delivering to")}</h3>
@@ -606,7 +596,18 @@ export class CheckoutShipping extends SourceCheckoutShipping {
               </div>
               {this.renderAddNewAddressButton()}
             </div>
-          ) : null}
+          ) : null
+        }
+        <Form
+          id={SHIPPING_STEP}
+          mix={{ block: "CheckoutShipping" }}
+          onSubmitError={onShippingError}
+          onSubmitSuccess={
+            !checkClickAndCollect()
+              ? onShippingSuccess
+              : handleClickNCollectPayment
+          }
+        >
           {this.renderAddressBook()}
           <div>
             {/* {<Loader isLoading={isLoading} />} */}

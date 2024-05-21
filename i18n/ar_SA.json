@@ -1349,6 +1349,6 @@
     "Add New": "أضف جديد",
     "Customs Clearance Information": "معلومات التخليص الجمركي",
     "Please enter valid number": "يرجى إدخال رقم صالح",
-    "Invalid Passport number entered": "رقم جواز السفر الذي أدخلته غير صحيح",
-    "Invalid National ID number entered": "رقم الهوية الوطنية الذي أدخلته غير صحيح"
+    "Enter a valid Passport number": "أدخل رقم جواز سفر صالح",
+    "Enter a valid National ID number": "أدخل رقم هوية وطنية صالح"
 }

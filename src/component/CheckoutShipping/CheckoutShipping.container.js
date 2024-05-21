@@ -511,7 +511,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       identity_number: identity_number,
     };
     // on checkout page, set update identity-number and type_of_identity store in the respective address
-    if (this.props?.isIdentityNumberModified) {
+    if (this.props?.isIdentityNumberModified && isSignedIn()) {
       const updatedAddress = {
         firstname: shippingAddress?.firstname,
         lastname: shippingAddress?.lastname,

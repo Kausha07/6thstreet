@@ -246,6 +246,21 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     );
   };
 
+  getidentityNumberSelectedAddress = () => {
+    const { addresses = [], selectedAddressId } = this.props;
+    if (addresses && addresses?.length > 0 && selectedAddressId) {
+      const selectedAddressObject = addresses?.find((address) => {
+        if (address?.id === selectedAddressId) {
+          return true;
+        }
+      })
+      if (selectedAddressObject?.identity_number && selectedAddressObject?.identity_number?.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   renderSignInCustomClearanceField = () => {
     const {
       AppConfig: { is_nationality_visible = false },
@@ -260,7 +275,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       onIdentityNumberChange: this.props?.onIdentityNumberChange,
       validationError: this.props?.validationError,
     };
-    return isSignedIn && is_nationality_visible ? (
+    const isIdentityNumberExist = !this.getidentityNumberSelectedAddress();
+    return isSignedIn && is_nationality_visible && isIdentityNumberExist ? (
       <div block="checkoutAddressBookCustomClearanceContainer">
         <h3 className="custom-clearance-header">
           {__("Customs Clearance Information")}

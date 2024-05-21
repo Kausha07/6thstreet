@@ -239,12 +239,14 @@
 
   .checkoutAddressBookCustomClearanceContainer {
     width: 447px;
-    height: 176px;
+    min-height: 176px;
+    height: auto;
     border: 1px solid #D1D3D4;
     margin: 0px 50px;
     @include mobile {
       width: auto;
-      height: 162px;
+      min-height: 170px;
+      height: auto;
       background-color:#F8F8F8;
       border-radius: 6px;
       margin: 30px 0px;

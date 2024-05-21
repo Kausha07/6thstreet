@@ -41,9 +41,9 @@ const MyAccountAddressNationalityFieldFrom = ({
   const handleInvalid = (event) => {
     event.preventDefault();
     if(typeOfIdentity == 0) {
-      showErrorNotification(__("Invalid National ID number entered"));
+      showErrorNotification(__("Enter a valid National ID number"));
     }else {
-      showErrorNotification(__("Invalid Passport number entered"));
+      showErrorNotification(__("Enter a valid Passport number"));
     }
     setValidationError(true);
   };
@@ -69,14 +69,10 @@ const MyAccountAddressNationalityFieldFrom = ({
   };
 
   const getPlaceHolderMessage = () => {
-    if (isMobile.any()) {
-      if (typeOfIdentity == 0) {
-        return __("ENTER NATIONAL ID NUMBER");
-      } else {
-        return __("ENTER PASSPORT NUMBER");
-      }
+    if (typeOfIdentity == 0) {
+      return __("ENTER NATIONAL ID NUMBER");
     } else {
-      return __("Enter the National ID/Passport number");
+      return __("ENTER PASSPORT NUMBER");
     }
   };
 
