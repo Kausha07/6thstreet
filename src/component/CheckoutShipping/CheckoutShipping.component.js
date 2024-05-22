@@ -585,7 +585,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         {this.renderOpenPopupButton()}
         {isSignedIn() ? this.renderAddAdress() : null}
         {isSignedIn() && !checkClickAndCollect() ? (
-            <div block="header-new-address-container">
+            <div block="header-new-address-container" mods={{formContent}}>
               <div>
                 <h3>{__("Delivering to")}</h3>
                 <h4 block="CheckoutShipping" elem="DeliveryMessage">
