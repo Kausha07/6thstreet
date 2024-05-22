@@ -8,10 +8,10 @@
 
         @include mobile {
             position: absolute;
-            justify-content: left;
+            justify-content: center;
             padding: 0px 10px;
-            bottom: 13px !important;
-            margin-bottom: 10px;
+            bottom: 5px !important;
+            margin-bottom: 0px;
         }
     }
 
@@ -19,7 +19,7 @@
         @include mobile {
             .swiper-pagination {
                 @include mobile {
-                    justify-content: right;
+                    justify-content: center;
                 }
             }
         }

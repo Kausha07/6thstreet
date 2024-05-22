@@ -697,7 +697,9 @@ class PDPGallery extends PureComponent {
           {this.renderSlider()}
           {this.renderGalleryTag()}
         </button>
-        {isNewDesign && isMobile.any() && <Ratings />}
+        
+          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" />}
+        
         {!isNewDesign && this.renderVideoButtons()}
       </div>
       </>

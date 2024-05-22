@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useEffect} from 'react'
 import ReactDOM from 'react-dom';
 import './ModalOverlay.style.scss';
 import ModalPopup from "./ModalPopup";
 import Backdrop from "./Backdrop";
 
 const ModalOverlay = (props) => {
+
+    useEffect(()=>{
+        if(props.open){
+            document.body.classList.add('modal-open');
+        } else {
+            document.body.classList.remove('modal-open');
+        }
+        return () => {
+          document.body.classList.remove('modal-open');
+        }
+      },[props.open])
     
     return (
         <>

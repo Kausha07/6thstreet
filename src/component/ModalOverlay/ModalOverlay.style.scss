@@ -70,7 +70,17 @@
     background: rgba(0, 0, 0, 0.20);
     z-index: 99;
 }
-
+body{
+    #root{
+        transition: filter .25s linear;
+        -webkit-transition: filter .25s linear;
+    }
+    &.modal-open{
+        #root{
+            filter: blur(2.5px);
+        }
+    }
+}
 .modal {
     position: fixed;
     // bottom: 0;

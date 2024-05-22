@@ -30,11 +30,26 @@
 }
 .ratings{
     display: inline-block;
+    z-index: 1;
     @include mobile{
         position: absolute;
         left: 10px;
         bottom: 25px;
         
+    }
+    &_isArabic{
+        left: auto;
+        right: 10px;
+        .ratings{
+            &-summary{
+                &-rating{
+                    .ratings-icon{
+                        margin-right: 2px;
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
     }
     &-summary{
         background: #fff;
@@ -190,13 +205,6 @@
     &-detailPop{
         &_isArabic{
             .ratings{
-                &-summary{
-                    &-rating{
-                        .ratings-icon{
-                            margin-right: 2px;
-                        }
-                    }
-                }
                 &-starItem {
                     .ratings-icon{
                         margin-left: 0;

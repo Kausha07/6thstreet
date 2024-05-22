@@ -48,7 +48,7 @@ const Ratings = (props) => {
     }
 
     return (
-        <div block="ratings" mods={{isArabic : isArabic() }}>
+        <div className={`${props.className ? props.className :''} ratings ${ isArabic() ? 'ratings_isArabic' : ''}`}>
             <div block="ratings-summary" onClick={modalHandlerOpen}>
                 <span block="ratings-summary" elem="rating">
                     <span block="ratings-summary" elem="text">{average_ratings}</span>

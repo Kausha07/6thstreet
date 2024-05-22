@@ -463,6 +463,11 @@
         text-align: right;
       }
     }
+    &-ImgBlock{
+      position: relative;
+      width: 100%;
+      display: inline-block;
+    }
   }
 
   .tagsForMsiteProduct {
@@ -477,6 +482,87 @@
         margin: 5px 5px 0 0;
         font-size: 11px;
         z-index: 1;
+      }
+    }
+  }
+  @mixin ratingFontSize{
+    @include mobile {
+        font-size: 9px;
+        line-height: 11px;
+        font-weight: 500;
+    }
+    @include desktop {
+        font-size: 13px;
+        line-height: 11px;
+        font-weight: 500;
+    }
+}
+  .PLPratings{
+    &.ratings{
+        position: absolute;
+        @include mobile{
+          left: 5px;
+          bottom: 30px;
+        }
+        @include desktop{
+          left: 10px;
+          bottom: 40px;
+          // top: 225px;
+        }
+      
+      &_isArabic{
+          @include mobile{
+            left: auto;
+            right: 5px;
+            bottom: 30px;
+          }
+          @include desktop{
+            left: auto;
+            right: 10px;
+            bottom: 40px;
+            // top: 225px;
+          }
+      }
+    }
+    .ratings{
+      @include mobile{
+        left: 5px;
+        bottom: 15px;
+      }
+      @include desktop{
+        left: 10px;
+        bottom: 5px;
+      }
+      &-summary{
+        @include mobile{
+          width: 55px;
+        }
+        @include desktop{
+          border-radius: 13px;
+        }
+        &-count,
+        &-text,
+        &-separator,
+        &-rating{
+          @include ratingFontSize();
+        }
+        &-totalReview{
+          @include ratingFontSize();
+        }
+      }
+      &-totalReview{
+        &-count,
+        &-text{
+            @include ratingFontSize();
+        }
+        &-text{
+          display: none;
+        }
+      }
+      &-icon{
+        @include mobile{
+          width: 6px;
+        }
       }
     }
   }

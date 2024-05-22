@@ -1,4 +1,4 @@
-import close from '.icons/close.svg';
+import close from './icons/close.svg';
 import { isArabic } from "Util/App";
 
 const ModalPopup = (props) => {
