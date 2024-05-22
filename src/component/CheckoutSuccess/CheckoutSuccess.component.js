@@ -1688,6 +1688,7 @@ export class CheckoutSuccess extends PureComponent {
       initialTotals,
       orderID,
       isSidewideCouponEnabled,
+      totals,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1723,7 +1724,7 @@ export class CheckoutSuccess extends PureComponent {
           )}
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
-          <EarnedCashReward rewardEarned={null} orderID={orderID}/>
+          <EarnedCashReward rewardEarned={totals?.total_wallet_credit} orderID={orderID}/>
           {this.renderReferralBanner()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
