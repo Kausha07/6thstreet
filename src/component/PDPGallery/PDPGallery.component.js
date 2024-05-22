@@ -33,6 +33,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js";
 import timerIcon from "./icons/flash_Sale.svg";
 import Ratings from 'Component/Ratings/Ratings';
+import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.PDP.isNewDesign
@@ -696,8 +697,9 @@ class PDPGallery extends PureComponent {
           }
           {this.renderSlider()}
           {this.renderGalleryTag()}
+          {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" />}
         </button>
-        
+
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" />}
         
         {!isNewDesign && this.renderVideoButtons()}
