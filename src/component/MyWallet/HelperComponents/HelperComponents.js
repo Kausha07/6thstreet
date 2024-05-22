@@ -9,6 +9,7 @@ import GoUpArrow from "../IconsAndImages/GoUpArrow.svg";
 import InfoIcon from "../IconsAndImages/InfoIcon.svg";
 import CoinsIcon from "../IconsAndImages/CoinsIcon.svg";
 import { useState, useEffect } from "react";
+import { getCurrency } from "Util/App";
 import Link from "Component/Link";
 import { formatDate } from "../../../util/Common";
 import ClickOutside from "Component/ClickOutside";
@@ -238,6 +239,8 @@ export function ExpiringSoon({ expiry, balance }) {
 
 export function EarnedCashReward({ rewardEarned, orderID }) {
   const [rewardCreditEarned, setRewardCreditsEarned] = useState();
+  const currencyCode = getCurrency();
+
   useEffect(() => {
     async function getOrderDetails() {
       try {
@@ -262,7 +265,7 @@ export function EarnedCashReward({ rewardEarned, orderID }) {
           </div>
           <div className="CashText">
             <div className="CashHeading">
-              {__("You earned a cash of AED %s", rewardCreditEarned)}
+              {__("You earned a cash of %s %s", currencyCode, rewardCreditEarned)}
             </div>
             <div className="CashDetails">
               __('(The cash will be credited in your wallet after the return
