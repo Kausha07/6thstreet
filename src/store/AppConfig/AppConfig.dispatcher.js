@@ -34,14 +34,16 @@ export class AppConfigDispatcher {
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
             user_id: userId,
-            is_loggedin: customer?.id ? true : false
+            is_loggedin: customer?.id ? true : false,
+            userAgent: userAgent
         },
         variationTargetingVariables: {
             country_code: countryCode,
             platform: isMobile.any() ? 'msite' : 'desktop',
             source: 'PWA',
             user_id: userId,
-            is_loggedin: customer?.id ? true : false
+            is_loggedin: customer?.id ? true : false,
+            userAgent: userAgent,
         },
         userAgent: userAgent,
         // userIpAddress: ipAddressData?.ip
