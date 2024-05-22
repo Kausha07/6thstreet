@@ -1336,5 +1336,19 @@
     "Recommended code: ": "الكود الموصى به",
     "OFF": "خصم",
     "CODE:": "الكود",
-    "Total MRP": "السعر"
+    "Total MRP": "السعر",
+    "Please provide National ID No. for custom clearance": "يرجى تقديم رقم الهوية الوطنية لإجراءات التخليص الجمركي",
+    "Please provide National ID number for custom clearance": "يرجى تقديم رقم الهوية الوطنية لإجراءات التخليص الجمركي",
+    "Please provide Passport No. for custom clearance": "يرجى تقديم رقم جواز السفر للتخليص الجمركي",
+    "Please provide Passport number for custom clearance": "يرجى تقديم رقم جواز السفر للتخليص الجمركي",
+    "National ID Number": "رقم الهوية الوطنية",
+    "Passport Number":"رقم جواز السفر",
+    "Enter the National ID/Passport number": "أدخل الرقم الوطني/رقم جواز السفر",
+    "ENTER NATIONAL ID NUMBER": "أدخل رقم الهوية الوطنية",
+    "ENTER PASSPORT NUMBER": "أدخل رقم جواز السفر الوطني",
+    "Add New": "أضف جديد",
+    "Customs Clearance Information": "معلومات التخليص الجمركي",
+    "Please enter valid number": "يرجى إدخال رقم صالح",
+    "Enter a valid Passport number": "أدخل رقم جواز سفر صالح",
+    "Enter a valid National ID number": "أدخل رقم هوية وطنية صالح"
 }
