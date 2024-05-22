@@ -46,7 +46,9 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   guest_checkout: state.ConfigReducer.guest_checkout,
   currencyCode: state.ConfigReducer.default_display_currency_code,
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  config: state.AppConfig.config,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -276,11 +278,15 @@ export class CartOverlayContainer extends PureComponent {
   }
 
   render() {
+    const { vwoData } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return (
       <CartOverlay
         {...this.props}
         {...this.state}
         {...this.containerFunctions}
+        isSidewideCouponEnabled={isSidewideCouponEnabled}
       />
     );
   }

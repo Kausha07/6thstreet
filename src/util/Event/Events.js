@@ -24,8 +24,9 @@ export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
   "gtm_product_remove_from_cart";
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
-export const EVENT_GTM_CHECKOUT_BILLING = "checkout_billing_Step";
-export const EVENT_GTM_ADD_TO_CART = "addToCart";
+export const EVENT_GTM_ADD_TO_CART = "add_to_cart";
+export const EVENT_GTM_CHECKOUT_BILLING = "add_shipping_info";
+export const EVENT_ADD_PAYMENT_INFO = "add_payment_info";
 
 // new events
 export const EVENT_GTM_TRENDING_BRANDS_CLICK = "gtm_trending_brands_click";
@@ -51,8 +52,11 @@ export const VUE_REMOVE_TO_WISHLIST = "removeFromWishlist";
 export const VUE_BUY = "buy";
 export const VUE_PLACE_ORDER = "placeOrder";
 export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
+export const EVENT_GTM_VIEW_PROMOTION = "view_promotion";
 export const EVENT_CLICK_PROMOTION_IMPRESSION = "promotionClick";
+export const EVENT_GTM_SELECT_PROMOTION = "select_promotion";
 export const EVENT_PRODUCT_IMPRESSION = "productImpression";
+export const EVENT_GTM_VIEW_ITEM_LIST = "view_item_list";
 
 export const EVENT_GTM_CANCEL_SEARCH = "cancel_search";
 export const EVENT_GTM_CLEAR_SEARCH = "clear_search";
@@ -72,6 +76,7 @@ export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
 export const EVENT_CLICK_RECOMMENDATION_CLICK = "recommendation_clicked";
 export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK =
   "search_product_suggestion_click";
+export const EVENT_GTM_PAGE_NOT_FOUND = "404_error";
 export const EVENT_PAGE_NOT_FOUND = "pageNotFound";
 export const EVENT_GTM_FOOTER = "gtm_footer_events";
 export const EVENT_GTM_COUPON = "gtm_coupon_events";
@@ -158,7 +163,8 @@ export const EVENT_ACCOUNT_SETTINGS_CLICK = "account_settings_click";
 export const EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK =
   "account_customer_support_click";
 export const EVENT_ACCOUNT_CLUB_APPAREL_CLICK = "account_club_apparel_click";
-export const EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK = "account_section_referral_tab_click"
+export const EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK =
+  "account_section_referral_tab_click";
 export const EVENT_MOE_ORDER_ITEM_CLICK = "order_item_click";
 export const EVENT_MOE_UPDATE_PROFILE = "update_profile";
 export const EVENT_MOE_RETURN_AN_ITEM_CLICK = "return_an_item_click";
@@ -199,6 +205,7 @@ export const EVENT_LOGIN_TAB_CLICK = "login_tab_click";
 export const EVENT_FORGOT_PASSWORD_CLICK = "forgot_password_click";
 export const EVENT_REGISTER_TAB_CLICK = "register_tab_click";
 export const EVENT_LOGIN = "login";
+export const EVENT_GTM_LOGIN_SUCCESS = "login_success";
 export const EVENT_LOGIN_FAILED = "login_failed";
 export const EVENT_REGISTER = "register";
 export const EVENT_REGISTER_FAILED = "register_failed";
@@ -206,7 +213,6 @@ export const EVENT_SIGN_UP = "sign_up";
 export const EVENT_SIGN_UP_FAIL = "sign_up_fail";
 export const EVENT_GTM_CART = "cart_event";
 export const EVENT_MOE_CUSTOM_TAB_ICON = "custom_tab_icon";
-
 
 //General Events for MOE and GTM
 export const EVENT_INSTA_FOLLOW = "insta_follow_icon";
@@ -281,7 +287,8 @@ export const EVENT_WISHLIST_ICON_CLICK = "Wishlist_icon_click";
 export const EVENT_INFLUENCER_HOME_SCREEN_VIEW = "influencer_home_screen_view";
 export const EVENT_INFLUENCER_SEARCH_CLICK = "influencer_search_click";
 export const EVENT_INFLUENCER_REFINE_CLICK = "influencer_refine_click";
-export const EVENT_INFLUENCER_REFINE_GENDER_CLICK = "influencer_refine_gender_click";
+export const EVENT_INFLUENCER_REFINE_GENDER_CLICK =
+  "influencer_refine_gender_click";
 export const EVENT_INFLUENCER_DETAIL_CLICK = "influencer_detail_click";
 export const EVENT_COLLECTION_DETAIL_CLICK = "collection_detail_click";
 export const EVENT_SHARE_COLLECTION_CLICK = "share_collection_click";
@@ -301,11 +308,12 @@ export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
 export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
 export const EVENT_GTM_CA_LINK = "gtm_ca_link";
 export const EVENT_CA_LINKNOW_CLICK = "CA_linknow_click";
-export const EVENT_CA_CHECKBOX_SELECT = "CA_checkbox_select"
+export const EVENT_CA_CHECKBOX_SELECT = "CA_checkbox_select";
 export const EVENT_CA_CHECKBOX = "CA_checkbox";
 export const EVENT_MOE_COMPONENT_DID_CATCH = "component_did_catch";
-export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong";
-// PLP filters event 
+export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG =
+  "ooops_something_went_wrong";
+// PLP filters event
 export const EVENT_FILTER_CLEAR_ALL = "filter_clear_all";
 export const EVENT_FILTER_ATTRIBUTE_SELECTED = "filter_attribute_selected";
 export const EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED =
@@ -345,3 +353,8 @@ export const EVENT_CLICK_BRAND_SEARCH_SCREEN = "click_brand_search";
 export const EVENT_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
 export const EVENT_CLICK_RECENT_SEARCH = "click_recent_search";
 export const EVENT_CLICK_POPULAR_SEARCH = "click_popular_search";
+export const EVENT_Track_USER_VARIANT =  "track_user_variant";
+
+// Home Page Personalisation Tracking Events
+export const EVENT_HOME_SCREEN_VIEW = "home_screen_view";
+export const EVENT_PLP_SCREEN_VIEW = "plp_screen_view";

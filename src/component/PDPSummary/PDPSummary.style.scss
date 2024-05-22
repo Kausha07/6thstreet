@@ -438,6 +438,19 @@ div[class^='styles__body'] {
   display: none;
 }
 
+.AdditionShippingInformationInternationalTag{
+  margin-top: 15px;
+}
 #TamaraPromo {
   margin-top: 20px;
+}
+
+.PDPSideWideCouponInfo {
+  &-sidewideCoupon {
+    font-family: "Avenir Next";
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+  }
 }
