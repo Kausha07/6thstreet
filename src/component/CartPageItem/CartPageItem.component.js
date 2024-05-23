@@ -905,6 +905,84 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
+  renderEddWhenExpressEnabled = (crossBorder) => {
+    const {
+      edd_info,
+      item: {
+        full_item_info: { cross_border = 0 },
+        extension_attributes,
+      },
+      international_shipping_fee,
+      isExpressDelivery,
+    } = this.props;
+
+    let actualEddMess = this.formatEddMessage(crossBorder);
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    if (!actualEddMess) {
+      return null;
+    }
+
+    const isExpressProduct = true;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="AreaText" mods={{ isArabic }}>
+          <Shipping />
+          <span>{splitReadyByKey}</span>
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div block="EddExpressWrapper">
+        {isExpressProduct && (
+          <div block="EddExpressDelivery">
+            <div block="EddExpressDeliveryTextBlock">
+              <Shipping />
+              <div block="EddExpressDeliveryText">
+                <span block="EddExpressDeliveryTextRed">
+                  {__("Express")} {}
+                </span>
+                <span block="EddExpressDeliveryTextNormal">
+                  {__("Delivery by")}
+                </span>
+                <span block="EddExpressDeliveryTextBold">{__("Tomorrow")}</span>
+              </div>
+            </div>
+            <div block="EddExpressDeliveryCutOffTime">
+              {__("Order within 4hrs 10 Mins")}
+            </div>
+          </div>
+        )}
+
+        {actualEddMess && !isExpressProduct && (
+          <div block="EddStandardDelivery">
+            <div block="EddStandardDeliveryTextBlock">
+              <Shipping />
+              <span block="EddStandardDeliveryText">
+                {__("Standard")} {}
+                {actualEddMess.split(splitKey)[0]} {}
+                {splitKey} {}
+              </span>
+              <span block="EddStandardDeliveryTextBold">
+                {actualEddMess.split(splitKey)[1]}
+              </span>
+            </div>
+            <div block="internationalShipmentTag">
+              {isIntlBrand || (international_shipping_fee && +cross_border)
+                ? this.renderIntlTag()
+                : null}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   renderEdd = (crossBorder) => {
     const { item: { extension_attributes } } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -965,6 +1043,7 @@ export class CartItem extends PureComponent {
       },
       intlEddResponse,
       international_shipping_fee,
+      isExpressDelivery,
     } = this.props;
     const { isNotAvailble } = this.state;
     const isIntlBrand = (cross_border === 1) &&
@@ -983,13 +1062,19 @@ export class CartItem extends PureComponent {
         {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
-        {edd_info &&
+        {!isExpressDelivery && edd_info &&
           edd_info.is_enable &&
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee && +cross_border)) ?  this.renderIntlTag() : null}
+          {isExpressDelivery && edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_cart &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
+          !isNotAvailble &&
+          this.renderEddWhenExpressEnabled(cross_border === 1)}
+        {!isExpressDelivery && (isIntlBrand || (international_shipping_fee && +cross_border)) ?  this.renderIntlTag() : null}
       </figcaption>
     );
   }

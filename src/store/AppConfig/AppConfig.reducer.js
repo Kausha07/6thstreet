@@ -58,6 +58,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false,
                 isProductRatingEnabled: config.countries[getCountryCode]?.isProductRatingEnabled || false,
                 is_msite_megamenu_enabled: config.countries[getCountryCode]?.is_msite_megamenu_enabled || false,
+                isExpressDelivery: config.countries[getCountryCode]?.isExpressDelivery, 
             };
 
             // this will invalidate config after one year
