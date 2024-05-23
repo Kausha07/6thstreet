@@ -1281,9 +1281,12 @@ class PDPSummary extends PureComponent {
     // ) {
     //   tags.push(__("International Shipment"));
     // }
-    if (discountable?.toLowerCase() === "no") {
-      tags.push(__("Non Discountable"));
-    }
+
+    // we are hiding Non Discountable based on product requirment 
+    // if (discountable?.toLowerCase() === "no") {
+    //   tags.push(__("Non Discountable"));
+    // }
+
     if (tags && tags.length) {
       return (
         <>
