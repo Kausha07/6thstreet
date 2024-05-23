@@ -97,8 +97,8 @@ export default function MyCashTransactions() {
       <div id="mycash-history" className="HistoryContainer">
         <Loader isLoading={isloaderShown} />
         {myCashHistory &&
-          myCashHistory.map((transaction) => (
-            <>
+          myCashHistory.map((transaction, index) => (
+            <div key={index}>
               {transaction.action == ACTION_TRANSACTIONAL_ORDER && (
                 <OrderPlaced transaction={transaction} />
               )}
@@ -115,7 +115,7 @@ export default function MyCashTransactions() {
                 <Refund transaction={transaction} text={"Refund"} />
               )}
               <hr className="HoriRow" />
-            </>
+            </div>
           ))}
       </div>
     </>

@@ -42,7 +42,6 @@ export default function AllTransactions() {
           allHistory?.length == 0 ||
           allHistory?.length != totalTransactions
         ) {
-          console.log("test conditon ", allHistory?.length, totalTransactions);
           setIsLoading(true);
           setIsLoaderShown(true);
           const responseHistory = await getTransactionHistory(
@@ -116,8 +115,8 @@ export default function AllTransactions() {
       <div id="all-history" className="HistoryContainer">
         <Loader isLoading={isloaderShown} />
         {allHistory &&
-          allHistory.map((transaction) => (
-            <>
+          allHistory.map((transaction, index) => (
+            <div key={index}>
               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
                 transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
                 (transaction.action == ACTION_PROMOTIONAL_REFUND &&
@@ -168,7 +167,7 @@ export default function AllTransactions() {
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
               <hr className="HoriRow" />
-            </>
+            </div>
           ))}
       </div>
     </>

@@ -112,8 +112,8 @@ export default function RewardsTransactions() {
         <Loader isLoading={isloaderShown} />
         <div>
           <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
-          {rewardHistory.map((transaction) => (
-            <>
+          {rewardHistory.map((transaction, index) => (
+            <div key={index}>
               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
                 transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
                 (transaction.action == ACTION_PROMOTIONAL_REFUND &&
@@ -137,7 +137,7 @@ export default function RewardsTransactions() {
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
               <hr className="HoriRow" />
-            </>
+            </div>
           ))}
         </div>
       </div>
