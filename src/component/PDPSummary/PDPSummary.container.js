@@ -28,7 +28,8 @@ export const mapStateToProps = (state) => ({
   brandInfoData : state.PDP.brandInfoData,
   catalogue_from_algolia:
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -69,6 +70,7 @@ export class PDPSummaryContainer extends PureComponent {
       international_shipping_fee,
       config = {},
       colourVarientsButtonClick,
+      isExpressDelivery,
     } = this.props;
     return {
       product,
@@ -90,6 +92,7 @@ export class PDPSummaryContainer extends PureComponent {
       international_shipping_fee,
       config,
       colourVarientsButtonClick,
+      isExpressDelivery,
     };
   };
 

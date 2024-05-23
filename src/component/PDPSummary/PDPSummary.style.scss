@@ -86,7 +86,7 @@
     }
   }
 
-  h1 {
+  .headingH1 {
     font-size: 24px;
     margin: 0.4px 0 0 0;
     text-decoration: none;
@@ -376,6 +376,108 @@
   &-AvailableItems {
     margin-top: 20px;
     font-size: 17px;
+  }
+
+  .EddParentExpressWrapper {
+    margin-top: 10px;
+    .cityAreaText {
+      color: #000000;
+    }
+    .EddExpressWrapper {
+      @include desktop {
+        width: 343px;
+      }
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .EddExpressDelivery {
+        display: flex;
+        background: #f964461a;
+        height: 49px;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 8px;
+        margin-top: 10px;
+        text-transform: initial;
+
+        svg {
+          width: 23px;
+          height: 19px;
+          margin: 0 8px;
+        }
+
+        .EddExpressDeliveryTextBlock {
+          display: flex;
+          align-items: center;
+          .EddExpressDeliveryTextRed {
+            color: #f96446;
+            font-weight: 600;
+            font-style: italic;
+            font-size: 14px;
+          }
+
+          .EddExpressDeliveryTextNormal {
+            font-weight: 400;
+          }
+
+          .EddExpressDeliveryTextBold {
+            font-weight: 600;
+            margin: 0 5px;
+          }
+        }
+      }
+
+      .EddExpressDeliveryCutOffTime {
+        font-size: 10px;
+        font-weight: 400;
+        color: #606060;
+        margin-top: 2px;
+        margin: 2px 38px;
+      }
+
+      .EddStandardDelivery {
+        display: flex;
+        background: #8686861a;
+        padding: 10px 0;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 8px;
+        margin-top: 10px;
+        text-transform: initial;
+
+        .EddStandardDeliveryTextBlock {
+          display: flex;
+          align-items: center;
+
+          svg {
+            width: 23px;
+            height: 19px;
+            margin: 0 8px;
+          }
+
+          .EddStandardDeliveryText {
+            font-weight: 400;
+          }
+
+          .EddStandardDeliveryTextBold {
+            font-weight: 600;
+            margin: 0 5px;
+          }
+        }
+
+        .internationalShipmentTag {
+          margin: 2px 38px;
+          font-size: 10px;
+          color: #606060;
+
+          .AdditionShippingInformationInternationalTag {
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }
 

@@ -42,6 +42,9 @@ import Event, {
 import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
+import CityArea from "Component/CityArea/index";
+import { Shipping } from "Component/Icons";
+
 class PDPSummary extends PureComponent {
   constructor(props) {
     super(props);
@@ -839,6 +842,104 @@ class PDPSummary extends PureComponent {
     return actualEddMess;
   }
 
+  renderSelectCityForExpress(crossBorder) {
+    const { isMobile, isArabic, selectedSizeCode } = this.state;
+
+    const {
+      edd_info,
+      product: { international_vendor = null, simple_products = {} },
+      isExpressDelivery,
+    } = this.props;
+
+    const sku = selectedSizeCode || this.getInStockSKU(simple_products);
+    let actualEddMess = this.formatEddMessage(crossBorder);
+    let splitKey = DEFAULT_SPLIT_KEY;
+    const isPDP = true;
+
+    if (actualEddMess === null) {
+      return null;
+    }
+
+    if (+simple_products?.[sku]?.quantity === 0) {
+      return null;
+    }
+
+    return (
+      <div block="EddParentExpressWrapper">
+        {isExpressDelivery &&
+          ((!crossBorder && !edd_info.has_item_level) ||
+            (edd_info.has_item_level && !crossBorder) ||
+            (edd_info.has_item_level &&
+              crossBorder &&
+              edd_info.international_vendors &&
+              edd_info.international_vendors.indexOf(international_vendor) ===
+                -1)) && (
+            <>
+              <CityArea
+                isPDP={isPDP}
+                getEddForPDPres={this.getEddForPDP}
+                showBackgroundColor={false}
+                showEllipsisArea={isMobile ? true : false}
+                isToMakeEDDCallPage={false}
+              />
+            </>
+          )}
+        <div block="EddExpressWrapper">
+          {
+            <div block="EddExpressDelivery">
+              <div block="EddExpressDeliveryTextBlock">
+                <Shipping />
+                <div block="EddExpressDeliveryText">
+                  <span block="EddExpressDeliveryTextRed">
+                    {__("Express")} {}
+                  </span>
+                  <span block="EddExpressDeliveryTextNormal">
+                    {__("Delivery by")}
+                  </span>
+                  <span block="EddExpressDeliveryTextBold">
+                    {__("Tomorrow")}
+                  </span>
+                </div>
+              </div>
+              <div block="EddExpressDeliveryCutOffTime">
+                {__("Order within 4hrs 10 Mins")}
+              </div>
+            </div>
+          }
+
+          {actualEddMess && (
+            <div block="EddStandardDelivery">
+              <div block="EddStandardDeliveryTextBlock">
+                <Shipping />
+                <span block="EddStandardDeliveryText">
+                  {__("Standard")} {}
+                  {actualEddMess.split(splitKey)[0]} {}
+                  {splitKey} {}
+                </span>
+                <span block="EddStandardDeliveryTextBold">
+                  {actualEddMess.split(splitKey)[1]}
+                </span>
+              </div>
+              <div block="internationalShipmentTag">
+                {/* here we are showing International Shipment tag based on inventory as soon as you select any size of the product*/}
+                {(+simple_products?.[sku]?.cross_border_qty && //from this line
+                  +simple_products?.[sku]?.quantity <=
+                    +simple_products?.[sku]?.cross_border_qty &&
+                  +simple_products?.[sku]?.quantity !== 0) || // to this line (including above 2 lines of code) here we are checking for CB inventory
+                (actualEddMess?.split(splitKey)?.[1]?.includes("-") && // now from this line of code
+                  simple_products?.[selectedSizeCode]?.quantity !== 0 && // we are checking when we don't have city/area then range EDD will get displayed then IS tag should also get visible
+                  !selectedSizeCode) //  but get change as soon as you select any size
+                  ? this.renderIntlTag()
+                  : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+
   renderSelectCity(crossBorder) {
     const {
       showCityDropdown,
@@ -1033,7 +1134,7 @@ class PDPSummary extends PureComponent {
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
-          <h1>
+          <h1 elem="headingH1">
             {brandUrlPath ? (
               gender !== "home" ? (
                 <Link
@@ -1064,7 +1165,7 @@ class PDPSummary extends PureComponent {
     }
 
     return (
-      <h1>
+      <h1 elem="headingH1">
         {brandUrlPath ? (
           gender !== "home" ? (
             <Link
@@ -1404,7 +1505,8 @@ class PDPSummary extends PureComponent {
         stock_qty,
       },
       edd_info,
-      intlEddResponse
+      intlEddResponse,
+      isExpressDelivery,
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
@@ -1457,7 +1559,8 @@ class PDPSummary extends PureComponent {
               timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
             }
         </div>
-        {cityResponse &&
+        {!isExpressDelivery &&
+          cityResponse &&
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
@@ -1475,6 +1578,17 @@ class PDPSummary extends PureComponent {
         {this.renderTabby()}
         {this.renderPDPTags()}
         {this.renderAvailableItemsSection()}
+        {isExpressDelivery &&
+          edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_pdp &&
+          ((isIntlBrand &&
+            Object.keys(intlEddResponse).length > 0 &&
+            !edd_info.has_item_level) ||
+            cross_border_qty === 0 ||
+            (edd_info.has_item_level && isIntlBrand)) &&
+          !outOfStockStatus &&
+          this.renderSelectCityForExpress(cross_border_qty === 1)}
       </div>
     );
   }
