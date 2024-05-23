@@ -33,6 +33,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   cartItems: state.Cart.cartItems,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -53,6 +54,7 @@ export const CityArea = (props) => {
     edd_info,
     isSignedIn,
     cartItems,
+    isExpressDelivery,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -66,8 +68,11 @@ export const CityArea = (props) => {
     useState(false);
 
   const [finalAreaText, setFinalAreaText] = useState(
-    JSON.parse(localStorage?.getItem("EddAddressReq"))?.area ||
-      __("Select Area")
+    JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+      ? JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+      : defaultShippingAddress?.area
+      ? defaultShippingAddress?.area
+      : __("Select Area")
   );
 
   // useEffect(() => {
@@ -337,9 +342,22 @@ export const CityArea = (props) => {
       <div block="cityAreaAddressSelection">
         {renderMyAccountOverlay()}
         {renderForm()}
-        <Image lazyLoad={false} src={address} alt="" />
-        <div block="cityAreaText" onClick={() => showHidePOPUP(true)}>
-          {finalAreaText}
+        <div
+          block={`cityAreaDropdown  ${
+            showBackgroundColor ? "showBackgroundColor" : ""
+          }`}
+          onClick={() => showHidePOPUP(!showPopUp)}
+        >
+          <img src={address} alt="" block="locationImage" />
+          {finalAreaText && (
+            <div
+              block={`cityAreaText  ${
+                showEllipsisArea ? "showEllipsisArea" : ""
+              }`}
+            >
+              {finalAreaText}
+            </div>
+          )}
         </div>
         {showPopUp && cityAreaPopUp()}
         {showCityAreaSelectionPopUp && renderCityAreaSelectionPopUp()}
@@ -347,7 +365,7 @@ export const CityArea = (props) => {
     );
   };
 
-  return render();
+  return isExpressDelivery && render();
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CityArea);
