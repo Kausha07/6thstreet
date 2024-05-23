@@ -27,7 +27,6 @@ import "./AllTransactions.style.scss";
 export default function AllTransactions() {
   const [isLoading, setIsLoading] = useState(false);
   const [allHistory, setAllHistory] = useState([]);
-  const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [isloaderShown, setIsLoaderShown] = useState(false);
   const [page, setPage] = useState(1);
@@ -63,10 +62,6 @@ export default function AllTransactions() {
             } else {
               setfetchMore(false);
             }
-
-            if (isFirstFetchLoading) {
-              setIsFirstFetchLoading(false);
-            }
             setIsLoading(false);
             setIsLoaderShown(false);
           }
@@ -87,7 +82,6 @@ export default function AllTransactions() {
     const { body } = document;
     const html = document.documentElement;
     const footerHeight = 300;
-    // !isMobile ? 300 : 0;
     const docHeight = Math.max(
       body.scrollHeight,
       body.offsetHeight,
@@ -110,14 +104,6 @@ export default function AllTransactions() {
 
   // Handle scroll inside mycash history container
   useEffect(() => {
-    //not being used currently as it was used for
-    // function handleScroll1(event) {
-    //   const { scrollTop, clientHeight, scrollHeight } = event.target;
-    //   if (scrollHeight - scrollTop === clientHeight) {
-    //     setPage((oldPage) => oldPage + 1);
-    //   }
-    // }
-    // const element = document.getElementById("all-history");
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -129,19 +115,7 @@ export default function AllTransactions() {
     <>
       <div id="all-history" className="HistoryContainer">
         <Loader isLoading={isloaderShown} />
-        {isFirstFetchLoading ? (
-          <div className="LoaderClass">
-            <Oval
-              color="#333"
-              secondaryColor="#333"
-              height={50}
-              width={"100%"}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-            />
-          </div>
-        ) : (
-          allHistory &&
+        {allHistory &&
           allHistory.map((transaction) => (
             <>
               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
@@ -193,8 +167,7 @@ export default function AllTransactions() {
                 )}
               <hr className="HoriRow" />
             </>
-          ))
-        )}
+          ))}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { Oval } from "react-loader-spinner";
+import Loader from "Component/Loader";
 import {
   OrderPlaced,
   Cashback,
@@ -13,23 +13,18 @@ import {
   ACTION_PROMOTIONAL_ORDER,
   ACTION_PROMOTIONAL_REWARD_14_DAYS,
   ACTION_PROMOTIONAL_REFUND,
-  TRANSACTIONAL_HISTORY_TYPE,
   PROMOTIONAL_HISTORY_TYPE,
 } from "./../MyWalletConfig/MyWalletConfig.js";
 import "./RewardsTransactions.style.scss";
 
 export default function RewardsTransactions() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
-  const [isFurtherFetchLoading, setIsFurtherFetchLoading] = useState(false);
   const [rewardHistory, setRewardHistory] = useState([]);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [nextBalanceExpiry, setNextBalanceExpiry] = useState(null);
   const [expiringAmount, setExpiringAmount] = useState(null);
-
+  const [isloaderShown, setIsLoaderShown] = useState(false);
   const [page, setPage] = useState(1);
-
-  const [hasMore, setHasMore] = useState(true);
 
   const type = PROMOTIONAL_HISTORY_TYPE;
   const LIMIT = 10;
@@ -40,9 +35,10 @@ export default function RewardsTransactions() {
         //type can be eaither all/transactional/promotional
         if (
           rewardHistory?.length == 0 ||
-          rewardHistory?.length < totalTransactions
+          rewardHistory?.length != totalTransactions
         ) {
           setIsLoading(true);
+          setIsLoaderShown(true);
           const responseHistory = await getTransactionHistory(
             type,
             page,
@@ -60,85 +56,90 @@ export default function RewardsTransactions() {
               setExpiringAmount(responseHistory?.data?.expiring_amount);
             }
             setTotalTransactions(responseHistory?.data?.count);
-            if (isFirstFetchLoading) {
-              setIsFirstFetchLoading(false);
-            }
             setIsLoading(false);
+            setIsLoaderShown(false);
           }
         }
       } catch (error) {
         setIsLoading(false);
+        setIsLoaderShown(false);
       }
     };
 
     fetchRewardsHistory();
   }, [page]);
 
+  function handleScroll() {
+    const windowHeight =
+      "innerHeight" in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const { body } = document;
+    const html = document.documentElement;
+    const footerHeight = 300;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    if (windowBottom + footerHeight >= docHeight && !isLoading) {
+      setIsLoading(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isLoading) {
+      setPage((oldPage) => oldPage + 1);
+    }
+  }, [isLoading]);
+
   // Handle scroll inside rewards history container
   useEffect(() => {
-    // function handleScroll(event) {
-    //   const { scrollTop, clientHeight, scrollHeight } = event.target;
+    window.addEventListener("scroll", handleScroll);
 
-    //   if (scrollHeight - scrollTop === clientHeight) {
-    //     setPage((oldPage) => oldPage + 1);
-    //   }
-    // }
-
-    const element = document.getElementById("reward-history");
-    // element.addEventListener("scroll", handleScroll);
-
-    if (isLoading || !hasMore) {
-      return;
-    }
     return () => {
-      // element.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <>
       <div id="reward-history" className="HistoryContainer">
-        {isFirstFetchLoading ? (
-          <div className="LoaderClass">
-            <Oval
-              color="#333"
-              secondaryColor="#333"
-              height={50}
-              width={"100%"}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-            />
-          </div>
-        ) : (
-          <div>
-            <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
-            {rewardHistory.map((transaction) => (
-              <>
-               {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN || 
-              transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS || 
-              transaction.action == ACTION_PROMOTIONAL_REFUND && transaction?.expires_at == null && (
-                  <RewardsExpired transaction={transaction} />
-                )}
-                {transaction.action == ACTION_PROMOTIONAL_ORDER && (
-                  <OrderPlaced transaction={transaction} />
-                )}
+        <Loader isLoading={isloaderShown} />
+        <div>
+          <ExpiringSoon expiry={nextBalanceExpiry} balance={expiringAmount} />
+          {rewardHistory.map((transaction) => (
+            <>
+              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN ||
+                transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS ||
+                (transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                  transaction?.expires_at == null && (
+                    <RewardsExpired transaction={transaction} />
+                  ))}
+              {transaction.action == ACTION_PROMOTIONAL_ORDER && (
+                <OrderPlaced transaction={transaction} />
+              )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
-                  <Cashback transaction={transaction} />
-                )}
+              {transaction.action == ACTION_PROMOTIONAL_REWARD_14_DAYS && (
+                <Cashback transaction={transaction} />
+              )}
 
-                {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
-                  <Refund transaction={transaction} text={"Reward"} />
-                )}
+              {transaction.action == ACTION_PROMOTIONAL_CREDIT_ADMIN && (
+                <Refund transaction={transaction} text={"Reward"} />
+              )}
 
-                {transaction.action == ACTION_PROMOTIONAL_REFUND &&  transaction?.expires_at != null &&(
+              {transaction.action == ACTION_PROMOTIONAL_REFUND &&
+                transaction?.expires_at != null && (
                   <Refund transaction={transaction} text={"Refund"} />
                 )}
-                <hr className="HoriRow" />
-              </>
-            ))}
-          </div>
-        )}
+              <hr className="HoriRow" />
+            </>
+          ))}
+        </div>
       </div>
     </>
   );
