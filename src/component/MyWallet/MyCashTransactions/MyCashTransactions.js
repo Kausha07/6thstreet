@@ -1,4 +1,4 @@
-import { Oval } from "react-loader-spinner";
+import Loader from "Component/Loader";
 import { OrderPlaced, Refund } from "../HelperComponents/HelperComponents";
 import { useState, useEffect } from "react";
 import { getTransactionHistory } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
@@ -15,9 +15,9 @@ import "./MyCashTransactions.style.scss";
 export default function MyCashTransactions() {
   const [isLoading, setIsLoading] = useState(false);
   const [myCashHistory, setMyCashHistory] = useState([]);
-  const [isFirstFetchLoading, setIsFirstFetchLoading] = useState(true);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [page, setPage] = useState(1);
+  const [isloaderShown, setIsLoaderShown] = useState(false);
   const type = TRANSACTIONAL_HISTORY_TYPE;
   const LIMIT = 10;
 
@@ -27,9 +27,10 @@ export default function MyCashTransactions() {
         //type can be eaither all/transactional/promotional
         if (
           myCashHistory?.length == 0 ||
-          myCashHistory?.length < totalTransactions
+          myCashHistory?.length != totalTransactions
         ) {
           setIsLoading(true);
+          setIsLoaderShown(true);
           const responseHistory = await getTransactionHistory(
             type,
             page,
@@ -42,55 +43,62 @@ export default function MyCashTransactions() {
             ]);
 
             setTotalTransactions(responseHistory?.data?.count);
-            if (isFirstFetchLoading) {
-              setIsFirstFetchLoading(false);
-            }
             setIsLoading(false);
+            setIsLoaderShown(false);
           }
         }
       } catch (error) {
         setIsLoading(false);
+        setIsLoaderShown(false);
       }
     };
     fetchMyCashHistory();
   }, [page]);
 
+  function handleScroll() {
+    const windowHeight =
+      "innerHeight" in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const { body } = document;
+    const html = document.documentElement;
+    const footerHeight = 300;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    if (windowBottom + footerHeight >= docHeight && !isLoading) {
+      setIsLoading(true);
+    }
+  }
+
+  useEffect(() => {
+    if (isLoading) {
+      setPage((oldPage) => oldPage + 1);
+    }
+  }, [isLoading]);
+
   // Handle scroll inside mycash history container
   useEffect(() => {
-    function handleScroll(event) {
-      const { scrollTop, clientHeight, scrollHeight } = event.target;
-
-      if (scrollHeight - scrollTop === clientHeight) {
-        setPage((oldPage) => oldPage + 1);
-      }
-    }
-
-    const element = document.getElementById("mycash-history");
-    element.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      element.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <>
       <div id="mycash-history" className="HistoryContainer">
-        {isFirstFetchLoading ? (
-          <div className="LoaderClass">
-            <Oval
-              color="#333"
-              secondaryColor="#333"
-              height={50}
-              width={"100%"}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-            />
-          </div>
-        ) : (
-          myCashHistory &&
-          myCashHistory.map((transaction, index) => (
-            <div key={index}>
+        <Loader isLoading={isloaderShown} />
+        {myCashHistory &&
+          myCashHistory.map((transaction) => (
+            <>
               {transaction.action == ACTION_TRANSACTIONAL_ORDER && (
                 <OrderPlaced transaction={transaction} />
               )}
@@ -107,9 +115,8 @@ export default function MyCashTransactions() {
                 <Refund transaction={transaction} text={"Refund"} />
               )}
               <hr className="HoriRow" />
-            </div>
-          ))
-        )}
+            </>
+          ))}
       </div>
     </>
   );
