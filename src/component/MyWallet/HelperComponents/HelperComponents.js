@@ -312,7 +312,7 @@ export function EligibiltyPopup({ setIsVisible, percentage, amount }) {
                 {percentage}
                 {"%"}{" "}
               </span>
-              {__("of the order value up to")}{" "}
+              {__("of the order subtotal value up to")}{" "}
               <span className="amount">{amount}</span>
             </div>
           </div>
