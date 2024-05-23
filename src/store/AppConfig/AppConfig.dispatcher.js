@@ -53,30 +53,41 @@ export class AppConfigDispatcher {
 
     // if sitewide is disabled from default.json then do not call VWO for sitewide
     const country = getCountryFromUrl();
-    const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;    
-
+    const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;
+    const getSitewideConfigVwo = abTestingConfig?.SiteWideCoupon?.getConfigVwo || false;
+    
     // Get Logged in User Variations from VWO tool
     try {
         if (userId && window.vwoClientInstance) {
             if(isSiteWideCall) {
-                const sitewideVariationName = 
-                 window.vwoClientInstance?.getVariation(siteWideCampaignName, `${userId}`, options);
-                const isFeatureEnabled = 
-                 window.vwoClientInstance?.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
-                const enableSitewideCoupon = 
-                 window.vwoClientInstance?.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
+                if(getSitewideConfigVwo) {
+                    const sitewideVariationName = 
+                        window.vwoClientInstance?.getVariation(siteWideCampaignName, `${userId}`, options);
+                    const isFeatureEnabled = 
+                        window.vwoClientInstance?.isFeatureEnabled(siteWideCampaignName, `${userId}`, options);
+                    const enableSitewideCoupon = 
+                        window.vwoClientInstance?.getFeatureVariableValue(siteWideCampaignName, 'enable', `${userId}`, options);
                 
-                SiteWideCoupon = {
-                    isFeatureEnabled: enableSitewideCoupon ? enableSitewideCoupon : false,
-                    enableSitewideCoupon,
-                    variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
-                    vwo: sitewideVariationName ? '1' : '0',
-                    campaignName: siteWideCampaignName,
-                };
+                    SiteWideCoupon = {
+                        isFeatureEnabled: sitewideVariationName ? enableSitewideCoupon ? enableSitewideCoupon : false : abTestingConfig?.SiteWideCoupon?.variable?.[0]?.defaultValue ||  false,
+                        enableSitewideCoupon,
+                        variationName: sitewideVariationName || abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                        vwo: sitewideVariationName ? '1' : '0',
+                        campaignName: siteWideCampaignName,
+                    };
+                } else {
+                    SiteWideCoupon = {
+                        isFeatureEnabled: abTestingConfig?.SiteWideCoupon?.variable?.[0]?.defaultValue || false,
+                        enableSitewideCoupon: abTestingConfig?.SiteWideCoupon?.variable?.[0]?.defaultValue || false,
+                        variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                        vwo: '0',
+                        campaignName: siteWideCampaignName,
+                    };
+                }  
             } else {
                 SiteWideCoupon = {
-                    isFeatureEnabled: false,
-                    enableSitewideCoupon: false,
+                    isFeatureEnabled: isSiteWideCall && !getSitewideConfigVwo && abTestingConfig?.SiteWideCoupon?.variable?.[0]?.defaultValue ,
+                    enableSitewideCoupon: abTestingConfig?.SiteWideCoupon?.variable?.[0]?.defaultValue,
                     variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
                     vwo: '0',
                     campaignName: siteWideCampaignName,
