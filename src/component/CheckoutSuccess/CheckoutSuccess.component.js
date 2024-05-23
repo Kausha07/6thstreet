@@ -1517,6 +1517,7 @@ export class CheckoutSuccess extends PureComponent {
         tax_amount = 0,
         customer_balance_amount = 0,
         store_credit_amount = 0,
+        reward_currency_amount = 0,
         currency_code = getCurrency(),
         international_shipping_amount = 0,
         fulfilled_from = "",
@@ -1564,6 +1565,16 @@ export class CheckoutSuccess extends PureComponent {
                   }
                 )
               : null}
+            {reward_currency_amount !== 0
+            ? this.renderSitewidePriceLine(
+              reward_currency_amount,
+                __("My Rewards"),
+                {
+                  isStoreCredit: true,
+                  couponSavings: true,
+                }
+              )
+            : null}
             {parseFloat(tax_amount) !== 0
               ? this.renderSitewidePriceLine(tax_amount, __("Tax"))
               : null}

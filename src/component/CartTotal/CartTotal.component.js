@@ -172,6 +172,11 @@ function CartTotal(props) {
             { couponSavings: true }
           )}
           {renderPriceLine(
+            getValueFromTotals(totals, "reward"),
+            __("My Rewards"),
+            { couponSavings: true }
+          )}
+          {renderPriceLine(
             getValueFromTotals(totals, "clubapparel"),
             __("Club Apparel Redemption")
           )}

@@ -400,8 +400,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     return (
       <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
-        <StoreCredit canApply hideIfZero />
         <UseMyWallet eligibleAmount = {eligible_amount}/>
+        <StoreCredit canApply hideIfZero />
         {this.props?.isClubApparelEnabled ? <ClubApparel hideIfZero /> : null}
       </div>
     );
