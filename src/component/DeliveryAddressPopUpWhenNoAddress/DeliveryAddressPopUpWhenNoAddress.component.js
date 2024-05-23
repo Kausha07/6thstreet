@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
+import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import address from "Component/PDPSummary/icons/address_black.svg";
 
@@ -16,15 +17,26 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
   const wrapperRef = createRef();
 
   useEffect(() => {
-    window.addEventListener("mousedown", closePopupOnOutsideClick);
+    if (isMobile.any()) {
+      window.addEventListener("mousedown", closePopupOnOutsideClick);
+    } else {
+      window.addEventListener("scroll", closePopupOnOutsideClick);
+      window.addEventListener("mousedown", closePopupOnOutsideClick);
+    }
+
     return () => {
-      window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      if (isMobile.any()) {
+        window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      } else {
+        window.removeEventListener("scroll", closePopupOnOutsideClick);
+        window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      }
     };
   }, [wrapperRef]);
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
-    if (showPopUp) {
+    if (showPopUp && isMobile.any()) {
       html.style.overflow = "hidden";
     }
     return () => {

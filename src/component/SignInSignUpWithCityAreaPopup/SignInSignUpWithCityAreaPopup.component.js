@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createRef } from "react";
 import { isSignedIn } from "Util/Auth";
+import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import address from "Component/PDPSummary/icons/address_black.svg";
 import "./SignInSignUpWithCityAreaPopup.style";
@@ -16,15 +17,26 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
   const wrapperRef = createRef();
 
   useEffect(() => {
-    window.addEventListener("mousedown", closePopupOnOutsideClick);
+    if (isMobile.any()) {
+      window.addEventListener("mousedown", closePopupOnOutsideClick);
+    } else {
+      window.addEventListener("scroll", closePopupOnOutsideClick);
+      window.addEventListener("mousedown", closePopupOnOutsideClick);
+    }
+
     return () => {
-      window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      if (isMobile.any()) {
+        window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      } else {
+        window.removeEventListener("scroll", closePopupOnOutsideClick);
+        window.removeEventListener("mousedown", closePopupOnOutsideClick);
+      }
     };
   }, [wrapperRef]);
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
-    if (showPopUp) {
+    if (showPopUp && isMobile.any()) {
       html.style.overflow = "hidden";
     }
     return () => {
@@ -46,7 +58,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     if (!isSignedIn()) {
       renderMyAccountOverlay();
       toggleRegisterScreen(false);
-      showHidePOPUP(false)
+      showHidePOPUP(false);
     }
   };
 
@@ -62,7 +74,9 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     <div block="signInSignUpWithCityAreaMainBlock">
       <div block="signInSignUpWithCityAreaOuterBlock">
         <div block="signInSignUpWithCityAreaPopUp" ref={wrapperRef}>
-          <h1>{__("Sign in/ Create Account to see delivery Option")}</h1>
+          <h1 block="signInSignUpWithCityAreaPopUpHeading">
+            {__("Sign in/ Create Account to see delivery Option")}
+          </h1>
           <div block="signInSignUpWithCityAreaInnerBlock">
             <div block="createAccountSignInButton">
               <button

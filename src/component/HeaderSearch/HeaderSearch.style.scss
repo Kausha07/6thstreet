@@ -52,6 +52,10 @@
     }
   }
 
+  @include mobile{
+    padding: 0 10px;
+  }
+
   @include before-desktop {
     position: absolute;
     top: 75px;
@@ -144,7 +148,7 @@
   }
 
   #header-search {
-    width: 65%;
+    width: 100%;
     @include tablet {
       width: 372px;
     }

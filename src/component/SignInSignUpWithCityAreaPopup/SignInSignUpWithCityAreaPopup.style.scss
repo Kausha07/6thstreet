@@ -1,4 +1,5 @@
 .signInSignUpWithCityAreaMainBlock {
+  cursor: pointer;
   .signInSignUpWithCityAreaOuterBlock {
     @include mobile {
       position: fixed;
@@ -40,7 +41,7 @@
         border: 1px solid #d1d3d4;
       }
 
-      h1 {
+      .signInSignUpWithCityAreaPopUpHeading {
         font-family: Avenir Next;
         font-weight: 600;
         line-height: 24px;
