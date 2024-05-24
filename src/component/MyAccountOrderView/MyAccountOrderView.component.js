@@ -1009,7 +1009,7 @@ class MyAccountOrderView extends PureComponent {
       order: {
         status,
         payment,
-        payment: { method },
+        payment: { method, title },
         //club_apparel_amount = 0,
         store_credit_amount = 0,
       },
@@ -1048,15 +1048,7 @@ class MyAccountOrderView extends PureComponent {
       case EXCHANGE_STORE_CREDIT:
         return this.renderPaymentTypeText(__("Exchange My Cash"));
       case "free":
-        if (
-          this.props?.order?.club_apparel_amount &&
-          parseFloat(this.props?.order?.club_apparel_amount) !== 0
-        ) {
-          return this.renderPaymentTypeText(__("Club Apparel"));
-        } else if (store_credit_amount !== 0) {
-          return this.renderPaymentTypeText(__("My Cash"));
-        }
-        return;
+        return this.renderPaymentTypeText(title);
       case KNET_PAY:
         return this.renderPaymentTypeText("KNET");
       case CAREEM_PAY:
