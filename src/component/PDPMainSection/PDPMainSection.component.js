@@ -6,18 +6,6 @@ import PDPSummary from 'Component/PDPSummary';
 
 import './PDPMainSection.style';
 
-const PDPPageJSON = {
-    renderMySignInPopup:{},
-    renderMainSection:{
-      gallery:{},
-      summary:{}
-    },
-    renderSeperator:{},
-    renderMixAndMatchSection:{},
-    renderDetailsSection:{},
-    renderDetail:{}
-  }
-
 class PDPMainSection extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types

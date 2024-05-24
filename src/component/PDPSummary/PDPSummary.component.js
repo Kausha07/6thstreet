@@ -44,6 +44,7 @@ import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import { connect } from "react-redux";
 import Ratings from 'Component/Ratings/Ratings';
+import PDPBrandFollow from 'Component/PDPBrandFollow/PDPBrandFollow';
 export const mapStateToProps = (state) => ({
   isNewDesign:state.PDP.isNewDesign
 });
@@ -1412,7 +1413,7 @@ class PDPSummary extends PureComponent {
       edd_info,
       intlEddResponse,
       renderSummary,
-      isNewDesign
+      isNewDesign,
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
@@ -1502,7 +1503,7 @@ class PDPSummary extends PureComponent {
             return this.renderTabby();
           }
           if(sectionName === 'pdpTags'){
-            return this.renderTabby();
+            return this.renderPDPTags();
           }
           if(sectionName === 'asloAviable'){
             return this.renderAvailableItemsSection();
