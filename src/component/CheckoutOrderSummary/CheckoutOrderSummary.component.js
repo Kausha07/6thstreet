@@ -257,12 +257,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const eventData = {
       name: event,
       coupon: coupon,
-      discount: props?.totals?.discount || "",
-      shipping: props?.totals?.shipping_fee || "",
-      tax: props?.totals?.tax_amount || "",
-      sub_total : props?.totals?.subtotal || "",
-      subtotal_incl_tax : props?.totals?.subtotal_incl_tax || "",
-      total: props?.totals?.total || "",
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
     };
     Event.dispatch(EVENT_GTM_COUPON, eventData);
   }
@@ -274,11 +274,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
 
     if(!resp?.status){
-      sendSiteWideCouponEvents(EVENT_APPLY_COUPON_FAILED, sidewideCouponCode );
+      this.sendSiteWideCouponEvents(EVENT_APPLY_COUPON_FAILED, sidewideCouponCode );
     }else if(resp?.status && flag ) {
-      sendSiteWideCouponEvents(EVENT_APPLY_COUPON, sidewideCouponCode );
+      this.sendSiteWideCouponEvents(EVENT_APPLY_COUPON, sidewideCouponCode );
     } else {
-      sendSiteWideCouponEvents(EVENT_REMOVE_COUPON, sidewideCouponCode );
+      this.sendSiteWideCouponEvents(EVENT_REMOVE_COUPON, sidewideCouponCode );
     }
   };
 
