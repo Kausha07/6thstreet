@@ -17,12 +17,27 @@ import CartCouponList from "Component/CartCouponList";
 import CartCouponDetail from 'Component/CartCouponDetail';
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 import { connect } from "react-redux";
-import Event, { MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
+import Event, {
+  MOE_trackEvent,
+  EVENT_GTM_COUPON,
+  EVENT_REMOVE_COUPON,
+  EVENT_APPLY_COUPON,
+  EVENT_APPLY_COUPON_FAILED,
+} from "Util/Event";
 import Delivery from "./icons/delivery-truck.png";
 import SideWideCoupon from "Component/SideWideCoupon";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
+import { Coupon } from "Component/Icons/index";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CartTotal from "Component/CartTotal";
 
 import "./CheckoutOrderSummary.extended.style";
+
+export const mapDispatchToProps = (dispatch) => ({
+  updateSidewideCoupon: (quoteId, flag, is_guest) =>
+    CartDispatcher.updateSidewideCoupon(dispatch, quoteId, flag, is_guest),
+});
 
 export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
@@ -30,6 +45,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   isCouponRequest: state.CartReducer.isCouponRequest,
   vwoData: state.AppConfig.vwoData,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
@@ -231,6 +247,41 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
   }
 
+  sendSiteWideCouponEvents = (event, coupon) => {
+    MOE_trackEvent(event, { 
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      coupon_code: coupon || "",
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: event,
+      coupon: coupon,
+      discount: props?.totals?.discount || "",
+      shipping: props?.totals?.shipping_fee || "",
+      tax: props?.totals?.tax_amount || "",
+      sub_total : props?.totals?.subtotal || "",
+      subtotal_incl_tax : props?.totals?.subtotal_incl_tax || "",
+      total: props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
+  }
+
+  handleSideWideCoupon = async (flag, sidewideCouponCode) => {
+    const { isSignedIn, updateSidewideCoupon } = this.props;
+
+    const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
+    const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
+
+    if(!resp?.status){
+      sendSiteWideCouponEvents(EVENT_APPLY_COUPON_FAILED, sidewideCouponCode );
+    }else if(resp?.status && flag ) {
+      sendSiteWideCouponEvents(EVENT_APPLY_COUPON, sidewideCouponCode );
+    } else {
+      sendSiteWideCouponEvents(EVENT_REMOVE_COUPON, sidewideCouponCode );
+    }
+  };
+
   handleRemoveCode = (e) => {
     e.stopPropagation();
     MOE_trackEvent(EVENT_REMOVE_COUPON, {
@@ -275,80 +326,180 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
   renderDiscountCode() {
     const {
-      totals: { coupon_code },
-      couponsItems = [], couponLists= [],
+      totals: { site_wide_applied = 0, coupon_code = "" },
+      couponsItems = [],
+      couponLists = [],
       config,
       vwoData,
+      isCouponRequest,
     } = this.props;
     const countryCode = getCountryFromUrl();
-    const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+    const isSidewideCouponEnabled =
+      vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
       appliedCoupon = couponsItems.find(function (coupon) {
-        return coupon.code == coupon_code
-      })
+        return coupon.code == coupon_code;
+      });
     }
-  
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode =
+      config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+
     return (
-        <div block="wrapperCartCouponBlock" mods={{ isArabic }}>{
-          (!this.state?.isCouponPopupOpen) ?
-            <>
-              <div block="cartCouponBlock" mods={{ isArabic }}>
-                {
-                  isSidewideCouponEnabled ? 
-                  <SideWideCoupon 
-                    handleRemoveCode ={this.handleRemoveCode}
-                  /> :
-                  coupon_code ?
-                    <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
-                      <div block="appliedCouponDetail">
-                        <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
-                      </div>
-                      <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
-                    </div>
-                    :
-                    <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
-                }
-              </div>
+      <div block="wrapperCartCouponBlock" mods={{ isArabic }}>
+        {!this.state?.isCouponPopupOpen ? (
+          <>
+            <div block="cartCouponBlock" mods={{ isArabic }}>
               {isSidewideCouponEnabled ? (
-                <div block="otherCouponBlock" onClick={this.openCouponPopup} className="sidewideCheckout">
-                  {__("View other available coupons")}
-                </div>
-              ) : null}
-              {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
-            </>
-            :
-            <>
-              <div block="couponPopupBlock">
-                <div block="couponPopupContent" ref={this.cartCouponPopup} mods={{ isArabic }}>
-                  <div block="couponPopupTop" mods={{isArabic}}>
-                  {isMobile ? __("Discount code") : __("Promo codes")}
-                    <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
-                      <span>Close</span>
+                site_wide_applied || coupon_code ? (
+                  <div block="appliedCouponBlock">
+                    <div block="appliedCouponDetail">
+                      <span block="showCouponBtnLeftBlock">
+                        <img
+                          block="couponImage"
+                          src={Coupon}
+                          alt="couponImage"
+                        />
+                        <p block="appliedCouponCode" mods={{ isArabic }}>
+                          {coupon_code ? coupon_code : sidewideCouponCode}{" "}
+                          &nbsp;
+                          <span className="couponAppliedText">
+                            {__("Coupon applied")}
+                          </span>
+                        </p>
+                      </span>
+                    </div>
+                    <button
+                      block="appliedCouponBtn remove"
+                      onClick={(e) => {
+                        coupon_code
+                          ? this.handleRemoveCode(e)
+                          : this.handleSideWideCoupon(0, sidewideCouponCode);
+                      }}
+                    >
+                      {__("Remove")}
                     </button>
                   </div>
-                    {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
-                    <div block="couponInputBox">
-                      <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
-                    </div>
-                  <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} setLoader={this.setLoader}/>
-                  {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
-                  {this.state?.isTermsAndConditionspopupOpen && 
-                    <CartCouponTermsAndConditions
-                      TermsAndConditions={this.state}
-                      hideTermsAndConditions={this.hideTermsAndConditions}
-                      hideDetail={this.hideCouponDetial}
-                      handleApplyCode={this.handleApplyCode}
-                    />
-                  }
+                ) : (
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <span block="couponText" mods={{ isArabic }}>
+                        {__("Enter coupon or promo code")}
+                      </span>
+                    </span>
+                  </button>
+                )
+              ) : coupon_code ? (
+                <div block="appliedCouponBlock">
+                  <div block="appliedCouponDetail">
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <p block="appliedCouponCode" mods={{ isArabic }}>
+                        {coupon_code ? coupon_code : sidewideCouponCode} &nbsp;
+                        <span className="couponAppliedText">
+                          {__("Coupon applied")}
+                        </span>
+                      </p>
+                    </span>
+                  </div>
+                  <button
+                    block="appliedCouponBtn remove"
+                    onClick={(e) => {
+                      this.handleRemoveCode(e);
+                    }}
+                  >
+                    {__("Remove")}
+                  </button>
                 </div>
-              <Loader isLoading={isLoading} />
+              ) : (
+                <>
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <span block="couponText" mods={{ isArabic }}>
+                        {__("Enter coupon or promo code")}
+                      </span>
+                    </span>
+                    <span block="couponCodeSelectText">{__("Select")}</span>
+                  </button>
+                </>
+              )}
+            </div>
+            {isSidewideCouponEnabled ? (
+              <>
+                <SideWideCoupon
+                  handleRemoveCode={this.handleRemoveCode}
+                  openCouponPopup={this.openCouponPopup}
+                />
+              </>
+            ) : null}
+            {this.state?.isCouponDetialPopupOpen && (
+              <CartCouponDetail
+                couponDetail={this.state}
+                hideDetail={this.hideCouponDetial}
+                showTermsAndConditions={this.showTermsAndConditions}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <div block="couponPopupBlock">
+              <div
+                block="couponPopupContent"
+                ref={this.cartCouponPopup}
+                mods={{ isArabic }}
+              >
+                <div block="couponPopupTop" mods={{ isArabic }}>
+                  {isMobile ? __("Discount code") : __("Promo codes")}
+                  <button
+                    onClick={this.closeCouponPopup}
+                    block="closeCouponPopupBtn"
+                  >
+                    <span>Close</span>
+                  </button>
+                </div>
+                {isMobile ? null : (
+                  <p>{__("Select a Promo or type a Coupon code")}</p>
+                )}
+                <div block="couponInputBox">
+                  <CartCoupon
+                    couponCode={coupon_code}
+                    closePopup={this.closeCouponPopup}
+                  />
+                </div>
+                <CartCouponList
+                  couponCode={coupon_code}
+                  closePopup={this.closeCouponPopup}
+                  showDetail={this.showCouponDetial}
+                  {...this.props}
+                  setLoader={this.setLoader}
+                />
+                {this.state?.isCouponDetialPopupOpen && (
+                  <CartCouponDetail
+                    couponDetail={this.state}
+                    hideDetail={this.hideCouponDetial}
+                    showTermsAndConditions={this.showTermsAndConditions}
+                  />
+                )}
+                {this.state?.isTermsAndConditionspopupOpen && (
+                  <CartCouponTermsAndConditions
+                    TermsAndConditions={this.state}
+                    hideTermsAndConditions={this.hideTermsAndConditions}
+                    hideDetail={this.hideCouponDetial}
+                    handleApplyCode={this.handleApplyCode}
+                  />
+                )}
               </div>
-            </>
-        }</div>
+              <Loader isLoading={isLoading} />
+            </div>
+          </>
+        )}
+      </div>
     );
   }
 
@@ -550,4 +701,4 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 }
 
-export default connect(mapStateToProps)(CheckoutOrderSummary);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutOrderSummary);
