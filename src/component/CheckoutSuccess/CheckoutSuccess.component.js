@@ -1334,13 +1334,36 @@ export class CheckoutSuccess extends PureComponent {
             : __("Cash on Delivery"),
       });
     } else if (paymentMethod?.code?.match(/free/)) {
-      if (getDiscountFromTotals(total_segments, "clubapparel")) {
-        this.setState({ paymentTitle: __("Club Apparel") });
-      } else if (getDiscountFromTotals(total_segments, "customerbalance")) {
-        this.setState({ paymentTitle: __("My Cash") });
-      } else if (getDiscountFromTotals(total_segments, "reward")) {
-        this.setState({ paymentTitle: __("My Rewards") });
-      }
+        if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel") });
+        }
+        else if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel, My Rewards") });
+        }
+        else if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel, My Cash") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Wallet") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Cash") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Rewards") });
+        }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
     } else if (paymentMethod?.code?.match(/knet/)) {
