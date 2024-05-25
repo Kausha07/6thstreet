@@ -411,21 +411,22 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     if (!price && !allowZero) {
       return null;
     }
+    const { isArabic, } = this.state;
 
     const {
       totals: { currency_code = getCurrency() },
     } = this.props;
     const finalPrice = getFinalPrice(price, currency_code);
 
-    if(name === "Coupon Code"){
+    if(name === "Coupon Code" || name === "My Cash"|| name === "My Rewards"){
       return (
         <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
           <strong block="CheckoutOrderSummary" elem="Text">
             {name}
           </strong>
           <strong block="CheckoutOrderSummary" elem="PriceCouponCode">
-            {`- ${parseFloat(price) || price === 0 ? currency_code : ""
-              } ${Math.abs(finalPrice)}`}
+            {isArabic ?`${parseFloat(price) || price === 0 ? currency_code : ""} ${Math.abs(finalPrice)} -` 
+              : `- ${parseFloat(price) || price === 0 ? currency_code : ""} ${Math.abs(finalPrice)}`}
           </strong>
         </li>
       );
@@ -455,6 +456,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         shipping_amount = 0,
         currency_code = getCurrency(),
         total_segments: totals = [],
+        total_wallet_credit,
         items = [],
       },
       international_shipping_fee,
@@ -539,6 +541,13 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">
             {this.renderPriceLine(grandTotal, __("Total"), {}, true)}
+          </div>
+          <div block="CheckoutOrderSummary" elem="Cashback">
+            {this.renderPriceLine(
+                total_wallet_credit,
+              __("Cashbak"), 
+              { couponSavings: true }
+            )}
           </div>
         </ul>
       </div>

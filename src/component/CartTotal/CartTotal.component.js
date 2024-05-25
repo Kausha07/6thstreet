@@ -27,6 +27,7 @@ function CartTotal(props) {
   const {
     totals: {
       total_segments: totals = [],
+      total_wallet_credit,
       total = 0,
       items = [],
       shipping_fee = 0,
@@ -86,11 +87,11 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {isArabic
             ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
-                name === "My Cash" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice
+                name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice
               } ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? currency_code : ""
-              } ${name === "My Cash" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice}`}
+              } ${name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice}`}
         </strong>
       </li>
     );
@@ -197,6 +198,11 @@ function CartTotal(props) {
             {
               divider: true,
             }
+          )}
+          {renderPriceLine(
+              total_wallet_credit,
+            __("Cashbak"), 
+            { cashBack: true, divider: true, }
           )}
         </div>
       </ul>
