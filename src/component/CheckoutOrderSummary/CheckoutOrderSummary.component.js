@@ -545,7 +545,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           <div block="CheckoutOrderSummary" elem="Cashback">
             {this.renderPriceLine(
                 total_wallet_credit,
-              __("Cashbak"), 
+              __("Cashback"), 
               { couponSavings: true }
             )}
           </div>

@@ -1734,16 +1734,26 @@ export class CheckoutSuccess extends PureComponent {
         paymentMethod?.code === "tabby_installments" ||
         paymentMethod?.code === "checkout_knet"
       ) {
+        const promotional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.reward_currency_amount : this.props?.order?.reward_currency_amount;
+        const transactional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.store_credit_amount : this.props?.order?.customer_balance_amount;
+       
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,
           paymentMethod: paymentMethod?.code || "",
+          promotional_balance_used: promotional_balance_used || "",
+          transactional_balance_used: transactional_balance_used || "",
         });
       } else {
+        const promotional_balance_used = getDiscountFromTotals(this.props?.initialTotals?.total_segments, "reward");
+        const transactional_balance_used = getDiscountFromTotals(this.props?.initialTotals?.total_segments, "customerbalance");
+
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: initialTotals,
           paymentMethod: paymentMethod?.code || "",
+          promotional_balance_used: promotional_balance_used || "",
+          transactional_balance_used: transactional_balance_used || "",
         });
       }
       this.setState({ eventSent: true });

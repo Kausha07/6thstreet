@@ -30,8 +30,8 @@ class PurchaseEvent extends BaseEvent {
    * Bind on product detail
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_PURCHASE, ({ orderID: orderId, totals, paymentMethod }) => {
-      this.handle(orderId, totals, paymentMethod);
+    Event.observer(EVENT_GTM_PURCHASE, ({ orderID: orderId, totals, paymentMethod, promotional_balance_used, transactional_balance_used }) => {
+      this.handle(orderId, totals, paymentMethod, promotional_balance_used, transactional_balance_used);
     });
   }
 
@@ -42,7 +42,7 @@ class PurchaseEvent extends BaseEvent {
    * @param totals
    * @param cartData
    */
-  handler(orderId, totals, paymentMethod) {
+  handler(orderId, totals, paymentMethod, promotional_balance_used, transactional_balance_used) {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
@@ -104,6 +104,8 @@ class PurchaseEvent extends BaseEvent {
         cod_amount: totals?.msp_cod_amount ?? 0,
         coupon:totals?.coupon_code ?? "",
         tax_amount:totals?.tax_amount ?? "",
+        promotional_balance_used: promotional_balance_used,
+        transactional_balance_used: transactional_balance_used,
         purchase: {
           actionField: this.getActionFields(orderId, totals),
           products: formattedImpressions
