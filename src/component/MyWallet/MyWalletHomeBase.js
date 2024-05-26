@@ -11,7 +11,10 @@ import {
   CollapsableComponent,
 } from "./HelperComponents/HelperComponents";
 import { getFAQsJson } from "./../../util/API/endpoint/Wallet/Wallet.endpoint.js";
-
+import {
+  EVENT_MOE_MY_WALLET_SCREEN_VIEW,
+  MOE_trackEvent,
+} from "Util/Event";
 import "./MyWalletHomeBase.style.scss";
 
 export default function MyWalletHomeBase() {
@@ -35,6 +38,11 @@ export default function MyWalletHomeBase() {
 
   useEffect(() => {
     fetchFAQsData();
+    MOE_trackEvent(EVENT_MOE_MY_WALLET_SCREEN_VIEW, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   }, []);
   return (
     <>

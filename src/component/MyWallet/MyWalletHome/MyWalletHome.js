@@ -35,6 +35,11 @@ import GoRightIcon from "./../IconsAndImages/GoRightIcon.svg";
 import GoBackIcon from "./../IconsAndImages/GoBackIcon.svg";
 import WalletMainIcon from "./../IconsAndImages/WalletMainIcon.svg";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {
+  EVENT_MOE_WALLET_BANNER_CLICK,
+  MOE_trackEvent,
+} from "Util/Event";
 
 import "./MyWalletHome.style.scss";
 
@@ -98,6 +103,11 @@ export default function MyWalletHome({ setCurrentScreen }) {
   function copyReferralCode() {
     dispatch(showNotification("success", __("Coupon copied to clipboard")));
     navigator.clipboard.writeText(walletCashbackCoupon);
+    MOE_trackEvent(EVENT_MOE_WALLET_BANNER_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   }
 
   function extractNumberFromString(value) {

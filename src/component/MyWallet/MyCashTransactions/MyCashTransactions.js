@@ -10,6 +10,11 @@ import {
   ACTION_TRANSACTIONAL_REFUND,
   ACTION_TRANSACTIONAL_PAYMENT_REVERT,
 } from "./../MyWalletConfig/MyWalletConfig.js";
+import {
+  EVENT_MOE_YOUR_TRANSACTIONS_SCREEN_VIEW,
+  MOE_trackEvent,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./MyCashTransactions.style.scss";
 
 export default function MyCashTransactions() {
@@ -86,6 +91,12 @@ export default function MyCashTransactions() {
   // Handle scroll inside mycash history container
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    MOE_trackEvent(EVENT_MOE_YOUR_TRANSACTIONS_SCREEN_VIEW, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);

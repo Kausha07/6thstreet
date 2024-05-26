@@ -4,6 +4,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { getWalletBalance } from "Util/API/endpoint/Wallet/Wallet.endpoint";
+import {
+  EVENT_MOE_ACCOUNT_SECTION_WALLET_TAB_CLICK,
+  MOE_trackEvent,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./MyAccountTabListItem.component.style.scss";
 
 export const BreadcrumbsDispatcher = import(
@@ -99,6 +104,13 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
           onClick={() => {
             changeActiveTab(tabEntry[0]);
             this.updateBreadcrumbs(tabEntry[1]?.url, tabEntry[1]?.name);
+            if(name === __("My Wallet")){
+              MOE_trackEvent(EVENT_MOE_ACCOUNT_SECTION_WALLET_TAB_CLICK, {
+                country: getCountryFromUrl().toUpperCase(),
+                language: getLanguageFromUrl().toUpperCase(),
+                app6thstreet_platform: "Web",
+              });
+            }
           }}
           role="link"
         >

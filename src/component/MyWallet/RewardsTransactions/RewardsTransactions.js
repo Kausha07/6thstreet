@@ -15,6 +15,11 @@ import {
   ACTION_PROMOTIONAL_REFUND,
   PROMOTIONAL_HISTORY_TYPE,
 } from "./../MyWalletConfig/MyWalletConfig.js";
+import {
+  EVENT_MOE_YOUR_TRANSACTIONS_SCREEN_VIEW,
+  MOE_trackEvent,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./RewardsTransactions.style.scss";
 
 export default function RewardsTransactions() {
@@ -101,6 +106,11 @@ export default function RewardsTransactions() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
+    MOE_trackEvent(EVENT_MOE_YOUR_TRANSACTIONS_SCREEN_VIEW, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
