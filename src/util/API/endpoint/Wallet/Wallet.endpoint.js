@@ -22,6 +22,7 @@ export const getReward = () => MobileAPI.get("wallet/rewards");
 
 export const getFAQsJson = () => {
   const configFile = "faq.json";
-  const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
-  return CDN.get(`config_staging/faq.json`);
+  const directory = process.env.REACT_APP_BOTTOM_NAVIGATION_CONFIG_DIR;
+    
+  return CDN.get(`${directory}/${configFile}`)
 };
