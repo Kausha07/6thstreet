@@ -38,7 +38,10 @@ import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {
   EVENT_MOE_WALLET_BANNER_CLICK,
+  MOE_USER_ATTR_PROMOTIONAL_BALANCE,
+  MOE_USER_ATTR_TRANSACTIONAL_BALANCE,
   MOE_trackEvent,
+  MOE_addUserAttribute,
 } from "Util/Event";
 
 import "./MyWalletHome.style.scss";
@@ -68,6 +71,9 @@ export default function MyWalletHome({ setCurrentScreen }) {
         setPromotionalBalance(responseBalance?.data?.promotional_balance);
         setTotalBalance(responseBalance?.data?.total_balance);
         setTransactionalBalance(responseBalance?.data?.transaction_balance);
+
+        MOE_addUserAttribute(MOE_USER_ATTR_PROMOTIONAL_BALANCE, responseBalance?.data?.promotional_balance);
+        MOE_addUserAttribute(MOE_USER_ATTR_TRANSACTIONAL_BALANCE, responseBalance?.data?.transaction_balance);
         setIsBalanceLoading(false);
       }
     } catch (error) {
