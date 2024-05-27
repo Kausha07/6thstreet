@@ -1745,15 +1745,13 @@ export class CheckoutSuccess extends PureComponent {
           transactional_balance_used: transactional_balance_used || "",
         });
       } else {
-        const promotional_balance_used = getDiscountFromTotals(this.props?.initialTotals?.total_segments, "reward");
-        const transactional_balance_used = getDiscountFromTotals(this.props?.initialTotals?.total_segments, "customerbalance");
 
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: initialTotals,
           paymentMethod: paymentMethod?.code || "",
-          promotional_balance_used: promotional_balance_used || "",
-          transactional_balance_used: transactional_balance_used || "",
+          promotional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "reward") || "",
+          transactional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "customerbalance") || "",
         });
       }
       this.setState({ eventSent: true });
