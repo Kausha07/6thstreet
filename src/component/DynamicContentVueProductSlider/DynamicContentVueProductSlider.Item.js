@@ -104,7 +104,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           elem="SpecialPriceCon"
           mods={{ isArabic }}
         >
-          <Price price={price} renderSpecialPrice={false} cart={true} />
+          <Price price={price} renderSpecialPrice={true} cart={true} />
         </div>
       );
     }
