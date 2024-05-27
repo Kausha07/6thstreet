@@ -97,7 +97,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
   renderPrice(price) {
     const { isArabic } = this.state;
-   // console.log("inside home render price ======>");
     if (price && price.length > 0) {
       return (
         <div
