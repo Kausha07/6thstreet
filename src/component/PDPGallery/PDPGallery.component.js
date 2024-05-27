@@ -649,12 +649,10 @@ class PDPGallery extends PureComponent {
   }
   renderSaleBlock = () => {
     const { isArabic } = this.state;
-    const {timer_start_time, timer_end_time} = this.props;
-    
-    const newinfoText = __('Flash sale! Limited Time only!');
+    const { product : {timer_start_time, timer_end_time}} = this.props;
+    const newinfoText = __("Flash sale! Limited Time only!");
     return(
             timer_start_time && timer_end_time &&  <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
-      
     )
 
   }
