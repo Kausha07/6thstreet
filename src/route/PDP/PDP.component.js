@@ -75,9 +75,10 @@ class PDP extends PureComponent {
     
 }
 
-  showMyAccountPopup = () => {
+
+  showMyAccountPopup = (successCallback) => {
     const { showPopup } = this.state;
-    this.setState({ showPopup: true });
+    this.setState({ showPopup: true, successCallback:successCallback });
     const popupEventData = {
       name: EVENT_SIGN_IN_SCREEN_VIEWED,
       category: "user_login",
@@ -90,6 +91,7 @@ class PDP extends PureComponent {
 
   closePopup = () => {
     this.setState({ signInPopUp: "", showPopup: false });
+    this.state.successCallback && this.state.successCallback()
   };
 
   onSignIn = () => {

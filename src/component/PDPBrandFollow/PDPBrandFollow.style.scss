@@ -1,0 +1,55 @@
+.BrandFollow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border:1px solid #000;
+    border-radius: 5px;
+    padding: 4px 8px;
+    &-icon{
+        width: 13px;
+        height: 13px;
+        margin-right: 2px;
+    }
+    &-text{
+        font-size: 11px;
+        line-height: 13.8px;
+        font-weight: 500;
+        text-transform: capitalize;
+        
+    }
+    &.disabled{
+        pointer-events: none;
+        cursor: none;
+        opacity: .5;
+    }
+    &:link,
+    &:hover,
+    &:visited,
+    &:focus,
+    &:active{
+        text-decoration: none;
+        .BrandFollow-text{
+            text-decoration: none;
+        }
+
+    }
+    &._isArabic{
+        left: 0;
+        right: auto;
+        .BrandFollow{
+            &-icon{
+                margin-right: 0;
+                margin-left: 2px;        
+            }
+        }
+    }
+}
+
+.PDPbrandName{
+    display: block;
+    position: relative;
+}

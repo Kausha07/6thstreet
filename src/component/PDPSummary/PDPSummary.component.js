@@ -1414,7 +1414,9 @@ class PDPSummary extends PureComponent {
       intlEddResponse,
       renderSummary,
       isNewDesign,
+      renderMySignInPopup
     } = this.props;
+    
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
     let cross_border_qty = 0;
@@ -1462,7 +1464,13 @@ class PDPSummary extends PureComponent {
             )
           }
           if(sectionName === "brandName"){
-            return this.renderBrand()
+            
+            return (
+              <div block="PDPbrandName">
+                {this.renderBrand()}
+                {isNewDesign && isMobile && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}
+              </div> 
+            )
           }
           if(sectionName === "priceSummary"){
             return (
