@@ -154,6 +154,10 @@ function CartTotal(props) {
             __("Total MRP")
           )}
           {renderPriceLine(
+            getValueFromTotals(totals, "subtotal"),
+            __("Subtotal")
+          )}
+          {renderPriceLine(
             getValueFromTotals(totals, "total_discount"),
             __("Coupon Savings"),
             { couponSavings: true }
