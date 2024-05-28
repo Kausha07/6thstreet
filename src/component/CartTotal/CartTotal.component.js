@@ -158,10 +158,10 @@ function CartTotal(props) {
             __("Coupon Savings"),
             { couponSavings: true }
           )}
-           {renderPriceLine(
+          { getValueFromTotals(totals, "total_discount") ? renderPriceLine(
             getValueFromTotals(totals, "subtotal"),
             __("Subtotal")
-          )}
+          ) : null }
           {!inventory_level_cross_border || !international_shipping_fee
             ? renderPriceLineForShipping(shipping_fee, __("Shipping fee"))
             : null}
