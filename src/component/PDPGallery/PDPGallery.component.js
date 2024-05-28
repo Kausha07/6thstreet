@@ -659,7 +659,14 @@ class PDPGallery extends PureComponent {
 
   render() {
     const { openGalleryOverlay, isArabic } = this.state;
-    const { renderMySignInPopup,isNewDesign } = this.props;
+    const { 
+      renderMySignInPopup,
+      isNewDesign,
+      product:{
+        rating_brand,
+        rating_sku,
+      }
+    } = this.props;
    
     return (
       <>
@@ -698,7 +705,7 @@ class PDPGallery extends PureComponent {
           {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" />}
         </button>
 
-          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" />}
+          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} />}
         
         {!isNewDesign && this.renderVideoButtons()}
       </div>

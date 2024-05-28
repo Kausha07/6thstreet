@@ -3,46 +3,45 @@ import { useSelector, useDispatch} from 'react-redux';
 import './Ratings.style.scss';
 import ModalOverlay from 'Component/ModalOverlay/ModalOverlay';
 import isMobile from "Util/Mobile";
-import Overlay from "SourceComponent/Overlay";
 import { isArabic } from "Util/App";
 import RatingPopup from "./RatingPopup";
+import { formatNumber } from 'Util/Ratings/Ratings';
+import { getStore } from "Store";
 
 import stars from "./icons/stars.svg";
 
-const rating_info = {
-    ratings:80,
-    average_ratings:4.8,
-    one_rating:10,
-    two_rating:10,
-    three_rating:20,
-    four_rating:30,
-    five_rating:20,
-}
-
 
 const Ratings = (props) => {
+    const country = getStore()?.getState()?.AppState?.country;
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const dispatch = useDispatch();
-    const product = useSelector(state => state.PDP.product);
+    const newinfoText = __("Ratings");
     const config = useSelector(state => state.AppConfig.config);
-    const newinfoText = __('Ratings');
-    const k = __('k')
-   
-    const { ratings, average_ratings} =  rating_info;
+    const { uMinAvgRating, uMinRatingCount} = config?.countries[country];
+    const {
+        rating_brand,
+        rating_sku
+    } = props;
 
-    // console.log('----Appconfg',config);
-    // console.log('----asdas',product);
+    if(!rating_sku){
+        return null;
+    }
+    const {
+        average_ratings, 
+        total_ratings, 
+        min_avg_rating : p_min_avg_rating,
+        min_rating_count:p_min_rating_count
+    } =  rating_sku;
 
-    // const incrementHandler = () => {
-    //     dispatch({
-    //         type:'increment'
-    //     })
-    // }
+    const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
+    const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 
+    if(average_ratings <= min_average_ratngs && total_ratings <= min_ratings_count){
+        return null;
+    }
+    const totalRatings = formatNumber(total_ratings);
     const modalHandlerOpen = () => {
         setIsModalOpen(true);
     }
-
     const modalHandlerClose = () => {
         setIsModalOpen(false);
     }
@@ -57,14 +56,14 @@ const Ratings = (props) => {
                
                 <span block="ratings-summary" elem="separator">|</span>
                 <span block="ratings-summary" elem="totalReview">   
-                    <span block="ratings-totalReview" elem="count">{ratings}{k}</span>
+                    <span block="ratings-totalReview" elem="count">{totalRatings}</span>
                     <span block="ratings-totalReview" elem="text">{newinfoText}</span>
                 </span>
 
             </div>
             {isModalOpen && 
                 <ModalOverlay  className="ratingDetail fromBottom" open={isModalOpen} onConfirm={modalHandlerClose}>
-                    <RatingPopup {...rating_info} />
+                    <RatingPopup key='rating' {...rating_sku} />
                 </ModalOverlay>
             }
         </div>

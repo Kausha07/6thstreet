@@ -1351,5 +1351,8 @@
     "Please enter valid number": "يرجى إدخال رقم صالح",
     "Enter a valid Passport number": "أدخل رقم جواز سفر صالح",
     "Enter a valid National ID number": "أدخل رقم هوية وطنية صالح",
-    "Flash sale! Limited Time only!":"خصومات فلاش! فترة محددة فقط!"
+    "Flash sale! Limited Time only!":"خصومات فلاش! فترة محددة فقط!",
+    "Ratings":"التقييمات",
+    "Customer Rating":"تقييم الزبائن",
+    "verified Buyers":"المشترين المعرّفين"
 }

@@ -1412,6 +1412,8 @@ class PDPSummary extends PureComponent {
         size_eu = [],
         in_stock,
         stock_qty,
+        rating_brand,
+        rating_sku,
       },
       edd_info,
       intlEddResponse,
@@ -1419,7 +1421,7 @@ class PDPSummary extends PureComponent {
       isNewDesign,
       renderMySignInPopup
     } = this.props;
-    
+  
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
     let cross_border_qty = 0;
@@ -1480,7 +1482,13 @@ class PDPSummary extends PureComponent {
               <div block="PriceAndPDPSummaryHeaderAndTimer">
                 <div block="PriceAndPDPSummaryHeader">
                   {this.renderPriceAndPDPSummaryHeader()}
-                  {isNewDesign && !isMobile && <Ratings />}
+                  {isNewDesign && !isMobile && 
+                  <Ratings 
+                    className="PDPRatings" 
+                    rating_sku={rating_sku} 
+                    rating_brand={rating_brand} 
+                  />
+                }
                 </div>
                   {
                     !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
@@ -1503,7 +1511,6 @@ class PDPSummary extends PureComponent {
                 this.renderSelectCity(cross_border_qty === 1)
             )
           }
-
           if(sectionName === 'pdpAddtocart'){
             return this.renderAddToCartSection()
           }

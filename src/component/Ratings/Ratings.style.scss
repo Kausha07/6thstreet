@@ -59,12 +59,12 @@
         border:1px solid #DEDEDE; 
         cursor: pointer;
         @include mobile{
-            padding: 4px;
+            padding: 4px 8px;
             border-radius: 15px;
-            width: 75px;
+            width: auto;
         }
         @include desktop{
-            padding: 5px;
+            padding: 5px 8px;
             
         }
         &-count,
@@ -168,8 +168,8 @@
                 animation-duration: .5s;
                 -webkit-animation-delay: .25s;
                 animation-delay: .25s;
-                -webkit-animation-fill-mode: both;
-                animation-fill-mode: both;
+                -webkit-animation-fill-mode: backwards;
+                animation-fill-mode: backwards;
                 -webkit-animation-name: widthLeftToright;
                 animation-name: widthLeftToright;
             }
