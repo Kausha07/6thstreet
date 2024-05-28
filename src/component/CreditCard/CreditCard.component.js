@@ -39,6 +39,7 @@ class CreditCard extends PureComponent {
             expMonth: '',
             expYear: '',
         };
+        this.ScrollerRef = React.createRef();
     }
 
     componentDidMount() {
@@ -53,6 +54,10 @@ class CreditCard extends PureComponent {
         setOrderButtonEnabled();
         if (this.haveUnvalidFields()) {
             setOrderButtonDisabled();
+        }
+
+        if (this?.ScrollerRef?.current) {
+            this?.ScrollerRef?.current?.scrollIntoView({ behavior: "smooth" });
         }
     }
 
@@ -392,7 +397,7 @@ class CreditCard extends PureComponent {
                             const { cvv } = this.state;
                             const isAmex = scheme.toLowerCase() === AMEX;
                             return (
-                                <div block="SelectedSavedCard" elem="Item" key={entity_id}>
+                                <div block="SelectedSavedCard" elem="Item" key={entity_id} ref={this.ScrollerRef}>
                                     <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
                                         style={{ marginRight: isArabic ? '12px' : '0px' }} />
                                     <span block="SelectedSavedCard" elem="CardNumber">{cardNum}</span>

@@ -8,7 +8,7 @@ import TabbyMiniPopup from "Component/TabbyMiniPopup";
 import { TABBY_TOOLTIP_INSTALLMENTS } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import PropTypes from "prop-types";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
-import { isArabic } from "Util/App";
+import { isArabic, getDiscountFromTotals } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
 import Loader from "Component/Loader";
@@ -251,7 +251,12 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderCashOnDelivery() {
-    const { isClickAndCollect, totals: { total, currency_code }, setOrderButtonDisabled } = this.props;
+    const {
+      isClickAndCollect,
+      totals: { total, currency_code, total_segments = [] },
+      setOrderButtonDisabled,
+    } = this.props;
+    const codFee = getDiscountFromTotals(total_segments, "msp_cashondelivery");
 
     if (isClickAndCollect) {
       return null;
@@ -292,7 +297,15 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         <h2 block="CheckoutPayments" elem="MethodTitle">
           {method_title}
         </h2>
+        {codFee ? (<p 
+          block="CheckoutPayments"
+          elem="codExtraChargeText"
+        >
+          <span className="codCharge">{`${currency_code} ${codFee}`}</span>&nbsp;
+          <span>{__(`will be charged extra for cash on delivery`)}</span>
+        </p>) : null}
         <p block="CheckoutPayments" elem="MethodDiscription">
+          <span className="noteBoldText">{__("Please Note: ")}</span>
           {method_description}
         </p>
       </div>
