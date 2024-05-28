@@ -103,6 +103,7 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
           mods={{ tabImageId }}
           onClick={() => {
             changeActiveTab(tabEntry[0]);
+            this.fetchWalletBalance();
             this.updateBreadcrumbs(tabEntry[1]?.url, tabEntry[1]?.name);
             if(name === __("My Wallet")){
               MOE_trackEvent(EVENT_MOE_ACCOUNT_SECTION_WALLET_TAB_CLICK, {
