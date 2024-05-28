@@ -206,7 +206,7 @@ function CartTotal(props) {
           {renderPriceLine(
               total_wallet_credit,
             __("Cashback"), 
-            { cashBack: true, divider: true, }
+            { cashBack: true, divider: true, couponSavings : true}
           )}
         </div>
       </ul>
