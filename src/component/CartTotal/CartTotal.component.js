@@ -154,13 +154,13 @@ function CartTotal(props) {
             __("Total MRP")
           )}
           {renderPriceLine(
-            getValueFromTotals(totals, "subtotal"),
-            __("Subtotal")
-          )}
-          {renderPriceLine(
             getValueFromTotals(totals, "total_discount"),
             __("Coupon Savings"),
             { couponSavings: true }
+          )}
+           {renderPriceLine(
+            getValueFromTotals(totals, "subtotal"),
+            __("Subtotal")
           )}
           {!inventory_level_cross_border || !international_shipping_fee
             ? renderPriceLineForShipping(shipping_fee, __("Shipping fee"))
