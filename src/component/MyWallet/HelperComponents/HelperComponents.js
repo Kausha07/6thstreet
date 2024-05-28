@@ -265,11 +265,12 @@ export function EarnedCashReward({ rewardEarned, orderID }) {
           </div>
           <div className="CashText">
             <div className="CashHeading">
-              {__("You earned a cash of %s %s", currencyCode, rewardCreditEarned)}
+              {__("You earned a cashback of %s %s", currencyCode, rewardCreditEarned)}
             </div>
             <div className="CashDetails">
-              __('(The cash will be credited in your wallet after the return
-              window for this order closes)')
+              {
+                __("The amount will be credited to your wallet after the return window for this order is closed. Please note that the amount is subject to change in case of returns/cancellation of the product(s) in the order.")
+              }
             </div>
           </div>
         </div>

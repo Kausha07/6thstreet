@@ -1339,6 +1339,8 @@
     "Expires": "تنتهي صلاحيته",
     "My Cash Balance of %s expires in": "رصيد 'رصيدي' الخاص بك البالغ %s ينتهي في",
     "Days": "أيام",
+    "You earned a cashback of %s %s": "لقد حصلت على استرداد نقدي بقيمة %s %s",
+    "The amount will be credited to your wallet after the return window for this order is closed. Please note that the amount is subject to change in case of returns/cancellation of the product(s) in the order.": "سيتم إضافة المبلغ إلى محفظتك بعد انتهاء فترة الإرجاع لهذا الطلب. يرجى ملاحظة أن المبلغ قابل للتغيير في حالة إرجاع/إلغاء المنتج(ات) في الطلب.",
     "Total Available Balance": "إجمالي الرصيد المتاح",
     "Earned from return/cancel order": "مكتسب من من طلب مسترجع/ملغي",
     "Earned from promotional offer": "تم إضافته مكافآة",
