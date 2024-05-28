@@ -95,7 +95,7 @@ export function UseMyWallet(props) {
     if (isRewardsApplied) {
       setIsWalletBalanceApplied(true);
     }
-  }, []);
+  }, [cartTotals]);
 
   return (
     <>
