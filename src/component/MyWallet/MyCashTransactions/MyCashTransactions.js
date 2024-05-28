@@ -19,6 +19,7 @@ import "./MyCashTransactions.style.scss";
 
 export default function MyCashTransactions() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirstFetch, setFirstFetch] = useState(false);
   const [myCashHistory, setMyCashHistory] = useState([]);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [page, setPage] = useState(1);
@@ -49,6 +50,9 @@ export default function MyCashTransactions() {
 
             setTotalTransactions(responseHistory?.data?.count);
             setIsLoading(false);
+            if(!isFirstFetch){
+              setFirstFetch(true);
+            }
             setIsLoaderShown(false);
           }
         }
@@ -83,7 +87,7 @@ export default function MyCashTransactions() {
   }
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && isFirstFetch) {
       setPage((oldPage) => oldPage + 1);
     }
   }, [isLoading]);

@@ -24,6 +24,7 @@ import "./RewardsTransactions.style.scss";
 
 export default function RewardsTransactions() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirstFetch, setFirstFetch] = useState(false);
   const [rewardHistory, setRewardHistory] = useState([]);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [nextBalanceExpiry, setNextBalanceExpiry] = useState(null);
@@ -62,6 +63,9 @@ export default function RewardsTransactions() {
             }
             setTotalTransactions(responseHistory?.data?.count);
             setIsLoading(false);
+            if(!isFirstFetch){
+              setFirstFetch(true);
+            }
             setIsLoaderShown(false);
           }
         }
@@ -97,7 +101,7 @@ export default function RewardsTransactions() {
   }
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && isFirstFetch) {
       setPage((oldPage) => oldPage + 1);
     }
   }, [isLoading]);

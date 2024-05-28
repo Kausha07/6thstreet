@@ -31,6 +31,7 @@ import "./AllTransactions.style.scss";
 
 export default function AllTransactions() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirstFetch, setFirstFetch] = useState(false);
   const [allHistory, setAllHistory] = useState([]);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [isloaderShown, setIsLoaderShown] = useState(false);
@@ -67,6 +68,9 @@ export default function AllTransactions() {
               setfetchMore(false);
             }
             setIsLoading(false);
+            if(!isFirstFetch){
+              setFirstFetch(true);
+            }
             setIsLoaderShown(false);
           }
         }
@@ -101,7 +105,7 @@ export default function AllTransactions() {
   }
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && isFirstFetch) {
       setPage((oldPage) => oldPage + 1);
     }
   }, [isLoading]);
