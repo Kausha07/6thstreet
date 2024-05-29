@@ -1180,6 +1180,9 @@ class MyAccountOrderView extends PureComponent {
                   couponSavings: true,
                 })
               : null}
+            {
+              isSidewideCouponEnabled && total_discount ? this.renderPriceLine(subTotal, __("Subtotal")) : null
+            }
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderPriceLine(shipping_amount, __("Shipping fee"), {
                 divider: true,

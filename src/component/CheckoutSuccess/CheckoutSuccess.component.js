@@ -856,6 +856,13 @@ export class CheckoutSuccess extends PureComponent {
               { couponSavings: true }
             )
           : null}
+        { 
+         isSidewideCouponEnabled &&
+          getDiscountFromTotals(total_segments, "total_discount") ? this.renderPriceLine(
+            getDiscountFromTotals(total_segments, "subtotal"),
+            __("Subtotal")
+          ) : null
+        }
         {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
@@ -1562,6 +1569,7 @@ export class CheckoutSuccess extends PureComponent {
                 couponSavings: true,
               }
             )}
+            {total_discount &&  this.renderSitewidePriceLine(subtotal, __("Subtotal"))}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderSitewidePriceLine(
                 shipping_amount,

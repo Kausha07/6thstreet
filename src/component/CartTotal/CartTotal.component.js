@@ -201,7 +201,8 @@ function CartTotal(props) {
             __("Total"),
             {
               divider: true,
-            }
+            },
+            true
           )}
           {renderPriceLine(
               total_wallet_credit,
