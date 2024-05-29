@@ -52,6 +52,7 @@ export const mapStateToProps = (state) => ({
   vwoData: state.AppConfig.vwoData,
   customer: state.MyAccountReducer.customer,
   config: state.AppConfig.config,
+  abTestingConfig: state.AppConfig.abTestingConfig,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
