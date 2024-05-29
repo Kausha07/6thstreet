@@ -1173,7 +1173,7 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {isSidewideCouponEnabled
-              ? this.renderPriceLine(total_mrp, __("Total MRP"))
+              ? this.renderPriceLine(total_mrp, __("Total Price"))
               : this.renderPriceLine(subTotal, __("Subtotal"))}
             {isSidewideCouponEnabled
               ? this.renderPriceLine(total_discount, __("Coupon Savings"), {

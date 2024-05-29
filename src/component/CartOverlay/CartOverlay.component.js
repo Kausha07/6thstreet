@@ -142,7 +142,7 @@ export class CartOverlay extends PureComponent {
       return (
         <dl block="CartOverlay" elem="Total" mods={{ isArabic }}>
           <dt>
-            {__("Total MRP")}
+            {__("Total Price")}
           </dt>
           <dd>{this.renderPriceLine(total_mrp)}</dd>
         </dl>

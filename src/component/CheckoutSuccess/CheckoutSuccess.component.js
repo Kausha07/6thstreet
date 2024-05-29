@@ -843,7 +843,7 @@ export class CheckoutSuccess extends PureComponent {
         {isSidewideCouponEnabled
           ? this.renderPriceLine(
               getDiscountFromTotals(total_segments, "total_mrp"),
-              __("Total MRP")
+              __("Total Price")
             )
           : this.renderPriceLine(
               getDiscountFromTotals(total_segments, "subtotal"),
@@ -1561,7 +1561,7 @@ export class CheckoutSuccess extends PureComponent {
       <div block="MyAccountOrderView" elem="OrderTotals">
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
-            {this.renderSitewidePriceLine(total_mrp, __("Total MRP"))}
+            {this.renderSitewidePriceLine(total_mrp, __("Total Price"))}
             {this.renderSitewidePriceLine(
               total_discount,
               __("Coupon Savings"),

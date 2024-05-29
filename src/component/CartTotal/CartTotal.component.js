@@ -151,7 +151,7 @@ function CartTotal(props) {
         <div block={block} elem="Subtotals">
           {renderPriceLine(
             getValueFromTotals(totals, "total_mrp"),
-            __("Total MRP")
+            __("Total Price")
           )}
           {renderPriceLine(
             getValueFromTotals(totals, "total_discount"),
