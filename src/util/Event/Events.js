@@ -303,6 +303,14 @@ export const REFERRAL_COPY = "referral_copy";
 export const REFERRAL_SHARE = "referral_share";
 export const REFERRAL_NUDGE_CLICK = "referral_nudge_click";
 
+//Wallet events
+export const EVENT_MOE_ACCOUNT_SECTION_WALLET_TAB_CLICK = "account_section_wallet_tab_click";
+export const EVENT_MOE_MY_WALLET_SCREEN_VIEW = "my_wallet_screen_view";
+export const EVENT_MOE_YOUR_TRANSACTIONS_SCREEN_VIEW = "your_transactions_screen_view";
+export const EVENT_MOE_WALLET_BANNER_CLICK = "wallet_banner_click";
+export const MOE_USER_ATTR_PROMOTIONAL_BALANCE = "promotional_balance";
+export const MOE_USER_ATTR_TRANSACTIONAL_BALANCE = "transactional_balance"
+
 // Checkout Errors Tracking Event
 export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
 export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";

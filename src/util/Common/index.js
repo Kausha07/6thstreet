@@ -666,3 +666,13 @@ export const getShippingFees = (country) => {
       return 20;
   }
 };
+
+export function formatDate(inputDate) {
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const parts = inputDate.split('-');
+  const day = parts[2];
+  const month = months[parseInt(parts[1]) - 1];
+  const year = parts[0];
+
+  return `${day} ${month} ${year}`;
+}

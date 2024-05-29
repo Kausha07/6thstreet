@@ -90,7 +90,7 @@ class DynamicContentReferralBanner extends PureComponent {
       <>
         <div block="Banner" elem="Content" mods={{ isArabic }}>
           <h4>{__("Refer and Earn Credit")}</h4>
-          <p>{__("Refer 6thStreet and get store credit today!")}</p>
+          <p>{__("Refer 6thStreet and get my cash today!")}</p>
         </div>
       </>
     );
