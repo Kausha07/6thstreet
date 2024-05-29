@@ -14,17 +14,19 @@ const RatingPopup = (props) => {
         two_rating, 
         three_rating, 
         four_rating, 
-        five_rating
+        five_rating,
+        prdAverageRatings = +average_ratings,
+        prdTotalRatings = +total_ratings,
     } =  props;
 
     const allStarCount = [
-        one_rating,
-        two_rating, 
-        three_rating, 
-        four_rating, 
-        five_rating
+        +one_rating,
+        +two_rating, 
+        +three_rating, 
+        +four_rating, 
+        +five_rating
     ];
-    const totalRatings = formatNumber(total_ratings);
+    const totalRatings = formatNumber(prdTotalRatings);
 
     return (
         <div block="ratings-detailPop"  mods={{isArabic : isArabic() }}>
@@ -32,7 +34,7 @@ const RatingPopup = (props) => {
             <div block="ratings-Info">
                 <div block="ratings-avg">
                     <h4 block="ratings-avg" elem="title">
-                        <span>{average_ratings}</span>
+                        <span>{prdAverageRatings}</span>
                         <img block="ratings" elem="icon"  mods={ { isLarge: true } } src={stars} />
                     </h4>
                     <span block="ratings-avg" elem="text">
@@ -47,9 +49,9 @@ const RatingPopup = (props) => {
                                 <span block="ratings-starItem" elem="text">{allStarCount.length - i}</span>
                                 <img block="ratings" elem="icon" mods={ { isSmall: true } } src={stars} />
                                 <span block="ratings-starItem" elem="bar">
-                                    <span block="ratings-starItem" elem="barSelected" style={{width:`${percentageRating(item,total_ratings)}`}}></span>
+                                    <span block="ratings-starItem" elem="barSelected" style={{width:`${percentageRating(item,prdTotalRatings)}`}}></span>
                                 </span>
-                                <span block="ratings-starItem" elem="text">{`${percentageRating(item, total_ratings)}`}</span>
+                                <span block="ratings-starItem" elem="text">{`${percentageRating(item, prdTotalRatings)}`}</span>
                             </div>
                         )
                     })}

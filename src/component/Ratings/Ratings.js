@@ -27,18 +27,18 @@ const Ratings = (props) => {
     }
     const {
         average_ratings, 
-        total_ratings, 
-        min_avg_rating : p_min_avg_rating,
-        min_rating_count:p_min_rating_count
+        total_ratings,
+        prdAverageRatings = +average_ratings,
+        prdTotalRatings = +total_ratings,
     } =  rating_sku;
 
     const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 
-    if(average_ratings <= min_average_ratngs && total_ratings <= min_ratings_count){
+    if(prdAverageRatings < min_average_ratngs || prdTotalRatings < min_ratings_count){
         return null;
     }
-    const totalRatings = formatNumber(total_ratings);
+    const totalRatings = formatNumber(prdTotalRatings);
     const modalHandlerOpen = () => {
         setIsModalOpen(true);
     }
@@ -50,7 +50,7 @@ const Ratings = (props) => {
         <div className={`${props.className ? props.className :''} ratings ${ isArabic() ? 'ratings_isArabic' : ''}`}>
             <div block="ratings-summary" onClick={modalHandlerOpen}>
                 <span block="ratings-summary" elem="rating">
-                    <span block="ratings-summary" elem="text">{average_ratings}</span>
+                    <span block="ratings-summary" elem="text">{prdAverageRatings}</span>
                     <img block="ratings" elem="icon" src={stars} /> 
                 </span>
                
@@ -63,7 +63,7 @@ const Ratings = (props) => {
             </div>
             {isModalOpen && 
                 <ModalOverlay  className="ratingDetail fromBottom" open={isModalOpen} onConfirm={modalHandlerClose}>
-                    <RatingPopup key='rating' {...rating_sku} />
+                    <RatingPopup key='rating' {...rating_sku}  />
                 </ModalOverlay>
             }
         </div>
