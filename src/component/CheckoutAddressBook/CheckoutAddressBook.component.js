@@ -10,6 +10,8 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
+import MyAccountAddressNationalityFieldForm from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
+import { getStore } from "Store";
 
 import "./CheckoutAddressBook.style.scss";
 
@@ -214,22 +216,99 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       </div>
     );
   }
+  renderGuestUserCustomClearanceField = () => {
+    const {
+      AppConfig: { is_nationality_visible = false },
+    } = getStore().getState();
+    const type_of_identity = {
+      value: this.props?.type_of_identity,
+      onTypeOfIdentityChange: this.props?.onTypeOfIdentityChange,
+    };
+    const identity_number = {
+      value: this.props?.identity_number,
+      onIdentityNumberChange: this.props?.onIdentityNumberChange,
+      validationError: this.props?.validationError,
+    };
+    return (
+      <>
+        {this.renderGuestContent()}
+        {is_nationality_visible && (
+          <div block="custom-clearance-guest-user">
+            <MyAccountAddressNationalityFieldForm
+              isArabic={isArabic}
+              isCheckoutPage={true}
+              type_of_identity={type_of_identity}
+              identity_number={identity_number}
+            />
+          </div>
+        )}
+      </>
+    );
+  };
 
+  getidentityNumberSelectedAddress = () => {
+    const { addresses = [], selectedAddressId } = this.props;
+    if (addresses && addresses?.length > 0 && selectedAddressId) {
+      const selectedAddressObject = addresses?.find((address) => {
+        if (address?.id === selectedAddressId) {
+          return true;
+        }
+      })
+      if (selectedAddressObject?.identity_number && selectedAddressObject?.identity_number?.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  renderSignInCustomClearanceField = () => {
+    const {
+      AppConfig: { is_nationality_visible = false },
+    } = getStore().getState();
+    const { isSignedIn } = this.props;
+    const type_of_identity = {
+      value: this.props?.type_of_identity,
+      onTypeOfIdentityChange: this.props?.onTypeOfIdentityChange,
+    };
+    const identity_number = {
+      value: this.props?.identity_number,
+      onIdentityNumberChange: this.props?.onIdentityNumberChange,
+      validationError: this.props?.validationError,
+    };
+    const isIdentityNumberExist = !this.getidentityNumberSelectedAddress();
+    return isSignedIn && is_nationality_visible && isIdentityNumberExist ? (
+      <div block="checkoutAddressBookCustomClearanceContainer">
+        <h3 className="custom-clearance-header">
+          {__("Customs Clearance Information")}
+        </h3>
+        <div block="checkoutAddressBookCustomClearance">
+          <MyAccountAddressNationalityFieldForm
+            isArabic={isArabic}
+            isCheckoutPage={true}
+            type_of_identity={type_of_identity}
+            identity_number={identity_number}
+          />
+        </div>
+      </div>
+    ) : null;
+  };
   renderContent() {
     const { isSignedIn, isClickAndCollect, clickAndCollectStatus } = this.props;
     if (isSignedIn && !clickAndCollectStatus) {
       return this.renderSignedInContent();
     }
 
-    return this.renderGuestContent();
+    return this.renderGuestUserCustomClearanceField();
   }
 
   render() {
-    const { isBilling,PickUpAddress } = this.props;
+    const { isBilling,PickUpAddress } = this.props; 
     return (
       <div block="CheckoutAddressBook" mods={{ isBilling }}>
         {!PickUpAddress && this.renderHeading()}
+        {!this.state.isMobile && this.renderSignInCustomClearanceField()}
         {this.renderContent()}
+        {this.state.isMobile && this.renderSignInCustomClearanceField()}
       </div>
     );
   }

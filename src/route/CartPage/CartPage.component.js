@@ -29,7 +29,14 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import Event, { EVENT_MOE_VIEW_CART_ITEMS, MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
+import Event, {
+  EVENT_MOE_VIEW_CART_ITEMS,
+  MOE_trackEvent,
+  EVENT_GTM_COUPON,
+  EVENT_REMOVE_COUPON,
+  EVENT_APPLY_COUPON,
+  EVENT_APPLY_COUPON_FAILED,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
@@ -338,6 +345,41 @@ export class CartPage extends PureComponent {
     });
   };
 
+  sendSiteWideCouponEvents = (event, coupon) => {
+    MOE_trackEvent(event, { 
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      coupon_code: coupon || "",
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: event,
+      coupon: coupon,
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
+  }
+
+  handleSideWideCoupon = async (flag, sidewideCouponCode) => {
+    const { isSignedIn, updateSidewideCoupon } = this.props;
+
+    const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
+    const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
+
+    if(!resp?.status){
+      this.sendSiteWideCouponEvents(EVENT_APPLY_COUPON_FAILED, sidewideCouponCode );
+    }else if(resp?.status && flag ) {
+      this.sendSiteWideCouponEvents(EVENT_APPLY_COUPON, sidewideCouponCode );
+    } else {
+      this.sendSiteWideCouponEvents(EVENT_REMOVE_COUPON, sidewideCouponCode );
+    }
+  };
+
   handleRemoveCode = (e) => {
     e.stopPropagation();
     MOE_trackEvent(EVENT_REMOVE_COUPON, {
@@ -407,11 +449,15 @@ export class CartPage extends PureComponent {
 
   renderDiscountCode() {
     const {
-      totals: { coupon_code },
+      totals: {
+        site_wide_applied = 0,
+        coupon_code = "",
+      },
       couponsItems = [],
       totals,
       isSidewideCouponEnabled,
       isCouponRequest,
+      config,
     } = this.props;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
@@ -422,52 +468,100 @@ export class CartPage extends PureComponent {
         return coupon.code == coupon_code;
       });
     }
+    const countryCode = getCountryFromUrl();
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode =
+      config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+
     return (
       <>
         {!this.state?.isCouponPopupOpen ? (
           <>
             <div block="cartCouponBlock">
               {isSidewideCouponEnabled ? (
-                <>
-                <SideWideCoupon handleRemoveCode={this.handleRemoveCode} />
-                <Loader isLoading={isCouponRequest} />
-                </>
+                site_wide_applied || coupon_code ? (
+                  <div block="appliedCouponBlock">
+                    <div block="appliedCouponDetail">
+                      <span block="showCouponBtnLeftBlock">
+                        <img
+                          block="couponImage"
+                          src={Coupon}
+                          alt="couponImage"
+                        />
+                        <p block="appliedCouponCode" mods={{ isArabic }}>
+                          {coupon_code ? coupon_code : sidewideCouponCode}{" "}
+                          &nbsp;
+                          <span className="couponAppliedText">
+                            {__("Coupon applied")}
+                          </span>
+                        </p>
+                      </span>
+                    </div>
+                    <button
+                      block="appliedCouponBtn remove"
+                      onClick={(e) => {
+                        coupon_code
+                          ? this.handleRemoveCode(e)
+                          : this.handleSideWideCoupon(0, sidewideCouponCode );
+                      }}
+                    >
+                      {__("Remove")}
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <span block="couponText" mods={{ isArabic }}>
+                        {__("Enter coupon or promo code")}
+                      </span>
+                    </span>
+                  </button>
+                )
               ) : coupon_code ? (
-                <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                <div block="appliedCouponBlock">
                   <div block="appliedCouponDetail">
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <p block="appliedCouponCode" mods={{ isArabic }}>
-                        {appliedCoupon ? appliedCoupon?.code : coupon_code}
+                        {coupon_code ? coupon_code : sidewideCouponCode} &nbsp;
+                        <span className="couponAppliedText">
+                          {__("Coupon applied")}
+                        </span>
                       </p>
                     </span>
                   </div>
                   <button
                     block="appliedCouponBtn remove"
                     onClick={(e) => {
-                      this.handleRemoveCode(e);
+                      this.handleRemoveCode(e)
                     }}
                   >
-                    {__("Delete")}
+                    {__("Remove")}
                   </button>
                 </div>
               ) : (
-                <button onClick={this.openCouponPopup} block="showCouponBtn">
-                  <span block="showCouponBtnLeftBlock">
-                    <img block="couponImage" src={Coupon} alt="couponImage" />
-                    <span block="couponText" mods={{ isArabic }}>
-                      {__("Enter coupon or promo code")}
+                <>
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <span block="couponText" mods={{ isArabic }}>
+                        {__("Enter coupon or promo code")}
+                      </span>
                     </span>
-                  </span>
-
-                  <span block="couponCodeSelectText">{__("Select")}</span>
-                </button>
+                    <span block="couponCodeSelectText">{__("Select")}</span>
+                  </button>
+                </>
               )}
             </div>
             {isSidewideCouponEnabled ? (
-              <div block="otherCouponBlock" onClick={this.openCouponPopup}>
-                {__("View other available coupons")}
-              </div>
+              <>
+                <SideWideCoupon
+                  handleRemoveCode={this.handleRemoveCode}
+                  openCouponPopup={this.openCouponPopup}
+                />
+                <Loader isLoading={isCouponRequest} />
+              </>
             ) : null}
             {this.state?.isCouponDetialPopupOpen && (
               <CartCouponDetail
@@ -494,14 +588,16 @@ export class CartPage extends PureComponent {
                     <span>Close</span>
                   </button>
                 </div>
-                  {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
-                  <div block="couponInputBox">
-                      <CartCoupon
-                        couponCode={coupon_code}
-                        closePopup={this.closeCouponPopup}
-                        totals={totals}
-                      />
-                  </div>
+                {isMobile ? null : (
+                  <p>{__("Select a Promo or type a Coupon code")}</p>
+                )}
+                <div block="couponInputBox">
+                  <CartCoupon
+                    couponCode={coupon_code}
+                    closePopup={this.closeCouponPopup}
+                    totals={totals}
+                  />
+                </div>
                 <CartCouponList
                   couponCode={coupon_code}
                   closePopup={this.closeCouponPopup}

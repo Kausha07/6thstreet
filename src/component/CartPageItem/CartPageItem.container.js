@@ -30,6 +30,7 @@ import { isSignedIn } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
+  VUE_ADD_TO_CART,
   VUE_REMOVE_FROM_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
@@ -428,6 +429,7 @@ export class CartItemContainer extends PureComponent {
             original_price,
             discount_amount
           },
+          product_type_6s,
         },
         prevPath = null,
       } = this.props;
@@ -471,7 +473,7 @@ export class CartItemContainer extends PureComponent {
           referrer: prevPath,
           url: window.location.href,
           sourceProdID: config_sku,
-          sourceCatgID: category, // TODO: replace with category id
+          sourceCatgID: product_type_6s,
           prodPrice: price,
           userID: userID,
         },
@@ -501,6 +503,7 @@ export class CartItemContainer extends PureComponent {
           url,
         },
       },
+      prevPath = null,
     } = this.props;
 
     const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
@@ -531,6 +534,34 @@ export class CartItemContainer extends PureComponent {
       cart_id: getCartID || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+    });
+
+    // vue analytics
+    let vueEventName = "";
+    if (event === EVENT_MOE_ADD_TO_CART) {
+      vueEventName = VUE_ADD_TO_CART;
+    } else if (event === EVENT_MOE_REMOVE_FROM_CART) {
+      vueEventName = VUE_REMOVE_FROM_CART;
+    }
+
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: vueEventName,
+      params: {
+        event: vueEventName,
+        pageType: "cart",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+        sourceProdID: config_sku,
+        sourceCatgID: product_type_6s,
+        prodPrice: price,
+        userID: userID,
+      },
     });
   }
   /**

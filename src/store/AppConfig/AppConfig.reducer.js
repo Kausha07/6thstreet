@@ -60,6 +60,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 walletCashbackCoupon: config.countries[getCountryCode]?.cashback_coupon || false, 
                 isProductRatingEnabled: config.countries[getCountryCode]?.isProductRatingEnabled || false,
                 is_msite_megamenu_enabled: config.countries[getCountryCode]?.is_msite_megamenu_enabled || false,
+                is_nationality_visible: config.countries[getCountryCode]?.is_nationality_visible || false,
+                is_nationality_mandatory: config.countries[getCountryCode]?.is_nationality_mandatory || false
             };
 
             // this will invalidate config after one year
