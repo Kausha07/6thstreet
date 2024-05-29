@@ -7,18 +7,19 @@ export const SPAM_PROTECTION_DELAY = 200;
 class TrackUserVariant extends BaseEvent {
 
     bindEvent() {
-        Event.observer(EVENT_Track_USER_VARIANT, ({ campaign_variant }) => {
-          this.handle({ campaign_variant });
+        Event.observer(EVENT_Track_USER_VARIANT, ({ campaign_variant, segment_name }) => {
+          this.handle({ campaign_variant, segment_name });
         });
     }
 
-    handler({ campaign_variant }) {
+    handler({ campaign_variant, segment_name }) {
         if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
           return;
         }
 
         this.pushEventData({
           campaign_variant,
+          segment_name
         });
     }
 

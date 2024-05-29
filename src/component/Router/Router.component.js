@@ -39,6 +39,7 @@ import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
 import isMobile from "Util/Mobile";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
 const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
@@ -473,14 +474,16 @@ export class Router extends SourceRouter {
   }
 
   componentDidUpdate() {
-    const { vwoData } = this.props;
+    const { vwoData, abTestingConfig } = this.props;
     const { isVwoEvent } = this.state;
 
     if(!isVwoEvent && vwoData){
       console.log('vwoData ', vwoData );
       const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
 
-      let eventData = {};
+      const userSegment = BrowserDatabase.getItem("customer")?.user_segment;
+      let eventData = {
+      };
 
       for (const key in vwoData) {
         const item = vwoData[key];
@@ -496,7 +499,8 @@ export class Router extends SourceRouter {
       }
 
       Event.dispatch(EVENT_Track_USER_VARIANT, {
-        campaign_variant: JSON.stringify(eventData)
+        campaign_variant: JSON.stringify(eventData),
+        segment_name :  userSegment || abTestingConfig?.HPP?.defaultUserSegment
       });
 
       this.setState({isVwoEvent: true})
