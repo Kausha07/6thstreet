@@ -882,7 +882,12 @@ class ProductItem extends PureComponent {
   renderLink() {
     const {
       product,
-      product: { url, link },
+      product: { 
+        url, 
+        link,
+        rating_brand,
+        rating_sku,
+      },
       qid,
       isVueData,
       prevPath = null,
@@ -968,7 +973,7 @@ class ProductItem extends PureComponent {
 
       >
         {this.renderImage()}
-        {isNewDesign && <Ratings className="PLPratings" />}
+        {isNewDesign && <Ratings rating_sku={rating_sku} rating_brand={rating_brand} className="PLPratings" />}
       </Link>
     );
   }
