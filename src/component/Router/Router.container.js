@@ -252,6 +252,7 @@ export class RouterContainer extends SourceRouterContainer {
       is_live_party_enabled,
       is_msite_megamenu_enabled,
       vwoData,
+      abTestingConfig
     } = this.props;
 
     return {
@@ -262,6 +263,7 @@ export class RouterContainer extends SourceRouterContainer {
       is_live_party_enabled,
       is_msite_megamenu_enabled,
       vwoData,
+      abTestingConfig
     };
   };
 
