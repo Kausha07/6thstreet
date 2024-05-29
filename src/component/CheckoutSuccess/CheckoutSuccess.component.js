@@ -1742,15 +1742,16 @@ export class CheckoutSuccess extends PureComponent {
         paymentMethod?.code === "tabby_installments" ||
         paymentMethod?.code === "checkout_knet"
       ) {
-        const promotional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.reward_currency_amount : this.props?.order?.reward_currency_amount;
-        const transactional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.store_credit_amount : this.props?.order?.customer_balance_amount;
+        // tracking parameters are commented and will be used when tracking will be enabled in next release
+        // const promotional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.reward_currency_amount : this.props?.order?.reward_currency_amount;
+        // const transactional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.store_credit_amount : this.props?.order?.customer_balance_amount;
        
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,
           paymentMethod: paymentMethod?.code || "",
-          promotional_balance_used: promotional_balance_used || "",
-          transactional_balance_used: transactional_balance_used || "",
+          // promotional_balance_used: promotional_balance_used || "",
+          // transactional_balance_used: transactional_balance_used || "",
         });
       } else {
 
@@ -1758,8 +1759,8 @@ export class CheckoutSuccess extends PureComponent {
           orderID: incrementID,
           totals: initialTotals,
           paymentMethod: paymentMethod?.code || "",
-          promotional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "reward") || "",
-          transactional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "customerbalance") || "",
+          // promotional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "reward") || "",
+          // transactional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "customerbalance") || "",
         });
       }
       this.setState({ eventSent: true });
