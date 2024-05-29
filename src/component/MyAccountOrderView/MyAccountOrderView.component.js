@@ -47,6 +47,7 @@ import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
 import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
+import { EarnedCashReward } from "../MyWallet/HelperComponents/HelperComponents.js";
 import {
   CANCEL_ITEM_LABEL,
   DELIVERY_FAILED,
@@ -1008,7 +1009,7 @@ class MyAccountOrderView extends PureComponent {
       order: {
         status,
         payment,
-        payment: { method },
+        payment: { method, title },
         //club_apparel_amount = 0,
         store_credit_amount = 0,
       },
@@ -1045,17 +1046,9 @@ class MyAccountOrderView extends PureComponent {
         }
         return this.renderCardPaymentType();
       case EXCHANGE_STORE_CREDIT:
-        return this.renderPaymentTypeText(__("Exchange Store Credit"));
+        return this.renderPaymentTypeText(__("Exchange My Cash"));
       case "free":
-        if (
-          this.props?.order?.club_apparel_amount &&
-          parseFloat(this.props?.order?.club_apparel_amount) !== 0
-        ) {
-          return this.renderPaymentTypeText(__("Club Apparel"));
-        } else if (store_credit_amount !== 0) {
-          return this.renderPaymentTypeText(__("Store Credit"));
-        }
-        return;
+        return this.renderPaymentTypeText(title);
       case KNET_PAY:
         return this.renderPaymentTypeText("KNET");
       case CAREEM_PAY:
@@ -1165,6 +1158,7 @@ class MyAccountOrderView extends PureComponent {
        // club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_amount = 0,
+        reward_currency_amount = 0,
         fulfilled_from = "",
         total_mrp= 0,
         total_discount= 0,
@@ -1179,13 +1173,16 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {isSidewideCouponEnabled
-              ? this.renderPriceLine(total_mrp, __("Total MRP"))
+              ? this.renderPriceLine(total_mrp, __("Total Price"))
               : this.renderPriceLine(subTotal, __("Subtotal"))}
             {isSidewideCouponEnabled
               ? this.renderPriceLine(total_discount, __("Coupon Savings"), {
                   couponSavings: true,
                 })
               : null}
+            {
+              isSidewideCouponEnabled && total_discount ? this.renderPriceLine(subTotal, __("Subtotal")) : null
+            }
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderPriceLine(shipping_amount, __("Shipping fee"), {
                 divider: true,
@@ -1199,7 +1196,13 @@ class MyAccountOrderView extends PureComponent {
                 }
               )}
             {store_credit_amount !== 0
-              ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
+              ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
+                  isStoreCredit: true,
+                  couponSavings: true,
+                })
+              : null}
+            {reward_currency_amount !== 0
+              ? this.renderPriceLine(reward_currency_amount, __("My Rewards"), {
                   isStoreCredit: true,
                   couponSavings: true,
                 })
@@ -1307,6 +1310,7 @@ class MyAccountOrderView extends PureComponent {
         {this.renderPaymentType()}
         {this.renderPaymentSummary()}
         {this.renderContact()}
+        <EarnedCashReward rewardEarned={order?.total_wallet_earned} />
       </div>
     );
   }

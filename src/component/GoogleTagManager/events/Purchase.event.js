@@ -94,7 +94,7 @@ class PurchaseEvent extends BaseEvent {
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
         currency:  this.getCurrencyCode(),
-        transaction_id: totals?.id ?? "",
+        transaction_id: orderId ?? "",
         order_id: orderId,
         total: totals?.total ?? "",
         discount: totals?.discount ?? 0,
@@ -104,6 +104,8 @@ class PurchaseEvent extends BaseEvent {
         cod_amount: totals?.msp_cod_amount ?? 0,
         coupon:totals?.coupon_code ?? "",
         tax_amount:totals?.tax_amount ?? "",
+        // promotional_balance_used: promotional_balance_used,// commented and will be enabled later
+        // transactional_balance_used: transactional_balance_used,
         purchase: {
           actionField: this.getActionFields(orderId, totals),
           products: formattedImpressions
@@ -155,7 +157,7 @@ class PurchaseEvent extends BaseEvent {
             : "",
           currency: totals?.currency_code || "",
           order_id: orderId || "",
-          transaction_id: totals?.id || "",
+          transaction_id: orderId || "",
           brand_name: productKeys?.brand_name || "",
           color: productKeys?.color || "",
           discounted_price: productKeys?.itemPrice || "",
@@ -187,7 +189,7 @@ class PurchaseEvent extends BaseEvent {
         subtotal_amount: totals?.subtotal || "",
         order_id: orderId || "",
         total_amount: totals?.total || "",
-        transaction_id: totals?.id || "",
+        transaction_id: orderId || "",
         brand_name: productBrand.length > 0 ? productBrand : "",
         color: productColor.length > 0 ? productColor : "",
         discounted_price: productItemPrice.length > 0 ? productItemPrice : "",

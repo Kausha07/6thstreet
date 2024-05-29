@@ -11,6 +11,7 @@ import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
 import MyAccountReferralTab from "Component/MyAccountReferralTab";
 import MyAccountVipCustomer from "Component/MyAccountVipCustomer";
+import MyWalletHomeBase from "Component/MyWallet/MyWalletHomeBase";
 // import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
@@ -39,6 +40,7 @@ import {
   tabMapType,
   REFERRAL_SCREEN,
   VIP_CUSTOMER,
+  MY_WALLET,
 } from "Type/Account";
 import {
   exchangeReturnState,
@@ -77,7 +79,6 @@ import Event, {
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import supportIcon from "./icons/support.png";
 import OrdersIcon from "./icons/box-vip.png";
-
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -119,6 +120,7 @@ export class MyAccount extends SourceMyAccount {
     [SETTINGS_SCREEN]: SettingsScreen,
     [REFERRAL_SCREEN]: MyAccountReferralTab,
     [VIP_CUSTOMER]: MyAccountVipCustomer,
+    [MY_WALLET]: MyWalletHomeBase,
   };
 
   linksMap = [
@@ -319,14 +321,19 @@ export class MyAccount extends SourceMyAccount {
       IsReferralEnabled,
       isClubApparelEnabled,
       IsVipCustomerEnabled,
+      isWalletEnabled,
     } = this.props;
     const isVipCustomer =
       (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     const { pathname = "" } = location;
 
+    if (!isWalletEnabled) {
+      delete tabMap[MY_WALLET];
+    }
+
     let newTabMap = is_exchange_enabled
       ? {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -334,7 +341,7 @@ export class MyAccount extends SourceMyAccount {
           ...tabMap2,
         }
       : {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -441,6 +448,7 @@ export class MyAccount extends SourceMyAccount {
       isClubApparelEnabled,
       IsVipCustomerEnabled,
       history: { location },
+      isWalletEnabled,
     } = this.props;
     const { isArabic, isMobile } = this.state;
     const isVipCustomer =
@@ -461,12 +469,15 @@ export class MyAccount extends SourceMyAccount {
       )[0].style.background = "none";
     }
 
+    if (!isWalletEnabled) {
+      delete tabMap[MY_WALLET];
+    }
     if (!IsReferralEnabled) {
       delete tabMap[REFERRAL_SCREEN];
     }
     let newTabMap = is_exchange_enabled
       ? {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -474,7 +485,7 @@ export class MyAccount extends SourceMyAccount {
           ...tabMap2,
         }
       : {
-          ...storeCreditState,
+          ...(!isWalletEnabled && storeCreditState),
           ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
@@ -546,7 +557,7 @@ export class MyAccount extends SourceMyAccount {
             <span block="UserName">{firstname}</span>
           </div>
           <div block="MobileCards" mods={{ isClubApparelEnabled }}>
-          {isClubApparelEnabled ? (
+            {isClubApparelEnabled ? (
               <div block="CaCardsContainer">
                 <div block="InfoIconBlock">
                   <Image block="InfoIcon" src={infoIcon} alt={"Club Apparel"} />

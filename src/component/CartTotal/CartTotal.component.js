@@ -27,6 +27,7 @@ function CartTotal(props) {
   const {
     totals: {
       total_segments: totals = [],
+      total_wallet_credit,
       total = 0,
       items = [],
       shipping_fee = 0,
@@ -86,11 +87,11 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {isArabic
             ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
-                name === "Store Credit" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice
+                name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice
               } ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? currency_code : ""
-              } ${name === "Store Credit" || name === "Coupon Savings" ? Math.abs(finalPrice) : finalPrice}`}
+              } ${name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice}`}
         </strong>
       </li>
     );
@@ -150,13 +151,17 @@ function CartTotal(props) {
         <div block={block} elem="Subtotals">
           {renderPriceLine(
             getValueFromTotals(totals, "total_mrp"),
-            __("Total MRP")
+            __("Total Price")
           )}
           {renderPriceLine(
             getValueFromTotals(totals, "total_discount"),
             __("Coupon Savings"),
             { couponSavings: true }
           )}
+          { getValueFromTotals(totals, "total_discount") ? renderPriceLine(
+            getValueFromTotals(totals, "subtotal"),
+            __("Subtotal")
+          ) : null }
           {!inventory_level_cross_border || !international_shipping_fee
             ? renderPriceLineForShipping(shipping_fee, __("Shipping fee"))
             : null}
@@ -168,7 +173,12 @@ function CartTotal(props) {
             )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
-            __("Store Credit"),
+            __("My Cash"),
+            { couponSavings: true }
+          )}
+          {renderPriceLine(
+            getValueFromTotals(totals, "reward"),
+            __("My Rewards"),
             { couponSavings: true }
           )}
           {renderPriceLine(
@@ -191,7 +201,13 @@ function CartTotal(props) {
             __("Total"),
             {
               divider: true,
-            }
+            },
+            true
+          )}
+          {renderPriceLine(
+              total_wallet_credit,
+            __("Cashback"), 
+            { cashBack: true, divider: true, couponSavings : true}
           )}
         </div>
       </ul>

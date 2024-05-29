@@ -89,7 +89,7 @@ export class CheckoutFail extends CheckoutSuccess {
       subtotal_amount: subtotal || "",
       order_id: orderID || "",
       total_amount: total || "",
-      transaction_id: id || "",
+      transaction_id: orderID || "",
       brand_name: productBrand?.length > 0 ? productBrand : "",
       color: productColor?.length > 0 ? productColor : "",
       discounted_price: productItemPrice?.length > 0 ? productItemPrice : "",
