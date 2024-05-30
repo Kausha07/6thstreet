@@ -730,6 +730,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       Object.keys(totals).length &&
       !items.length &&
       checkoutStep !== DETAILS_STEP
+      && !(location.pathname.match(`/checkout/success`))
+      && !(location.pathname.match(`/checkout/cancel`))
     ) {
       showInfoNotification(__("Please add at least one product to cart!"));
       history.push("/cart");
