@@ -56,6 +56,10 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const [transactionalBalance, setTransactionalBalance] = useState(null);
   const [allTransactionHistory, setAllTransactionHistory] = useState(null);
 
+  const isWalletBannerEnabled = useSelector(
+    (state) => state.AppConfig.isWalletBannerEnabled
+  );
+
   const isLanguageArabic = isArabic();
   const walletCashbackCoupon = useSelector(
     (state) => state.AppConfig.walletCashbackCoupon
@@ -221,7 +225,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
             </button>
           </div>
-          {walletCashbackCoupon && (
+          {isWalletBannerEnabled && (
             <div className="ReferNEarnLink">
               <div className="referIcon">
                 <img src={VoucherIcon} alt="voucher" />
