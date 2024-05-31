@@ -72,8 +72,14 @@ export default function MyWalletHome({ setCurrentScreen }) {
         setTotalBalance(responseBalance?.data?.total_balance);
         setTransactionalBalance(responseBalance?.data?.transaction_balance);
 
-        MOE_addUserAttribute(MOE_USER_ATTR_PROMOTIONAL_BALANCE, responseBalance?.data?.promotional_balance);
-        MOE_addUserAttribute(MOE_USER_ATTR_TRANSACTIONAL_BALANCE, responseBalance?.data?.transaction_balance);
+        MOE_addUserAttribute(
+          MOE_USER_ATTR_PROMOTIONAL_BALANCE,
+          responseBalance?.data?.promotional_balance
+        );
+        MOE_addUserAttribute(
+          MOE_USER_ATTR_TRANSACTIONAL_BALANCE,
+          responseBalance?.data?.transaction_balance
+        );
         setIsBalanceLoading(false);
       }
     } catch (error) {
@@ -215,21 +221,23 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
             </button>
           </div>
-          <div className="ReferNEarnLink">
-            <div className="referIcon">
-              <img src={VoucherIcon} alt="voucher" />
-            </div>
-            <div>
-              <div className="Heading">{__("Shop now to earn rewards")}</div>
-              <div className="SubHeading">
-                {__("Coupon")}
-                {" :"} {walletCashbackCoupon}
-                <span onClick={() => copyReferralCode()}>
-                  <img className="CopyIcon" src={CopyIcon} alt="copy" />
-                </span>
+          {walletCashbackCoupon && (
+            <div className="ReferNEarnLink">
+              <div className="referIcon">
+                <img src={VoucherIcon} alt="voucher" />
+              </div>
+              <div>
+                <div className="Heading">{__("Shop now to earn rewards")}</div>
+                <div className="SubHeading">
+                  {__("Coupon")}
+                  {" :"} {walletCashbackCoupon}
+                  <span onClick={() => copyReferralCode()}>
+                    <img className="CopyIcon" src={CopyIcon} alt="copy" />
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {allTransactionHistory?.count > 0 && (
             <div className="TransactionHeading">
               <div className="Heading">{__("All Transaction")}</div>
