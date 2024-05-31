@@ -227,12 +227,12 @@ export default function MyWalletHome({ setCurrentScreen }) {
           </div>
           {isWalletBannerEnabled && (
             <div className="ReferNEarnLink">
-              <div className="referIcon">
+              <div className={isMobileValue ? "referIcon mobileReferIcon" : "referIcon"}>
                 <img src={VoucherIcon} alt="voucher" />
               </div>
               <div>
-                <div className="Heading">{__("Shop now to earn rewards")}</div>
-                <div className="SubHeading">
+                <div className={isMobileValue ? "Heading mobileHeading" : "Heading"}>{__("Shop now to earn rewards")}</div>
+                <div className={isMobileValue ? "SubHeading mobileSubHeading": "SubHeading"}>
                   {__("Coupon")}
                   {" :"} {walletCashbackCoupon}
                   <span onClick={() => copyReferralCode()}>
