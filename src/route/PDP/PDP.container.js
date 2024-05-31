@@ -443,7 +443,7 @@ export class PDPContainer extends PureComponent {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
       const userID = customer && customer.id ? customer.id : null;
-      const madUUid = userData?.USER_DATA?.deviceUuid || getUUID();
+      const madUUid = getUUID();
       const vuePayload = {
         user_id: userID,
         product_id: sku,

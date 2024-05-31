@@ -59,21 +59,22 @@ export class HeaderCartContainer extends PureComponent {
     if (items.length !== 0 && isMinicartOpen === prevIsMinicartOpen) {
       const mappedItems = checkProducts(items) || [];
 
-      if (total === 0) {
-        const storeCredits = total_segments.find(
-          ({ code }) => code === "customerbalance"
-        );
+      // commenting this code b/c we need not check calculation of cartAPI in frontend 
+      // if (total === 0) {
+      //   const storeCredits = total_segments.find(
+      //     ({ code }) => code === "customerbalance"
+      //   );
 
-        const clubApparelCredits = total_segments.find(
-          ({ code }) => code === "clubapparel"
-        );
-        const { value: appliedStoreCredit = 0 } = storeCredits || {};
-        const { value: appliedClubApparelCredit = 0 } = clubApparelCredits || {};
+      //   const clubApparelCredits = total_segments.find(
+      //     ({ code }) => code === "clubapparel"
+      //   );
+      //   const { value: appliedStoreCredit = 0 } = storeCredits || {};
+      //   const { value: appliedClubApparelCredit = 0 } = clubApparelCredits || {};
 
-        if (subtotal > (Math.abs(appliedStoreCredit) + Math.abs(appliedClubApparelCredit) + Math.abs(discount))) {
-          updateTotals(id);
-        }
-      }
+      //   if (subtotal > (Math.abs(appliedStoreCredit) + Math.abs(appliedClubApparelCredit) + Math.abs(discount))) {
+      //     updateTotals(id);
+      //   }
+      // }
 
       {/*if (mappedItems.length !== 0) {
         showNotification(

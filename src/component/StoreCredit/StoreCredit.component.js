@@ -22,9 +22,9 @@ export class StoreCredit extends PureComponent {
     const { creditIsApplied } = this.props;
     const { pathname } = location;
 
-    if (this.hasCredit() && pathname === "/checkout" && !creditIsApplied) {
-      this.handleCheckboxChange();
-    }
+    // if (this.hasCredit() && pathname === "/checkout" && !creditIsApplied) {
+    //   this.handleCheckboxChange();
+    // }
   }
 
   hasCredit() {
@@ -53,7 +53,7 @@ export class StoreCredit extends PureComponent {
 
   renderAmount() {
     const { canApply, storeCreditBalance } = this.props;
-    const amount = canApply ? `(${storeCreditBalance})` : storeCreditBalance;
+    const amount = canApply ? `${storeCreditBalance}` : storeCreditBalance;
 
     return (
       <span block="StoreCredit" elem="Amount">
@@ -86,18 +86,20 @@ export class StoreCredit extends PureComponent {
     }
 
     const checkboxId = "store_credit_applied";
-    const label = canApply ? __("Use Store Credit") : __("Store Credit:");
+    const label = canApply ? __("Use My Cash") : __("My Cash:");
 
     return (
       <div block="StoreCredit" mods={{ canApply }}>
         <Loader isLoading={isLoading} />
-
+        <div>
+          <label block="StoreCredit" elem="Label" htmlFor={checkboxId}>
+            {label}
+          </label>
+          <div>
+            {__("Available Credit")}: {this.renderAmount()}
+          </div>
+        </div>
         {canApply && this.renderCheckbox(checkboxId)}
-
-        <label block="StoreCredit" elem="Label" htmlFor={checkboxId}>
-          {label}
-          {this.renderAmount()}
-        </label>
       </div>
     );
   }

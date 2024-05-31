@@ -161,7 +161,7 @@ export default function MyAccountReferralTab() {
             </li>
             <li>
               {__(
-                "Reward benefits will be awarded in the form of store credit to respective accounts"
+                "Reward benefits will be awarded in the form of my cash to respective accounts"
               )}
             </li>
             <li>
@@ -171,7 +171,7 @@ export default function MyAccountReferralTab() {
             </li>
             <li>
               {__(
-                "Earned store credit will remain valid for one year from the date of issuance"
+                "Earned my cash will remain valid for one year from the date of issuance"
               )}
             </li>
             <li>
@@ -288,7 +288,7 @@ export default function MyAccountReferralTab() {
         <div block="MyAccountReferral" elem="InviteContainer">
           <div block="Invite" elem="Container">
             <Image lazyLoad={true} alt={"Invite"} src={Invite} />
-            <p>{__("Invite your friends on 6thStreet to win store credit")}</p>
+            <p>{__("Invite your friends on 6thStreet to win my cash")}</p>
           </div>
           <div block="Invite" elem="Container" mods={{ isArabicValue }}>
             <Image lazyLoad={true} alt={"Arrow"} src={Arrow} />
