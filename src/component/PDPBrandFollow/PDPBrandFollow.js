@@ -3,7 +3,9 @@ import { isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import heart from './icons/heart.svg';
 import heartFilled from './icons/heartFilled.svg'; 
-import { isArabic } from "Util/App";    
+import { isArabic } from "Util/App";   
+import {getGraphqlEndpoint } from 'Util/Request/Request';
+import { showNotification } from "Store/Notification/Notification.action"; 
 
 import './PDPBrandFollow.style';
 
@@ -25,10 +27,10 @@ const PDPBrandFollow = (props) => {
         setIsLoadingFollow(true); 
         const {renderMySignInPopup } = props;
         if(isSignedIn()){
-            isFollowing(!isFollowActive);
+            isFollowing(!isFollowActive, onClickHandler);
         } else {
             renderMySignInPopup(() => {
-                isFollowing(!isFollowActive);
+                isFollowing(!isFollowActive, onClickHandler);
             });
 
         }
@@ -36,10 +38,11 @@ const PDPBrandFollow = (props) => {
 
     const onLoadHandler = () => {
         setIsLoadingFollow(true); 
+        // isFollowing('firstLoad');
         isFollowing();
     }
 
-    const isFollowing = (isFollow) =>{
+    const isFollowing = (isFollow, fn) =>{
         let data = {};
         if(isSignedIn()){ 
             const customer = BrowserDatabase.getItem("customer");
@@ -56,7 +59,7 @@ const PDPBrandFollow = (props) => {
                 clearTimeout(aftersignDone);
             } else {
                 aftersignDone = setTimeout(() => {
-                    isFollowing();
+                    fn();
                     maxFnExcue++
                     if(maxFnExcue >= 8){
                         clearTimeout(aftersignDone);
@@ -73,16 +76,95 @@ const PDPBrandFollow = (props) => {
 
     async function isFollowOrNot(data){
         // user, brandname, true
+        let query;
+        let url = getGraphqlEndpoint();
+        // console.log(data,data.isFollow);
             try {
-                //   const response = await MobileAPI.post(`url`,  data);
                 const response = {
                     userID:data.userID,
                     brand_name: props.brand_name,
                     isFollow:data.isFollow ? data.isFollow : false
                 }
+                // if(data.isFollow === 'firstLoad'){
+                //     query = `{
+                //         brandList{
+                //             items{
+                //                 ${props.brand_name}
+                //             }
+                //         }
+                //     }`
+                // }
+                
+                // if(data.isFollow){
+                //     query = `
+                //     mutation {
+                //         followTheBrand(
+                //           brand: ${props.brand_name}
+                //         ) {
+                //           "Follow the Brand"
+                //         }
+                //       }`;
+                // }
+                // if(!data.isFollow){
+                //     query = `
+                //     mutation {
+                //         unfollowTheBrand(
+                //           brand: ${props.brand_name}
+                //         ) {
+                //           "UnFollow the Brand"
+                //         }
+                //       }`;
+                // }
+                // const response = await MobileAPI.post(url,  data);
+                // const response = {
+                //     "data": {
+                //         "brandList": {
+                //           "items": [
+                //             {
+                //               "name": "brand 1"
+                //             },
+                //             {
+                //               "name": "brand 2"
+                //             },
+                //             {
+                //               "name": "Call it Spring"
+                //             }
+                //           ]
+                //         }
+                //     }
+                //   }
+                // const response = {
+                //     "data": {
+                //         "followTheBrand": {
+                //             "message": __("The Brand name has been followed by you.")
+                //         }
+                //     }
+                // }
 
+                // console.log(response.data,'--qwas--');
+                // if(Object.keys(response.data)[0] === 'brandList'){
+                //     let brandList = response?.data?.brandList?.items;
+                //     brandList.forEach((item) => {
+                //         item.name === props.brand_name && setisFollowActive(true);
+                //     })
+                // }
+                // if(Object.keys(response.data)[0] === 'followTheBrand'){
+                //     showNotification(
+                //         "success",
+                //         __(response.data.followTheBrand?.message)
+                //       );
+                //       setisFollowActive(true);
+                // }
+                // if(Object.keys(response.data)[0] === 'unfollowTheBrand'){
+                //     showNotification(
+                //         "success",
+                //         __(response.data.followTheBrand?.message)
+                //       );
+                //       setisFollowActive(false);
+                // }
+
+               
                 props.brand_name === response.brand_name && setisFollowActive(response.isFollow);
-            
                 setIsLoadingFollow(false); 
             }
             catch(err){
@@ -93,9 +175,9 @@ const PDPBrandFollow = (props) => {
 
 
     return <>
-        <a className={`BrandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} title={isFollowActive ? __('Following') :__('Follow')} disabled={isLoadingFollow}>
-            <img block="BrandFollow" elem="icon" src={isFollowActive ? heartFilled : heart} />
-            <span block="BrandFollow" elem="text">{isFollowActive ? __('Following') :__('Follow')}</span>
+        <a className={`brandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} title={isFollowActive ? __('Following') :__('Follow')} disabled={isLoadingFollow}>
+            <img block="brandFollow" elem="icon" src={isFollowActive ? heartFilled : heart} />
+            <span block="brandFollow" elem="text">{isFollowActive ? __('Following') :__('Follow')}</span>
         </a>
     </>
 }

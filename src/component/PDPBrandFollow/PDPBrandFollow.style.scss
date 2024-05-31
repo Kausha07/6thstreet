@@ -1,4 +1,4 @@
-.BrandFollow{
+.brandFollow{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,7 +32,7 @@
     &:focus,
     &:active{
         text-decoration: none;
-        .BrandFollow-text{
+        .brandFollow-text{
             text-decoration: none;
         }
 
@@ -40,7 +40,7 @@
     &._isArabic{
         left: 0;
         right: auto;
-        .BrandFollow{
+        .brandFollow{
             &-icon{
                 margin-right: 0;
                 margin-left: 2px;        
