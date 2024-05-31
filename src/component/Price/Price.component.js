@@ -309,7 +309,7 @@ class Price extends PureComponent {
         elem="sidewideCoupon"
         mods={{ isArabic }}
       >
-        <span>
+        <span className="discount">
           {discountPercentage}%{isArabic ? "" : <>&nbsp;</>}
           {__("OFF")}
         </span>

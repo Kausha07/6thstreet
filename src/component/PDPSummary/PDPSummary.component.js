@@ -1040,8 +1040,8 @@ class PDPSummary extends PureComponent {
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
-          <h1>
-            {brandUrlPath ? (
+          <h1  block="PDPSummary" elem="brandName">
+            <span block="brandName" elem="title">{brandUrlPath ? (
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
@@ -1061,7 +1061,7 @@ class PDPSummary extends PureComponent {
               )
             ) : (
               brand_name
-            )}{" "}
+            )}</span>{" "}
             <span block="PDPSummary" elem="Name">
               {name}
             </span>
@@ -1071,7 +1071,7 @@ class PDPSummary extends PureComponent {
     }
 
     return (
-      <h1>
+      <h1 block="PDPSummary" elem="brandName">
         {brandUrlPath ? (
           gender !== "home" ? (
             <Link
@@ -1126,6 +1126,7 @@ class PDPSummary extends PureComponent {
       product: { sku, gallery_images = [] },
       product,
       renderMySignInPopup,
+      isNewDesign
     } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
@@ -1136,7 +1137,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <>
-        {this.renderPDPSummaryHeader()}
+        {!isNewDesign && this.renderPDPSummaryHeader()}
         <div block="ShareAndWishlistButtonContainer" className={`${this.state.isArabic ? "isArabic": ""}`}>
           <ShareButton
             title={document.title}
@@ -1160,7 +1161,8 @@ class PDPSummary extends PureComponent {
   renderPriceAndPDPSummaryHeader() {
     const {
       product: { price, stock_qty, additional_shipping_info },
-      edd_info
+      edd_info,
+      isNewDesign
     } = this.props;
     const { stockAvailibility } = this.state;
 
@@ -1171,7 +1173,7 @@ class PDPSummary extends PureComponent {
     return (
       <div block="PriceContainer">
         <Price price={price} renderSpecialPrice={true} pageType="PDPPage" />
-        {isMobile.any() && this.renderPDPSummaryHeader()}
+        {!isNewDesign && isMobile.any() && this.renderPDPSummaryHeader()}
         {!edd_info || (edd_info && !edd_info.has_cross_border_enabled) && additional_shipping_info ? (
           <span block="AdditionShippingInformation">
             {additional_shipping_info}
@@ -1474,6 +1476,7 @@ class PDPSummary extends PureComponent {
               <div block="PDPbrandName">
                 {this.renderBrand()}
                 {isNewDesign && isMobile && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}
+                {isNewDesign && this.renderPDPSummaryHeader()}
               </div> 
             )
           }
