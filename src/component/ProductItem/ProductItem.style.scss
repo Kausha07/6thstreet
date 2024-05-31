@@ -534,9 +534,6 @@
         bottom: 5px;
       }
       &-summary{
-        @include mobile{
-          width: 55px;
-        }
         @include desktop{
           border-radius: 13px;
         }
