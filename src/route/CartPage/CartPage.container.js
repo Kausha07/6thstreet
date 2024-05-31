@@ -111,6 +111,8 @@ export const mapDispatchToProps = (dispatch) => ({
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   setColourVarientsButtonClick: (colourVarientsButtonClick) =>
   dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
+  updateSidewideCoupon: (quoteId, flag, is_guest) =>
+    CartDispatcher.updateSidewideCoupon(dispatch, quoteId, flag, is_guest),
 });
 
 export class CartPageContainer extends PureComponent {

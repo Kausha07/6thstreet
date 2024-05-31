@@ -35,6 +35,7 @@ export const RETURN_POLICY = "return-information";
 export const SHIPPING_POLICY = "shipping-policy";
 export const WALLET_PAYMENTS = "wallet-payments";
 export const REFERRAL_SCREEN = "referral";
+export const MY_WALLET = "my-wallet";
 export const VIP_CUSTOMER = "vip"
 
 export const activeTabType = PropTypes.string;

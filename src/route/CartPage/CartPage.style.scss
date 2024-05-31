@@ -932,7 +932,6 @@ padding: auto ;
         width: 100%;
         box-sizing: border-box;
         background-color: #f4fffc;
-        cursor: pointer;
         border: 1px dashed #28D9AA;
         .showCouponBtnLeftBlock{
             display: flex;
@@ -944,6 +943,8 @@ padding: auto ;
             }
             .couponText{
                 margin-left: 10px;
+                font-weight: 500;
+                font-size: 13px;
                 &_isArabic{
                     margin-left: initial;
                     margin-right: 10px;
@@ -1018,7 +1019,7 @@ padding: auto ;
                 padding-right: 0px;
                 &.remove {
                     border-radius: 8px;
-                    color: #28d9aa;
+                    color: #F01136;
                     font-family: "Avenir Next";
                     font-size: 13px;
                     font-weight: 600;
@@ -1392,4 +1393,8 @@ padding: auto ;
 
 .taxesIncluded {
     color: #9B9B9B;
+}
+
+.couponAppliedText {
+    font-weight: 500;
 }

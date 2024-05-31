@@ -184,6 +184,15 @@
                 }
             }
         }
+        &_cashBack {
+            .CheckoutOrderSummary {
+                &-Price {
+                    font-size: 13px;
+                    font-weight: var(--fw-demi);
+                    color: #13CA75;
+                }
+            }
+        }
         &_divider {
             border-top: 1px solid #ccc;
             padding: 10px 0px;
@@ -219,6 +228,20 @@
                     font-size: 13px;
                     font-weight: var(--fw-medium);
                     color: #28D9AA;
+                }
+            }
+        }
+    }
+    &-Cashback {
+        border-block-start: 1.5px solid var(--Gallery);
+        li {
+            grid-column: 1 / span 4;
+            grid-row: 1;
+            .CheckoutOrderSummary {
+                &-Text {
+                    margin-block-start: 3px;
+                    font-weight: var(--fw-regular);
+                    font-size: 15px;
                 }
             }
         }
@@ -282,15 +305,37 @@
         border-radius: 6px;
         background-color: #F4FFFC;
         cursor: pointer;
+        .showCouponBtnLeftBlock{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .couponImage{
+                width: 30px;
+                height: 18px;
+            }
+            .couponText{
+                margin-left: 10px;
+                font-weight: 500;
+                font-size: 13px;
+                &_isArabic{
+                    margin-left: initial;
+                    margin-right: 10px;
+                }
+            }
+        }
         .showCouponBtn {
-            color: #28D9AA;
+            border-radius: 6px;
             font-family: "Avenir Next";
+            text-transform: inherit;
             font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 0;
-            line-height: 40px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             width: 100%;
+
+            .couponCodeSelectText{
+                color: #28d9aa;
+            }
         }
         .appliedCouponBlock {
             padding: 10px 10px;
@@ -298,7 +343,6 @@
             align-items: center;
             .appliedCouponDetail {
                 .appliedCouponCode {
-                    color: #28D9AA;
                     font-family: "Avenir Next";
                     font-size: 13px;
                     font-weight: 600;
@@ -306,6 +350,12 @@
                     line-height: 18px;
                     margin: 0 0;
                     word-break: break-word;
+                    margin-left: 10px;
+
+                    &_isArabic{
+                        margin-left: initial;
+                        margin-right: 10px;
+                    }
                 }
                 .appliedCouponName {
                     color: #4A4A4A;
@@ -338,14 +388,14 @@
                 min-width: 80px;
                 &.remove {
                     border-radius: 8px;
-                    background-color: #28D9AA;
-                    color: #FFFFFF;
+                    color: #F01136;
                     font-family: "Avenir Next";
                     font-size: 13px;
                     font-weight: 600;
                     letter-spacing: 0;
                     line-height: 18px;
                     text-align: center;
+                    padding-left: 0;
                 }
             }
         }
@@ -500,4 +550,15 @@
 
 .taxesIncluded {
     color: #9B9B9B;
+}
+
+.couponAppliedText {
+    font-weight: 500;
+}
+
+.wrapperCartCouponBlock {
+    .sideWideCouponBlock {
+        width: auto;
+        margin: 0 18px 20px;
+    }
 }

@@ -51,6 +51,8 @@ export const mapStateToProps = (state) => ({
   is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
   vwoData: state.AppConfig.vwoData,
   customer: state.MyAccountReducer.customer,
+  config: state.AppConfig.config,
+  abTestingConfig: state.AppConfig.abTestingConfig,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -83,7 +85,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
-  updateVWOData: () => AppConfigDispatcher.updateVWOData(dispatch),
+  updateVWOData: (config) => AppConfigDispatcher.updateVWOData(dispatch, config),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -217,10 +219,10 @@ export class RouterContainer extends SourceRouterContainer {
 
   componentDidUpdate(prevProps) {
     const { customer: prevCustomer } = prevProps;
-    const { customer, updateVWOData } = this.props;
+    const { customer, updateVWOData, config } = this.props;
 
     if (prevCustomer?.id !== customer?.id) {
-      updateVWOData();
+      updateVWOData(config);
     }
 
     const countryCode = navigator.language.substr(0, 2);
@@ -250,6 +252,7 @@ export class RouterContainer extends SourceRouterContainer {
       is_live_party_enabled,
       is_msite_megamenu_enabled,
       vwoData,
+      abTestingConfig
     } = this.props;
 
     return {
@@ -260,6 +263,7 @@ export class RouterContainer extends SourceRouterContainer {
       is_live_party_enabled,
       is_msite_megamenu_enabled,
       vwoData,
+      abTestingConfig
     };
   };
 

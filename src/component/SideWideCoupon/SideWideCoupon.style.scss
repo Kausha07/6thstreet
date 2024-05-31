@@ -110,12 +110,12 @@
     }
 
     &-sidewideApplyed {
-        height: 50px;
+        height: 35px;
         padding: 0 15px;
         padding: 10px 15px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
 
         .couponText {
             margin-left: 10px;
@@ -129,7 +129,7 @@
 
     &-sidewideNotApplyed {
         .showCouponBtn {
-            height: 50px;
+            height: 35px;
             padding: 0 15px;
         }
 
@@ -148,7 +148,7 @@
             font-weight: 600;
             line-height: 17.76px;
             text-align: center;
-            color: black;
+            color: #28D9AA;
         }
     }
 

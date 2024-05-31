@@ -297,7 +297,7 @@ class Price extends PureComponent {
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
 
     if (
-      (pageType !== "PDPPage" && pageType !== "plp" && pageType !== "wishlist") ||
+      (pageType && pageType !== "PDPPage" && pageType !== "plp" && pageType !== "wishlist" && pageType !== "vuePlp") ||
       discountPercentage === 0
     ) {
       return null;
@@ -475,6 +475,17 @@ class Price extends PureComponent {
           )}
         </>
       );
+    }
+
+    if(basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
+      return (
+      <>
+        <span block="Price" elem="Wrapper">
+          {isArabic && <>&nbsp;</>}
+            {this.renderBasePriceSideWide()}
+        </span>
+      </>
+      )
     }
     return (
       <>

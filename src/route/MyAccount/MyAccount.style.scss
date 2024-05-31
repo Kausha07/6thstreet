@@ -160,6 +160,12 @@
         }
       }
 
+      &_my-wallet {
+        &:before {
+          background-image: url(./icons/walletIcon.svg);
+        }
+      }
+
       &_dashboard {
         &:before {
           background-image: url(./icons/dashboard.png);
@@ -218,13 +224,13 @@
           background-image: url(./icons/settings.png);
         }
       }
-      &_vip{
+      &_vip {
         &:before {
           background-image: url(./icons/vip.png);
           max-width: 23px;
           background-size: contain;
           margin-top: 7px;
-          @include mobile{
+          @include mobile {
             max-width: 25px;
           }
         }
@@ -303,8 +309,8 @@
             left: 0;
           }
         }
-        &-Button_tabImageId_vip{
-          &:before{
+        &-Button_tabImageId_vip {
+          &:before {
             margin-top: 5px;
             right: 13px !important;
           }
@@ -323,7 +329,7 @@
     }
     &_isVip {
       #MyAccountMobileHeader {
-        @include mobile{
+        @include mobile {
           background: #e7d8fc;
         }
       }
