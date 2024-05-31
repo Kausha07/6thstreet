@@ -1147,7 +1147,10 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
-    const { QPAY_DETAILS, paymentMethod, KnetDetails } = this.props;
+    let { QPAY_DETAILS, paymentMethod, KnetDetails, payMethodCode } = this.props;
+    if (!paymentMethod){
+      paymentMethod = payMethodCode;
+    }
     const { PUN, date, status } = QPAY_DETAILS;
     return (
       <>
@@ -1263,12 +1266,16 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderPaymentTypeContent = () => {
-    const {
+    let {
       creditCardData: { number = "", expMonth, expYear, cvv },
       paymentMethod,
       initialTotals: { total_segments = [] },
       selectedCard,
+      payMethodCode,
     } = this.props;
+    if(!paymentMethod){
+      paymentMethod = payMethodCode;
+    }
     if (
       number &&
       expMonth &&
@@ -1520,7 +1527,7 @@ export class CheckoutSuccess extends PureComponent {
         fulfilled_from = "",
         total_mrp = 0,
         total_discount = 0,
-      },
+      } = {},
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
 
@@ -1677,6 +1684,7 @@ export class CheckoutSuccess extends PureComponent {
       incrementID,
       initialTotals,
       isSidewideCouponEnabled,
+      isSignedIn,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1716,10 +1724,10 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}
-          {paymentMethod?.code === "checkout_qpay" ||
+          {(paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
           paymentMethod?.code === "checkout_knet" ||
-          paymentMethod?.code === TAMARA
+          paymentMethod?.code === TAMARA) && isSignedIn
             ? isSidewideCouponEnabled
               ? this.renderSideWidePaymentSummary()
               : this.renderPaymentSummary()

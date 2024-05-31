@@ -258,8 +258,24 @@ export class CheckoutSuccessContainer extends PureComponent {
       isChangePhonePopupOpen,
       phone,
       isMobileVerification,
+      initialTotals
     } = this.state;
-    const { isFailed, country, config, orderDetailsCartTotal, vwoData } = this.props;
+    const {
+      isFailed,
+      country,
+      config,
+      orderDetailsCartTotal,
+      vwoData,
+      isSignedIn,
+      paymentMethod,
+      redirectPaymentMethod,
+    } = this.props;
+    let isRedirectPayment = false;
+    let newInitialTotal= {};
+    if (!isSignedIn && !paymentMethod) {
+      isRedirectPayment = true;
+      newInitialTotal =  JSON.parse(localStorage.getItem("CART_DETAILS"));
+    }
     const countryCode = getCountryFromUrl();
     const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
@@ -272,6 +288,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       country,
       isSidewideCouponEnabled,
       orderDetailsCartTotal,
+      initialTotals: isRedirectPayment ? newInitialTotal : initialTotals,
+      payMethodCode: {code: redirectPaymentMethod},
     };
   };
 
