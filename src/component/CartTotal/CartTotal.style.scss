@@ -65,6 +65,15 @@
                 }
             }
         }
+        &_cashBack {
+            .CartPage {
+                &-Price {
+                    font-size: 15px;
+                    font-weight: var(--fw-bold);
+                    color: #13CA75;
+                }
+            }
+        }
         &:last-child {
             margin-bottom: 0;
         }
