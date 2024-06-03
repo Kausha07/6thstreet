@@ -101,6 +101,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export class CartItemContainer extends PureComponent {
@@ -184,6 +185,7 @@ export class CartItemContainer extends PureComponent {
     international_shipping_fee: this.props.international_shipping_fee,
     config: this.props.config,
     vwoData: this.props.vwoData,
+    isExpressDelivery: this.props.isExpressDelivery,
   });
 
   /**

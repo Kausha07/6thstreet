@@ -500,6 +500,113 @@
       text-align: right;
     }
   }
+
+  .EddExpressWrapper {
+    @include desktop {
+      width: 100%;
+    }
+
+    @include mobile {
+      width: 100%;
+    }
+
+    .EddExpressDelivery {
+      display: flex;
+      background: #f964461a;
+      height: 40px;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 8px;
+      // margin-top: 10px;
+      text-transform: initial;
+
+      svg {
+        width: 15px;
+        height: 15px;
+        margin: 0 5px;
+      }
+
+      .EddExpressDeliveryTextBlock {
+        display: flex;
+        align-items: center;
+
+        @include mobile {
+          font-size: 11px;
+        }
+
+        .EddExpressDeliveryTextRed {
+          color: #f96446;
+          font-weight: 600;
+          font-style: italic;
+          font-size: 12px;
+        }
+
+        .EddExpressDeliveryTextNormal {
+          font-weight: 400;
+          font-size: 11px;
+        }
+
+        .EddExpressDeliveryTextBold {
+          font-weight: 600;
+          margin: 0 5px;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .EddExpressDeliveryCutOffTime {
+      font-size: 10px;
+      font-weight: 400;
+      color: #606060;
+      margin-top: 2px;
+      margin: 2px 38px;
+    }
+
+    .EddStandardDelivery {
+      display: flex;
+      background: #8686861a;
+      padding: 5px 0;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 8px;
+      // margin-top: 10px;
+      text-transform: initial;
+
+      .EddStandardDeliveryTextBlock {
+        display: flex;
+        align-items: center;
+
+        @include mobile {
+          font-size: 11px;
+        }
+
+        svg {
+          width: 15px;
+          height: 15px;
+          margin: 0 4px;
+        }
+
+        .EddStandardDeliveryText {
+          font-weight: 400;
+          font-size: 11px;
+        }
+
+        .EddStandardDeliveryTextBold {
+          font-weight: 600;
+          margin: 0 5px;
+          font-size: 12px;
+        }
+      }
+
+      .internationalShipmentTag {
+        .AdditionShippingInformation {
+          margin: 0 25px;
+          font-size: 10px;
+          color: #606060;
+        }
+      }
+    }
+  }
 }
 
 .pipe {
