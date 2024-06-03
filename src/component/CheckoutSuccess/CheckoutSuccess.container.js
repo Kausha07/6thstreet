@@ -251,6 +251,14 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
   }
 
+  isObjectEmpty = (objectName) => {
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
+  };
+
   containerProps = () => {
     const {
       clubApparelMember,
@@ -258,13 +266,13 @@ export class CheckoutSuccessContainer extends PureComponent {
       isChangePhonePopupOpen,
       phone,
       isMobileVerification,
-      initialTotals
+      initialTotals = {},
     } = this.state;
     const {
       isFailed,
       country,
       config,
-      orderDetailsCartTotal,
+      orderDetailsCartTotal= {},
       vwoData,
       isSignedIn,
       paymentMethod,
@@ -272,9 +280,14 @@ export class CheckoutSuccessContainer extends PureComponent {
     } = this.props;
     let isRedirectPayment = false;
     let newInitialTotal= {};
-    if (!isSignedIn && !paymentMethod) {
+    let guestOrderDetailsCartTotal= {}
+    if (!isSignedIn && !paymentMethod || this.isObjectEmpty(initialTotals)) {
       isRedirectPayment = true;
       newInitialTotal =  JSON.parse(localStorage.getItem("CART_DETAILS"));
+      guestOrderDetailsCartTotal= {
+        site_wide_applied: newInitialTotal?.site_wide_applied || 0,
+        discount_code: newInitialTotal?.coupon_code || "",
+      }
     }
     const countryCode = getCountryFromUrl();
     const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
@@ -287,9 +300,11 @@ export class CheckoutSuccessContainer extends PureComponent {
       isMobileVerification,
       country,
       isSidewideCouponEnabled,
-      orderDetailsCartTotal,
+      orderDetailsCartTotal: this.isObjectEmpty(orderDetailsCartTotal)
+        ? guestOrderDetailsCartTotal
+        : orderDetailsCartTotal,
       initialTotals: isRedirectPayment ? newInitialTotal : initialTotals,
-      payMethodCode: {code: redirectPaymentMethod},
+      payMethodCode: { code: redirectPaymentMethod },
     };
   };
 
