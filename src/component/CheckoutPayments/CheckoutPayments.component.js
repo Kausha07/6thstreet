@@ -256,6 +256,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       totals: { total, currency_code, total_segments = [] },
       setOrderButtonDisabled,
     } = this.props;
+    const { isMobile } = this.state;
     const codFee = getDiscountFromTotals(total_segments, "msp_cashondelivery");
 
     if (isClickAndCollect) {
@@ -302,12 +303,12 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           elem="codExtraChargeText"
         >
           <span className="codCharge">{`${currency_code} ${codFee}`}</span>&nbsp;
-          <span>{__(`will be charged extra for cash on delivery`)}</span>
+          <span>{__("will be charged extra for cash on delivery")}</span>
         </p>) : null}
-        <p block="CheckoutPayments" elem="MethodDiscription">
+        {isMobile ? null : ( <p block="CheckoutPayments" elem="MethodDiscription">
           <span className="noteBoldText">{__("Please Note: ")}</span>
           {method_description}
-        </p>
+        </p>)}
       </div>
     );
   }

@@ -58,6 +58,7 @@ class CreditCard extends PureComponent {
 
         if (this?.ScrollerRef?.current) {
             this?.ScrollerRef?.current?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("cvv")?.focus();
         }
     }
 
