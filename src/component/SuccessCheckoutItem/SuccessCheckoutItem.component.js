@@ -359,7 +359,7 @@ export class SuccessCheckoutItem extends PureComponent {
             }
           });
         } else {
-          const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          const isIntlBrand = edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
           if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
             const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;

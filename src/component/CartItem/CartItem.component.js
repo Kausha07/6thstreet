@@ -469,7 +469,7 @@ export class CartItem extends PureComponent {
             }
           });
         } else {
-          const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          const isIntlBrand = edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
           if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
             const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
@@ -595,7 +595,6 @@ export class CartItem extends PureComponent {
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
-      (cross_border === 1) &&
       edd_info &&
       edd_info.has_cross_border_enabled;
 
@@ -619,7 +618,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
+        {(isIntlBrand || (international_shipping_fee)) ? this.renderIntlTag() : null}
         {row_total === 0 ? null : this.renderActions()}
       </figcaption>
     );
