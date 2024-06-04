@@ -995,7 +995,7 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: { name, brand_name, gallery_images = [], brandNameclick  },
+      product: { name, brand_name, gallery_images = [], brandNameclick  },isNewDesign,renderMySignInPopup
     } = this.props;
 
     const { isArabic } = this.state;
@@ -1062,6 +1062,7 @@ class PDPSummary extends PureComponent {
             ) : (
               brand_name
             )}</span>{" "}
+            {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}
             <span block="PDPSummary" elem="Name">
               {name}
             </span>
@@ -1072,7 +1073,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1 block="PDPSummary" elem="brandName">
-        {brandUrlPath ? (
+       <span block="brandName" elem="title">{brandUrlPath ? (
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
@@ -1092,7 +1093,8 @@ class PDPSummary extends PureComponent {
           )
         ) : (
           brand_name
-        )}{" "}
+        )} {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}</span> {" "}
+        
         <span block="PDPSummary" elem="Name">
           {name}
         </span>
@@ -1421,7 +1423,6 @@ class PDPSummary extends PureComponent {
       intlEddResponse,
       renderSummary,
       isNewDesign,
-      renderMySignInPopup
     } = this.props;
   
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
@@ -1475,7 +1476,6 @@ class PDPSummary extends PureComponent {
             return (
               <div block="PDPbrandName">
                 {this.renderBrand()}
-                {isNewDesign && isMobile && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}
                 {isNewDesign && this.renderPDPSummaryHeader()}
               </div> 
             )

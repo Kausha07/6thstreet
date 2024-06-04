@@ -470,9 +470,7 @@ div[class^='styles__body'] {
     &-Header{
       line-height: normal;
       width: 100%;
-      @include desktop{
-        margin-bottom: 10px;
-      }
+      
     }
     &-Heading{
       margin-bottom: 8px;
@@ -488,7 +486,8 @@ div[class^='styles__body'] {
         letter-spacing: .9px;
         line-height: 20px;
         font-size: 14px;
-        
+        // max-width: 100%;
+        position: static;
       }
       @include desktop{
         letter-spacing: 0;
@@ -521,6 +520,7 @@ div[class^='styles__body'] {
         line-height: 17px;
         border-radius: 16px;
         padding:5px 10px;
+        margin-bottom: 10px;
       }
       @include mobile{
         font-size: 10px;
@@ -627,9 +627,10 @@ div[class^='styles__body'] {
     }
     .brandName{
       &-title{
-        display:inline-block;
-        width: 100%;
+        
         @include mobile{
+          display:inline-block;
+          width: 100%;
           &::after{
             content: '';
             background-image: url(./icons/brandArrow.svg);
@@ -641,18 +642,35 @@ div[class^='styles__body'] {
             margin-left: 8px;
           }
         }
+        @include desktop{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          
+        }
+        .brandFollow{
+          @include desktop{
+            margin-left: 14px;
+            position: relative;
+          }
+        }
       }
     }
     &_isArabic{
       .brandName{
         &-title{
-          
           @include mobile{
             &::after{
               margin-left: 0px;
               margin-right: 8px;
               transform: rotate(180deg);
               margin-bottom: -2px;
+            }
+          }
+          .brandFollow{
+              @include desktop{
+              margin-left: 0;
+              margin-right: 14px;
             }
           }
         }
