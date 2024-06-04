@@ -778,13 +778,15 @@ class PDPSummary extends PureComponent {
             actualEddMess = defaultEddMess;
           }
         }
-        actualEddMess =
+        if(!(edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>=-1)){
+          actualEddMess =
           actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
           selectedSizeCode &&
           +simple_products?.[sku]?.quantity >
             +simple_products?.[sku]?.cross_border_qty
             ? defaultEddMessBasedOnInventory
             : actualEddMess;
+        }
       }
     } else {
       const isIntlBrand =
