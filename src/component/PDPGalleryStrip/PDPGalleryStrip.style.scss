@@ -5,40 +5,7 @@
 }
 
 
-@keyframes bounce {
-    0%,20%,53%,to {
-        -webkit-animation-timing-function: cubic-bezier(.215,.61,.355,1);
-        animation-timing-function: cubic-bezier(.215,.61,.355,1);
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0)
-    }
 
-    40%,43% {
-        -webkit-animation-timing-function: cubic-bezier(.755,.05,.855,.06);
-        animation-timing-function: cubic-bezier(.755,.05,.855,.06);
-        -webkit-transform: translate3d(0,-30px,0) scaleY(1.1);
-        transform: translate3d(0,-30px,0) scaleY(1.1)
-    }
-
-    70% {
-        -webkit-animation-timing-function: cubic-bezier(.755,.05,.855,.06);
-        animation-timing-function: cubic-bezier(.755,.05,.855,.06);
-        -webkit-transform: translate3d(0,-15px,0) scaleY(1.05);
-        transform: translate3d(0,-15px,0) scaleY(1.05)
-    }
-
-    80% {
-        -webkit-transform: translateZ(0) scaleY(.95);
-        transform: translateZ(0) scaleY(.95);
-        -webkit-transition-timing-function: cubic-bezier(.215,.61,.355,1);
-        transition-timing-function: cubic-bezier(.215,.61,.355,1)
-    }
-
-    90% {
-        -webkit-transform: translate3d(0,-4px,0) scaleY(1.02);
-        transform: translate3d(0,-4px,0) scaleY(1.02)
-    }
-}
 
 @-webkit-keyframes flash {
     0%,50%,to {
@@ -160,12 +127,12 @@
     &-text{
         display: inline-block;
         text-transform: uppercase;
-        font-weight: 400;
+        font-weight: 500;
         vertical-align: middle;
         i{
             color:#F96446;
             font-style: normal;
-            margin: 0 2px;
+            margin: 0 3px;
         }
         @include mobile{
             font-size: 12px;
@@ -174,7 +141,7 @@
         @include desktop{
             font-size: 14px;
             line-height: 19px;
-            font-weight: 400;
+            font-weight: 500;
         }
     }
     &.isArabic{
