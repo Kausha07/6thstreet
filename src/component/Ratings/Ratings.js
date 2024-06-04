@@ -1,8 +1,7 @@
 import {useState} from 'react';
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector} from 'react-redux';
 import './Ratings.style.scss';
 import ModalOverlay from 'Component/ModalOverlay/ModalOverlay';
-import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 import RatingPopup from "./RatingPopup";
 import { formatNumber } from 'Util/Ratings/Ratings';
@@ -12,14 +11,18 @@ import stars from "./icons/stars.svg";
 
 
 const Ratings = (props) => {
-    const country = getStore()?.getState()?.AppState?.country;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const newinfoText = __("Ratings");
+    const country = getStore()?.getState()?.AppState?.country;
     const config = useSelector(state => state.AppConfig.config);
     const { uMinAvgRating, uMinRatingCount} = config?.countries[country];
     const {
         rating_brand,
-        rating_sku
+        rating_sku,
+        brand_min_avg_rating = +rating_brand?.min_avg_rating > 0 ? +rating_brand?.min_avg_rating: '',
+        brand_min_rating_count = +rating_brand?.min_rating_count > 0 ? +rating_brand?.min_rating_count: '',
+        config_min_avg_rating = +rating_sku?.min_avg_rating > 0 ? +rating_sku?.min_avg_rating: '',
+        config_min_rating_count = +rating_sku?.min_rating_count > 0 ? +rating_sku?.min_rating_count: '',
     } = props;
 
     if(!rating_sku){
@@ -32,12 +35,16 @@ const Ratings = (props) => {
         prdTotalRatings = +total_ratings,
     } =  rating_sku;
 
-    const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
-    const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
+    // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
+    // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
+
+    const min_average_ratngs = config_min_avg_rating || brand_min_avg_rating || uMinAvgRating;
+    const min_ratings_count = config_min_rating_count || brand_min_rating_count || uMinRatingCount;
 
     if(prdAverageRatings < min_average_ratngs || prdTotalRatings < min_ratings_count){
         return null;
     }
+    
     const totalRatings = formatNumber(prdTotalRatings);
     const modalHandlerOpen = () => {
         setIsModalOpen(true);
