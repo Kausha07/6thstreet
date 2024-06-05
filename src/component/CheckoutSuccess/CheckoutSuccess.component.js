@@ -1741,7 +1741,6 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   render() {
-    console.log('checking=>', 'pkj---999=====>>>', this.props );
     return this.renderDetails();
   }
 }
