@@ -6,7 +6,7 @@ import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestion
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from "Util/Auth";
+import { getUUIDToken, getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import browserHistory from "Util/History";
 import { getLocaleFromUrl } from "Util/Url/Url";
@@ -112,7 +112,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -135,7 +135,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {
