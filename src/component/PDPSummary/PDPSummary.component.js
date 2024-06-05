@@ -898,7 +898,7 @@ class PDPSummary extends PureComponent {
               <span>{actualEddMess.split(splitKey)[1]}</span>
             </div>
           )}
-          {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && !crossBorder) || (edd_info.has_item_level && crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
+          {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && !crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1) || (edd_info.has_item_level && crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
             <>
               {selectedAreaId ? (
                 <div
