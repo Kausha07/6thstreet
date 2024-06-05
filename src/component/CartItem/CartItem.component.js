@@ -32,7 +32,7 @@ import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import Price from "Component/Price";
 import { Store } from "../Icons";
-import { Shipping } from "Component/Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 
 import "./CartItem.style";
 import "./CartItem.extended.style";
@@ -395,6 +395,7 @@ export class CartItem extends PureComponent {
   renderColSizeQty() {
     const {
       item: { color, optionValue, qty },
+      isCheckoutPage,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -405,6 +406,15 @@ export class CartItem extends PureComponent {
             <span> {__("Color:")}</span>
             {color}
           </div>
+          {isCheckoutPage && (
+            <div block="CartItem" elem="Size" mods={{ isArabic }}>
+              <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
+                |
+              </span>
+              <span> {__("Qty:")} </span>
+              {qty}
+            </div>
+          )}
           <div block="CartItem" elem="Size" mods={{ isArabic }}>
             <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
               |
@@ -412,8 +422,7 @@ export class CartItem extends PureComponent {
             <span> {__("Size:")} </span>
             {optionValue}
           </div>
-
-          {this.renderQuantitySelection()}
+          {!isCheckoutPage && this.renderQuantitySelection()}
         </div>
       );
     }
@@ -536,7 +545,7 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
-  renderEddWhenExpressEnabled = (crossBorder) => {
+  renderEddWhenExpressEnabled = (crossBorder, actualEddMess) => {
     const {
       edd_info,
       item: {
@@ -547,7 +556,6 @@ export class CartItem extends PureComponent {
       isExpressDelivery,
     } = this.props;
 
-    let actualEddMess = this.formatEddMessage(crossBorder);
     const isIntlBrand =
       cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
     let splitKey = DEFAULT_SPLIT_KEY;
@@ -573,7 +581,7 @@ export class CartItem extends PureComponent {
         {isExpressProduct && (
           <div block="EddExpressDelivery">
             <div block="EddExpressDeliveryTextBlock">
-              <Shipping />
+              <ExpressDeliveryTruck />
               <div block="EddExpressDeliveryText">
                 <span block="EddExpressDeliveryTextRed">
                   {__("Express")} {}
@@ -617,17 +625,32 @@ export class CartItem extends PureComponent {
   };
 
   renderEdd = (crossBorder) => {
-    if (this.props?.isExpressDelivery) {
-      return this.renderEddWhenExpressEnabled(crossBorder);
-    }
-
-    const { item: { extension_attributes } } = this.props;
+    const {
+      item: { extension_attributes },
+      edd_info,
+      isCheckoutPage,
+      isExpressDelivery,
+      eddMessageForCheckoutPage,
+    } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;
     }
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    if (isCheckoutPage) {
+      const isIntlBrand =
+        crossBorder && edd_info && edd_info?.has_cross_border_enabled;
+
+      eddMessageForCheckoutPage(actualEddMess, isIntlBrand);
+      return null;
+    }
+
+    if (isExpressDelivery) {
+      return this.renderEddWhenExpressEnabled(crossBorder, actualEddMess);
+    }
+
     return (
       <div block="AreaText" mods={{ isArabic }}>
         {extension_attributes?.click_to_collect_store ? (
@@ -678,6 +701,7 @@ export class CartItem extends PureComponent {
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
+      isCheckoutPage
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -705,7 +729,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {!isExpressDelivery &&
+        {(!isCheckoutPage || !isExpressDelivery) &&
         (isIntlBrand || (international_shipping_fee && +cross_border))
           ? this.renderIntlTag()
           : null}

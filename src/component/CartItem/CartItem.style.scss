@@ -144,6 +144,11 @@
       }
     }
 
+    margin-left: 6px;
+    &_isArabic {
+      margin-left: 0px;
+    }
+
     @include desktop() {
       height: 130px;
       width: 100%;

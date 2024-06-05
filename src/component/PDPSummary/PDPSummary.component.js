@@ -43,7 +43,7 @@ import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import CityArea from "Component/CityArea/index";
-import { Shipping } from "Component/Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 
 class PDPSummary extends PureComponent {
   constructor(props) {
@@ -888,7 +888,7 @@ class PDPSummary extends PureComponent {
           {
             <div block="EddExpressDelivery">
               <div block="EddExpressDeliveryTextBlock">
-                <Shipping />
+                <ExpressDeliveryTruck />
                 <div block="EddExpressDeliveryText">
                   <span block="EddExpressDeliveryTextRed">
                     {__("Express")} {}

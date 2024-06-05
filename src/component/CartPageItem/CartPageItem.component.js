@@ -40,7 +40,7 @@ import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getCurrency } from "Util/App";
 
-import { Shipping } from "Component/Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 import isMobile from "Util/Mobile";
 /**
  * Cart and CartOverlay item
@@ -942,7 +942,7 @@ export class CartItem extends PureComponent {
         {isExpressProduct && (
           <div block="EddExpressDelivery">
             <div block="EddExpressDeliveryTextBlock">
-              <Shipping />
+              <ExpressDeliveryTruck />
               <div block="EddExpressDeliveryText">
                 <span block="EddExpressDeliveryTextRed">
                   {__("Express")} {}

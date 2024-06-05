@@ -35,6 +35,9 @@ import { tamaraLogo } from "./Tamara";
 import BlueTick from "./BlueTick";
 import BluePlus from "./BluePlus";
 import EditPencil from "./EditPencil";
+import OrangeDotSelector from "./OrangeDotSelector";
+import BlackDotSelector from "./BlackDotSelector";
+import ExpressDeliveryTruck from "./ExpressDeliveryTruck";
 
 export {
   Account,
@@ -74,4 +77,7 @@ export {
   BlueTick,
   BluePlus,
   EditPencil,
+  OrangeDotSelector,
+  BlackDotSelector,
+  ExpressDeliveryTruck,
 };
