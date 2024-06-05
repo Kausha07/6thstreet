@@ -19,10 +19,6 @@ const Ratings = (props) => {
     const {
         rating_brand,
         rating_sku,
-        brand_min_avg_rating = +rating_brand?.min_avg_rating > 0 ? +rating_brand?.min_avg_rating: '',
-        brand_min_rating_count = +rating_brand?.min_rating_count > 0 ? +rating_brand?.min_rating_count: '',
-        config_min_avg_rating = +rating_sku?.min_avg_rating > 0 ? +rating_sku?.min_avg_rating: '',
-        config_min_rating_count = +rating_sku?.min_rating_count > 0 ? +rating_sku?.min_rating_count: '',
     } = props;
 
     if(!rating_sku){
@@ -38,10 +34,10 @@ const Ratings = (props) => {
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 
-    const min_average_ratngs = config_min_avg_rating || brand_min_avg_rating || uMinAvgRating;
-    const min_ratings_count = config_min_rating_count || brand_min_rating_count || uMinRatingCount;
+    const threshold_average_ratings = +rating_sku?.min_avg_rating > 0 ? +rating_sku?.min_avg_rating : +rating_brand?.min_avg_rating > 0 ? +rating_brand?.min_avg_rating : uMinAvgRating;
+    const threshold_ratings_count = +rating_sku?.min_rating_count > 0 ? +rating_sku?.min_rating_count : +rating_brand?.min_rating_count > 0 ? +rating_brand?.min_rating_count : uMinRatingCount;
 
-    if(prdAverageRatings < min_average_ratngs || prdTotalRatings < min_ratings_count){
+    if(prdAverageRatings < threshold_average_ratings || prdTotalRatings < threshold_ratings_count){
         return null;
     }
     
@@ -60,7 +56,7 @@ const Ratings = (props) => {
                     <span block="ratings-summary" elem="text">{prdAverageRatings}</span>
                     <img block="ratings" elem="icon" src={stars} /> 
                 </span>
-               
+            
                 <span block="ratings-summary" elem="separator">|</span>
                 <span block="ratings-summary" elem="totalReview">   
                     <span block="ratings-totalReview" elem="count">{totalRatings}</span>
