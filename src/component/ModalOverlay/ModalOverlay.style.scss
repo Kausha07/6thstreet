@@ -76,9 +76,10 @@ body{
         -webkit-transition: filter .25s linear;
     }
     &.modal-open{
-        overflow-x: hidden;
+        overflow: hidden;
         #root{
             filter: blur(2.5px);
+            overflow: hidden;
         }
     }
 }
