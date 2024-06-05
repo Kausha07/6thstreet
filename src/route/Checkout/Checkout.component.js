@@ -655,7 +655,8 @@ export class Checkout extends SourceCheckout {
       QPayOrderDetails,
       KnetDetails,
       KNETOrderDetails,
-      orderDetailsCartTotal,
+      orderDetailsCartTotal = {},
+      redirectPaymentMethod,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -686,6 +687,7 @@ export class Checkout extends SourceCheckout {
           KNETOrderDetails={KNETOrderDetails}
           guestAutoSignIn={guestAutoSignIn}
           orderDetailsCartTotal={orderDetailsCartTotal}
+          redirectPaymentMethod={redirectPaymentMethod}
         />
       );
     }
@@ -708,6 +710,7 @@ export class Checkout extends SourceCheckout {
         careemPayInfo={careemPayInfo}
         careemPayStatus={careemPayStatus}
         orderDetailsCartTotal={orderDetailsCartTotal}
+        redirectPaymentMethod={redirectPaymentMethod}
       />
     );
   }

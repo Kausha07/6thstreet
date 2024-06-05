@@ -8,7 +8,7 @@ import VueQuery from "../../query/Vue.query";
 import Logger from "Util/Logger";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import "./DynamicContentVueSlider.style";
-import { getUUIDToken } from "Util/Auth";
+import { getUUIDToken, getUUID } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
@@ -47,7 +47,7 @@ class DynamicContentVueSlider extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     let type = this.props.type;
     const payload = VueQuery.buildQuery(type, query, {

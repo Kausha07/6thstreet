@@ -368,7 +368,7 @@ export class HomePageContainer extends PureComponent {
         num_results: element === "vue_trending_brands" ? vueBrandsNumOfResults : vueCategoriesNumOfResults,
         user_id:userID,
         product_id: "",
-        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+        mad_uuid:  getUUID(),
         widget_type : element
       };
   
