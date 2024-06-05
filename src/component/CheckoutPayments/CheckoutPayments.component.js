@@ -306,7 +306,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           <span>{__("will be charged extra for cash on delivery")}</span>
         </p>) : null}
         {<p block="CheckoutPayments" elem="MethodDiscription">
-          {isMobile ? null : (<span className="noteBoldText">{__("Please Note: ")}</span>)}
           {method_description}
         </p>}
       </div>
