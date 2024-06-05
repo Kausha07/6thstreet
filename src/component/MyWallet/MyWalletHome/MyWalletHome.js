@@ -56,6 +56,10 @@ export default function MyWalletHome({ setCurrentScreen }) {
   const [transactionalBalance, setTransactionalBalance] = useState(null);
   const [allTransactionHistory, setAllTransactionHistory] = useState(null);
 
+  const isWalletBannerEnabled = useSelector(
+    (state) => state.AppConfig.isWalletBannerEnabled
+  );
+
   const isLanguageArabic = isArabic();
   const walletCashbackCoupon = useSelector(
     (state) => state.AppConfig.walletCashbackCoupon
@@ -72,8 +76,14 @@ export default function MyWalletHome({ setCurrentScreen }) {
         setTotalBalance(responseBalance?.data?.total_balance);
         setTransactionalBalance(responseBalance?.data?.transaction_balance);
 
-        MOE_addUserAttribute(MOE_USER_ATTR_PROMOTIONAL_BALANCE, responseBalance?.data?.promotional_balance);
-        MOE_addUserAttribute(MOE_USER_ATTR_TRANSACTIONAL_BALANCE, responseBalance?.data?.transaction_balance);
+        MOE_addUserAttribute(
+          MOE_USER_ATTR_PROMOTIONAL_BALANCE,
+          responseBalance?.data?.promotional_balance
+        );
+        MOE_addUserAttribute(
+          MOE_USER_ATTR_TRANSACTIONAL_BALANCE,
+          responseBalance?.data?.transaction_balance
+        );
         setIsBalanceLoading(false);
       }
     } catch (error) {
@@ -215,21 +225,23 @@ export default function MyWalletHome({ setCurrentScreen }) {
               )}
             </button>
           </div>
-          <div className="ReferNEarnLink">
-            <div className="referIcon">
-              <img src={VoucherIcon} alt="voucher" />
-            </div>
-            <div>
-              <div className="Heading">{__("Shop now to earn rewards")}</div>
-              <div className="SubHeading">
-                {__("Coupon")}
-                {" :"} {walletCashbackCoupon}
-                <span onClick={() => copyReferralCode()}>
-                  <img className="CopyIcon" src={CopyIcon} alt="copy" />
-                </span>
+          {isWalletBannerEnabled && (
+            <div className="ReferNEarnLink">
+              <div className={isMobileValue ? "referIcon mobileReferIcon" : "referIcon"}>
+                <img src={VoucherIcon} alt="voucher" />
+              </div>
+              <div>
+                <div className={isMobileValue ? "Heading mobileHeading" : "Heading"}>{__("Shop now to earn rewards")}</div>
+                <div className={isMobileValue ? "SubHeading mobileSubHeading": "SubHeading"}>
+                  {__("Coupon")}
+                  {" :"} {walletCashbackCoupon}
+                  <span onClick={() => copyReferralCode()}>
+                    <img className="CopyIcon" src={CopyIcon} alt="copy" />
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {allTransactionHistory?.count > 0 && (
             <div className="TransactionHeading">
               <div className="Heading">{__("All Transaction")}</div>

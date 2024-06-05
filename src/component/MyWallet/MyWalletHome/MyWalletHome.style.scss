@@ -180,6 +180,10 @@
           inline-size: 100%;
         }
       }
+      .mobileReferIcon{
+        inset-block-start: 0px;
+        inline-size: 100px;
+      }
       .Heading {
         inset-inline-start: 200px;
         font-family: Avenir Next;
@@ -189,6 +193,9 @@
         letter-spacing: 0px;
         text-align: start;
         padding-block-start: 16px;
+      }
+      .mobileHeading{
+        inset-inline-start: 100px;
       }
       .SubHeading {
         inset-inline-start: 200px;
@@ -207,6 +214,11 @@
           inline-size: 20px;
           cursor: pointer;
         }
+      }
+      .mobileSubHeading{
+        inset-inline-start: 100px;
+        font-size: 15px;
+        font-weight: 500;
       }
     }
     .TransactionHeading {

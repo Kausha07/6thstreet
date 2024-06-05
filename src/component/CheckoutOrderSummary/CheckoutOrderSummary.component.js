@@ -697,7 +697,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             {this.renderPriceLine(
                 total_wallet_credit,
               __("Cashback"), 
-              { couponSavings: true }
+              { cashBack: true }
             )}
           </div>
         </ul>
