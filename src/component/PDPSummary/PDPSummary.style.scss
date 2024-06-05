@@ -455,6 +455,24 @@ div[class^='styles__body'] {
   }
 }
 
+.productBrandName{
+  text-transform: capitalize;
+  color: #000;
+  @include mobile{
+    letter-spacing: .9px;
+    line-height: 20px;
+    font-size: 14px;
+    // max-width: 100%;
+    
+  }
+  @include desktop{
+    letter-spacing: 0;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 33px;
+  }
+}
+
 ._newDesign{
   .PDPbrandName{
     margin-bottom: 10px;
@@ -482,22 +500,14 @@ div[class^='styles__body'] {
       flex-direction: column;
       width: 100%;
       position: relative;
+      
       @include mobile{
-        letter-spacing: .9px;
-        line-height: 20px;
-        font-size: 14px;
-        // max-width: 100%;
         position: static;
-      }
-      @include desktop{
-        letter-spacing: 0;
-        font-weight: 600;
-        font-size: 24px;
-        line-height: 33px;
       }
     }
     &-Name{
       margin-top: 5px;
+      text-transform: capitalize;
       @include mobile{
         font-weight: 400;
         font-size: 12px;
@@ -512,6 +522,7 @@ div[class^='styles__body'] {
     &-Exclusive{
       text-transform: uppercase;
       background: #F3F2F2;
+      color:#000;
       &:not(:last-child){
         margin-right:5px;
       }
@@ -521,6 +532,7 @@ div[class^='styles__body'] {
         border-radius: 16px;
         padding:5px 10px;
         margin-bottom: 10px;
+        display: inline-block;
       }
       @include mobile{
         font-size: 10px;
@@ -550,21 +562,20 @@ div[class^='styles__body'] {
           line-height: 30px;
         }
         @include desktop{
-          font-size: 600;
+          font-size: 20px;
           line-height: 27px;
         }
       }
       .Price-Del{
         color: #777777;
+        font-weight: 500;
         @include mobile{
-          font-weight: 400;
           font-size: 14px;
           line-height: 16px;
         }
         @include desktop{
           font-size: 16px;
           line-height: 22px;
-          font-weight: 500;
         }
       }
     }
@@ -601,15 +612,23 @@ div[class^='styles__body'] {
       }
     }
     .PDPSideWideCouponInfo-sidewideCoupon{
-      font-weight: 400;
-      font-size: 12px;
-      line-height: 20px;
+      @include desktop{
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      @include mobile{
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 20px;
+      }
       .discount{
         color: #28D9AA;
+        @include desktop{
+          font-weight: 500;
+        }
       }
-      @include desktop{
-        font-weight: 500;
-      }
+      
     }
     .PDPbrandName{
       display: flex;
@@ -627,20 +646,10 @@ div[class^='styles__body'] {
     }
     .brandName{
       &-title{
-        
+        @extend .productBrandName;
         @include mobile{
           display:inline-block;
           width: 100%;
-          &::after{
-            content: '';
-            background-image: url(./icons/brandArrow.svg);
-            height: 10px;
-            background-repeat: no-repeat;
-            background-position: center;
-            width: 10px;
-            display: inline-block;
-            margin-left: 8px;
-          }
         }
         @include desktop{
           display: flex;
@@ -656,22 +665,44 @@ div[class^='styles__body'] {
         }
       }
     }
+    .ProductLabel,
+    .ProductTag{
+      @extend .PDPSummary-Exclusive;
+    }
+    .pdpsummarylinkTagStyle {
+      @extend .productBrandName;
+      @include mobile{
+        &::after{
+          content: '';
+          background-image: url(./icons/brandArrow.svg);
+          height: 10px;
+          background-repeat: no-repeat;
+          background-position: center;
+          width: 10px;
+          display: inline-block;
+          margin-left: 8px;
+        }
+      }
+    }
     &_isArabic{
       .brandName{
         &-title{
-          @include mobile{
-            &::after{
-              margin-left: 0px;
-              margin-right: 8px;
-              transform: rotate(180deg);
-              margin-bottom: -2px;
-            }
-          }
+          
           .brandFollow{
               @include desktop{
               margin-left: 0;
               margin-right: 14px;
             }
+          }
+        }
+      }
+      .pdpsummarylinkTagStyle {
+        @include mobile{
+          &::after{
+            margin-left: 0px;
+            margin-right: 8px;
+            transform: rotate(180deg);
+            margin-bottom: -2px;
           }
         }
       }
