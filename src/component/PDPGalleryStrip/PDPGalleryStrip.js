@@ -10,7 +10,7 @@ const addToBagThreshold = 10;
 const otherAreViewThreshold = 10;
 
 const PDPGalleryStrip = (props) => {
-    const addTobagText = __('Added To Bag');
+    const addTobagText = __('Added this to Bag');
     const otherAreViewText = __('Others are viewing');
     const [isATBViewing, setisATBViewing] = useState(true);
     const [isOAVViewing, setisOAVViewing] = useState(false);
