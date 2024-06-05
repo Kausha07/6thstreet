@@ -34,10 +34,10 @@ const Ratings = (props) => {
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 
-    const threshold_average_ratings = +rating_sku?.min_avg_rating > 0 ? +rating_sku?.min_avg_rating : +rating_brand?.min_avg_rating > 0 ? +rating_brand?.min_avg_rating : uMinAvgRating;
-    const threshold_ratings_count = +rating_sku?.min_rating_count > 0 ? +rating_sku?.min_rating_count : +rating_brand?.min_rating_count > 0 ? +rating_brand?.min_rating_count : uMinRatingCount;
+    const thresholdAverageRatings = +rating_sku?.min_avg_rating > 0 ? +rating_sku?.min_avg_rating : +rating_brand?.min_avg_rating > 0 ? +rating_brand?.min_avg_rating : uMinAvgRating;
+    const thresholdRatingsCount = +rating_sku?.min_rating_count > 0 ? +rating_sku?.min_rating_count : +rating_brand?.min_rating_count > 0 ? +rating_brand?.min_rating_count : uMinRatingCount;
 
-    if(prdAverageRatings < threshold_average_ratings || prdTotalRatings < threshold_ratings_count){
+    if(prdAverageRatings < thresholdAverageRatings || prdTotalRatings < thresholdRatingsCount){
         return null;
     }
     
