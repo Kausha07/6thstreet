@@ -305,10 +305,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           <span className="codCharge">{`${currency_code} ${codFee}`}</span>&nbsp;
           <span>{__("will be charged extra for cash on delivery")}</span>
         </p>) : null}
-        {isMobile ? null : ( <p block="CheckoutPayments" elem="MethodDiscription">
-          <span className="noteBoldText">{__("Please Note: ")}</span>
+        {<p block="CheckoutPayments" elem="MethodDiscription">
+          {isMobile ? null : (<span className="noteBoldText">{__("Please Note: ")}</span>)}
           {method_description}
-        </p>)}
+        </p>}
       </div>
     );
   }
