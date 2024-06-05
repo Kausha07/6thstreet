@@ -184,6 +184,15 @@
                 }
             }
         }
+        &_cashBack {
+            .CheckoutOrderSummary {
+                &-Price {
+                    font-size: 13px;
+                    font-weight: var(--fw-demi);
+                    color: #13CA75;
+                }
+            }
+        }
         &_divider {
             border-top: 1px solid #ccc;
             padding: 10px 0px;
@@ -219,6 +228,20 @@
                     font-size: 13px;
                     font-weight: var(--fw-medium);
                     color: #28D9AA;
+                }
+            }
+        }
+    }
+    &-Cashback {
+        border-block-start: 1.5px solid var(--Gallery);
+        li {
+            grid-column: 1 / span 4;
+            grid-row: 1;
+            .CheckoutOrderSummary {
+                &-Text {
+                    margin-block-start: 3px;
+                    font-weight: var(--fw-regular);
+                    font-size: 15px;
                 }
             }
         }
@@ -537,5 +560,13 @@
     .sideWideCouponBlock {
         width: auto;
         margin: 0 18px 20px;
+    }
+}
+
+.CheckoutOrderSummary-SummaryItem_cashBack{
+    .CheckoutOrderSummary-Price{
+        font-size: 15px;
+        font-weight: var(--fw-bold);
+        color: #13CA75;
     }
 }

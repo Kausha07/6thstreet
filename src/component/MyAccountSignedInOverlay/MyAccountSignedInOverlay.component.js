@@ -7,6 +7,7 @@ import { ReactComponent as AccountIcon } from "Style/account.svg";
 import { isArabic } from "Util/App";
 import AddressIcon from "./icons/address.svg";
 import WalletIcon from "../../style/icons/payment.png";
+import WalletV1Icon from "../../route/MyAccount/icons/walletIcon.svg";
 import OrdersIcon from "./icons/cat-menu.svg";
 import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
@@ -94,6 +95,29 @@ export class MyAccountSignedInOverlay extends PureComponent {
           {__("My Profile")}
         </span>
       </Link>
+    );
+  }
+
+  renderMyWalletLink() {
+    return (
+      <div>
+        <Link
+          block="MyAccountSignedInOverlay"
+          elem="LinkAccount"
+          to="/my-account/my-wallet"
+          // onClick={() => this.sendEvents(EVENT_ACCOUNT_PROFILE_CLICK)}
+        >
+          <Image
+            lazyLoad={true}
+            src={WalletV1Icon}
+            mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+            alt={"cat-menu"}
+          />
+          <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+            {__("My Wallet")}
+          </span>
+        </Link>
+      </div>
     );
   }
 
@@ -302,14 +326,20 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderWrapper() {
-    const { customer, IsVipCustomerEnabled, isClubApparelEnabled } = this.props;
+    const {
+      customer,
+      IsVipCustomerEnabled,
+      isClubApparelEnabled,
+      isWalletEnabled,
+    } = this.props;
     const isVipCustomer =
-      customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
+      (customer && customer?.vipCustomer && IsVipCustomerEnabled) || false;
     return (
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
         {isVipCustomer && this.renderVipLink()}
         {isClubApparelEnabled && this.renderClubLink()}
         {this.renderMyAccountLink()}
+        {isWalletEnabled && this.renderMyWalletLink()}
         {this.renderReferralLink()}
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}

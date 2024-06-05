@@ -41,11 +41,11 @@ export class StoreCreditDispatcher {
             if (apply) {
                 await applyStoreCredit(cartId);
 
-                dispatch(showNotification('success', __('Store Credits are applied!')));
+                dispatch(showNotification('success', __('My Cash is applied!')));
             } else {
                 await removeStoreCredit(cartId);
 
-                dispatch(showNotification('success', __('Store Credits are removed!')));
+                dispatch(showNotification('success', __('My Cash is removed!')));
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);

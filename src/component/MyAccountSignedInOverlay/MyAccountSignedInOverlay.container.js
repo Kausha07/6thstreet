@@ -20,6 +20,7 @@ export const mapStateToProps = (_state) => ({
     isClubApparelEnabled: _state.AppConfig.isClubApparelEnabled,
     customer: _state.MyAccountReducer.customer,
     IsVipCustomerEnabled: _state.AppConfig.isVIPEnabled,
+    isWalletEnabled: _state.AppConfig.isWalletV1Enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -39,6 +40,7 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
         isClubApparelEnabled:PropTypes.bool,
         customer: customerType.isRequired,
         IsVipCustomerEnabled: PropTypes.bool,
+        isWalletEnabled: PropTypes.bool,
     };
 
     containerFunctions = {
