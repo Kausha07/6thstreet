@@ -55,6 +55,13 @@ export const CityArea = (props) => {
     isSignedIn,
     cartItems,
     isExpressDelivery,
+    invokeEDDCallForPDPExpress,
+    isPDP = false,
+    isToMakeEDDCallPage = true,
+    showBackgroundColor = true,
+    showEllipsisArea = true,
+    EddAddress,
+    expressService,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -259,7 +266,23 @@ export const CityArea = (props) => {
   };
 
   const autoPopulateCityArea = async (selectedAddress) => {
-    await getEddResponse(selectedAddress, true);
+    const { area = "", city = "", country_code = "" } = selectedAddress;
+
+    let requestObj = {
+      country: country_code || getCountryFromUrl(),
+      city: city,
+      area: area,
+      courier: null,
+      source: null,
+    };
+
+    localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+
+    if (isPDP) {
+      await invokeEDDCallForPDPExpress(selectedAddress);
+    } else if (isToMakeEDDCallPage) {
+      await getEddResponse(selectedAddress, true);
+    }
     const request = JSON.parse(localStorage.getItem("EddAddressReq"));
     setFinalAreaText(request?.area);
   };
@@ -365,7 +388,7 @@ export const CityArea = (props) => {
     );
   };
 
-  return isExpressDelivery && render();
+  return isExpressDelivery ? render() : null;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CityArea);

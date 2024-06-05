@@ -842,6 +842,24 @@ class PDPSummary extends PureComponent {
     return actualEddMess;
   }
 
+  invokeEDDCallForPDPExpress = async (selectedAddress) => {
+    const { selectedArea } = this.state;
+    // await this.getEddForPDP(selectedAddress?.area);
+    // await  this.callEstimateEddAPI(selectedAddress?.area);
+
+    this.setState(
+      {
+        selectedCity: selectedAddress?.city,
+        selectedArea: selectedAddress?.area,
+        countryCode: selectedAddress?.country_code,
+      },
+      () => {
+        this.getEddForPDP(selectedArea);
+        this.callEstimateEddAPI(selectedArea);
+      }
+    );
+  };
+
   renderSelectCityForExpress(crossBorder) {
     const { isMobile, isArabic, selectedSizeCode } = this.state;
 
@@ -877,7 +895,7 @@ class PDPSummary extends PureComponent {
             <>
               <CityArea
                 isPDP={isPDP}
-                getEddForPDPres={this.getEddForPDP}
+                invokeEDDCallForPDPExpress={this.invokeEDDCallForPDPExpress}
                 showBackgroundColor={false}
                 showEllipsisArea={isMobile ? true : false}
                 isToMakeEDDCallPage={false}
