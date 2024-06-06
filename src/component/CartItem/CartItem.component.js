@@ -595,6 +595,7 @@ export class CartItem extends PureComponent {
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
+      (cross_border === 1) &&
       edd_info &&
       edd_info.has_cross_border_enabled;
 
@@ -618,7 +619,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee)) ? this.renderIntlTag() : null}
+        {(isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor) > -1)) )) ? this.renderIntlTag() : null}
         {row_total === 0 ? null : this.renderActions()}
       </figcaption>
     );
