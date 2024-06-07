@@ -984,7 +984,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     });
     
     if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
-      MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
+      MOE_AddUniqueID(paymentInformation.billing_address.guest_email.toLowerCase());
     }
 
     if (
