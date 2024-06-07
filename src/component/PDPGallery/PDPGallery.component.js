@@ -665,8 +665,11 @@ class PDPGallery extends PureComponent {
       product:{
         rating_brand,
         rating_sku,
+        objectID,
+        sku,
       }
     } = this.props;
+
    
     return (
       <>
@@ -702,7 +705,7 @@ class PDPGallery extends PureComponent {
           }
           {this.renderSlider()}
           {this.renderGalleryTag()}
-          {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" />}
+          {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" productId={objectID} sku={sku}/>}
         </button>
 
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} />}

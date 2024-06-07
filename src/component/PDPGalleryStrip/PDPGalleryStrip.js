@@ -1,79 +1,70 @@
 import {useEffect, useState} from 'react';
-import { useSelector, useDispatch} from 'react-redux';
 import './PDPGalleryStrip.style';
 import { isArabic } from "Util/App";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import bags from './icons/bags.png';
 import eyes from './icons/eyes.png';
 
-const addToBagThreshold = 10;
-const otherAreViewThreshold = 10;
+
 
 const PDPGalleryStrip = (props) => {
     const addTobagText = __('Added this to Bag');
     const otherAreViewText = __('Others are viewing');
     const [isATBViewing, setisATBViewing] = useState(true);
     const [isOAVViewing, setisOAVViewing] = useState(false);
-    const [isAddtoBagCount, setisAddTobagCount] = useState(addTobagHandler);
-    const [isOtherAreView, setisOtherAreViewing] = useState(otherAreView);
-    const config = useSelector(state => state.AppConfig.config);
-
+    const [isAddtoBagCount, setisAddTobagCount] = useState(0);
+    const [isOtherAreView, setisOtherAreViewing] = useState(0);
 
     useEffect(() => {
+        const {productId, sku} = props;
         let myInterval;
-        meViewingHandler();
-        if(isAddtoBagCount > addToBagThreshold && isOtherAreView > otherAreViewThreshold){
-             myInterval =  setInterval(() => {
-                console.log('-----.....set Intervals')
-                setisATBViewing(prev => !prev);
-                setisOAVViewing(prev => !prev);
-            }, 3000);
-        } else{
-            setisATBViewing(isAddtoBagCount > addToBagThreshold);
-            setisOAVViewing(isOtherAreView > otherAreViewThreshold);
-        }
+        const fetchData = async () => {
+            try {
+                // Make multiple API calls simultaneously
+                const [resSendMyView, resOthersViewing, resAddedToBag] = await Promise.all([
+                    MobileAPI.post(`product-view/${productId}`),
+                    MobileAPI.get(`product-count/${productId}`),
+                    MobileAPI.get(`brought-count/${sku}`)
+                ]);
+
+                // Extract data from responses
+                const sendMyView = await resSendMyView?.data[0];
+                const otherView = await resOthersViewing?.data[0];
+                const addToBag = await resAddedToBag?.data[0];
+
+                console.log('--sendMyView', sendMyView);
+                console.log('--otherView', otherView);
+                console.log('--addToBag', addToBag);
+
+                sendMyView.status > 0 && console.log('my view count');
+
+                // Update state with fetched data
+                setisAddTobagCount(addToBag.count);
+                setisOtherAreViewing(otherView.count);
+
+                if(addToBag.count && otherView.count){
+                    myInterval =  setInterval(() => {
+                        setisATBViewing(prev => !prev);
+                        setisOAVViewing(prev => !prev);
+                    }, 3000);
+                } else {
+                    setisATBViewing(addToBag.count > 0);
+                    setisOAVViewing(otherView.count > 0);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
         
-        return () => {
-            console.log('-----.......clear Intervals')
-            myInterval && clearInterval(myInterval);
-        }
+        // Fetch data initially
+        fetchData();
+
+        return () => myInterval && clearInterval(myInterval);
+        
     },[]);
 
-    function defautlThreshold(){
-        return [isAddtoBad, isOtherAreView]
-    }
-
-    function addTobagHandler(){
-        try {
-            // const { data } = await MobileAPI.get(`sku/${ returnId }`);
-            return 12;
-        } catch (e) {
-            Logger.log(e);
-        }
-        
-    }
-
-    function otherAreView(){
-        try {
-            // const { data } = await MobileAPI.get(`sku/${ sku }`);
-            return 20;
-        } catch (e) {
-            Logger.log(e);
-        }
-    }
-
-    async function meViewingHandler(){
-        try {
-            // const { data } = await MobileAPI.get(`sku/${ sku }`);
-            
-        } catch (e) {
-            Logger.log(e);
-        }
-    }
-
-
     return (
-        <div className={`${props.className} PDPGalleryStrip ${isArabic() ? 'isArabic' :''}`} style={{display:isATBViewing || isOAVViewing ? 'block':'none'}}>
+        <div className={`${props.className} PDPGalleryStrip ${isArabic() ? 'isArabic' :''}`} style={{display:isAddtoBagCount > 0 || isOtherAreView > 0 ? 'block':'none'}}>
            { isAddtoBagCount > 0 && 
                 <div className={`PDPGalleryStrip-elem ${isATBViewing ? 'active':'' }`}>
                     <img block='PDPGalleryStrip' elem='icon' src={bags} alt={`${isAddtoBagCount} ${addTobagText}`}/>

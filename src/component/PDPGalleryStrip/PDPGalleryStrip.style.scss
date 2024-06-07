@@ -60,27 +60,27 @@
     animation-fill-mode: both
 }
 .PDPGalleryStrip{
-    position: absolute;
-    right: 0;
-    background-color: rgba($color: #fff, $alpha: .9);
-    padding: 6px 8px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    width: 100%;
     
-    height: 30px;
-    text-align: center;
-    transition: all .25s ease;
-    -webkit-transition: all .25s ease;
+    // width: 100%;
+    // position: absolute;
+    // right: 0;
+    // background-color: rgba($color: #fff, $alpha: .9);
+    // padding: 6px 8px;
+    // border-top-left-radius: 10px;
+    // border-bottom-left-radius: 10px;
+    // height: 30px;
+    // text-align: center;
+    // transition: all .25s ease;
+    // -webkit-transition: all .25s ease;
     
-    @include mobile{
-        bottom: 25px;
-        max-width: 167px;
-    }
-    @include desktop{
-        bottom: 50px;
-        max-width: 200px;
-    }
+    // @include mobile{
+    //     bottom: 25px;
+    //     // max-width: 167px;
+    // }
+    // @include desktop{
+    //     bottom: 50px;
+    //     // max-width: 200px;
+    // }
     &-icon{
         display: inline-block;
         width: auto;
@@ -93,16 +93,36 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        // width: 100%;
         opacity: 0;
         visibility: hidden;
         transition: all .23s ease;
         -webkit-transition: all .5s ease;
+        // position: absolute;
+        // left: 50%;
+        // top: 50%;
+        // transform: translate(-50%, -50%);
+        // -webkit-transform: translate(-50%, -50%);
+
         position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        -webkit-transform: translate(-50%, -50%);
+        right: 0;
+        background-color: rgba($color: #fff, $alpha: .9);
+        padding: 6px 8px;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        height: 30px;
+        text-align: center;
+        transition: all .25s ease;
+        -webkit-transition: all .25s ease;
+
+        @include mobile{
+            bottom: 25px;
+            // max-width: 167px;
+        }
+        @include desktop{
+            bottom: 50px;
+            // max-width: 200px;
+        }
 
         &.active{
             opacity: 1;
@@ -112,16 +132,17 @@
             // animation-name: bounce;
             // -webkit-animation-name: flash;
             // animation-name: flash;
-            -webkit-animation-name: fadeIn;
-            animation-name: fadeIn;
-            -webkit-transform-origin: center bottom;
-            transform-origin: center bottom;
-            -webkit-animation-duration: .5s;
-            animation-duration: .5s;
-            -webkit-animation-duration: var(--animate-duration);
-            animation-duration: var(--animate-duration);
-            -webkit-animation-fill-mode: both;
-            animation-fill-mode: both
+
+            // -webkit-animation-name: fadeIn;
+            // animation-name: fadeIn;
+            // -webkit-transform-origin: center bottom;
+            // transform-origin: center bottom;
+            // -webkit-animation-duration: .5s;
+            // animation-duration: .5s;
+            // -webkit-animation-duration: var(--animate-duration);
+            // animation-duration: var(--animate-duration);
+            // -webkit-animation-fill-mode: both;
+            // animation-fill-mode: both
         }
     }
     &-text{
@@ -145,13 +166,17 @@
         }
     }
     &.isArabic{
-        left: 0;
-        right: auto;
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
         direction: rtl;
+        .PDPGalleryStrip{
+            &-elem{
+                left: 0;
+                right: auto;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+        }
     }
 }
 // background: #F96446;
