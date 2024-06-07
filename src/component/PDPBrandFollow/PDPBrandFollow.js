@@ -42,30 +42,30 @@ const PDPBrandFollow = (props) => {
         setIsLoadingFollow(true); 
         if(isSignedIn()){
             // !isItemTheir && isFollowing(!isFollowActive);
-            isFollowing(!isFollowActive)
+            isFollowing();
         } else {
             renderMySignInPopup(() => {
                 // isSignedIn() && !isItemTheir && getListOnLoad(onClickHandler)
-                isSignedIn() && isFollowing(!isFollowActive);
+                isSignedIn() && isFollowing();
                 !isSignedIn() && setIsLoadingFollow(false);
             });
         }
     }
-    const isFollowing = async (isFollow) =>{
+    const isFollowing = async () =>{
         try {
             let data = {};
             data.type = 'brand';
             data.name = props.brand_name;
-            data.follow = isFollow;
+            data.follow = !isFollowActive;
             const res = await MobileAPI.post('follow', data);
-            if(props.brand_name === res.name) {
-                setisFollowActive(res.name !== '') 
+            if(props.brand_name.toLowerCase() === res?.name?.toLowerCase()) {
+                setisFollowActive(res?.name !== '') 
                 dispatch(showNotification(
                     'success',
                     __("You Followed this Brand")
                 ));
             } else {
-                setisFollowActive(res.name);
+                setisFollowActive(res?.name);
                 dispatch(showNotification(
                     'success',
                     __("You Unfollowed this Brand")
@@ -80,9 +80,11 @@ const PDPBrandFollow = (props) => {
         }
     }
 
-    const getListOnLoad = async (fn) => {
+    const getListOnLoad = async () => {
         const res = await MobileAPI.get('follow/list');
-        const selectedItem = res.length > 0 && res.filter(item => props.brand_name === item.name);
+        const selectedItem = res.length > 0 && res.filter(item => {
+            return props.brand_name.toLowerCase() === item?.name?.toLowerCase()
+        });
         setisFollowActive(selectedItem.length > 0);
         // isItemTheir = selectedItem.length > 0;
         // !isItemTheir && fn && fn();
