@@ -16,6 +16,8 @@ import {
   setVueTrendingBrandsBannerActive,
   setUserIdForVueTrendingBrands,
   setSignInIsLoading,
+  setExpressServicable,
+  setSelectedCityArea,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -40,6 +42,7 @@ import {
   resetPassword,
   resetPasswordWithToken,
   updateCustomerData,
+  expressServicable,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getShippingAddresses } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
@@ -77,7 +80,8 @@ export {
 export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 import { getCountryFromUrl } from "Util/Url";
-import {CART_ITEMS_CACHE_KEY} from "../Cart/Cart.reducer";
+import { CART_ITEMS_CACHE_KEY } from "../Cart/Cart.reducer";
+import MagentoAPI from "Util/API/provider/MagentoAPI";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
@@ -759,6 +763,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     // eslint-disable-next-line
     return updateCustomerData(mappedData);
+  }
+
+  async expressService(dispatch, data) {
+    const response = await expressServicable(data);
+
+    if (response) {
+      dispatch(setExpressServicable(response));
+    }
+  }
+
+  selectedCityArea(dispatch, data) {
+    dispatch(setSelectedCityArea(data));
   }
 }
 

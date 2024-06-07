@@ -926,7 +926,7 @@ export class CartItem extends PureComponent {
       return null;
     }
 
-    const isExpressProduct = true;
+    const isExpressProduct = false;
     if (extension_attributes?.click_to_collect_store) {
       return (
         <div block="AreaText" mods={{ isArabic }}>
@@ -963,14 +963,16 @@ export class CartItem extends PureComponent {
           <div block="EddStandardDelivery">
             <div block="EddStandardDeliveryTextBlock">
               <Shipping />
-              <span block="EddStandardDeliveryText">
-                {__("Standard")} {}
-                {actualEddMess.split(splitKey)[0]} {}
-                {splitKey} {}
-              </span>
-              <span block="EddStandardDeliveryTextBold">
-                {actualEddMess.split(splitKey)[1]}
-              </span>
+              <div block="shipmentText">
+                <span block="EddStandardDeliveryText">
+                  {__("Standard")} {}
+                  {actualEddMess.split(splitKey)[0]} {}
+                  {splitKey} {}
+                </span>
+                <span block="EddStandardDeliveryTextBold">
+                  {actualEddMess.split(splitKey)[1]}
+                </span>
+              </div>
             </div>
             <div block="internationalShipmentTag">
               {isIntlBrand || (international_shipping_fee && +cross_border)

@@ -506,28 +506,27 @@
     }
   }
 
+  .eddAndActionsBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .EddExpressWrapper {
-    @include desktop {
-      width: 100%;
-    }
-
-    @include mobile {
-      width: 100%;
-    }
-
+    min-width: 260px;
+    max-width: 260px;
     .EddExpressDelivery {
       display: flex;
       background: #f964461a;
-      height: 40px;
       justify-content: center;
       flex-direction: column;
       border-radius: 8px;
-      // margin-top: 10px;
       text-transform: initial;
+      padding: 0 15px 5px 0;
 
       svg {
-        width: 15px;
-        height: 15px;
+        width: 25px;
+        height: 25px;
         margin: 0 5px;
       }
 
@@ -543,18 +542,18 @@
           color: #f96446;
           font-weight: 600;
           font-style: italic;
-          font-size: 12px;
+          font-size: 13px;
         }
 
         .EddExpressDeliveryTextNormal {
           font-weight: 400;
-          font-size: 11px;
+          font-size: 12px;
         }
 
         .EddExpressDeliveryTextBold {
           font-weight: 600;
           margin: 0 5px;
-          font-size: 12px;
+          font-size: 13px;
         }
       }
     }
@@ -570,11 +569,10 @@
     .EddStandardDelivery {
       display: flex;
       background: #8686861a;
-      padding: 5px 0;
+      padding: 5px;
       justify-content: center;
       flex-direction: column;
       border-radius: 8px;
-      // margin-top: 10px;
       text-transform: initial;
 
       .EddStandardDeliveryTextBlock {

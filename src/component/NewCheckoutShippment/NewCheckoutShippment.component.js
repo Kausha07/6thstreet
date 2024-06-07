@@ -57,7 +57,7 @@ export const NewCheckoutShippment = (props) => {
           <div
             block="StandardDeliveryBlock"
             mods={{
-              isSelected: true,
+              isSelected: false,
             }}
           >
             <div block="EddStandardDelivery">

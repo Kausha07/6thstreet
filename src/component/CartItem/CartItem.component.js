@@ -545,7 +545,7 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
-  renderEddWhenExpressEnabled = (crossBorder, actualEddMess) => {
+  renderEddWhenExpressEnabled = (crossBorder) => {
     const {
       edd_info,
       item: {
@@ -554,14 +554,21 @@ export class CartItem extends PureComponent {
       },
       international_shipping_fee,
       isExpressDelivery,
+      isCheckoutPage,
+      eddMessageForCheckoutPage,
     } = this.props;
 
+    let actualEddMess = this.formatEddMessage(crossBorder);
     const isIntlBrand =
       cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
 
     if (!actualEddMess) {
+      return null;
+    }
+    if (isExpressDelivery && isCheckoutPage) {
+      eddMessageForCheckoutPage(actualEddMess, isIntlBrand);
       return null;
     }
 
@@ -625,31 +632,13 @@ export class CartItem extends PureComponent {
   };
 
   renderEdd = (crossBorder) => {
-    const {
-      item: { extension_attributes },
-      edd_info,
-      isCheckoutPage,
-      isExpressDelivery,
-      eddMessageForCheckoutPage,
-    } = this.props;
+    const { item: { extension_attributes } } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;
     }
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
-
-    if (isCheckoutPage) {
-      const isIntlBrand =
-        crossBorder && edd_info && edd_info?.has_cross_border_enabled;
-
-      eddMessageForCheckoutPage(actualEddMess, isIntlBrand);
-      return null;
-    }
-
-    if (isExpressDelivery) {
-      return this.renderEddWhenExpressEnabled(crossBorder, actualEddMess);
-    }
 
     return (
       <div block="AreaText" mods={{ isArabic }}>
@@ -721,19 +710,35 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
+        {!isNotAvailble && <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
-        {edd_info &&
-          edd_info.is_enable &&
-          edd_info.has_cart &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
-          !isNotAvailble &&
-          this.renderEdd(cross_border === 1)}
-        {(!isCheckoutPage || !isExpressDelivery) &&
-        (isIntlBrand || (international_shipping_fee && +cross_border))
-          ? this.renderIntlTag()
-          : null}
-        {row_total === 0 ? null : this.renderActions()}
+        <div block="eddAndActionsBlock">
+          {isNotAvailble && this.renderOOSMessage()}
+          {!isExpressDelivery &&
+            edd_info &&
+            edd_info.is_enable &&
+            edd_info.has_cart &&
+            ((isIntlBrand && Object.keys(intlEddResponse).length > 0) ||
+              cross_border === 0 ||
+              edd_info.has_item_level) &&
+            !isNotAvailble &&
+            this.renderEdd(cross_border === 1)}
+          {isExpressDelivery &&
+            edd_info &&
+            edd_info.is_enable &&
+            edd_info.has_cart &&
+            ((isIntlBrand && Object.keys(intlEddResponse).length > 0) ||
+              cross_border === 0 ||
+              edd_info.has_item_level) &&
+            !isNotAvailble &&
+            this.renderEddWhenExpressEnabled(cross_border === 1)}
+          {!isCheckoutPage &&
+          !isExpressDelivery &&
+          (isIntlBrand || (international_shipping_fee && +cross_border))
+            ? this.renderIntlTag()
+            : null}
+          {row_total === 0 ? null : this.renderActions()}
+        </div>
       </figcaption>
     );
   }

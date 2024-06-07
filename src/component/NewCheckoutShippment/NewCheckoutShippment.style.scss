@@ -52,7 +52,7 @@
           }
 
           &::before {
-            top: 10px;
+            top: 20px;
             left: 10px;
             width: 15px;
             height: 15px;
@@ -68,7 +68,7 @@
           &_isSelected {
             &::after {
               opacity: 1;
-              top: 10px;
+              top: 20px;
               left: 9px;
               width: 18px;
               height: 18px;
@@ -85,16 +85,14 @@
 
           .EddExpressDelivery {
             display: flex;
-            // height: 45px;
             justify-content: center;
             flex-direction: column;
-            // margin-top: 10px;
             text-transform: initial;
+            padding-bottom: 5px;
 
             svg {
-              width: 35px;
-              height: 35px;
-              // margin: 0 5px;
+              width: 30px;
+              height: 30px;
             }
 
             .EddExpressDeliveryTextBlock {
@@ -109,18 +107,18 @@
                 color: #f96446;
                 font-weight: 600;
                 font-style: italic;
-                font-size: 12px;
+                font-size: 13px;
               }
 
               .EddExpressDeliveryTextNormal {
                 font-weight: 400;
-                font-size: 11px;
+                font-size: 12px;
               }
 
               .EddExpressDeliveryTextBold {
                 font-weight: 600;
                 margin: 0 5px;
-                font-size: 12px;
+                font-size: 13px;
               }
             }
           }
@@ -130,7 +128,7 @@
             font-weight: 400;
             color: #606060;
             margin-top: 2px;
-            margin: 2px 38px;
+            margin: 2px 32px;
           }
 
           .ExpressPrice {
@@ -148,6 +146,7 @@
           border-top: none;
 
           padding: 0 10px 0 40px;
+          height: 57px;
           &::before,
           &::after {
             content: "";
@@ -156,7 +155,7 @@
           }
 
           &::before {
-            top: 10px;
+            top: 20px;
             left: 10px;
             width: 15px;
             height: 15px;
@@ -172,7 +171,7 @@
           &_isSelected {
             &::after {
               opacity: 1;
-              top: 10px;
+              top: 20px;
               left: 9px;
               width: 18px;
               height: 18px;
