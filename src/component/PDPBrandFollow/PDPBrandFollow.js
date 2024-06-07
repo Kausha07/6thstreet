@@ -1,178 +1,93 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { isSignedIn } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
 import heart from './icons/heart.svg';
 import heartFilled from './icons/heartFilled.svg'; 
-import { isArabic } from "Util/App";   
-import {getGraphqlEndpoint } from 'Util/Request/Request';
-import { showNotification } from "Store/Notification/Notification.action"; 
+import { isArabic } from "Util/App"; 
+import { showNotification } from "Store/Notification/Notification.action";
+import MobileAPI from "Util/API/provider/MobileAPI";
+import BrowserDatabase from "Util/BrowserDatabase";
+
 
 import './PDPBrandFollow.style';
 
 const PDPBrandFollow = (props) => {
     
-
+    const {renderMySignInPopup } = props;
+    const dispatch = useDispatch();
     const [isLoadingFollow, setIsLoadingFollow] = useState(false);
     const [isFollowActive, setisFollowActive] = useState(false);
-    let aftersignDone, maxFnExcue = 0;
+
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
 
     useEffect(() => {
        onLoadHandler();
        return () => {
-        clearTimeout(aftersignDone);
+        setIsLoadingFollow(false);
        }
-    },[]);
+    },[userID]);
+
+    const onLoadHandler = async () => {
+        setIsLoadingFollow(true); 
+        if(isSignedIn()){
+            getListOnLoad();
+        } else {
+            setIsLoadingFollow(false); 
+            setisFollowActive(false);
+        }
+    }
 
     const onClickHandler = () => {
         setIsLoadingFollow(true); 
-        const {renderMySignInPopup } = props;
         if(isSignedIn()){
-            isFollowing(!isFollowActive, onClickHandler);
+            // !isItemTheir && isFollowing(!isFollowActive);
+            isFollowing(!isFollowActive)
         } else {
             renderMySignInPopup(() => {
-                isFollowing(!isFollowActive, onClickHandler);
+                // isSignedIn() && !isItemTheir && getListOnLoad(onClickHandler)
+                isSignedIn() && isFollowing(!isFollowActive);
+                !isSignedIn() && setIsLoadingFollow(false);
             });
-
         }
     }
-
-    const onLoadHandler = () => {
-        setIsLoadingFollow(true); 
-        // isFollowing('firstLoad');
-        isFollowing();
-    }
-
-    const isFollowing = (isFollow, fn) =>{
-        let data = {};
-        if(isSignedIn()){ 
-            const customer = BrowserDatabase.getItem("customer");
-            const userID = customer && customer.id ? customer.id : null;
-            // const userID = null;
-            if(userID && props.brand_name){
-                data.userID = userID;
-                data.brand_name = props.brand_name;
-                if(isFollow){
-                    data.isFollow = isFollow;
-                }
-                console.log('--009900--',data);
-                isFollowOrNot(data);
-                clearTimeout(aftersignDone);
+    const isFollowing = async (isFollow) =>{
+        try {
+            let data = {};
+            data.type = 'brand';
+            data.name = props.brand_name;
+            data.follow = isFollow;
+            const res = await MobileAPI.post('follow', data);
+            if(props.brand_name === res.name) {
+                setisFollowActive(res.name !== '') 
+                dispatch(showNotification(
+                    'success',
+                    __("You Followed this Brand")
+                ));
             } else {
-                aftersignDone = setTimeout(() => {
-                    fn();
-                    maxFnExcue++
-                    if(maxFnExcue >= 8){
-                        clearTimeout(aftersignDone);
-                        setIsLoadingFollow(false);
-                    }
-                },500);
-            }
-           
-        } else {
-            console.log('--009900--',data);
-            setIsLoadingFollow(false); 
+                setisFollowActive(res.name);
+                dispatch(showNotification(
+                    'success',
+                    __("You Unfollowed this Brand")
+                ));
+            } 
+            setIsLoadingFollow(false);
+            
+        }
+        catch(err){
+            console.error("Error", err);
+            setIsLoadingFollow(false);
         }
     }
 
-    async function isFollowOrNot(data){
-        // user, brandname, true
-        let query;
-        let url = getGraphqlEndpoint();
-        // console.log(data,data.isFollow);
-            try {
-                const response = {
-                    userID:data.userID,
-                    brand_name: props.brand_name,
-                    isFollow:data.isFollow ? data.isFollow : false
-                }
-                // if(data.isFollow === 'firstLoad'){
-                //     query = `{
-                //         brandList{
-                //             items{
-                //                 ${props.brand_name}
-                //             }
-                //         }
-                //     }`
-                // }
-                
-                // if(data.isFollow){
-                //     query = `
-                //     mutation {
-                //         followTheBrand(
-                //           brand: ${props.brand_name}
-                //         ) {
-                //           "Follow the Brand"
-                //         }
-                //       }`;
-                // }
-                // if(!data.isFollow){
-                //     query = `
-                //     mutation {
-                //         unfollowTheBrand(
-                //           brand: ${props.brand_name}
-                //         ) {
-                //           "UnFollow the Brand"
-                //         }
-                //       }`;
-                // }
-                // const response = await MobileAPI.post(url,  data);
-                // const response = {
-                //     "data": {
-                //         "brandList": {
-                //           "items": [
-                //             {
-                //               "name": "brand 1"
-                //             },
-                //             {
-                //               "name": "brand 2"
-                //             },
-                //             {
-                //               "name": "Call it Spring"
-                //             }
-                //           ]
-                //         }
-                //     }
-                //   }
-                // const response = {
-                //     "data": {
-                //         "followTheBrand": {
-                //             "message": __("The Brand name has been followed by you.")
-                //         }
-                //     }
-                // }
-
-                // console.log(response.data,'--qwas--');
-                // if(Object.keys(response.data)[0] === 'brandList'){
-                //     let brandList = response?.data?.brandList?.items;
-                //     brandList.forEach((item) => {
-                //         item.name === props.brand_name && setisFollowActive(true);
-                //     })
-                // }
-                // if(Object.keys(response.data)[0] === 'followTheBrand'){
-                //     showNotification(
-                //         "success",
-                //         __(response.data.followTheBrand?.message)
-                //       );
-                //       setisFollowActive(true);
-                // }
-                // if(Object.keys(response.data)[0] === 'unfollowTheBrand'){
-                //     showNotification(
-                //         "success",
-                //         __(response.data.followTheBrand?.message)
-                //       );
-                //       setisFollowActive(false);
-                // }
-
-               
-                props.brand_name === response.brand_name && setisFollowActive(response.isFollow);
-                setIsLoadingFollow(false); 
-            }
-            catch(err){
-                console.error("Error", err);
-                setIsLoadingFollow(false);
-            }
-      }
-
+    const getListOnLoad = async (fn) => {
+        const res = await MobileAPI.get('follow/list');
+        const selectedItem = res.length > 0 && res.filter(item => props.brand_name === item.name);
+        setisFollowActive(selectedItem.length > 0);
+        // isItemTheir = selectedItem.length > 0;
+        // !isItemTheir && fn && fn();
+        setIsLoadingFollow(false);
+    }
 
     return <>
         <a className={`brandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} title={isFollowActive ? __('Following') :__('Follow')} disabled={isLoadingFollow}>
