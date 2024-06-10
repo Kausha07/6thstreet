@@ -153,7 +153,7 @@ class PDPSummary extends PureComponent {
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              payload = { sku : item.sku, intl_vendor : edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
               payload["qty"] = parseInt(item?.full_item_info?.available_qty);
               payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
               payload["brand"] = item?.full_item_info?.brand_name;
@@ -187,7 +187,7 @@ class PDPSummary extends PureComponent {
       let items = [];
       items_in_cart.map(item => {
         if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-          payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+          payload = { sku : item.sku, intl_vendor : edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
           payload["qty"] = parseInt(item?.full_item_info?.available_qty);
           payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
           payload["brand"] = item?.full_item_info?.brand_name;
@@ -336,9 +336,6 @@ class PDPSummary extends PureComponent {
             payload = {
               sku: sku,
               intl_vendor:
-                parseInt(simple_products[sku]?.cross_border_qty) &&
-                parseInt(simple_products[sku]?.quantity) <=
-                  parseInt(simple_products[sku]?.cross_border_qty) &&
                 edd_info.international_vendors &&
                 international_vendor &&
                 edd_info.international_vendors.indexOf(international_vendor) >
@@ -549,7 +546,7 @@ class PDPSummary extends PureComponent {
         let items = [];
         items_in_cart.map(item => {
           if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-            payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+            payload = { sku : item.sku, intl_vendor : item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
             payload["qty"] = parseInt(item?.full_item_info?.available_qty);
             payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
             payload["brand"] = item?.full_item_info?.brand_name;
@@ -761,7 +758,7 @@ class PDPSummary extends PureComponent {
             }
           })
         } else {
-          const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          const isIntlBrand = edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
           if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
             const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
@@ -781,13 +778,15 @@ class PDPSummary extends PureComponent {
             actualEddMess = defaultEddMess;
           }
         }
-        actualEddMess =
+        if(!(edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>=-1)){
+          actualEddMess =
           actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
           selectedSizeCode &&
           +simple_products?.[sku]?.quantity >
             +simple_products?.[sku]?.cross_border_qty
             ? defaultEddMessBasedOnInventory
             : actualEddMess;
+        }
       }
     } else {
       const isIntlBrand =
@@ -899,7 +898,7 @@ class PDPSummary extends PureComponent {
               <span>{actualEddMess.split(splitKey)[1]}</span>
             </div>
           )}
-          {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && !crossBorder) || (edd_info.has_item_level && crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
+          {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1) || (edd_info.has_item_level && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
             <>
               {selectedAreaId ? (
                 <div
@@ -946,9 +945,9 @@ class PDPSummary extends PureComponent {
           </div>
         </div>
         {/* here we are showing International Shipment tag based on inventory as soon as you select any size of the product*/}
-        {(+simple_products?.[sku]?.cross_border_qty && //from this line
+        {(((+simple_products?.[sku]?.cross_border_qty && //from this line
           +simple_products?.[sku]?.quantity <=
-            +simple_products?.[sku]?.cross_border_qty &&
+            +simple_products?.[sku]?.cross_border_qty) || (international_vendor && edd_info && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)) &&
           +simple_products?.[sku]?.quantity !== 0) || // to this line (including above 2 lines of code) here we are checking for CB inventory
         (actualEddMess?.split(splitKey)?.[1]?.includes("-") && // now from this line of code
           simple_products?.[selectedSizeCode]?.quantity !== 0 && // we are checking when we don't have city/area then range EDD will get displayed then IS tag should also get visible
