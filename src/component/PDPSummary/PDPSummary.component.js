@@ -289,7 +289,7 @@ class PDPSummary extends PureComponent {
     }
   }
 
-  getEddForPDP(areaSelected = null, cityByProps = null) {
+  getEddForPDP(areaSelected = null) {
     const {
       estimateEddResponseForPDP,
       edd_info,
@@ -318,7 +318,7 @@ class PDPSummary extends PureComponent {
           }
         });
       }
-      if((city && area && countryCode) || (areaSelected && cityByProps)) {
+      if(city && area && countryCode) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
           addressCityData,
           city,
@@ -531,10 +531,10 @@ class PDPSummary extends PureComponent {
     });
   };
 
-  callEstimateEddAPI = (area = null, cityByProps = null) => {
+  callEstimateEddAPI = (area = null) => {
     const { selectedCity, countryCode, selectedArea } = this.state;
     const { estimateEddResponse, edd_info } = this.props;
-    if((selectedCity || cityByProps) && (selectedArea || area)) {
+    if(selectedCity && (selectedArea || area)) {
       let request = {
         country: countryCode,
         city: selectedCity,
@@ -841,12 +841,6 @@ class PDPSummary extends PureComponent {
     return actualEddMess;
   }
 
-  invokeEDDCallForPDPExpress = async (selectedAddress) => {
-    const { selectedArea } = this.state;
-    await this.getEddForPDP(selectedAddress?.area, selectedAddress?.city);
-    await this.callEstimateEddAPI(selectedAddress?.area, selectedAddress?.city);
-  };
-
   renderSelectCityForExpress(crossBorder) {
     const { isMobile, isArabic, selectedSizeCode } = this.state;
 
@@ -864,7 +858,6 @@ class PDPSummary extends PureComponent {
     const sku = selectedSizeCode || this.getInStockSKU(simple_products);
     let actualEddMess = this.formatEddMessage(crossBorder);
     let splitKey = DEFAULT_SPLIT_KEY;
-    const isPDP = true;
 
     if (actualEddMess === null) {
       return null;
@@ -886,8 +879,6 @@ class PDPSummary extends PureComponent {
                 -1)) && (
             <>
               <CityArea
-                isPDP={isPDP}
-                invokeEDDCallForPDPExpress={this.invokeEDDCallForPDPExpress}
                 showBackgroundColor={false}
                 showEllipsisArea={true}
                 isToMakeEDDCallPage={false}

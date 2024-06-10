@@ -36,6 +36,7 @@ export const mapStateToProps = (state) => ({
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   EddAddress: state.MyAccountReducer.EddAddress,
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  pdpProduct: state.PDP.product,
 });
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -46,6 +47,8 @@ export const mapDispatchToProps = (dispatch) => ({
   expressService: (data) => MyAccountDispatcher.expressService(dispatch, data),
   selectedCityArea: (data) =>
     MyAccountDispatcher.selectedCityArea(dispatch, data),
+  estimateEddResponseForPDP: (request) =>
+    MyAccountDispatcher.estimateEddResponseForPDP(dispatch, request),
 });
 
 export const CityArea = (props) => {
@@ -58,9 +61,7 @@ export const CityArea = (props) => {
     estimateEddResponse,
     edd_info,
     isSignedIn,
-    cartItems,
     isExpressDelivery,
-    invokeEDDCallForPDPExpress,
     isPDP = false,
     isToMakeEDDCallPage = true,
     showBackgroundColor = true,
@@ -69,6 +70,8 @@ export const CityArea = (props) => {
     expressService,
     selectedCityArea,
     currentSelectedCityArea,
+    pdpProduct,
+    estimateEddResponseForPDP,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -88,13 +91,6 @@ export const CityArea = (props) => {
       ? defaultShippingAddress?.area
       : __("Select Area")
   );
-
-  // useEffect(() => {
-  //   const request = JSON.parse(localStorage?.getItem("EddAddressReq"));
-  //   if (request) {
-  //     getEddResponse(request, true);
-  //   }
-  // }, [cartItems]);
 
   useEffect(() => {
     if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
@@ -244,7 +240,6 @@ export const CityArea = (props) => {
 
     if (edd_info?.has_item_level) {
       let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
-      // let items_in_cart = cartItems || [];
       request.intl_vendors = null;
       let items = [];
 
@@ -283,11 +278,75 @@ export const CityArea = (props) => {
 
       if (items?.length) {
         await estimateEddResponse(request, type);
-      } else {
-        localStorage.setItem("EddAddressReq", JSON.stringify(request));
       }
     } else {
       await estimateEddResponse(request, type);
+    }
+  };
+
+  const getEddForPDP = async (selectedArea = null, selectedCity = null) => {
+    const {
+      simple_products = {},
+      international_vendor = null,
+      brand_name = "",
+    } = pdpProduct;
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp &&
+      edd_info.has_item_level
+    ) {
+      let cross_border_qty = 0;
+      if (typeof simple_products === "object" && simple_products !== null) {
+        Object.values(simple_products).forEach((obj) => {
+          if (
+            parseInt(obj.cross_border_qty) &&
+            parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+          ) {
+            cross_border_qty = 1;
+          }
+        });
+      }
+      if (selectedArea && selectedCity) {
+        let request = {
+          country: getCountryFromUrl(),
+          city: selectedCity,
+          area: selectedArea,
+          courier: null,
+          source: null,
+        };
+        request.intl_vendors = null;
+        let payload = {};
+        if (!(cross_border_qty && !edd_info?.has_cross_border_enabled)) {
+          let items = [];
+          Object.keys(simple_products).map((sku) => {
+            payload = {
+              sku: sku,
+              intl_vendor:
+                edd_info.international_vendors &&
+                international_vendor &&
+                edd_info.international_vendors.indexOf(international_vendor) >
+                  -1
+                  ? international_vendor
+                  : null,
+            };
+
+            payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
+            payload["cross_border_qty"] = parseInt(
+              simple_products?.[sku]?.cross_border_qty
+            )
+              ? parseInt(simple_products?.[sku]?.cross_border_qty)
+              : "";
+            payload["brand"] = brand_name;
+
+            items.push(payload);
+          });
+          request.items = items;
+          if (items?.length) {
+            await estimateEddResponseForPDP(request, true);
+          }
+        }
+      }
     }
   };
 
@@ -306,11 +365,15 @@ export const CityArea = (props) => {
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
 
-    if (isPDP) {
-      await invokeEDDCallForPDPExpress(selectedAddress);
+    if (window.pageType === "PRODUCT") {
+      // checking this condition rather than isPDP bcz if we are on PDP page and
+      // select address from the top header section then there's no EDD call for PDP
+      await getEddForPDP(selectedAddress?.area, selectedAddress?.city);
+      await getEddResponse(selectedAddress, true);
     } else if (isToMakeEDDCallPage) {
       await getEddResponse(selectedAddress, true);
     }
+
     const request = JSON.parse(localStorage.getItem("EddAddressReq"));
     setFinalAreaText(request?.area);
   };
