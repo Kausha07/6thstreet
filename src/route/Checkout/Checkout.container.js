@@ -56,6 +56,10 @@ import Event, {
   EVENT_MOE_EDD_TRACK_ON_ORDER,
   EVENT_GTM_CHECKOUT_BILLING,
   MOE_trackEvent,
+  MOE_AddFirstName,
+  MOE_addLastName,
+  MOE_addMobile,
+  MOE_addEmail,
   MOE_AddUniqueID,
   EVENT_MOE_CREATE_ORDER_API_FAIL,
   EVENT_MOE_COMPONENT_DID_CATCH,
@@ -983,8 +987,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       payment_code: code ? code : null,
     });
     
-    if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
-      MOE_AddUniqueID(paymentInformation.billing_address.guest_email.toLowerCase());
+    if (!isSignedIn) {     
+      if (paymentInformation?.billing_address?.firstname) MOE_AddFirstName(paymentInformation?.billing_address?.firstname);
+      if (paymentInformation?.billing_address?.lastname) MOE_addLastName(paymentInformation?.billing_address?.lastname);
+      if (paymentInformation?.billing_address?.phone) MOE_addMobile(paymentInformation?.billing_address?.phone);
+      if (paymentInformation?.billing_address?.guest_email) {
+        MOE_addEmail(paymentInformation?.billing_address.guest_email.toLowerCase());
+        MOE_AddUniqueID(paymentInformation.billing_address.guest_email.toLowerCase());
+      }
     }
 
     if (
