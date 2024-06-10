@@ -34,6 +34,8 @@ export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   cartItems: state.Cart.cartItems,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  EddAddress: state.MyAccountReducer.EddAddress,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
 });
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -41,6 +43,9 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
+  expressService: (data) => MyAccountDispatcher.expressService(dispatch, data),
+  selectedCityArea: (data) =>
+    MyAccountDispatcher.selectedCityArea(dispatch, data),
 });
 
 export const CityArea = (props) => {
@@ -62,6 +67,8 @@ export const CityArea = (props) => {
     showEllipsisArea = true,
     EddAddress,
     expressService,
+    selectedCityArea,
+    currentSelectedCityArea,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -90,20 +97,39 @@ export const CityArea = (props) => {
   // }, [cartItems]);
 
   useEffect(() => {
-    const request = JSON.parse(localStorage?.getItem("EddAddressReq"));
-
-    if (!request && !isSignedIn) {
-      setShowPopUp(true);
-
-      const timeoutId = setTimeout(() => {
-        setShowPopUp(false);
-      }, 5000);
-
-      return () => clearTimeout(timeoutId);
+    if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
+      setFinalAreaText(
+        JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+      );
     }
-  }, []);
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
 
+  useEffect(() => {
+    if (
+      defaultShippingAddress?.area &&
+      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+    ) {
+      setFinalAreaText(defaultShippingAddress?.area);
+    }
+  }, [defaultShippingAddress?.area]);
 
+  useEffect(() => {
+    if (!isPDP && isExpressDelivery) {
+      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"))
+        ? JSON.parse(localStorage?.getItem("EddAddressReq"))
+        : defaultShippingAddress
+        ? defaultShippingAddress
+        : {};
+      let data = {
+        city: reqOBJ?.city ? reqOBJ?.city : "",
+        area: reqOBJ?.area ? reqOBJ?.area : "",
+      };
+
+      if (data?.city && data?.area) {
+        expressService(data);
+      }
+    }
+  }, [finalAreaText]);
 
   const editSelectedAddress = (address) => {
     setAddAndEditAddressButtonClicked(true);
@@ -275,6 +301,8 @@ export const CityArea = (props) => {
       courier: null,
       source: null,
     };
+
+    selectedCityArea(requestObj);
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
 
