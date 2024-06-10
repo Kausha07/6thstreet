@@ -647,6 +647,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateGuestUserEmail(email));
   }
   estimateEddResponseForPDP(dispatch, request){
+    const {
+      AppConfig: { isExpressDelivery = false },
+    } = getStore().getState();
+
+    if (isExpressDelivery) {
+      let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+
+      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
+    }
+
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
@@ -668,6 +680,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 // type --> false for call from checkout because we don't need to save this data for other pages it should be true 
   async estimateEddResponse(dispatch, request, type) {
+    const {
+      AppConfig: { isExpressDelivery = false },
+    } = getStore().getState();
+    
+    if (isExpressDelivery) {
+      let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+
+      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
+    }
+
     try {
       await MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {

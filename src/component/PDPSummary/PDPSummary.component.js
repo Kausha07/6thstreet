@@ -289,7 +289,7 @@ class PDPSummary extends PureComponent {
     }
   }
 
-  getEddForPDP(areaSelected = null) {
+  getEddForPDP(areaSelected = null, cityByProps = null) {
     const {
       estimateEddResponseForPDP,
       edd_info,
@@ -318,7 +318,7 @@ class PDPSummary extends PureComponent {
           }
         });
       }
-      if(city && area && countryCode) {
+      if((city && area && countryCode) || (areaSelected && cityByProps)) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
           addressCityData,
           city,
@@ -531,10 +531,10 @@ class PDPSummary extends PureComponent {
     });
   };
 
-  callEstimateEddAPI = (area = null) => {
+  callEstimateEddAPI = (area = null, cityByProps = null) => {
     const { selectedCity, countryCode, selectedArea } = this.state;
     const { estimateEddResponse, edd_info } = this.props;
-    if(selectedCity && (selectedArea || area)) {
+    if((selectedCity || cityByProps) && (selectedArea || area)) {
       let request = {
         country: countryCode,
         city: selectedCity,
@@ -843,20 +843,8 @@ class PDPSummary extends PureComponent {
 
   invokeEDDCallForPDPExpress = async (selectedAddress) => {
     const { selectedArea } = this.state;
-    // await this.getEddForPDP(selectedAddress?.area);
-    // await  this.callEstimateEddAPI(selectedAddress?.area);
-
-    this.setState(
-      {
-        selectedCity: selectedAddress?.city,
-        selectedArea: selectedAddress?.area,
-        countryCode: selectedAddress?.country_code,
-      },
-      () => {
-        this.getEddForPDP(selectedArea);
-        this.callEstimateEddAPI(selectedArea);
-      }
-    );
+    await this.getEddForPDP(selectedAddress?.area, selectedAddress?.city);
+    await this.callEstimateEddAPI(selectedAddress?.area, selectedAddress?.city);
   };
 
   renderSelectCityForExpress(crossBorder) {
@@ -864,8 +852,13 @@ class PDPSummary extends PureComponent {
 
     const {
       edd_info,
-      product: { international_vendor = null, simple_products = {} },
+      product: {
+        international_vendor = null,
+        simple_products = {},
+        express_delivery,
+      },
       isExpressDelivery,
+      isExpressServiceAvailable,
     } = this.props;
 
     const sku = selectedSizeCode || this.getInStockSKU(simple_products);
@@ -896,33 +889,42 @@ class PDPSummary extends PureComponent {
                 isPDP={isPDP}
                 invokeEDDCallForPDPExpress={this.invokeEDDCallForPDPExpress}
                 showBackgroundColor={false}
-                showEllipsisArea={isMobile ? true : false}
+                showEllipsisArea={true}
                 isToMakeEDDCallPage={false}
               />
             </>
           )}
         <div block="EddExpressWrapper">
-          {
-            <div block="EddExpressDelivery">
-              <div block="EddExpressDeliveryTextBlock">
-                <ExpressDeliveryTruck />
-                <div block="EddExpressDeliveryText">
-                  <span block="EddExpressDeliveryTextRed">
-                    {__("Express")} {}
-                  </span>
-                  <span block="EddExpressDeliveryTextNormal">
-                    {__("Delivery by")}
-                  </span>
-                  <span block="EddExpressDeliveryTextBold">
-                    {__("Tomorrow")}
-                  </span>
+          {isExpressServiceAvailable?.express_eligible &&
+            isExpressDelivery &&
+            !+express_delivery && (
+              <div block="EddExpressDelivery">
+                <div block="EddExpressDeliveryTextBlock">
+                  <ExpressDeliveryTruck />
+                  <div block="EddExpressDeliveryText">
+                    <span block="EddExpressDeliveryTextRed">
+                      {__("Express")} {}
+                    </span>
+                    <span block="EddExpressDeliveryTextNormal">
+                      {__("Delivery by")}
+                    </span>
+
+                    {+express_delivery === 1 ? (
+                      <span block="EddExpressDeliveryTextBold">
+                        {__("Today")}
+                      </span>
+                    ) : (
+                      <span block="EddExpressDeliveryTextBold">
+                        {__("Tomorrow")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div block="EddExpressDeliveryCutOffTime">
+                  {__("Order within 4hrs 10 Mins")}
                 </div>
               </div>
-              <div block="EddExpressDeliveryCutOffTime">
-                {__("Order within 4hrs 10 Mins")}
-              </div>
-            </div>
-          }
+            )}
 
           {actualEddMess && (
             <div block="EddStandardDelivery">
@@ -955,7 +957,6 @@ class PDPSummary extends PureComponent {
       </div>
     );
   }
-
 
   renderSelectCity(crossBorder) {
     const {
