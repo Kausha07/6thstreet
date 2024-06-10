@@ -479,7 +479,7 @@ export class CartItem extends PureComponent {
             }
           });
         } else {
-          const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          const isIntlBrand = edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
           if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
             const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
@@ -734,7 +734,7 @@ export class CartItem extends PureComponent {
             this.renderEddWhenExpressEnabled(cross_border === 1)}
           {!isCheckoutPage &&
           !isExpressDelivery &&
-          (isIntlBrand || (international_shipping_fee && +cross_border))
+          (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor) > -1)) ))
             ? this.renderIntlTag()
             : null}
           {row_total === 0 ? null : this.renderActions()}

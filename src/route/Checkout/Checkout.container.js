@@ -258,6 +258,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       guestAutoSignIn: false,
       addressLoader: true,
       orderDetailsCartTotal: {},
+      redirectPaymentMethod: "",
     };
   }
 
@@ -631,18 +632,22 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { order_id, increment_id } = TAMARA_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setState({redirectPaymentMethod: TAMARA})
       } else if (TABBY_CHECK) {
         const { order_id, increment_id } = TABBY_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setState({redirectPaymentMethod: TABBY_ISTALLMENTS})
       } else if (KNET_CHECK) {
         const { order_id, increment_id } = KNET_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setState({redirectPaymentMethod: KNET_PAY})
       } else if (QPAY_CHECK) {
         const { order_id, increment_id } = QPAY_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setState({redirectPaymentMethod: CHECKOUT_QPAY})
       }
 
       this.getOrderDetails(paymentData);
@@ -729,6 +734,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       Object.keys(totals).length &&
       !items.length &&
       checkoutStep !== DETAILS_STEP
+      && !(location.pathname.match(`/checkout/success`))
+      && !(location.pathname.match(`/checkout/cancel`))
     ) {
       showInfoNotification(__("Please add at least one product to cart!"));
       history.push("/cart");
@@ -1113,7 +1120,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
           });
         } else {
-          const isIntlBrand = cross_border && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          const isIntlBrand = edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
           if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
             const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
@@ -1206,7 +1213,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd, eddItems) {
-    const { createOrder, showErrorNotification } = this.props;
+    const { createOrder, showErrorNotification, totals } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -1407,6 +1414,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.resetCart();
               return true;
             }
+            // saving cart details to local for use on Thank you page
+            localStorage.setItem("CART_DETAILS", JSON.stringify(totals));
           } else {
             const { error } = data;
 

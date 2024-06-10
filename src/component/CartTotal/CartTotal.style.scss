@@ -65,9 +65,31 @@
                 }
             }
         }
+        &_cashBack {
+            .CartPage {
+                &-Price {
+                    font-size: 15px;
+                    font-weight: var(--fw-bold);
+                    color: #13CA75;
+                }
+            }
+        }
         &:last-child {
             margin-bottom: 0;
         }
         margin-bottom: 0px;
+    }
+}
+.CheckoutOrderSummary-Subtotals{
+    .CheckoutOrderSummary-SummaryItem_divider{
+        .CheckoutOrderSummary-Price{
+            font-size: 15px;
+            font-weight: var(--fw-bold);
+        }
+    }
+    .CheckoutOrderSummary-SummaryItem_cashBack{
+        .CheckoutOrderSummary-Price{
+            color: #13CA75;
+        }
     }
 }

@@ -735,7 +735,6 @@ class PLPAddToCart extends PureComponent {
             payload = {
               sku: item.sku,
               intl_vendor:
-                item?.full_item_info?.cross_border &&
                 item?.full_item_info?.international_vendor &&
                 edd_info.international_vendors &&
                 edd_info.international_vendors.indexOf(
