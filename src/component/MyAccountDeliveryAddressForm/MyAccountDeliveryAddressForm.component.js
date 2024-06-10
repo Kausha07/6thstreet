@@ -46,6 +46,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       countries,
       default_country,
       address: { city = null, country_code, area, type_of_identity, identity_number },
+      mailing_address_type,
     } = props;
     const countryId = country_code || default_country;
     const country = countries.find(({ id }) => id === countryId);
@@ -66,6 +67,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       identity_number: identity_number || "",
       validationError: false,
       isNationalityClick: null,
+      mailing_address_type: "37303"
     };
   }
 
@@ -125,6 +127,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
   };
 
+  onMailingAddressTypeChange = (val) => {
+    this.setState({ mailing_address_type: val });
+  };
+
   onFormSuccess = (fields) => {
     const { onSave,setNewAddressSaved } = this.props;
     const {
@@ -137,6 +143,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     newAddress.telephone = this.addPhoneCode() + telephone;
     newAddress.type_of_identity = this.state.type_of_identity;
     newAddress.identity_number = this.state.identity_number;
+    newAddress.mailing_address_type = this.state.mailing_address_type;
     setNewAddressSaved(true);
     onSave(newAddress);
   };
@@ -358,6 +365,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       identity_number: identityNumber,
       isNationalityClick,
       validationError,
+      mailing_address_type,
     } = this.state;
 
     const clearValue = newForm ? { value: "" } : null;
@@ -432,6 +440,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         value: identityNumber,
         onIdentityNumberChange: this.onIdentityNumberChange,
         validationError: validationError,
+      },
+      mailing_address_type: {
+        value: mailing_address_type,
+        onMailingAddressTypeChange: this.onMailingAddressTypeChange,
       },
       default_common: {
         type: "toggle",

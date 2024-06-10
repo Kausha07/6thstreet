@@ -130,6 +130,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       phonecode = "",
       type_of_identity = 0,
       identity_number = "",
+      mailing_address_type = "",
     } = address;
     const { validateAddress } = this.props;
 
@@ -142,7 +143,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       region: region ?? region_id,
       street: Array.isArray(street) ? street[0] : street,
       type_of_identity: type_of_identity,
-      identity_number: identity_number
+      identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     });
   }
 
@@ -291,6 +293,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       telephone,
       type_of_identity = this.props?.type_of_identity || 0,
       identity_number = this.props?.identity_number || "",
+      mailing_address_type,
     } = address;
     const newAddress = {
       firstname: firstname,
@@ -303,6 +306,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       default_shipping: default_shipping,
       type_of_identity: type_of_identity,
       identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     };
     return { newAddress };
   }

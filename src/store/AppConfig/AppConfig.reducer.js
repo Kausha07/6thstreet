@@ -63,7 +63,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 is_msite_megamenu_enabled: config.countries[getCountryCode]?.is_msite_megamenu_enabled || false,
                 isExpressDelivery: config.countries[getCountryCode]?.isExpressDelivery, 
                 is_nationality_visible: config.countries[getCountryCode]?.is_nationality_visible || false,
-                is_nationality_mandatory: config.countries[getCountryCode]?.is_nationality_mandatory || false
+                is_nationality_mandatory: config.countries[getCountryCode]?.is_nationality_mandatory || false,
+                mailing_address_type: config.mailing_address_type || [],
             };
 
             // this will invalidate config after one year

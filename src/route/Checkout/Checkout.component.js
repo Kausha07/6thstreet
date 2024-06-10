@@ -106,6 +106,7 @@ export class Checkout extends SourceCheckout {
     validationError: false,
     isNationalityClick: true,
     isIdentityNumberModified: false,
+    mailing_address_type: "37303",
   };
 
   onIdentityNumberChange = (value) => {
@@ -122,6 +123,10 @@ export class Checkout extends SourceCheckout {
     }else {
       this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
     }
+  };
+
+  onMailingAddressTypeChange = (val) => {
+    this.setState({ mailing_address_type: val });
   };
 
   getArabicCityArea = (city, area) => {
@@ -497,7 +502,14 @@ export class Checkout extends SourceCheckout {
       addresses,
       isClubApparelEnabled
     } = this.props;
-    const { isArabic, cashOnDeliveryFee, type_of_identity = 0, identity_number = "", validationError } = this.state;
+    const {
+      isArabic,
+      cashOnDeliveryFee,
+      type_of_identity = 0,
+      identity_number = "",
+      validationError,
+      mailing_address_type = "",
+    } = this.state;
 
     const { 
       couponsItems=[],
@@ -550,6 +562,8 @@ export class Checkout extends SourceCheckout {
           validationError={validationError}
           onIdentityNumberChange={this.onIdentityNumberChange}
           onTypeOfIdentityChange={this.onTypeOfIdentityChange}
+          onMailingAddressTypeChange={this.onMailingAddressTypeChange}
+          mailing_address_type={mailing_address_type}
         />
       </>
     );
@@ -752,7 +766,15 @@ export class Checkout extends SourceCheckout {
     }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
-    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false, isIdentityNumberModified = false } = this.state;
+    const {
+      continueAsGuest,
+      isArabic,
+      type_of_identity = 0,
+      identity_number = "",
+      validationError = false,
+      isIdentityNumberModified = false,
+      mailing_address_type = "",
+    } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
@@ -780,6 +802,8 @@ export class Checkout extends SourceCheckout {
           onIdentityNumberChange={this.onIdentityNumberChange}
           onTypeOfIdentityChange={this.onTypeOfIdentityChange}
           isIdentityNumberModified={isIdentityNumberModified}
+          onMailingAddressTypeChange={this.onMailingAddressTypeChange}
+          mailing_address_type={mailing_address_type}
         />
       </div>
     );

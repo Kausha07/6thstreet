@@ -86,6 +86,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     notSavedAddress: this.notSavedAddress.bind(this),
     onIdentityNumberChange: this.props.onIdentityNumberChange,
     onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+    onMailingAddressTypeChange: this.props?.onMailingAddressTypeChange,
   };
 
   static defaultProps = {
@@ -157,7 +158,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       type_of_identity,
       identity_number,
     } = address;
-    const { validateAddress } = this.props;
+    const { validateAddress, mailing_address_type, } = this.props;
     return validateAddress({
       area: region ?? postcode,
       city,
@@ -168,6 +169,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       street: Array.isArray(street) ? street[0] : street,
       type_of_identity: type_of_identity || this.props?.type_of_identity,
       identity_number: identity_number || this.props?.identity_number,
+      mailing_address_type: mailing_address_type || ""
     });
   }
 
@@ -474,6 +476,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       saveAddressInformation,
       customer: { email },
       totals,
+      mailing_address_type,
     } = this.props;
     const { guest_email: guestEmail } = fields;
     const isCTC = this.checkClickAndCollect();
@@ -509,6 +512,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       address_id: isCTC ? null : selectedCustomerAddressId,
       type_of_identity: type_of_identity,
       identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     };
     // on checkout page, set update identity-number and type_of_identity store in the respective address
     if (this.props?.isIdentityNumberModified && isSignedIn()) {
@@ -524,6 +528,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         identity_number: identity_number,
         type_of_identity: type_of_identity,
         id: selectedCustomerAddressId,
+        mailing_address_type: mailing_address_type,
       };
       try {
         const newPromise = new Promise((resolve, reject) => {

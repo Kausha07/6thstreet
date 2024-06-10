@@ -385,7 +385,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderAddAdress() {
     const { formContent, isArabic } = this.state;
-    const { customer } = this.props;
+    const { customer, onMailingAddressTypeChange, } = this.props;
     return (
       <div
         block="MyAccountAddressBook"
@@ -408,6 +408,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           identity_number={this.props?.identity_number}
           onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
           onIdentityNumberChange={this.props?.onIdentityNumberChange}
+          onMailingAddressTypeChange={onMailingAddressTypeChange}
         />
       </div>
     );
@@ -511,6 +512,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       edd_info,
       addressCityData,
       customer,
+      onMailingAddressTypeChange,
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -534,6 +536,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         identity_number={this.props?.identity_number}
         onIdentityNumberChange={this.props?.onIdentityNumberChange}
         onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
+        onMailingAddressTypeChange={onMailingAddressTypeChange}
       />
     );
   }
