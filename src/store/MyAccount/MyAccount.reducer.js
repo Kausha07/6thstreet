@@ -26,7 +26,9 @@ import {
   SET_NEW_ADDRESS_SAVED,
   SET_SELECTED_ADDRESS_ID,
   SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
-  SET_SIGNIN_IS_LOADING_STATUS
+  SET_SIGNIN_IS_LOADING_STATUS,
+  SET_EXPRESS_SERVICE_AVAILABLE,
+  SET_SELECTED_CITY_AREA,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -53,6 +55,8 @@ export const initialState = {
   newAddressSaved: false,
   addressIDSelected: null,
   myOrderLastOffsetLimit: {},
+  isExpressServiceAvailable: false,
+  currentSelectedCityArea: {},
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -234,6 +238,21 @@ export const MyAccountReducer = (state = initialState, action) => {
       ...state,
       myOrderLastOffsetLimit: limit,
     };
+
+    case SET_EXPRESS_SERVICE_AVAILABLE:
+      const { data: expressAvailable } = action;
+      return {
+        ...state,
+        isExpressServiceAvailable: expressAvailable,
+      };
+
+    case SET_SELECTED_CITY_AREA:
+      const { data: cityAreaObj } = action;
+
+      return {
+        ...state,
+        currentSelectedCityArea: cityAreaObj,
+      };
 
     default:
       return state;
