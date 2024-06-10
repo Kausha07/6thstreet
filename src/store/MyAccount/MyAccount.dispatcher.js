@@ -115,14 +115,64 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   };
   setEDDresultData = (response, finalRes, dispatch, login) => {
     if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
-      const {AppConfig: {edd_info= {}}} = getStore().getState();
+      const {
+        AppConfig: { edd_info = {}, isExpressDelivery = false },
+      } = getStore().getState();
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
           return address.default_shipping === true;
         }
       );
       const countryCode = getCountryFromUrl();
-      if (
+
+      if (localStorage.getItem("EddAddressReq") && isExpressDelivery) {
+        const request = JSON.parse(localStorage.getItem("EddAddressReq"));
+        dispatch(
+          setCustomerDefaultShippingAddress(defaultShippingAddress?.[0])
+        );
+        let payload = {};
+
+        if (edd_info.has_item_level) {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY);
+          request.intl_vendors = null;
+          let items = [];
+          items_in_cart.map((item) => {
+            if (
+              !(
+                item &&
+                item.full_item_info &&
+                item.full_item_info.cross_border &&
+                !edd_info?.has_cross_border_enabled
+              )
+            ) {
+              payload = {
+                sku: item.sku,
+                intl_vendor:
+                  item?.full_item_info?.cross_border &&
+                  edd_info.international_vendors &&
+                  item.full_item_info.international_vendor &&
+                  edd_info.international_vendors.indexOf(
+                    item.full_item_info.international_vendor
+                  ) > -1
+                    ? item?.full_item_info?.international_vendor
+                    : null,
+              };
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              payload["cross_border_qty"] = parseInt(
+                item?.full_item_info?.cross_border_qty
+              )
+                ? parseInt(item?.full_item_info?.cross_border_qty)
+                : "";
+              payload["brand"] = item?.full_item_info?.brand_name;
+              items.push(payload);
+            }
+          });
+          request.items = items;
+          if (items.length) {
+            this.estimateEddResponse(dispatch, request, true);
+          }
+        }
+      }else if (
         defaultShippingAddress &&
         Object.values(defaultShippingAddress).length > 0 && defaultShippingAddress[0]["country_code"] && countryCode == defaultShippingAddress[0]["country_code"]
       ) {
@@ -220,11 +270,34 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       dispatch(setCustomerDefaultShippingAddress(null));
     }
   };
-  requestCustomerData(dispatch, login = false) {
+  async requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     const {
       MyAccountReducer: { addressCityData = [] },
+      AppConfig: { isExpressDelivery = false },
     } = getStore().getState();
+
+    const country_code = getCountryFromUrl();
+
+    if (!localStorage.getItem("EddAddressReq") && isExpressDelivery) {
+      await MobileAPI.get(`order/last`).then((response) => {
+        if (
+          response?.city &&
+          response?.area &&
+          response?.country?.toLowerCase() === country_code?.toLowerCase()
+        ) {
+          let requestObj = {
+            country: country_code,
+            city: response?.city,
+            area: response?.area,
+            courier: null,
+            source: null,
+          };
+          localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+        }
+      });
+    }
+
     getShippingAddresses().then(async (response) => {
       if (response.data) {
         if (addressCityData.length === 0) {
