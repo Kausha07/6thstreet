@@ -135,15 +135,15 @@ export class AppConfigDispatcher {
             }
             let NewPDP = getVwoDataNewPDP();
             const pushData = {
-                "swc": {
+                [siteWideCampaignName]: {
                     "vwo":  SiteWideCoupon.vwo,
                     "val": SiteWideCoupon.variationName
                 },
-                "hpp": {
+                [HPPCampaignName]: {
                     "vwo": HPP.vwo,
                     "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`
                 },
-                "newpdp": {
+                [NewPDP.campaignName] : {
                     "vwo": NewPDP.vwo,
                     "val": NewPDP.variationName
                 }
