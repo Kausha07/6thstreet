@@ -23,6 +23,7 @@ export class AppConfigDispatcher {
     
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "hpp";
+    const newPDPCompaignName = abTestingConfig?.NewPDP?.campaignName || "new-PDP";
     const countryCode = getCountryFromUrl()?.toLowerCase();
     const userAgent = window?.navigator?.userAgent;
     // const ipResponse = await fetch('https://api.ipify.org/?format=json'');
@@ -55,7 +56,34 @@ export class AppConfigDispatcher {
     const country = getCountryFromUrl();
     const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;
     const getSitewideConfigVwo = abTestingConfig?.SiteWideCoupon?.getConfigVwo || false;
-    
+
+    const getVwoDataNewPDP = () => {
+        const isEnable = config?.countries?.[country]?.new_design || false;
+        const callVwo = abTestingConfig?.NewPDP?.getConfigVwo || false; 
+        let defaultVariationName = abTestingConfig?.NewPDP?.defaultVariant;
+        let campaignName = abTestingConfig?.NewPDP?.campaignName;
+        let isNewPDPEnable =  defaultVariationName === "c" ? false : true ;
+        let result = {
+            variationName: defaultVariationName,
+            vwo: '0',
+            campaignName,
+            isFeatureEnabled: isNewPDPEnable
+        };
+        if(isEnable && callVwo) {
+            const variationName = window.vwoClientInstance?.activate(
+                campaignName,
+                `${userId}`,
+                options
+              );
+              result = {
+                variationName: variationName ? variationName : defaultVariationName,
+                vwo: variationName ? '1': '0',
+                campaignName,
+                isFeatureEnabled: variationName ? variationName === "c" ? false : true : isNewPDPEnable
+              }
+        }
+        return result;
+    }
     // Get Logged in User Variations from VWO tool
     try {
         if (userId && window.vwoClientInstance) {
@@ -105,7 +133,7 @@ export class AppConfigDispatcher {
                 vwo: HPPvariationName ? '1' : '0',
                 campaignName: HPPCampaignName,
             }
-            
+            let NewPDP = getVwoDataNewPDP();
             const pushData = {
                 "swc": {
                     "vwo":  SiteWideCoupon.vwo,
@@ -113,12 +141,17 @@ export class AppConfigDispatcher {
                 },
                 "hpp": {
                     "vwo": HPP.vwo,
-                    "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`}
+                    "val": `${HPP.variationName}` === "1" ? 'c' : `v${HPP.variationName - 1}`
+                },
+                "newpdp": {
+                    "vwo": NewPDP.vwo,
+                    "val": NewPDP.variationName
+                }
             }
             console.log("vwo event",{ ...pushData, ...options.customVariables, userAgent });
             window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
             
-            return { SiteWideCoupon, HPP };
+            return { SiteWideCoupon, HPP, NewPDP };
         } else {
             return {
                 SiteWideCoupon : {
@@ -132,6 +165,11 @@ export class AppConfigDispatcher {
                     variationName: abTestingConfig?.HPP?.defaultValue,
                     vwo: '0',
                     campaignName: HPPCampaignName,
+                },
+                NewPDP : {
+                    variationName: abTestingConfig?.NewPDP?.variationName,
+                    vwo: '0',
+                    campaignName: newPDPCompaignName
                 } 
             }
         }
