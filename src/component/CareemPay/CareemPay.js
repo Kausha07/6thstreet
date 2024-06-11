@@ -26,20 +26,73 @@ function CareemPay({
   setCareemPayInfo,
   setCareemPayStatus,
 }) {
-
   const [isCareemCreateOrder, setIsCaremCreateOrder] = useState(false);
 
   const addCareemPayScripts = () => {
-    const checkSript = document.getElementById("CareemPayScript");
-    if(checkSript){
+    const checkSript = document.getElementById("careemPayScript");
+    if (checkSript) {
       return;
     }
     const script = document.createElement("script");
-    script.src = "https://dist.cpay.me/latest/merchant-sdk.js";
+    script.src = "https://one-click-js.careem-pay.com/v2/index.es.js";
+    script.id = "careemPayScript";
     script.defer = true;
-    script.id = "CareemPayScript";
+    script.type = "module";
+    script.addEventListener("load", () => {
+      const careemPay = window.CareemPay(
+        process.env.REACT_APP_CAREEM_PAY_CLIENT_ID,
+        {
+          env: process.env.REACT_APP_CAREEM_PAY_ENV, // 'sandbox' or 'production'
+          mode: "popup",
+        }
+      );
+      const checkoutBtn = document.getElementById("checkoutBtn");
+      if (careemPay && checkoutBtn) {
+        careemPay.attach("checkoutBtn");
+      }
+    });
     document.body.appendChild(script);
   };
+
+  function processCareemPay() {
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    if (!checkoutBtn) {
+      return;
+    }
+    const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
+    const cartId = cart?.data;
+    const data = { cart_id: cartId };
+    try {
+      checkoutBtn.addEventListener("checkout", async (checkoutAttempt) => {
+        // handle checkout attempt here
+        const respo = await getCareemPayInvoice(data);
+        const invoiceId = respo?.invoiceId;
+        if (!invoiceId) {
+          // cancel the payment attempt if invoice id is not generated
+          checkoutAttempt.cancel();
+          return;
+        }
+        // invoidId is generated - begin checkout with careem pay
+        try {
+          const result = await checkoutAttempt.begin(invoiceId);
+          setProcessingLoader(true);
+          setPaymentinfoCareemPay(CAREEM_PAY);
+          if (result.status === SUCCESS) {
+            setIsCaremCreateOrder(true);
+            setCareemPayStatus(SUCCESS);
+          } else if (result.status === FAILURE) {
+            setIsFailed(true);
+            setIsCaremCreateOrder(true);
+            setCareemPayStatus(FAILURE);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function getCareemPayInvoice(data) {
     try {
@@ -47,7 +100,7 @@ function CareemPay({
       if (res?.error) {
         showErrorNotification(`${res?.error}`);
       }
-      if (res){
+      if (res) {
         return res;
       }
     } catch (error) {
@@ -68,34 +121,40 @@ function CareemPay({
           method: code,
           data: {},
         },
-      }
+      };
       const response = await createOrderCareemPay({ data });
-      if(response) {
+      if (response) {
         const orderidd = response?.data?.order_id;
         const increment_id = response?.data?.increment_id;
         const orderStatus = response?.data?.success;
 
-
-        if(orderStatus) {     
+        if (orderStatus) {
           setDetailsStep(orderidd, increment_id);
-          const resp = await getOrderData(orderidd);    
-          if(resp) {
+          const resp = await getOrderData(orderidd);
+          if (resp) {
             const { billing_address } = resp?.data;
-            if(billing_address) {
+            if (billing_address) {
               setShippingAddressCareem(billing_address);
-              setPaymentinfoCareemPay(CAREEM_PAY, {...billing_address, guest_email: billing_address?.email});
-            }else {
+              setPaymentinfoCareemPay(CAREEM_PAY, {
+                ...billing_address,
+                guest_email: billing_address?.email,
+              });
+            } else {
               showErrorNotification("Billing address not available.");
             }
           }
           resetCart();
-        }else {
-          // if Payment is successful on careem pay modal but 
+        } else {
+          // if Payment is successful on careem pay modal but
           // Create-order2 API fails or not able to place order in Magento.
           // currently in this case backend sending us "qty not available" message in response.
 
           setIsFailed(true);
-          const careemPayInfo = { isCreateOrderFail: true, messageTitle:response?.data, messageDetails:response?.message }
+          const careemPayInfo = {
+            isCreateOrderFail: true,
+            messageTitle: response?.data,
+            messageDetails: response?.message,
+          };
           setCareemPayInfo(careemPayInfo);
 
           showErrorNotification(response?.data);
@@ -104,70 +163,28 @@ function CareemPay({
       }
       setProcessingLoader(false);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   }
 
-  
-  const CareemPayfun = () => {
-    const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
-    const cartId = cart?.data;
-    const data = { cart_id: cartId };
-
-    const cpay = window?.CareemPay({
-      env: process.env.REACT_APP_CAREEM_PAY_ENV, // 'sandbox' or 'production'
-    });
-
-    try {
-      cpay.autostrap({
-        el: "careemBtn",
-        requester: (e) => getCareemPayInvoice(data),
-        onComplete: (status) => {
-          setProcessingLoader(true);
-          setPaymentinfoCareemPay(CAREEM_PAY);
-          if (status === SUCCESS) {
-            setIsCaremCreateOrder(true);
-            setCareemPayStatus(SUCCESS);
-          }else if(status === FAILURE){
-            setIsFailed(true)
-            setIsCaremCreateOrder(true);
-            setCareemPayStatus(FAILURE);
-          }
-          
-        },
-        onError: (e) => {
-          console.error("something went wrong", e);
-          //handleError(e);
-        },
-        onClose: () => {
-          //sendAnalytics();
-        },
-      });
-    } catch (error) {
-      console.error("something went wrong at cpay.autostrap", error);
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener("careempayready", () => {
-      CareemPayfun();
-    });
     addCareemPayScripts();
-  }, []);
+    processCareemPay();
+    return () => {
+      const script = document.getElementById("careemPayScript");
+      if (script) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [continueAsGuest, isSignedIn]);
 
   useEffect(() => {
-    if(isCareemCreateOrder) {
+    if (isCareemCreateOrder) {
       createCareemPayOrder();
     }
   }, [isCareemCreateOrder]);
-  
-  useEffect(() => {
-    if (window.CareemPay) {
-      CareemPayfun();
-    }
-  },[continueAsGuest, isSignedIn]);
 
-  if(continueAsGuest) {
+  if (continueAsGuest) {
     return null;
   }
 
@@ -179,19 +196,12 @@ function CareemPay({
             <span>or</span>
           </div>
         </div>
-      )
-      }
+      )}
       <div className="carrrmPayWrapperDiv">
         <br />
         <h3>One-Click Checkout</h3>
         <div className="carremPayInnerDiv">
-          <button
-            id="careemBtn"
-            className="careemBtnCss"
-            data-radius="2px"
-          >
-            Checkout
-          </button>
+          <cpay-checkout-button id="checkoutBtn"></cpay-checkout-button>
         </div>
         <br />
       </div>
