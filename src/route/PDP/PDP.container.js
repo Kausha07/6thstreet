@@ -60,8 +60,7 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
-  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick,
-  vwoData: state.AppConfig.vwoData,
+  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick
 });
 
 export const mapDispatchToProps = (dispatch) => ({
