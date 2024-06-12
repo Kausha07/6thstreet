@@ -69,8 +69,8 @@ const PDPBrandFollow = (props) => {
                 product_sku:props.sku,
                 brand_name:props.brand_name
             };
-            if(props.brand_name.toLowerCase() === res?.name?.toLowerCase()) {
-                setisFollowActive(res?.name !== '') 
+            if(props.brand_name.toLowerCase() === res?.data?.name?.toLowerCase()) {
+                setisFollowActive(res?.data?.name !== '') 
                 dispatch(showNotification(
                     'success',
                     __("You Followed this Brand")
@@ -81,7 +81,7 @@ const PDPBrandFollow = (props) => {
                 Event.dispatch(EVENT_PDP_FOLLOW_BRAND,eventData);
                 dispatch(setAddtoCartInfo({"is_following_brand":true}));
             } else {
-                setisFollowActive(res?.name);
+                setisFollowActive(res?.data?.name);
                 dispatch(showNotification(
                     'success',
                     __("You Unfollowed this Brand")
@@ -103,7 +103,7 @@ const PDPBrandFollow = (props) => {
 
     const getListOnLoad = async () => {
         const res = await MobileAPI.get('follow/list');
-        const selectedItem = res.length > 0 && res.filter(item => {
+        const selectedItem = res?.data?.length > 0 && res?.data?.filter(item => {
             return props.brand_name.toLowerCase() === item?.name?.toLowerCase()
         });
         setisFollowActive(selectedItem.length > 0);
