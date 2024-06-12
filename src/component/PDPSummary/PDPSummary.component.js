@@ -1405,6 +1405,7 @@ class PDPSummary extends PureComponent {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
       product: {
+        name,
         cross_border = 0,
         brand_name = "",
         international_vendor = null,
@@ -1490,6 +1491,7 @@ class PDPSummary extends PureComponent {
                     className="PDPRatings" 
                     rating_sku={rating_sku} 
                     rating_brand={rating_brand} 
+                    productName={name}
                   />
                 }
                 </div>

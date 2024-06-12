@@ -5,7 +5,8 @@ import {
   setPDPShowSearch,
   setBrandButtonClick,
   setVueTrendingBrandClick,
-  setNewDesign
+  setNewDesign,
+  setAddtoCartInfo
 } from "Store/PDP/PDP.action";
 import { getStore } from "Store";
 
@@ -57,6 +58,10 @@ export class PDPDispatcher {
   
   async getIsNewDesign(dispatch,isNew){
     dispatch(setNewDesign(isNew));
+  }
+
+  async getAddToCartInfo(dispatch,data){
+    dispatch(setAddtoCartInfo(data));
   }
 
   async getProductDetailByIdCatalogue(options, dispatch) {
