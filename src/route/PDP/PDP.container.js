@@ -258,7 +258,7 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
-    if (Object.keys(getDetails).length > 0 && !eventSent && ((addtoCartInfo.productAPI && addtoCartInfo.followAPI)  || !isNewDesign)) {
+    if (Object.keys(getDetails).length > 0 && !eventSent && ((addtoCartInfo?.productAPI && addtoCartInfo?.followAPI)  || !isNewDesign)) {
       Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
           product: {
             name: productKeys.name,
