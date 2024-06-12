@@ -36,7 +36,7 @@ import Ratings from 'Component/Ratings/Ratings';
 import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
-  isNewDesign:state.PDP.isNewDesign
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 export const mapDispatchToProps = (dispatch) => ({
