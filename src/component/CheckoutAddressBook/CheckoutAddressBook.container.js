@@ -77,8 +77,25 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   }
 
   componentDidMount() {
-    const { onAddressSelect, setSelectedAddressID } = this.props;
+    const {
+      onAddressSelect,
+      setSelectedAddressID,
+      addresses = [],
+      onIdentityNumberChange = () => {},
+      onTypeOfIdentityChange = () => {},
+    } = this.props;
     const { selectedAddressId } = this.state;
+    const selectedAddress = addresses?.filter(
+      ({ id }) => id === selectedAddressId
+    );
+    const typeOfIdentity = selectedAddress?.[0]?.type_of_identity
+      ? selectedAddress?.[0]?.type_of_identity
+      : 0;
+    const identityNumber = selectedAddress?.[0]?.identity_number
+      ? selectedAddress?.[0]?.identity_number
+      : "";
+    onTypeOfIdentityChange(typeOfIdentity);
+    onIdentityNumberChange(identityNumber);
     onAddressSelect(selectedAddressId);
     setSelectedAddressID(selectedAddressId);
   }
@@ -89,7 +106,9 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       isSignedIn,
       customer,
       addresses,
-      setSelectedAddressID
+      setSelectedAddressID,
+      onIdentityNumberChange = ()=>{},
+      onTypeOfIdentityChange = ()=>{}
     } = this.props;
     const { selectedAddressId: prevSelectedAddressId } = prevState;
     const { selectedAddressId } = this.state;
@@ -97,9 +116,20 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       requestCustomerData();
     }
     if (selectedAddressId !== prevSelectedAddressId) {
+      const selectedAddress = addresses?.filter(
+        ({ id }) => id === selectedAddressId
+      );
+      const typeOfIdentity = selectedAddress?.[0]?.type_of_identity
+        ? selectedAddress?.[0]?.type_of_identity
+        : 0;
+      const identityNumber = selectedAddress?.[0]?.identity_number
+        ? selectedAddress?.[0]?.identity_number
+        : "";
       setSelectedAddressID(selectedAddressId);
       onAddressSelect(selectedAddressId);
       this.estimateShipping(selectedAddressId);
+      onTypeOfIdentityChange(typeOfIdentity);
+      onIdentityNumberChange(identityNumber);
     }
     if (
       prevProps.addresses !== addresses &&
@@ -175,7 +205,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              payload = { sku : item.sku, intl_vendor : edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
               payload["qty"] = parseInt(item?.full_item_info?.available_qty);
               payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
               payload["brand"] = item?.full_item_info?.brand_name;

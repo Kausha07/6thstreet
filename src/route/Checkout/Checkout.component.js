@@ -46,6 +46,10 @@ import {
   FREE,
   CHECKOUT_APPLE_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+export const mapStateToProps = (state) => ({
+  is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
+})
+
 export const mapDispatchToProps = (dispatch) => ({
   selectPaymentMethod: (code) =>
     CheckoutDispatcher.selectPaymentMethod(dispatch, code),
@@ -97,7 +101,29 @@ export class Checkout extends SourceCheckout {
     processingLoader: false,
     careemPayInfo:{},
     careemPayStatus: "",
+    type_of_identity: 0,
+    identity_number : "",
+    validationError: false,
+    isNationalityClick: true,
+    isIdentityNumberModified: false,
   };
+
+  onIdentityNumberChange = (value) => {
+    const isValidInput =
+      (this.state.type_of_identity == 0 && /^\d{0,12}$/.test(value)) ||
+      (this.state.type_of_identity == 1 && /^[a-zA-Z0-9]*$/.test(value));
+
+    this.setState({ identity_number : value, validationError: !isValidInput });
+  };
+
+  onTypeOfIdentityChange = (typeOfIdentityValue) => {
+    if(typeOfIdentityValue == 0) {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : true });
+    }else {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
+    }
+  };
+
   getArabicCityArea = (city, area) => {
     const { addressCityData } = this.props;
     let finalArea = area;
@@ -158,7 +184,7 @@ export class Checkout extends SourceCheckout {
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
               payload["qty"] = parseInt(item?.full_item_info?.available_qty);
               payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
               payload["brand"] = item?.full_item_info?.brand_name;
@@ -208,6 +234,12 @@ export class Checkout extends SourceCheckout {
 
           showError(__("Something went wrong"));
         });
+    }
+    if (
+     ( prevState?.identity_number !== this.state?.identity_number ||
+      prevState?.type_of_identity !== this.state?.type_of_identity) && !this.state.isIdentityNumberModified
+    ) {
+      this.setState({ isIdentityNumberModified: true });
     }
   }
 
@@ -465,7 +497,7 @@ export class Checkout extends SourceCheckout {
       addresses,
       isClubApparelEnabled
     } = this.props;
-    const { isArabic, cashOnDeliveryFee } = this.state;
+    const { isArabic, cashOnDeliveryFee, type_of_identity = 0, identity_number = "", validationError } = this.state;
 
     const { 
       couponsItems=[],
@@ -513,6 +545,11 @@ export class Checkout extends SourceCheckout {
           couponLists={couponLists}
           applyCouponToCart={applyCouponToCart}
           isClubApparelEnabled={isClubApparelEnabled}
+          type_of_identity={type_of_identity}
+          identity_number={identity_number}
+          validationError={validationError}
+          onIdentityNumberChange={this.onIdentityNumberChange}
+          onTypeOfIdentityChange={this.onTypeOfIdentityChange}
         />
       </>
     );
@@ -618,7 +655,8 @@ export class Checkout extends SourceCheckout {
       QPayOrderDetails,
       KnetDetails,
       KNETOrderDetails,
-      orderDetailsCartTotal,
+      orderDetailsCartTotal = {},
+      redirectPaymentMethod,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -649,6 +687,7 @@ export class Checkout extends SourceCheckout {
           KNETOrderDetails={KNETOrderDetails}
           guestAutoSignIn={guestAutoSignIn}
           orderDetailsCartTotal={orderDetailsCartTotal}
+          redirectPaymentMethod={redirectPaymentMethod}
         />
       );
     }
@@ -671,6 +710,7 @@ export class Checkout extends SourceCheckout {
         careemPayInfo={careemPayInfo}
         careemPayStatus={careemPayStatus}
         orderDetailsCartTotal={orderDetailsCartTotal}
+        redirectPaymentMethod={redirectPaymentMethod}
       />
     );
   }
@@ -701,6 +741,7 @@ export class Checkout extends SourceCheckout {
       },
       config: { countries },
       config,
+      is_nationality_mandatory = false,
     } = this.props;
 
     let platform = "";
@@ -711,7 +752,7 @@ export class Checkout extends SourceCheckout {
     }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
-    const { continueAsGuest, isArabic } = this.state;
+    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false, isIdentityNumberModified = false } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
@@ -732,6 +773,13 @@ export class Checkout extends SourceCheckout {
           isClickAndCollect={isClickAndCollect}
           renderGuestForm={this.renderGuestForm.bind(this)}
           handleClickNCollectPayment={handleClickNCollectPayment}
+          is_nationality_mandatory={is_nationality_mandatory}
+          type_of_identity={type_of_identity}
+          identity_number={identity_number}
+          validationError={validationError}
+          onIdentityNumberChange={this.onIdentityNumberChange}
+          onTypeOfIdentityChange={this.onTypeOfIdentityChange}
+          isIdentityNumberModified={isIdentityNumberModified}
         />
       </div>
     );
@@ -1001,4 +1049,4 @@ export class Checkout extends SourceCheckout {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Checkout);
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

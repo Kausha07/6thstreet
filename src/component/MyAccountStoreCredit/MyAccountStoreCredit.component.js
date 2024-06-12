@@ -21,7 +21,7 @@ class MyAccountStoreCredit extends PureComponent {
         return (
             <div block={ this.blockClass } elem="Balance">
                 <span block={ this.blockClass } elem="BalanceText">
-                    { __('Current Store Credit:') }
+                    { __('Current My Cash:') }
                 </span>
                 <span block={ this.blockClass } elem="BalanceAmount">
                     { balance || '' }

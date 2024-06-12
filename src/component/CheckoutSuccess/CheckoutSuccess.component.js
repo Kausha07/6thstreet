@@ -31,6 +31,7 @@ import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 import {
   TAMARA,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+import { EarnedCashReward } from "./../MyWallet/HelperComponents/HelperComponents.js"
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -643,7 +644,8 @@ export class CheckoutSuccess extends PureComponent {
     const { paymentMethod, order } = this.props;
     if (
       (paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments" ) && order
+      paymentMethod?.code === "tabby_installments" ||
+      paymentMethod?.code === TAMARA) && order
     ) {
       const {
         order: { status, unship = [], base_currency_code: currency },
@@ -665,7 +667,7 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-    } else if (paymentMethod?.code === "checkout_knet" && order) {
+    } else if ((paymentMethod?.code === "checkout_knet") && order) {
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
@@ -842,7 +844,7 @@ export class CheckoutSuccess extends PureComponent {
         {isSidewideCouponEnabled
           ? this.renderPriceLine(
               getDiscountFromTotals(total_segments, "total_mrp"),
-              __("Total MRP")
+              __("Total Price")
             )
           : this.renderPriceLine(
               getDiscountFromTotals(total_segments, "subtotal"),
@@ -855,6 +857,13 @@ export class CheckoutSuccess extends PureComponent {
               { couponSavings: true }
             )
           : null}
+        { 
+         isSidewideCouponEnabled &&
+          getDiscountFromTotals(total_segments, "total_discount") ? this.renderPriceLine(
+            getDiscountFromTotals(total_segments, "subtotal"),
+            __("Subtotal")
+          ) : null
+        }
         {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
@@ -875,16 +884,16 @@ export class CheckoutSuccess extends PureComponent {
                 : __("Cash on Delivery Fee")
             )
           : null}
-        {isSidewideCouponEnabled
-          ? this.renderDiscountPriceLine(
-              getDiscountFromTotals(total_segments, "customerbalance"),
-              __("Store Credit"),
-              { couponSavings: true }
-            )
-          : this.renderPriceLine(
-              getDiscountFromTotals(total_segments, "customerbalance"),
-              __("Store Credit")
-            )}
+        {this.renderDiscountPriceLine(
+            getDiscountFromTotals(total_segments, "customerbalance"),
+            __("My Cash"),
+            { couponSavings: true }
+        )}
+        {this.renderDiscountPriceLine(
+          getDiscountFromTotals(total_segments, "reward"),
+          __("My Rewards"),
+            { couponSavings: true }
+        )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
@@ -1146,7 +1155,10 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
-    const { QPAY_DETAILS, paymentMethod, KnetDetails } = this.props;
+    let { QPAY_DETAILS, paymentMethod, KnetDetails, payMethodCode } = this.props;
+    if (!paymentMethod){
+      paymentMethod = payMethodCode;
+    }
     const { PUN, date, status } = QPAY_DETAILS;
     return (
       <>
@@ -1262,12 +1274,16 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderPaymentTypeContent = () => {
-    const {
+    let {
       creditCardData: { number = "", expMonth, expYear, cvv },
       paymentMethod,
       initialTotals: { total_segments = [] },
       selectedCard,
+      payMethodCode,
     } = this.props;
+    if(!paymentMethod){
+      paymentMethod = payMethodCode;
+    }
     if (
       number &&
       expMonth &&
@@ -1333,11 +1349,36 @@ export class CheckoutSuccess extends PureComponent {
             : __("Cash on Delivery"),
       });
     } else if (paymentMethod?.code?.match(/free/)) {
-      if (getDiscountFromTotals(total_segments, "clubapparel")) {
-        this.setState({ paymentTitle: __("Club Apparel") });
-      } else if (getDiscountFromTotals(total_segments, "customerbalance")) {
-        this.setState({ paymentTitle: __("Store Credit") });
-      }
+        if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel") });
+        }
+        else if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel, My Rewards") });
+        }
+        else if (getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("Club Apparel, My Cash") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Wallet") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && getDiscountFromTotals(total_segments, "customerbalance") 
+          && !getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Cash") });
+        }
+        else if (!getDiscountFromTotals(total_segments, "clubapparel") 
+          && !getDiscountFromTotals(total_segments, "customerbalance") 
+          && getDiscountFromTotals(total_segments, "reward")){
+            this.setState({ paymentTitle: __("My Rewards") });
+        }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
     } else if (paymentMethod?.code?.match(/knet/)) {
@@ -1438,7 +1479,7 @@ export class CheckoutSuccess extends PureComponent {
             </>
           )}
         </strong>
-        <strong block="MyAccountOrderView" elem="Price">
+        <strong block="MyAccountOrderView" elem="Price" mods={mods}>
           {currency_code} {finalPrice}
         </strong>
       </li>
@@ -1514,12 +1555,13 @@ export class CheckoutSuccess extends PureComponent {
         tax_amount = 0,
         customer_balance_amount = 0,
         store_credit_amount = 0,
+        reward_currency_amount = 0,
         currency_code = getCurrency(),
         international_shipping_amount = 0,
         fulfilled_from = "",
         total_mrp = 0,
         total_discount = 0,
-      },
+      } = {},
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
 
@@ -1527,7 +1569,7 @@ export class CheckoutSuccess extends PureComponent {
       <div block="MyAccountOrderView" elem="OrderTotals">
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
-            {this.renderSitewidePriceLine(total_mrp, __("Total MRP"))}
+            {this.renderSitewidePriceLine(total_mrp, __("Total Price"))}
             {this.renderSitewidePriceLine(
               total_discount,
               __("Coupon Savings"),
@@ -1535,6 +1577,7 @@ export class CheckoutSuccess extends PureComponent {
                 couponSavings: true,
               }
             )}
+            {total_discount &&  this.renderSitewidePriceLine(subtotal, __("Subtotal"))}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderSitewidePriceLine(
                 shipping_amount,
@@ -1554,13 +1597,23 @@ export class CheckoutSuccess extends PureComponent {
             {store_credit_amount !== 0
               ? this.renderSitewidePriceLine(
                   store_credit_amount,
-                  __("Store Credit"),
+                  __("My Cash"),
                   {
                     isStoreCredit: true,
                     couponSavings: true,
                   }
                 )
               : null}
+            {reward_currency_amount !== 0
+            ? this.renderSitewidePriceLine(
+              reward_currency_amount,
+                __("My Rewards"),
+                {
+                  isStoreCredit: true,
+                  couponSavings: true,
+                }
+              )
+            : null}
             {parseFloat(tax_amount) !== 0
               ? this.renderSitewidePriceLine(tax_amount, __("Tax"))
               : null}
@@ -1594,6 +1647,7 @@ export class CheckoutSuccess extends PureComponent {
         msp_cod_amount = 0,
         tax_amount = 0,
         customer_balance_amount = 0,
+        reward_currency_amount = 0,
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_charges= 0,
@@ -1617,10 +1671,17 @@ export class CheckoutSuccess extends PureComponent {
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
-                  __("Store Credit"),
-                  { isStoreCredit: true }
+                  __("My Cash"),
+                  { isStoreCredit: true , couponSavings: true }
                 )
               : null}
+            { reward_currency_amount !== 0
+              ?  this.renderPriceLineQPAY(
+                reward_currency_amount,
+                __("My Rewards"),
+                { isStoreCredit: true, couponSavings: true  }
+              )
+            : null}
             {this.props?.order?.club_apparel_amount &&
             parseFloat(this.props?.order?.club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
@@ -1675,7 +1736,10 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       incrementID,
       initialTotals,
+      orderID,
       isSidewideCouponEnabled,
+      isSignedIn,
+      totals,
     } = this.props;
     const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
@@ -1687,16 +1751,25 @@ export class CheckoutSuccess extends PureComponent {
         paymentMethod?.code === "tabby_installments" ||
         paymentMethod?.code === "checkout_knet"
       ) {
+        // tracking parameters are commented and will be used when tracking will be enabled in next release
+        // const promotional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.reward_currency_amount : this.props?.order?.reward_currency_amount;
+        // const transactional_balance_used = isSidewideCouponEnabled ? this.props?.orderDetailsCartTotal?.store_credit_amount : this.props?.order?.customer_balance_amount;
+       
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,
           paymentMethod: paymentMethod?.code || "",
+          // promotional_balance_used: promotional_balance_used || "",
+          // transactional_balance_used: transactional_balance_used || "",
         });
       } else {
+
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: initialTotals,
           paymentMethod: paymentMethod?.code || "",
+          // promotional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "reward") || "",
+          // transactional_balance_used: getDiscountFromTotals(initialTotals?.total_segments, "customerbalance") || "",
         });
       }
       this.setState({ eventSent: true });
@@ -1711,14 +1784,15 @@ export class CheckoutSuccess extends PureComponent {
           )}
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
+          <EarnedCashReward rewardEarned={totals?.total_wallet_credit} orderID={orderID}/>
           {this.renderReferralBanner()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}
-          {paymentMethod?.code === "checkout_qpay" ||
+          {(paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
           paymentMethod?.code === "checkout_knet" ||
-          paymentMethod?.code === TAMARA
+          paymentMethod?.code === TAMARA) && isSignedIn
             ? isSidewideCouponEnabled
               ? this.renderSideWidePaymentSummary()
               : this.renderPaymentSummary()

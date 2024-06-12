@@ -147,7 +147,7 @@ const VuePLP = (props) => {
     const query = {
       filters: [],
       num_results: 50,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     const defaultQueryPayload = {
       userID,
@@ -246,7 +246,7 @@ const VuePLP = (props) => {
     const query = {
       filters: [],
       num_results: 50,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     const handleRandomSKU = getRandomSku();
     const defaultQueryPayload = {

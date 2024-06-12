@@ -45,7 +45,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     const {
       countries,
       default_country,
-      address: { city = null, country_code, area },
+      address: { city = null, country_code, area, type_of_identity, identity_number },
     } = props;
     const countryId = country_code || default_country;
     const country = countries.find(({ id }) => id === countryId);
@@ -62,6 +62,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       regionId: null,
       cities: [],
       postCodeValue: area,
+      type_of_identity: type_of_identity || 0,
+      identity_number: identity_number || "",
+      validationError: false,
+      isNationalityClick: null,
     };
   }
 
@@ -105,6 +109,22 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     return postCodeValue;
   }
 
+  onIdentityNumberChange = (value) => {
+    const isValidInput =
+      (this.state.type_of_identity == 0 && /^\d{0,12}$/.test(value)) ||
+      (this.state.type_of_identity == 1 && /^[a-zA-Z0-9]*$/.test(value));
+
+    this.setState({ identity_number : value, validationError: !isValidInput });
+  };
+
+  onTypeOfIdentityChange = (typeOfIdentityValue) => {
+    if(typeOfIdentityValue == 0) {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : true });
+    }else {
+      this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
+    }
+  };
+
   onFormSuccess = (fields) => {
     const { onSave,setNewAddressSaved } = this.props;
     const {
@@ -115,6 +135,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     } = fields;
     newAddress.region = { region_id, region };
     newAddress.telephone = this.addPhoneCode() + telephone;
+    newAddress.type_of_identity = this.state.type_of_identity;
+    newAddress.identity_number = this.state.identity_number;
     setNewAddressSaved(true);
     onSave(newAddress);
   };
@@ -330,7 +352,13 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       default_country,
     } = this.props;
 
-    const { phone, street = [], firstname, lastname } = address;
+    const { phone, street = [], firstname, lastname, type_of_identity, identity_number } = address;
+    const {
+      type_of_identity: typeOfIdentity,
+      identity_number: identityNumber,
+      isNationalityClick,
+      validationError,
+    } = this.state;
 
     const clearValue = newForm ? { value: "" } : null;
 
@@ -392,9 +420,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       street: {
         value: street,
         validation: ["notEmpty"],
-        maxLength : 420,
+        maxLength: 420,
         placeholder: __("Street Address"),
         ...clearValue,
+      },
+      type_of_identity: {
+        value: typeOfIdentity,
+        onTypeOfIdentityChange: this.onTypeOfIdentityChange,
+      },
+      identity_number: {
+        value: identityNumber,
+        onIdentityNumberChange: this.onIdentityNumberChange,
+        validationError: validationError,
       },
       default_common: {
         type: "toggle",

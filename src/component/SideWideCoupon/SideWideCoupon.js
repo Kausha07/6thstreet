@@ -37,6 +37,7 @@ function SideWideCoupon(props) {
     totals: { site_wide_applied = 0, site_wide_coupon = "", coupon_code = "" },
     isSignedIn,
     config,
+    openCouponPopup,
   } = props;
   const isArabic = checkIsArabic();
   const countryCode = getCountryFromUrl();
@@ -82,35 +83,29 @@ function SideWideCoupon(props) {
         <div block="sideWideCouponBlock" elem="sidewideApplyed">
           <div block="appliedCouponDetail">
             <span block="showCouponBtnLeftBlock">
-              <img block="couponImage" src={Coupon} alt="couponImage" />
-              <span block="couponText" mods={{ isArabic }}>
-                <span block="sideWideCouponBlock" elem="recommendedCode">
-                  {coupon_code ? coupon_code : sidewideCouponCode}&nbsp;
-                </span>
-                {__("Coupon applied")}
-              </span>
+                <div block="otherCouponBlock"  onClick={openCouponPopup}>
+                  {__("View other available coupons")}
+                </div>
             </span>
           </div>
-          <button
-            className="removeCouponBtn"
-            onClick={(e) => {
-              coupon_code ? handleRemoveCode(e) : handleSideWideCoupon(0);
-            }}
-          >
-            {__("Remove")}
-          </button>
         </div>
       ) : (
         <div block="sideWideCouponBlock" elem="sidewideNotApplyed">
           <div block="showCouponBtn">
             <span block="showCouponBtnLeftBlock">
-              <img block="couponImage" src={Coupon} alt="couponImage" />
-              <span block="couponText" mods={{ isArabic }}>
-                {__("Recommended code: ")}
-                <span block="sideWideCouponBlock" elem="recommendedCode">
-                  {sidewideCouponCode}
+              {site_wide_applied || coupon_code ? (
+                <div block="otherCouponBlock" onClick={this.openCouponPopup}>
+                  {__("View other available coupons")}
+                </div>
+              ) : (
+                <span block="couponText" mods={{ isArabic }}>
+                  {__("Recommended code: ")}
+                  <span block="sideWideCouponBlock" elem="recommendedCode">
+                    {sidewideCouponCode}
+                  </span>
                 </span>
-              </span>
+              )
+              }
             </span>
 
             <button

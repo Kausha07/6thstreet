@@ -111,6 +111,8 @@ export const mapDispatchToProps = (dispatch) => ({
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   setColourVarientsButtonClick: (colourVarientsButtonClick) =>
   dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
+  updateSidewideCoupon: (quoteId, flag, is_guest) =>
+    CartDispatcher.updateSidewideCoupon(dispatch, quoteId, flag, is_guest),
 });
 
 export class CartPageContainer extends PureComponent {
@@ -264,7 +266,7 @@ export class CartPageContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 25,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     const type = "vue_recently_viewed_slider";
     const defaultQueryPayload = {
@@ -289,7 +291,7 @@ export class CartPageContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 25,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     const type = "vue_top_picks_slider";
     const defaultQueryPayload = {
@@ -318,7 +320,7 @@ export class CartPageContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 25,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      mad_uuid: getUUID(),
     };
     const type = "vue_compact_style_it_slider";
     const defaultQueryPayload = {

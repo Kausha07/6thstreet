@@ -35,6 +35,7 @@ export const MyAccountDispatcher = import(
 
 export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload[ADDRESS_POPUP_ID] || {},
+  is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -61,6 +62,8 @@ export const mapDispatchToProps = (dispatch) => ({
   setAddressLoadingStatus: (status) =>
     dispatch(setAddressLoadingStatus(status)),
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
+  showNotification: (error) =>
+    dispatch(showNotification("error", error)),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -125,6 +128,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       telephone = "",
       street,
       phonecode = "",
+      type_of_identity = 0,
+      identity_number = "",
     } = address;
     const { validateAddress } = this.props;
 
@@ -136,6 +141,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       postcode: region ?? region_id,
       region: region ?? region_id,
       street: Array.isArray(street) ? street[0] : street,
+      type_of_identity: type_of_identity,
+      identity_number: identity_number
     });
   }
 
@@ -191,10 +198,40 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         address: { id },
       },
       updateAddress,
+      showNotification,
+      is_nationality_mandatory
     } = this.props;
     const { newAddress } = this.getNewAddressField(address);
     newAddress.id = id;
+
+    const isValidInput =
+      (newAddress?.type_of_identity == 0 &&
+        /^\d{1,9}$/.test(newAddress?.identity_number) &&
+        newAddress?.identity_number?.length <= 9) ||
+      (newAddress?.type_of_identity == 1 &&
+        /^[a-zA-Z0-9]*$/.test(newAddress?.identity_number) &&
+        newAddress?.identity_number?.length <= 15);
+
+    if (!isValidInput && is_nationality_mandatory) {
+      if (newAddress?.type_of_identity == 0) {
+        showNotification(__("Enter a valid National ID number"));
+      } else {
+        showNotification(__("Enter a valid Passport number"));
+      }
+      return;
+    }
+
     const apiResult = updateAddress(id, newAddress);
+    if (
+      Object.keys(address).length > 0 &&
+      address?.type_of_identity &&
+      address?.identity_number &&
+      this.props?.onIdentityNumberChange &&
+      this.props?.onTypeOfIdentityChange
+    ) {
+      this.props?.onIdentityNumberChange(address?.identity_number);
+      this.props?.onTypeOfIdentityChange(address?.type_of_identity);
+    }
 
     if (apiResult) {
       apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
@@ -252,6 +289,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       street,
       city,
       telephone,
+      type_of_identity = this.props?.type_of_identity || 0,
+      identity_number = this.props?.identity_number || "",
     } = address;
     const newAddress = {
       firstname: firstname,
@@ -262,6 +301,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       phone: telephone,
       country_code: country_id,
       default_shipping: default_shipping,
+      type_of_identity: type_of_identity,
+      identity_number: identity_number,
     };
     return { newAddress };
   }
