@@ -34,10 +34,6 @@ const PDPGalleryStrip = (props) => {
                 const otherView = await resOthersViewing?.data[0];
                 const addToBag = await resAddedToBag?.data[0];
 
-                console.log('--sendMyView', sendMyView);
-                console.log('--otherView', otherView);
-                console.log('--addToBag', addToBag);
-
                 sendMyView.status > 0 && console.log('my view count');
 
                 // Update state with fetched data
@@ -55,7 +51,8 @@ const PDPGalleryStrip = (props) => {
                 }
                 dispatch(setAddtoCartInfo({
                     "user_view_count":otherView.count > 0 ? otherView.count : 0,
-                    "user_added_to_cart_count":addToBag.count > 0 ? addToBag.count : 0
+                    "user_added_to_cart_count":addToBag.count > 0 ? addToBag.count : 0,
+                    productAPI:true
                 }))
 
             } catch (error) {

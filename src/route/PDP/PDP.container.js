@@ -61,7 +61,8 @@ export const mapStateToProps = (state) => ({
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
   colourVarientsButtonClick : state.PLP.colourVarientsButtonClick,
-  addtoCartInfo:state.PDP.addtoCartInfo
+  addtoCartInfo:state.PDP.addtoCartInfo,
+  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -189,7 +190,8 @@ export class PDPContainer extends PureComponent {
       menuCategories = [],
       pdpWidgetsData = [],
       gender,
-      addtoCartInfo
+      addtoCartInfo,
+      isNewDesign
     } = this.props;
     const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
     if (Object.keys(product).length) {
@@ -256,9 +258,8 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
-    if (Object.keys(getDetails).length > 0 && Object.keys(addtoCartInfo).length > 0 && !eventSent) {
-      let clearTime = setTimeout(() => {
-        Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+    if (Object.keys(getDetails).length > 0 && !eventSent && ((addtoCartInfo.productAPI && addtoCartInfo.followAPI)  || !isNewDesign)) {
+      Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
           product: {
             name: productKeys.name,
             id: sku,
@@ -298,8 +299,6 @@ export class PDPContainer extends PureComponent {
           colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
           ...addtoCartInfo,
         });
-        clearTimeout(clearTime);
-      }, 3000);
       
       this.setState({ eventSent: true });
     }

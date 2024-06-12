@@ -41,7 +41,11 @@ const PDPBrandFollow = (props) => {
         } else {
             setIsLoadingFollow(false); 
             setisFollowActive(false);
-            dispatch(setAddtoCartInfo({"is_following_brand":false}));
+            dispatch(
+                setAddtoCartInfo({
+                    "is_following_brand":false,
+                    followAPI:true
+                }));
         }
     }
 
@@ -69,6 +73,7 @@ const PDPBrandFollow = (props) => {
                 product_sku:props.sku,
                 brand_name:props.brand_name
             };
+            
             if(props.brand_name.toLowerCase() === res?.data?.name?.toLowerCase()) {
                 setisFollowActive(res?.data?.name !== '') 
                 dispatch(showNotification(
@@ -79,7 +84,11 @@ const PDPBrandFollow = (props) => {
                 MOE_trackEvent(EVENT_PDP_FOLLOW_BRAND,eventData);
                 /* GTM EVENT */
                 Event.dispatch(EVENT_PDP_FOLLOW_BRAND,eventData);
-                dispatch(setAddtoCartInfo({"is_following_brand":true}));
+
+                dispatch(setAddtoCartInfo({
+                    "is_following_brand":true,
+                    followAPI:true
+                }));
             } else {
                 setisFollowActive(res?.data?.name);
                 dispatch(showNotification(
@@ -90,7 +99,11 @@ const PDPBrandFollow = (props) => {
                 MOE_trackEvent(EVENT_PDP_UNFOLLOW_BRAND,eventData);
                 /* GTM EVENT */
                 Event.dispatch(EVENT_PDP_UNFOLLOW_BRAND,eventData);
-                dispatch(setAddtoCartInfo({"is_following_brand":false}));
+
+                dispatch(setAddtoCartInfo({
+                    "is_following_brand":false,
+                    followAPI:true
+                }));
             } 
             setIsLoadingFollow(false);
             
@@ -107,7 +120,10 @@ const PDPBrandFollow = (props) => {
             return props.brand_name.toLowerCase() === item?.name?.toLowerCase()
         });
         setisFollowActive(selectedItem.length > 0);
-        dispatch(setAddtoCartInfo({"is_following_brand":selectedItem.length > 0 ? true : false}));
+        dispatch(setAddtoCartInfo({
+            "is_following_brand":selectedItem.length > 0 ? true : false,
+            followAPI:true
+        }));
         // isItemTheir = selectedItem.length > 0;
         // !isItemTheir && fn && fn();
         setIsLoadingFollow(false);

@@ -74,11 +74,11 @@ class AddToCartEvent extends BaseEvent {
             item_size_type : product?.size_id ?? "",
             variant_availability :product?.variant_availability ?? "",
             product_rating :product?.product_rating ?? "",
-            no_of_rating :product?.no_of_rating ?? "",
-            flash_sale :product?.flash_sale ?? "",
+            no_of_ratings :product?.no_of_ratings ?? "",
+            is_flash_sale :product?.is_flash_sale ?? "",
             user_view_count :product?.user_view_count ?? "",
             user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
-            follow_brand :product?.follow_brand ?? "",
+            is_follow_brand :product?.is_follow_brand ?? "",
           }
         ]
       },
