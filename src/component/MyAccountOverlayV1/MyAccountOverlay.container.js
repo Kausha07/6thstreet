@@ -601,8 +601,8 @@ export class MyAccountOverlayContainer extends PureComponent {
               MOE_addMobile(customerRegisterData.contact_no);
             }
             if (customerRegisterData?.email) {
-              MOE_addEmail(customerRegisterData?.email.toLowerCase());
-              MOE_AddUniqueID(customerRegisterData?.email.toLowerCase());
+              MOE_addEmail(customerRegisterData?.email?.toLowerCase());
+              MOE_AddUniqueID(customerRegisterData?.email?.toLowerCase());
             }
             this.sendEvents(EVENT_REGISTER, eventAdditionalData);
           }

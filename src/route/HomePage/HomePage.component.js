@@ -77,8 +77,8 @@ class HomePage extends PureComponent {
     
     if(customer?.firstname) MOE_AddFirstName(customer?.firstname);
     if(customer?.lastName) MOE_addLastName(customer?.lastName);
-    if(customer?.email) MOE_addEmail(customer?.email.toLowerCase());
-    if(customer?.email) MOE_AddUniqueID(customer?.email.toLowerCase());
+    if(customer?.email) MOE_addEmail(customer?.email?.toLowerCase());
+    if(customer?.email) MOE_AddUniqueID(customer?.email?.toLowerCase());
     if(customer?.phone) MOE_addMobile(customer?.phone );
     if(customer?.dob) MOE_addUserAttribute("Birthdate", customer?.dob);
   }

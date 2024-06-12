@@ -992,8 +992,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (paymentInformation?.billing_address?.lastname) MOE_addLastName(paymentInformation?.billing_address?.lastname);
       if (paymentInformation?.billing_address?.phone) MOE_addMobile(paymentInformation?.billing_address?.phone);
       if (paymentInformation?.billing_address?.guest_email) {
-        MOE_addEmail(paymentInformation?.billing_address.guest_email.toLowerCase());
-        MOE_AddUniqueID(paymentInformation.billing_address.guest_email.toLowerCase());
+        MOE_addEmail(paymentInformation?.billing_address.guest_email?.toLowerCase());
+        MOE_AddUniqueID(paymentInformation.billing_address.guest_email?.toLowerCase());
       }
     }
 

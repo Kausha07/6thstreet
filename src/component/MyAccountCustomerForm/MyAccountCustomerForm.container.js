@@ -273,8 +273,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
           MOE_addMobile(phoneCountryCode + phone);
         }
         if (email) {
-          MOE_addEmail(email.toLowerCase());
-          MOE_AddUniqueID(email.toLowerCase());
+          MOE_addEmail(email?.toLowerCase());
+          MOE_AddUniqueID(email?.toLowerCase());
         }
         if (fullname) {
           const firstName =
