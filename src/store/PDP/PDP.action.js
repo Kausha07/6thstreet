@@ -7,6 +7,7 @@ export const SET_BRAND_INFO_DATA = 'SET_BRAND_INFO_DATA';
 export const SET_BRAND_BUTTON_CLICK = 'SET_BRAND_BUTTON_CLICK';
 export const SET_VUE_TRENDING_BRAND_CLICK = 'SET_VUE_TRENDING_BRAND_CLICK'
 export const SET_NEW_DESIGN = 'SET_NEW_DESIGN'
+export const SET_ADDTOCART_INFO = 'SET_ADDTOCART_INFO'
 
 export const setPDPGaleryImage = (imageIndex) => ({
     type: SET_PDP_GALLERY_IMAGE_INDEX,
@@ -44,6 +45,13 @@ export const setNewDesign = (
     return {
     type: SET_NEW_DESIGN,
     isNewDesign:response,
+}};
+export const setAddtoCartInfo = (
+    response
+) => {
+    return {
+    type: SET_ADDTOCART_INFO,
+    addtoCartInfo:response,
 }};
 
 export const setPDPClickAndCollect = ( storesList ) => ({

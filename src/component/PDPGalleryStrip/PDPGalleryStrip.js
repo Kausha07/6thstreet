@@ -4,6 +4,8 @@ import { isArabic } from "Util/App";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import bags from './icons/bags.png';
 import eyes from './icons/eyes.png';
+import { setAddtoCartInfo } from "Store/PDP/PDP.action";
+import { useDispatch } from 'react-redux';
 
 
 
@@ -14,7 +16,7 @@ const PDPGalleryStrip = (props) => {
     const [isOAVViewing, setisOAVViewing] = useState(false);
     const [isAddtoBagCount, setisAddTobagCount] = useState(0);
     const [isOtherAreView, setisOtherAreViewing] = useState(0);
-
+    const dispatch = useDispatch();
     useEffect(() => {
         const {productId, sku} = props;
         let myInterval;
@@ -51,6 +53,11 @@ const PDPGalleryStrip = (props) => {
                     setisATBViewing(addToBag.count > 0);
                     setisOAVViewing(otherView.count > 0);
                 }
+                dispatch(setAddtoCartInfo({
+                    "user_view_count":otherView.count > 0 ? otherView.count : 0,
+                    "user_added_to_cart_count":addToBag.count > 0 ? addToBag.count : 0
+                }))
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

@@ -8,7 +8,8 @@ import {
     SET_BRAND_INFO_DATA,
     SET_BRAND_BUTTON_CLICK,
     SET_VUE_TRENDING_BRAND_CLICK,
-    SET_NEW_DESIGN
+    SET_NEW_DESIGN,
+    SET_ADDTOCART_INFO
 } from './PDP.action';
 
 export const getInitialState = () => ({
@@ -21,7 +22,8 @@ export const getInitialState = () => ({
     brandInfoData: '',
     brandButtonClick : false,
     vueTrendingBrandClick: false,
-    isNewDesign: false
+    isNewDesign: false,
+    addtoCartInfo:{}
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
@@ -105,6 +107,17 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 ...state,
                 isNewDesign
             };
+
+        case SET_ADDTOCART_INFO:
+            const { addtoCartInfo } = action;
+            return {
+                ...state,
+                addtoCartInfo:{
+                    ...state.addtoCartInfo,
+                    ...addtoCartInfo
+                }
+            };
+        
 
         default:
             return state;

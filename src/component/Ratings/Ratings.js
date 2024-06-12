@@ -1,13 +1,17 @@
-import {useState} from 'react';
-import { useSelector} from 'react-redux';
+import {useState, useEffect} from 'react';
+import { useSelector, useDispatch} from 'react-redux';
 import './Ratings.style.scss';
 import ModalOverlay from 'Component/ModalOverlay/ModalOverlay';
 import { isArabic } from "Util/App";
 import RatingPopup from "./RatingPopup";
 import { formatNumber } from 'Util/Ratings/Ratings';
 import { getStore } from "Store";
-
+import Event, {
+    EVENT_PDP_RATING_CLICK,
+    MOE_trackEvent
+  } from "Util/Event";
 import stars from "./icons/stars.svg";
+import { setAddtoCartInfo } from "Store/PDP/PDP.action";
 
 
 const Ratings = (props) => {
@@ -15,13 +19,22 @@ const Ratings = (props) => {
     const newinfoText = __("Ratings");
     const country = getStore()?.getState()?.AppState?.country;
     const config = useSelector(state => state.AppConfig.config);
+    const addtoCartInfo = useSelector(state => state.PDP.addtoCartInfo)
     const { uMinAvgRating, uMinRatingCount} = config?.countries[country];
+    const dispatch = useDispatch();
     const {
         rating_brand,
         rating_sku,
+        productName
     } = props;
 
     if(!rating_sku){
+        if(!addtoCartInfo.hasOwnProperty("product_rating")){
+            dispatch(setAddtoCartInfo({
+                "product_rating":0,
+                "no_of_ratings":0
+            }));
+        }
         return null;
     }
     const {
@@ -31,6 +44,12 @@ const Ratings = (props) => {
         prdTotalRatings = +total_ratings,
     } =  rating_sku;
 
+    useEffect(() => {
+         dispatch(setAddtoCartInfo({
+            "product_rating":prdAverageRatings,
+            "no_of_rating":prdTotalRatings
+        }));
+    },[])
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 
@@ -44,6 +63,15 @@ const Ratings = (props) => {
     const totalRatings = formatNumber(prdTotalRatings);
     const modalHandlerOpen = () => {
         setIsModalOpen(true);
+        const eventData = {
+            product_rating:prdAverageRatings,
+            no_of_rating:prdTotalRatings,
+            product_name:productName
+        }
+        /* MOE events */
+        MOE_trackEvent(EVENT_PDP_RATING_CLICK,eventData);
+        /* GTM EVENT */
+        Event.dispatch(EVENT_PDP_RATING_CLICK,eventData);
     }
     const modalHandlerClose = () => {
         setIsModalOpen(false);
@@ -65,7 +93,7 @@ const Ratings = (props) => {
 
             </div>
             {isModalOpen && 
-                <ModalOverlay  className="ratingDetail fromBottom" open={isModalOpen} onConfirm={modalHandlerClose}>
+                <ModalOverlay popupName="rating" className="ratingDetail fromBottom" open={isModalOpen} onConfirm={modalHandlerClose}>
                     <RatingPopup key='rating' {...rating_sku}  />
                 </ModalOverlay>
             }

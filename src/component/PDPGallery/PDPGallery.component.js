@@ -47,6 +47,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(showNotification("success", message)),
   showErrorNotification: (error) =>
     dispatch(showNotification("error", error[0].message)),
+    getAddToCartInfo:(data) => PDPDispatcher.getAddToCartInfo(dispatch, data)
 });
 
 
@@ -649,11 +650,19 @@ class PDPGallery extends PureComponent {
   }
   renderSaleBlock = () => {
     const { isArabic } = this.state;
-    const { product : {timer_start_time, timer_end_time}} = this.props;
+    const {getAddToCartInfo, product : {timer_start_time, timer_end_time}} = this.props;
     const newinfoText = __("Flash sale! Limited Time only!");
-    return(
-            timer_start_time && timer_end_time &&  <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
-    )
+    const now = Date.parse(new Date().toUTCString());
+    const startDay = Date.parse(timer_start_time);
+    const endDay = Date.parse(timer_end_time);
+    if (!(endDay >= startDay) || !(now <= endDay) ||  startDay >= now) {
+      getAddToCartInfo({"is_flash_sale":false});
+    } else {
+      getAddToCartInfo({"is_flash_sale":true});
+      return(
+        <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer  newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
+      )
+    }
 
   }
 
@@ -667,10 +676,9 @@ class PDPGallery extends PureComponent {
         rating_sku,
         objectID,
         sku,
+        name
       }
     } = this.props;
-
-   
     return (
       <>
         {
@@ -708,7 +716,7 @@ class PDPGallery extends PureComponent {
           {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" productId={objectID} sku={sku}/>}
         </button>
 
-          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} />}
+          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productName={name} />}
         
         {!isNewDesign && this.renderVideoButtons()}
       </div>

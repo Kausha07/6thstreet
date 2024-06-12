@@ -60,7 +60,8 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
-  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick
+  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick,
+  addtoCartInfo:state.PDP.addtoCartInfo
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -188,6 +189,7 @@ export class PDPContainer extends PureComponent {
       menuCategories = [],
       pdpWidgetsData = [],
       gender,
+      addtoCartInfo
     } = this.props;
     const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
     if (Object.keys(product).length) {
@@ -254,45 +256,51 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
-    if (Object.keys(getDetails).length > 0 && !eventSent) {
-      Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-        product: {
-          name: productKeys.name,
-          id: sku,
-          price: specialPrice || originalPrice,
-          brand: productKeys?.brand_name,
-          category: categoryLevel || "",
-          variant: productKeys?.color || "",
+    if (Object.keys(getDetails).length > 0 && Object.keys(addtoCartInfo).length > 0 && !eventSent) {
+      let clearTime = setTimeout(() => {
+        Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+          product: {
+            name: productKeys.name,
+            id: sku,
+            price: specialPrice || originalPrice,
+            brand: productKeys?.brand_name,
+            category: categoryLevel || "",
+            variant: productKeys?.color || "",
+            colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
+            categories: categories, 
+            discount: originalPrice - specialPrice,
+            variant_availability: this.props?.product?.["in_stock"], 
+            ...addtoCartInfo
+          },
+        });
+        const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+        MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          category: currentAppState.gender
+            ? currentAppState?.gender?.toUpperCase()
+            : "",
+          gender: currentAppState.gender
+            ? currentAppState?.gender?.toUpperCase()
+            : "",
+          subcategory: categoryLevel || product_type_6s,
+          color: productKeys?.color || "",
+          brand_name: productKeys?.brand_name || "",
+          full_price: originalPrice || "",
+          product_url: url,
+          currency: getCurrency() || "",
+          product_sku: sku || "",
+          discounted_price: specialPrice || "",
+          product_image_url: thumbnail_url || "",
+          product_name: name || "",
+          isLoggedIn: isSignedIn(),
+          app6thstreet_platform: "Web",
           colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
-          categories: categories, 
-          discount: originalPrice - specialPrice,
-          variant_availability: this.props?.product?.["in_stock"], 
-        },
-      });
-      const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        category: currentAppState.gender
-          ? currentAppState?.gender?.toUpperCase()
-          : "",
-        gender: currentAppState.gender
-          ? currentAppState?.gender?.toUpperCase()
-          : "",
-        subcategory: categoryLevel || product_type_6s,
-        color: productKeys?.color || "",
-        brand_name: productKeys?.brand_name || "",
-        full_price: originalPrice || "",
-        product_url: url,
-        currency: getCurrency() || "",
-        product_sku: sku || "",
-        discounted_price: specialPrice || "",
-        product_image_url: thumbnail_url || "",
-        product_name: name || "",
-        isLoggedIn: isSignedIn(),
-        app6thstreet_platform: "Web",
-        colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No"
-      });
+          ...addtoCartInfo,
+        });
+        clearTimeout(clearTime);
+      }, 3000);
+      
       this.setState({ eventSent: true });
     }
   }
