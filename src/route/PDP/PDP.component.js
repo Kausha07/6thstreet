@@ -27,7 +27,7 @@ import { getPdpSectionConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   prevPath: state.PLP.prevPath,
-  isNewDesign:state.PDP.isNewDesign
+  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -68,7 +68,7 @@ class PDP extends PureComponent {
       this.setState({
         PDPJSON:response.data
       });
-      this.props.gnisNewDesign(response.newDesign);
+      // this.props.gnisNewDesign(response.newDesign);
     } catch (e) {
       Logger.log(e);
     }

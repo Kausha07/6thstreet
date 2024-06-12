@@ -46,7 +46,7 @@ import { connect } from "react-redux";
 import Ratings from 'Component/Ratings/Ratings';
 import PDPBrandFollow from 'Component/PDPBrandFollow/PDPBrandFollow';
 export const mapStateToProps = (state) => ({
-  isNewDesign:state.PDP.isNewDesign
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 class PDPSummary extends PureComponent {

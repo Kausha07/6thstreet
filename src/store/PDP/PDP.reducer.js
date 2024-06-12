@@ -21,7 +21,7 @@ export const getInitialState = () => ({
     brandInfoData: '',
     brandButtonClick : false,
     vueTrendingBrandClick: false,
-    isNewDesign:true
+    isNewDesign: false
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {

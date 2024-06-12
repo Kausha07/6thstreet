@@ -56,7 +56,7 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
-  isNewDesign:state.PDP.isNewDesign
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
