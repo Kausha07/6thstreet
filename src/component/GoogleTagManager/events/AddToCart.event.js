@@ -78,7 +78,7 @@ class AddToCartEvent extends BaseEvent {
             is_flash_sale :product?.is_flash_sale ?? "",
             user_view_count :product?.user_view_count ?? "",
             user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
-            is_follow_brand :product?.is_follow_brand ?? "",
+            is_following_brand :product?.is_following_brand ?? "",
           }
         ]
       },

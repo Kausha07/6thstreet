@@ -25,7 +25,7 @@ const Ratings = (props) => {
     const {
         rating_brand,
         rating_sku,
-        productName
+        productSku
     } = props;
 
     if(!rating_sku){
@@ -47,7 +47,7 @@ const Ratings = (props) => {
     useEffect(() => {
          dispatch(setAddtoCartInfo({
             "product_rating":prdAverageRatings,
-            "no_of_rating":prdTotalRatings
+            "no_of_ratings":prdTotalRatings
         }));
     },[])
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
@@ -65,8 +65,8 @@ const Ratings = (props) => {
         setIsModalOpen(true);
         const eventData = {
             product_rating:prdAverageRatings,
-            no_of_rating:prdTotalRatings,
-            product_name:productName
+            no_of_ratings:prdTotalRatings,
+            product_sku:productSku
         }
         /* MOE events */
         MOE_trackEvent(EVENT_PDP_RATING_CLICK,eventData);

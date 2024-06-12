@@ -65,6 +65,7 @@ export const mapStateToProps = (state) => ({
   isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
 });
 
+
 export const mapDispatchToProps = (dispatch) => ({
   requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),

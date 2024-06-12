@@ -995,7 +995,7 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: { name, brand_name, gallery_images = [], brandNameclick  },isNewDesign,renderMySignInPopup
+      product: { sku, name, brand_name, gallery_images = [], brandNameclick  },isNewDesign,renderMySignInPopup
     } = this.props;
 
     const { isArabic } = this.state;
@@ -1062,7 +1062,7 @@ class PDPSummary extends PureComponent {
             ) : (
               brand_name
             )}</span>{" "}
-            {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}
+            {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name} sku={sku}  />}
             <span block="PDPSummary" elem="Name">
               {name}
             </span>
@@ -1093,7 +1093,7 @@ class PDPSummary extends PureComponent {
           )
         ) : (
           brand_name
-        )} {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name}  />}</span> {" "}
+        )} {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name} sku={sku}  />}</span> {" "}
         
         <span block="PDPSummary" elem="Name">
           {name}
@@ -1405,6 +1405,7 @@ class PDPSummary extends PureComponent {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
       product: {
+        sku,
         name,
         cross_border = 0,
         brand_name = "",
@@ -1491,7 +1492,7 @@ class PDPSummary extends PureComponent {
                     className="PDPRatings" 
                     rating_sku={rating_sku} 
                     rating_brand={rating_brand} 
-                    productName={name}
+                    productSku={sku}
                   />
                 }
                 </div>
