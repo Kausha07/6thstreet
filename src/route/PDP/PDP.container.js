@@ -62,7 +62,7 @@ export const mapStateToProps = (state) => ({
   pdpWidgetsData: state.AppState.pdpWidgetsData,
   colourVarientsButtonClick : state.PLP.colourVarientsButtonClick,
   addtoCartInfo:state.PDP.addtoCartInfo,
-  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
+  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 
