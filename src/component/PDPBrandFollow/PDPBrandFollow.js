@@ -89,7 +89,7 @@ const PDPBrandFollow = (props) => {
                     "is_following_brand":true,
                     followAPI:true
                 }));
-            } else {
+            } else if(res?.data?.length <= 0) {
                 setisFollowActive(res?.data?.name);
                 dispatch(showNotification(
                     'success',
@@ -104,7 +104,22 @@ const PDPBrandFollow = (props) => {
                     "is_following_brand":false,
                     followAPI:true
                 }));
-            } 
+            }  else {
+                setisFollowActive(false);
+                dispatch(showNotification(
+                    'error',
+                    __(res)
+                ));
+                /* MOE events */
+                MOE_trackEvent(EVENT_PDP_UNFOLLOW_BRAND,eventData);
+                /* GTM EVENT */
+                Event.dispatch(EVENT_PDP_UNFOLLOW_BRAND,eventData);
+
+                dispatch(setAddtoCartInfo({
+                    "is_following_brand":false,
+                    followAPI:true
+                }));
+            }
             setIsLoadingFollow(false);
             
         }
