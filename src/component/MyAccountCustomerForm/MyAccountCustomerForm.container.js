@@ -6,7 +6,17 @@ import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm
 import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
-import { EVENT_MOE_UPDATE_PROFILE, BIRTHDATE_UPDATE_SUCCESS, MOE_trackEvent } from "Util/Event";
+import {
+  EVENT_MOE_UPDATE_PROFILE,
+  BIRTHDATE_UPDATE_SUCCESS,
+  MOE_addUserAttribute,
+  MOE_addMobile,
+  MOE_addEmail,
+  MOE_AddUniqueID,
+  MOE_AddFirstName,
+  MOE_addLastName,
+  MOE_trackEvent,
+} from "Util/Event";
 import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import isMobile from "Util/Mobile";
@@ -219,7 +229,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       phoneCountryCode = PHONE_CODES[countryCode],
       dateOfBirth,
     } = this.state;
-    const { phone, email } = customer;
+    const { phone, email, fullname } = customer;
     const elmnts = document.getElementsByClassName("MyAccount-Heading");
     const GetGender =
       gender == "1" ? "Male" : gender == "2" ? "Female" : "Prefer Not To Say";
@@ -243,7 +253,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         app6thstreet_platform: "Web",
       });
       this.setState({ showOTPField: false, isLoading: false });
-      if( updatedCustResponse && dateOfBirth ){
+      if (updatedCustResponse && dateOfBirth) {
         MOE_trackEvent(BIRTHDATE_UPDATE_SUCCESS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -251,12 +261,41 @@ export class MyAccountCustomerFormContainer extends PureComponent {
           birthdate: dateOfBirth || "",
           app6thstreet_platform: "Web",
         });
-        this.state.isDOBChoosen && showSuccessNotification(__("Birthdate updated successfully"));
+        MOE_addUserAttribute("Birthdate", dateOfBirth);
+        this.state.isDOBChoosen &&
+          showSuccessNotification(__("Birthdate updated successfully"));
         this.setState({
           isDOBChoosen: false,
-        })
-      } 
-      showSuccessNotification(__("Your information was successfully updated!"));
+        });
+      }
+      if (updatedCustResponse) {
+        if (phoneCountryCode && phone) {
+          MOE_addMobile(phoneCountryCode + phone);
+        }
+        if (email) {
+          MOE_addEmail(email?.toLowerCase());
+          MOE_AddUniqueID(email?.toLowerCase());
+        }
+        if (fullname) {
+          const firstName =
+            fullname.indexOf(" ") > 0
+              ? fullname.substr(0, fullname.indexOf(" "))
+              : fullname;
+          const lastName =
+            fullname.indexOf(" ") > 0
+              ? fullname.substr(fullname.indexOf(" ") + 1)
+              : "";
+          if (firstName) {
+            MOE_AddFirstName(firstName);
+          }
+          if (lastName) {
+            MOE_addLastName(lastName);
+          }
+        }
+        showSuccessNotification(
+          __("Your information was successfully updated!")
+        );
+      }
     } catch (e) {
       this.setState({ isLoading: false });
       showErrorNotification(e[0].message ? e[0].message : e);
