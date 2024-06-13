@@ -40,7 +40,6 @@ class CreditCard extends PureComponent {
             expYear: '',
         };
         this.ScrollerRef = React.createRef();
-        this.CvvRef = React.createRef();
     }
 
     componentDidMount() {
@@ -60,9 +59,6 @@ class CreditCard extends PureComponent {
         if (this?.ScrollerRef?.current) {
             this?.ScrollerRef?.current?.scrollIntoView({ behavior: "smooth" });
             document.getElementById("cvv")?.focus();
-        }
-        if(this?.CvvRef?.current){
-            this.CvvRef.current.focus();
         }
     }
 
@@ -279,7 +275,6 @@ class CreditCard extends PureComponent {
                         onChange={(e) => this.handleCvvChange(e, isAmex)}
                         validation={['notEmpty']}
                         onPaste={this.handlePaste}
-                        ref={this.CvvRef}
                     />
                     <div
                         block="CreditCard"
