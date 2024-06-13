@@ -12,6 +12,13 @@
     padding-left: 0;
     position: relative;
     text-align: center;
+    @include mobile{
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
     &-SizeFilterBar{
       height: 40px !important;
       min-height: 40px !important;
