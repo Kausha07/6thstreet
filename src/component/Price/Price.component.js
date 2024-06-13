@@ -342,7 +342,7 @@ class Price extends PureComponent {
       >
         {this.renderCurrency()}
         &nbsp;
-        {(price[0][currency].default == 0) ? price[0][currency].default :
+        {(price?.[0]?.[currency].default == 0) ? price[0][currency].default :
           newFinalPrice ? (1 * newFinalPrice).toFixed(decimals) : specialPrice}
         {!isArabic && <>&nbsp;</>}
       </span>
