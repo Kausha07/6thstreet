@@ -1484,6 +1484,7 @@ class PDPSummary extends PureComponent {
           }
           if(sectionName === "priceSummary"){
             return (
+              <>
               <div block="PriceAndPDPSummaryHeaderAndTimer">
                 <div block="PriceAndPDPSummaryHeader">
                   {this.renderPriceAndPDPSummaryHeader()}
@@ -1500,6 +1501,8 @@ class PDPSummary extends PureComponent {
                     !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
                   }
               </div>
+              <div class="SeperatorAddtoCart"></div>
+              </>
             )
           }
           if(sectionName === "shippingInfo"){

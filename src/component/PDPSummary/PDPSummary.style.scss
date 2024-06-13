@@ -458,16 +458,17 @@ div[class^='styles__body'] {
 .productBrandName{
   text-transform: capitalize;
   color: #000;
+  font-weight: 600;
   @include mobile{
     letter-spacing: .9px;
     line-height: 20px;
     font-size: 14px;
+
     // max-width: 100%;
     
   }
   @include desktop{
     letter-spacing: 0;
-    font-weight: 600;
     font-size: 24px;
     line-height: 33px;
   }
