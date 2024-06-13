@@ -323,6 +323,7 @@ class Price extends PureComponent {
 
   renderCartPageFinalPrice() {
     const {
+      price,
       specialPrice,
       finalPrice,
       discount_amount = 0,
@@ -331,6 +332,7 @@ class Price extends PureComponent {
     const { isArabic } = this.state;
     const countryCode = getCountryFromUrl();
     const decimals = currencyInTwoDigits.includes(countryCode) ? 2 : 3;
+    const currency = getCurrency();
 
     return (
       <span
@@ -340,7 +342,8 @@ class Price extends PureComponent {
       >
         {this.renderCurrency()}
         &nbsp;
-        {newFinalPrice ? (1 * newFinalPrice).toFixed(decimals) : specialPrice}
+        {(price[0][currency].default == 0) ? price[0][currency].default :
+          newFinalPrice ? (1 * newFinalPrice).toFixed(decimals) : specialPrice}
         {!isArabic && <>&nbsp;</>}
       </span>
     );
