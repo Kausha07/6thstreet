@@ -130,7 +130,7 @@ const PDPBrandFollow = (props) => {
     }
 
     return <>
-        <a className={`brandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} title={isFollowActive ? __('Following') :__('Follow')} disabled={isLoadingFollow}>
+        <a className={`brandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} disabled={isLoadingFollow}>
             <img block="brandFollow" elem="icon" src={isFollowActive ? heartFilled : heart} />
             <span block="brandFollow" elem="text">{isFollowActive ? __('Following') :__('Follow')}</span>
         </a>
