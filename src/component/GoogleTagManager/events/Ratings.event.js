@@ -4,24 +4,24 @@ export const SPAM_PROTECTION_DELAY = 200;
 
 class RatingsEvent extends BaseEvent {
   bindEvent() {
-    Event.observer(EVENT_PDP_RATING_CLICK, ({ product_rating, no_of_rating,product_name }) => {
+    Event.observer(EVENT_PDP_RATING_CLICK, ({ product_rating, no_of_ratings ,product_sku }) => {
       this.handle({
         product_rating,
-        no_of_rating,
-        product_name
+        no_of_ratings,
+        product_sku
       });
     });
   }
 
-  handler({ product_rating, no_of_rating, product_name }) {
+  handler({ product_rating, no_of_ratings, product_sku }) {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
 
     this.pushEventData({
         product_rating,
-        no_of_rating,
-        product_name
+        no_of_ratings,
+        product_sku
     });
   }
 }
