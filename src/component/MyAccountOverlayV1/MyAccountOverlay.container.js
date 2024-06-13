@@ -68,6 +68,7 @@ import Event, {
   MOE_addLastName,
   MOE_addEmail,
   MOE_addMobile,
+  MOE_AddUniqueID,
 } from "Util/Event";
 import { setVueTrendingBrandsBannerActive } from "Store/MyAccount/MyAccount.action";
 
@@ -600,7 +601,8 @@ export class MyAccountOverlayContainer extends PureComponent {
               MOE_addMobile(customerRegisterData.contact_no);
             }
             if (customerRegisterData?.email) {
-              MOE_addEmail(customerRegisterData.email);
+              MOE_addEmail(customerRegisterData?.email?.toLowerCase());
+              MOE_AddUniqueID(customerRegisterData?.email?.toLowerCase());
             }
             this.sendEvents(EVENT_REGISTER, eventAdditionalData);
           }

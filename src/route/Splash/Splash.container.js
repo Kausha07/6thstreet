@@ -37,7 +37,6 @@ export class SplashContainer extends PureComponent {
     super(props);
 
     this.requestConfig();
-    this.fetchPLPWidgets();
   }
 
   getDevicePrefix() {
@@ -72,6 +71,7 @@ export class SplashContainer extends PureComponent {
   async requestConfig() {
     const { getConfig } = this.props;
     await getConfig();
+    this.fetchPLPWidgets();
   }
 
   containerProps = () => ({

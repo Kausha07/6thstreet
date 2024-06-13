@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { connect } from 'react-redux';
 
 import DynamicContent from "Component/DynamicContent";
 import LoginBlockContainer from "Component/LoginBlock";
@@ -10,10 +11,21 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
+import {
+  MOE_addUserAttribute,
+  MOE_addMobile,
+  MOE_addEmail,
+  MOE_AddUniqueID,
+  MOE_AddFirstName,
+  MOE_addLastName,
+} from "Util/Event";
 import "./HomePage.style";
 import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 import { Helmet } from "react-helmet";
 
+export const mapStateToProps = (state) => ({
+  customer: state.MyAccountReducer.customer,
+});
 
 class HomePage extends PureComponent {
   constructor(props) {
@@ -59,6 +71,18 @@ class HomePage extends PureComponent {
       />
     );
   }
+
+  componentDidMount() {
+    const { customer } = this.props;
+    
+    if(customer?.firstname) MOE_AddFirstName(customer?.firstname);
+    if(customer?.lastName) MOE_addLastName(customer?.lastName);
+    if(customer?.email) MOE_addEmail(customer?.email?.toLowerCase());
+    if(customer?.email) MOE_AddUniqueID(customer?.email?.toLowerCase());
+    if(customer?.phone) MOE_addMobile(customer?.phone );
+    if(customer?.dob) MOE_addUserAttribute("Birthdate", customer?.dob);
+  }
+
   componentDidUpdate() {
     const DynamicContent = document.getElementsByClassName("DynamicContent")[0];
     if (DynamicContent) {
@@ -183,4 +207,4 @@ class HomePage extends PureComponent {
   }
 }
 
-export default HomePage;
+export default connect(mapStateToProps, null)(HomePage);
