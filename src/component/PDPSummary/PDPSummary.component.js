@@ -1501,7 +1501,6 @@ class PDPSummary extends PureComponent {
                     !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
                   }
               </div>
-              <div class="SeperatorAddtoCart"></div>
               </>
             )
           }
