@@ -29,6 +29,7 @@ import {
   SET_SIGNIN_IS_LOADING_STATUS,
   SET_EXPRESS_SERVICE_AVAILABLE,
   SET_SELECTED_CITY_AREA,
+  SET_EXPRESS_CUTOFF_TIME,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -57,6 +58,7 @@ export const initialState = {
   myOrderLastOffsetLimit: {},
   isExpressServiceAvailable: false,
   currentSelectedCityArea: {},
+  cutOffTime: null,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -254,6 +256,14 @@ export const MyAccountReducer = (state = initialState, action) => {
         currentSelectedCityArea: cityAreaObj,
       };
 
+    case SET_EXPRESS_CUTOFF_TIME:
+      const { data: cutOfftime } = action;
+
+      return {
+        ...state,
+        cutOffTime: cutOfftime,
+      };
+  
     default:
       return state;
   }

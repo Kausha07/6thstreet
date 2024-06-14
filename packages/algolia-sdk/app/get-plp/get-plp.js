@@ -231,6 +231,23 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
   return false;
 };
 
+const expressDataOBJ = ({ allFacets, facetKey }) => {
+  const data = allFacets[facetKey];
+  const result = Object.keys(data).reduce((acc, facetValue) => {
+    acc[facetValue] = {
+      facet_value: facetValue,
+      facet_key: facetKey,
+      label: getFacetLabel(facetValue),
+      is_selected: false,
+      product_count: data[facetValue],
+    };
+
+    return acc;
+  }, {});
+
+  return result;
+};
+
 function getFilters({
   locale,
   facets,
@@ -354,6 +371,15 @@ function getFilters({
     newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
     isPriceFilterAvailable: getIsPriceFilterAvaialbe(facets_stats, currency),
   };
+
+  // ExpressDelivery
+  filtersObject.express_delivery = {
+    label: translate("express_delivery", lang),
+    category: "express_delivery",
+    is_radio: false,
+    selected_filters_count: 0,
+    data: expressDataOBJ({ allFacets: facets, facetKey: "express_delivery" })
+  }
 
   // Discount
   filtersObject.discount = {

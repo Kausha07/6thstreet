@@ -43,6 +43,7 @@ import {
   getAttributeName,
   getLevelsFromCategoryKey,
 } from "./utils/FieldMultiselect.helper";
+import CityArea from "Component/CityArea";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -889,6 +890,10 @@ class FieldMultiselect extends PureComponent {
       return null;
     }
 
+    if (category === "express_delivery") {
+      return <CityArea />;
+    }
+
     return (
       <div block="Search-Container" mods={{ isArabic }}>
         <input
@@ -1311,7 +1316,9 @@ class FieldMultiselect extends PureComponent {
             mods: { isArabic },
           }}
         >
-          {isMobile.any() && Object.keys(conditionalData).length > 10
+          {isMobile.any() &&
+          (Object.keys(conditionalData).length > 10 ||
+            category === "express_delivery")
             ? this.renderFilterSearchbox(label, category)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>

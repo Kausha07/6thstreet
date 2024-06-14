@@ -24,6 +24,7 @@ import DeliveryAddressPopUpWhenNoAddress from "Component/DeliveryAddressPopUpWhe
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { CART_ITEMS_CACHE_KEY } from "../../store/Cart/Cart.reducer";
 import address from "Component/PDPSummary/icons/address_black.svg";
+import { ChevronDown } from "Component/Icons";
 import "./CityArea.style";
 
 export const mapStateToProps = (state) => ({
@@ -45,6 +46,7 @@ export const mapDispatchToProps = (dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
   expressService: (data) => MyAccountDispatcher.expressService(dispatch, data),
+  expressCutOffTime: () => MyAccountDispatcher.expressCutOffTime(dispatch),
   selectedCityArea: (data) =>
     MyAccountDispatcher.selectedCityArea(dispatch, data),
   estimateEddResponseForPDP: (request) =>
@@ -72,6 +74,7 @@ export const CityArea = (props) => {
     currentSelectedCityArea,
     pdpProduct,
     estimateEddResponseForPDP,
+    expressCutOffTime,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -124,6 +127,7 @@ export const CityArea = (props) => {
       if (data?.city && data?.area) {
         expressService(data);
       }
+      expressCutOffTime();
     }
   }, [finalAreaText]);
 
@@ -472,6 +476,7 @@ export const CityArea = (props) => {
               {finalAreaText}
             </div>
           )}
+          <ChevronDown />
         </div>
         {showPopUp && cityAreaPopUp()}
         {showCityAreaSelectionPopUp && renderCityAreaSelectionPopUp()}

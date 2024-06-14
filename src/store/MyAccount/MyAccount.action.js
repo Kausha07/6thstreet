@@ -31,6 +31,7 @@ export const SET_LAST_OFFSET_LIMIT_OF_MYORDERS =
 export const SET_SIGNIN_IS_LOADING_STATUS = "SET_SIGNIN_IS_LOADING_STATUS";
 export const SET_EXPRESS_SERVICE_AVAILABLE = "SET_EXPRESS_SERVICE_AVAILABLE";
 export const SET_SELECTED_CITY_AREA = "SET_SELECTED_CITY_AREA";
+export const SET_EXPRESS_CUTOFF_TIME = "SET_EXPRESS_CUTOFF_TIME";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -140,3 +141,8 @@ export const setSelectedCityArea = (data) => ({
   type: SET_SELECTED_CITY_AREA,
   data,
 });
+
+export const setExpressCutOffTime = (data) => ({
+  type: SET_EXPRESS_CUTOFF_TIME,
+  data,
+})

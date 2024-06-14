@@ -104,6 +104,7 @@ export const DeliveryAddressPopUp = (props) => {
                         block="deliveryAddressInfoBlock"
                         id={index}
                         onClick={() => changeAddress(address)}
+                        key={index}
                       >
                         <div
                           block="nameAndCityAreaBlock"

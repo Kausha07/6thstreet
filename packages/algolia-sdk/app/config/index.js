@@ -28,6 +28,7 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
+  "express_delivery",
 ];
 
 const MORE_FILTERS = [
@@ -294,6 +295,7 @@ const config = {
       "6s_also_available_count",
       "gallery_image_urls",
       "color_hex",
+      "express_delivery",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

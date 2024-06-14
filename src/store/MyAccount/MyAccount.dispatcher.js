@@ -18,6 +18,7 @@ import {
   setSignInIsLoading,
   setExpressServicable,
   setSelectedCityArea,
+  setExpressCutOffTime,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -43,6 +44,7 @@ import {
   resetPasswordWithToken,
   updateCustomerData,
   expressServicable,
+  cutOffTime,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getShippingAddresses } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
@@ -791,7 +793,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse({}));
             localStorage.removeItem("IntlEddAddressRes");
-          } else {
+          } else if(!isExpressDelivery) { //adding express condition bcz if edd api throws error then this block can't remove EddAddressReq
             dispatch(setEddResponse({}, request));
             localStorage.removeItem("EddAddressReq");
             localStorage.removeItem("EddAddressRes");
@@ -872,6 +874,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   selectedCityArea(dispatch, data) {
     dispatch(setSelectedCityArea(data));
+  }
+
+  async expressCutOffTime(dispatch) {
+    const response = await cutOffTime();
+    if (response) {
+      dispatch(setExpressCutOffTime(response));
+    }
   }
 }
 

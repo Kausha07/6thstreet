@@ -63,3 +63,5 @@ export const deleteStarRating = (simpleSKU, configSKU, incrementId) => MobileAPI
 
 export const expressServicable = (data) =>
     MobileAPI.post("/express-serviceable", data) || {};
+  
+export const cutOffTime = () => MobileAPI.get("/express-delivery-cutoff?") || {};
