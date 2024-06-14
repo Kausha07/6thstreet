@@ -1040,6 +1040,13 @@ class ProductItem extends PureComponent {
           this.state.hover &&
           this.renderAddToCartOnHover()}
         </div>
+
+        {isMobile.any()  && (
+          <div className="tagsForMsiteProduct">
+            {this.renderExclusiveMobile(true)}
+          </div>
+        )}
+
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer
@@ -1053,11 +1060,7 @@ class ProductItem extends PureComponent {
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}
         
-        {isMobile.any() &&  pageType !== "cartSlider" &&(
-          <div className="tagsForMsiteProduct">
-            {this.renderExclusiveMobile(true)}
-          </div>
-        )}
+        
 
       </li>
     );
