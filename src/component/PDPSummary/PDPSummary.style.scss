@@ -383,6 +383,19 @@
     .cityAreaText {
       color: #000000;
     }
+
+    .cityAreaAddressSelection {
+      margin: 0;
+      padding: 0;
+
+      .cityAreaDropdown {
+        margin: 0;
+        padding: 0;
+        min-width: 35%;
+        max-width: 90%;
+      }
+    }
+
     .EddExpressWrapper {
       @include desktop {
         width: 343px;

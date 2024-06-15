@@ -306,7 +306,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderCityArea() {
-    return <CityArea />;
+    return <CityArea showBackgroundColor={isMobile.any() ? true : false} />;
   }
 
   render() {

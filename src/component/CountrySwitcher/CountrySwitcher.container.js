@@ -32,6 +32,7 @@ export class CountrySwitcherContainer extends PureComponent {
         const { setCountry } = this.props;
         localStorage.removeItem('EddAddressReq')
         localStorage.removeItem('EddAddressRes')
+        localStorage.removeItem("currentSelectedAddress");
         setCountry(value);
     }
 

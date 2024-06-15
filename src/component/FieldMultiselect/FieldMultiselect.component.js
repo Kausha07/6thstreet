@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
+import { connect } from "react-redux";
 import PLPFilterOption from "Component/PLPFilterOption";
 import PropTypes from "prop-types";
 import { createRef, PureComponent, Fragment } from "react";
@@ -44,6 +45,10 @@ import {
   getLevelsFromCategoryKey,
 } from "./utils/FieldMultiselect.helper";
 import CityArea from "Component/CityArea";
+
+export const mapStateToProps = (state) => ({
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+});
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -777,6 +782,31 @@ class FieldMultiselect extends PureComponent {
         </ul>
       );
     }
+
+    if (category === "express_delivery") {
+      const selctedAddress = JSON.parse(
+        localStorage.getItem("currentSelectedAddress")
+      );
+      if (!selctedAddress) {
+        return (
+          <p block="expressNotificationPara">
+            {__("Express delivery may available. Please select your location.")}
+          </p>
+        );
+      } else if (
+        selctedAddress &&
+        !this.props.isExpressServiceAvailable?.express_eligible
+      ) {
+        return (
+          <p block="expressNotificationPara">
+            {__(
+              "Express Delivery is not currently available for this location."
+            )}
+          </p>
+        );
+      }
+    }
+
     return (
       <>
         <ul
@@ -879,6 +909,10 @@ class FieldMultiselect extends PureComponent {
     const { isArabic } = this.state;
     const currency = getCountryCurrencyCode();
 
+    if (category === "express_delivery") {
+      return <CityArea isSignInTypePopUp={true} showBackgroundColor={true} />;
+    }
+
     if (
       (isMobile.any() && currentActiveFilter !== category) ||
       category === "gender" ||
@@ -890,9 +924,6 @@ class FieldMultiselect extends PureComponent {
       return null;
     }
 
-    if (category === "express_delivery") {
-      return <CityArea />;
-    }
 
     return (
       <div block="Search-Container" mods={{ isArabic }}>
@@ -1294,16 +1325,31 @@ class FieldMultiselect extends PureComponent {
         )}
         {toggleOptionsList && !isMobile.any() && (
           <>
-            {Object.keys(conditionalData).length > (category === "sort" ? 10 : 0) 
-              ? this.renderFilterSearchbox(label, category)
-              : null}
-            {category === "sizes" && !isMobile.any()
-              ? this.renderSizeDropDown(datakeys)
-              : null}
-            {category !== "sizes" &&
-              !isMobile.any() &&
-              !is_radio &&
-              this.renderUnselectButton(category)}
+            {category !== "express_delivery" ? (
+              <>
+                {" "}
+                {Object.keys(conditionalData).length >
+                (category === "sort" ? 10 : 0)
+                  ? this.renderFilterSearchbox(label, category)
+                  : null}
+                {category === "sizes" && !isMobile.any()
+                  ? this.renderSizeDropDown(datakeys)
+                  : null}
+                {category !== "sizes" &&
+                  !isMobile.any() &&
+                  !is_radio &&
+                  this.renderUnselectButton(category)}
+              </>
+            ) : (
+              <>
+                 {category === "express_delivery" && (
+                  <CityArea
+                    isSignInTypePopUp={true}
+                    showBackgroundColor={true}
+                  />
+                )}
+              </>
+            )}
           </>
         )}
         <div
@@ -1332,4 +1378,4 @@ class FieldMultiselect extends PureComponent {
   }
 }
 
-export default FieldMultiselect;
+export default connect(mapStateToProps)(FieldMultiselect);

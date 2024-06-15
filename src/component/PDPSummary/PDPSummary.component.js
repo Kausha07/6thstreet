@@ -882,6 +882,7 @@ class PDPSummary extends PureComponent {
                 showBackgroundColor={false}
                 showEllipsisArea={true}
                 isToMakeEDDCallPage={false}
+                isPDP={true}
               />
             </>
           )}

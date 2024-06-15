@@ -12,6 +12,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     showHidePOPUP,
     showPopUp,
     showHideCityAreaSelection,
+    isSignInTypePopUp,
   } = props;
 
   const wrapperRef = createRef();
@@ -71,7 +72,10 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
   };
 
   return (
-    <div block="signInSignUpWithCityAreaMainBlock">
+    <div
+      block="signInSignUpWithCityAreaMainBlock"
+      elem={!isMobile.any() && isSignInTypePopUp && "stylePopUp"}
+    >
       <div block="signInSignUpWithCityAreaOuterBlock">
         <div block="signInSignUpWithCityAreaPopUp" ref={wrapperRef}>
           <h1 block="signInSignUpWithCityAreaPopUpHeading">

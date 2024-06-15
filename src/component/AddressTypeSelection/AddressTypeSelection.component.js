@@ -26,22 +26,24 @@ export const AddressTypeSelection = (props) => {
 
   const render = () => {
     return (
-      <div block="MyAccountAddressFieldForm" elem="AddressTypeSelection">
-        {mailing_address_type.map((type) => (
-          <Field
-            key={type.value}
-            type="radio"
-            id={type.value}
-            label={isArabic() ? type.label.ar : type.label.en}
-            name="addressType"
-            value={type.value}
-            checked={
-              selectedAddressType === type.value ||
-              type?.value === mailing_address_type_props?.value
-            }
-            onClick={() => handleAddressTypeChange(type.value)}
-          />
-        ))}
+      <div block="AddressTypeSelection">
+        <div block="MyAccountAddressFieldForm">
+          {mailing_address_type?.map((type) => (
+            <Field
+              key={type?.value}
+              type="radio"
+              id={type.value}
+              label={isArabic() ? type?.label?.ar : type?.label?.en}
+              name="addressType"
+              value={type?.value}
+              checked={
+                selectedAddressType === type?.value ||
+                type?.value === mailing_address_type_props?.value
+              }
+              onClick={() => handleAddressTypeChange(type.value)}
+            />
+          ))}
+        </div>
       </div>
     );
   };

@@ -66,7 +66,7 @@ export const CityArea = (props) => {
     isExpressDelivery,
     isPDP = false,
     isToMakeEDDCallPage = true,
-    showBackgroundColor = true,
+    showBackgroundColor = false,
     showEllipsisArea = true,
     EddAddress,
     expressService,
@@ -75,6 +75,7 @@ export const CityArea = (props) => {
     pdpProduct,
     estimateEddResponseForPDP,
     expressCutOffTime,
+    isSignInTypePopUp,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -368,6 +369,10 @@ export const CityArea = (props) => {
     selectedCityArea(requestObj);
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+    localStorage.setItem(
+      "currentSelectedAddress",
+      JSON.stringify(selectedAddress)
+    );
 
     if (window.pageType === "PRODUCT") {
       // checking this condition rather than isPDP bcz if we are on PDP page and
@@ -448,6 +453,7 @@ export const CityArea = (props) => {
           showHidePOPUP={showHidePOPUP}
           showPopUp={showPopUp}
           showHideCityAreaSelection={showHideCityAreaSelection}
+          isSignInTypePopUp={isSignInTypePopUp}
         />
       );
     } else {

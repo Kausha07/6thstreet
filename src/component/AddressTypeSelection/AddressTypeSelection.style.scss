@@ -1,5 +1,5 @@
-.MyAccountAddressFieldForm {
-  &-AddressTypeSelection {
+.AddressTypeSelection {
+  .MyAccountAddressFieldForm {
     display: flex;
     width: 60%;
     justify-content: space-between;

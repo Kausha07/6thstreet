@@ -296,6 +296,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             source: null,
           };
           localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+          localStorage.setItem(
+            "currentSelectedAddress",
+            JSON.stringify(response)
+          );
         }
       });
     }
@@ -416,6 +420,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     localStorage.removeItem("EddAddressReq");
+    localStorage.removeItem("currentSelectedAddress");
     localStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
