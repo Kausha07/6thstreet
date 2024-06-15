@@ -232,20 +232,23 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
 };
 
 const expressDataOBJ = ({ allFacets, facetKey }) => {
-  const data = allFacets[facetKey];
-  const result = Object.keys(data).reduce((acc, facetValue) => {
-    acc[facetValue] = {
-      facet_value: facetValue,
-      facet_key: facetKey,
-      label: getFacetLabel(facetValue),
-      is_selected: false,
-      product_count: data[facetValue],
-    };
-
-    return acc;
-  }, {});
-
-  return result;
+  const data = allFacets?.[facetKey];
+  if(data){
+    const result = Object?.keys?.(data)?.reduce((acc, facetValue) => {
+      acc[facetValue] = {
+        facet_value: facetValue,
+        facet_key: facetKey,
+        label: getFacetLabel(facetValue),
+        is_selected: false,
+        product_count: data[facetValue],
+      };
+  
+      return acc;
+    }, {});
+  
+    return result;
+  }
+  return {};
 };
 
 function getFilters({
