@@ -58,8 +58,8 @@ export const DeliveryAddressPopUp = (props) => {
     addNewAddress();
   };
 
-  const onDeliveryHereButtonClicked = async () => {
-    await autoPopulateCityArea(selectedAddress);
+  const onDeliveryHereButtonClicked = () => {
+    autoPopulateCityArea(selectedAddress);
     showHidePOPUP(false);
   };
 
@@ -75,7 +75,7 @@ export const DeliveryAddressPopUp = (props) => {
                     {__("Where should we deliver your order?")}
                   </h1>
                   <button block="addnewButton" onClick={onAddNewClick}>
-                    <img src={BluePlus} alt="plus icon" block="plusIconImage"/>
+                    <img src={BluePlus} alt="plus icon" block="plusIconImage" />
                     {__("Add New")}
                   </button>
                 </div>
@@ -146,7 +146,9 @@ export const DeliveryAddressPopUp = (props) => {
               </div>
               <div
                 block="deliverHereBlock"
-                onClick={onDeliveryHereButtonClicked}
+                onClick={() => {
+                  onDeliveryHereButtonClicked();
+                }}
               >
                 <button block="deliverHereButton">{__("Delivery Here")}</button>
               </div>
