@@ -58,8 +58,9 @@ export const DeliveryAddressPopUp = (props) => {
     addNewAddress();
   };
 
-  const onDeliveryHereButtonClicked = () => {
-    autoPopulateCityArea(selectedAddress);
+  const onDeliveryHereButtonClicked = async (e) => {
+    e.preventDefault();
+    await autoPopulateCityArea(selectedAddress);
     showHidePOPUP(false);
   };
 
@@ -146,8 +147,8 @@ export const DeliveryAddressPopUp = (props) => {
               </div>
               <div
                 block="deliverHereBlock"
-                onClick={() => {
-                  onDeliveryHereButtonClicked();
+                onClick={(e) => {
+                  onDeliveryHereButtonClicked(e);
                 }}
               >
                 <button block="deliverHereButton">{__("Delivery Here")}</button>
