@@ -108,6 +108,8 @@ class ProductItem extends PureComponent {
       autoplay: false,
       imageScroller: false,
       showImageScroller: false,
+      colorVarientratingSku: null,
+      colorVarientratingBrand: null
     };
   }
   componentDidMount() {
@@ -632,14 +634,14 @@ class ProductItem extends PureComponent {
       if(sku){
         const response = await new Algolia()?.getProductBySku({ sku });
         const {
-          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
+          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = [], rating_sku, rating_brand},
         } = response;
         const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png";
         if(sku === productSku) {
           this.props.setColourVarientsButtonClick(true);
-          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
+          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price, colorVarientratingSku: rating_sku, colorVarientratingBrand: rating_brand });
         }else {
-          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [] });
+          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [], colorVarientratingSku: null, colorVarientratingBrand: null });
         }
       }
 
@@ -897,7 +899,7 @@ class ProductItem extends PureComponent {
       pageType,
       isNewDesign
     } = this.props;
-
+    const {colorVarientratingSku, colorVarientratingBrand } = this.state;
     const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
     const modifiedUrl = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.url : url; 
     const modifiedLink = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.link : link;
@@ -973,7 +975,7 @@ class ProductItem extends PureComponent {
 
       >
         {this.renderImage()}
-        {isNewDesign && <Ratings rating_sku={rating_sku} rating_brand={rating_brand} className="PLPratings" />}
+        {isNewDesign && <Ratings rating_sku={colorVarientratingSku ? colorVarientratingSku : rating_sku} rating_brand={colorVarientratingBrand ? colorVarientratingBrand : rating_brand} className="PLPratings" />}
       </Link>
     );
   }
