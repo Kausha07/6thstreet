@@ -424,6 +424,11 @@
     .CountdownTimer{
       padding-top: 6px;
       float: left;
+      .DynamicContentCountDownTimer{
+        @include desktop{
+          margin-bottom: 5px;
+        }
+      }
     }
     .CountdownTimerArabic{
       padding-top: 6px;
