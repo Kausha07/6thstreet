@@ -716,7 +716,7 @@ class PDPGallery extends PureComponent {
           {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" productId={objectID} sku={sku}/>}
         </button>
 
-          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} />}
+          {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} isPDPEventsOnly />}
         
         {!isNewDesign && this.renderVideoButtons()}
       </div>

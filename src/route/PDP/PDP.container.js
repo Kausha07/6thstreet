@@ -90,6 +90,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  getAddToCartInfo:(data) => PDPDispatcher.getAddToCartInfo(dispatch, data)
 });
 
 export class PDPContainer extends PureComponent {
@@ -434,11 +435,18 @@ export class PDPContainer extends PureComponent {
     }
   }
 
+  resetingAddToCartInfo(){
+    this.props.getAddToCartInfo({
+      isForceToEmpty:true
+    });
+  };
+
   componentWillUnmount() {
     this.props.resetProduct();
     document
       .querySelectorAll("script[type='application/ld+json']")
       .forEach((node) => node.remove());
+      this.resetingAddToCartInfo();
   }
 
   getPdpWidgetsVueData() {

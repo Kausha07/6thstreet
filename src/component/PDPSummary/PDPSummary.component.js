@@ -1494,6 +1494,7 @@ class PDPSummary extends PureComponent {
                     rating_sku={rating_sku} 
                     rating_brand={rating_brand} 
                     productSku={sku}
+                    isPDPEventsOnly
                   />
                 }
                 </div>

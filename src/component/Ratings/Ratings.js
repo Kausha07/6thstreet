@@ -25,11 +25,12 @@ const Ratings = (props) => {
     const {
         rating_brand,
         rating_sku,
-        productSku
+        productSku,
+        isPDPEventsOnly
     } = props;
 
     if(!rating_sku){
-        if(!addtoCartInfo.hasOwnProperty("product_rating")){
+        if(!addtoCartInfo.hasOwnProperty("product_rating") && isPDPEventsOnly){
             dispatch(setAddtoCartInfo({
                 "product_rating":0,
                 "no_of_ratings":0
@@ -45,10 +46,12 @@ const Ratings = (props) => {
     } =  rating_sku;
 
     useEffect(() => {
-         dispatch(setAddtoCartInfo({
-            "product_rating":prdAverageRatings,
-            "no_of_ratings":prdTotalRatings
-        }));
+        if(isPDPEventsOnly){
+            dispatch(setAddtoCartInfo({
+               "product_rating":prdAverageRatings,
+               "no_of_ratings":prdTotalRatings
+           }));
+        }
     },[])
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
@@ -63,15 +66,17 @@ const Ratings = (props) => {
     const totalRatings = formatNumber(prdTotalRatings);
     const modalHandlerOpen = () => {
         setIsModalOpen(true);
-        const eventData = {
-            product_rating:prdAverageRatings,
-            no_of_ratings:prdTotalRatings,
-            product_sku:productSku
+        if(isPDPEventsOnly){
+            const eventData = {
+                product_rating:prdAverageRatings,
+                no_of_ratings:prdTotalRatings,
+                product_sku:productSku
+            }
+            /* MOE events */
+            MOE_trackEvent(EVENT_PDP_RATING_CLICK,eventData);
+            /* GTM EVENT */
+            Event.dispatch(EVENT_PDP_RATING_CLICK,eventData);
         }
-        /* MOE events */
-        MOE_trackEvent(EVENT_PDP_RATING_CLICK,eventData);
-        /* GTM EVENT */
-        Event.dispatch(EVENT_PDP_RATING_CLICK,eventData);
     }
     const modalHandlerClose = () => {
         setIsModalOpen(false);

@@ -110,10 +110,11 @@ export const PDPReducer = (state = getInitialState(), action) => {
 
         case SET_ADDTOCART_INFO:
             const { addtoCartInfo } = action;
+            let getCartObject = addtoCartInfo.isForceToEmpty ? {} : state.addtoCartInfo;
             return {
                 ...state,
                 addtoCartInfo:{
-                    ...state.addtoCartInfo,
+                    ...getCartObject,
                     ...addtoCartInfo
                 }
             };
