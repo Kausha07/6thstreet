@@ -174,7 +174,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             this.estimateEddResponse(dispatch, request, true);
           }
         }
-      }else if (
+      } else if (
         defaultShippingAddress &&
         Object.values(defaultShippingAddress).length > 0 && defaultShippingAddress[0]["country_code"] && countryCode == defaultShippingAddress[0]["country_code"]
       ) {
@@ -282,26 +282,28 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const country_code = getCountryFromUrl();
 
     if (!localStorage.getItem("EddAddressReq") && isExpressDelivery) {
-      await MobileAPI.get(`order/last`).then((response) => {
-        if (
-          response?.city &&
-          response?.area &&
-          response?.country?.toLowerCase() === country_code?.toLowerCase()
-        ) {
-          let requestObj = {
-            country: country_code,
-            city: response?.city,
-            area: response?.area,
-            courier: null,
-            source: null,
-          };
-          localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
-          localStorage.setItem(
-            "currentSelectedAddress",
-            JSON.stringify(response)
-          );
+      await MobileAPI.get(`order/last?country_specific=true`).then(
+        (response) => {
+          if (
+            response?.city &&
+            response?.area &&
+            response?.country?.toLowerCase() === country_code?.toLowerCase()
+          ) {
+            let requestObj = {
+              country: country_code,
+              city: response?.city,
+              area: response?.area,
+              courier: null,
+              source: null,
+            };
+            localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+            localStorage.setItem(
+              "currentSelectedAddress",
+              JSON.stringify(response)
+            );
+          }
         }
-      });
+      );
     }
 
     getShippingAddresses().then(async (response) => {
@@ -798,7 +800,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse({}));
             localStorage.removeItem("IntlEddAddressRes");
-          } else if(!isExpressDelivery) { //adding express condition bcz if edd api throws error then this block can't remove EddAddressReq
+          } else if (!isExpressDelivery) {
+            //adding express condition bcz if edd api throws error then this block can't remove EddAddressReq
             dispatch(setEddResponse({}, request));
             localStorage.removeItem("EddAddressReq");
             localStorage.removeItem("EddAddressRes");
