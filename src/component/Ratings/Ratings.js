@@ -23,13 +23,27 @@ const Ratings = (props) => {
     const { uMinAvgRating, uMinRatingCount} = config?.countries[country];
     const dispatch = useDispatch();
     const {
-        rating_brand,
-        rating_sku,
+        rating_brand = {},
+        rating_sku = {},
         productSku,
-        isPDPEventsOnly
+        isPDPEventsOnly = false
     } = props;
+    const {
+        average_ratings = 0, 
+        total_ratings = 0,
+        prdAverageRatings = +average_ratings,
+        prdTotalRatings = +total_ratings,
+    } =  rating_sku;
+    useEffect(() => {
+        if(isPDPEventsOnly){
+            dispatch(setAddtoCartInfo({
+               "product_rating":prdAverageRatings,
+               "no_of_ratings":prdTotalRatings
+           }));
+        }
+    },[]);
 
-    if(!rating_sku){
+    if(!rating_sku || !rating_sku?.total_ratings){
         if(!addtoCartInfo.hasOwnProperty("product_rating") && isPDPEventsOnly){
             dispatch(setAddtoCartInfo({
                 "product_rating":0,
@@ -38,21 +52,9 @@ const Ratings = (props) => {
         }
         return null;
     }
-    const {
-        average_ratings, 
-        total_ratings,
-        prdAverageRatings = +average_ratings,
-        prdTotalRatings = +total_ratings,
-    } =  rating_sku;
+    
 
-    useEffect(() => {
-        if(isPDPEventsOnly){
-            dispatch(setAddtoCartInfo({
-               "product_rating":prdAverageRatings,
-               "no_of_ratings":prdTotalRatings
-           }));
-        }
-    },[])
+    
     // const min_average_ratngs = Math.max(rating_sku?.min_avg_rating, rating_brand?.min_avg_rating, uMinAvgRating);
     // const min_ratings_count = Math.max(rating_sku?.min_rating_count, rating_brand?.min_rating_count, uMinRatingCount);
 

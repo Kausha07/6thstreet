@@ -634,7 +634,7 @@ class ProductItem extends PureComponent {
       if(sku){
         const response = await new Algolia()?.getProductBySku({ sku });
         const {
-          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = [], rating_sku, rating_brand},
+          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = [], rating_sku = {}, rating_brand = {}},
         } = response;
         const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png";
         if(sku === productSku) {
