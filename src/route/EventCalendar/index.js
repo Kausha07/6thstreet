@@ -1,34 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector, connect } from "react-redux";
-import { toggleBreadcrumbs } from "Store/Breadcrumbs/Breadcrumbs.action";
-// export const BreadcrumbsDispatcher = import(
-//     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
-//     "Store/Breadcrumbs/Breadcrumbs.dispatcher"
-//   );
+import { useDispatch } from "react-redux";
 
 import CDN from '../../util/API/provider/CDN';
 import { isArabic } from "Util/App";
 import "./EventCalendar.style.scss";
 
-// export const mapDispatchToProps = (dispatch) => ({
-//     // toggleBreadcrumbs: (areBreadcrumbsVisible) => dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
-// });
 
 function EventCalendar(props) {
     const [eventContent, setEventContent] = useState({});
-    //dispatch
-    const dispatch = useDispatch();
+      const dispatch = useDispatch();
     const getCalendarContent = async () => {
         const configFile = 'eventCalendar.json';
         const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
-        const eventData = await CDN.get(`${directory}/${configFile}`);
-        // const content = 
-
+        const eventData = await CDN.get(`${directory}/${configFile}`);        
         setEventContent(isArabic() ? eventData["ar"] : eventData["en"])
-        console.log("widget", eventContent)
     }
-    useEffect(() => {
-        // toggleBreadcrumbs(false);
+    useEffect(() => { 
         dispatch({ type: "TOGGLE_BREADCRUMBS", payload: { areBreadcrumbsVisible: true } });
         getCalendarContent();
 
@@ -56,20 +43,20 @@ function EventCalendar(props) {
         <main block="pageLayout">
             <div block="wrap">
                 <div block="box">
-                    <h1 block="eventTitle">{eventContent.eventName}</h1>
+                    <h1 block="eventTitle">{eventContent?.eventName}</h1>
                     <div block="scheduledBox">
                         <div block="scheduledBox-time">
                             <img
                                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTExLjk5IDJDNi40NyAyIDIgNi40OCAyIDEyczQuNDcgMTAgOS45OSAxMEMxNy41MiAyMiAyMiAxNy41MiAyMiAxMlMxNy41MiAyIDExLjk5IDJ6TTEyIDIwYy00LjQyIDAtOC0zLjU4LTgtOHMzLjU4LTggOC04IDggMy41OCA4IDgtMy41OCA4LTggOHoiLz48cGF0aCBkPSJNMTIuNSA3SDExdjZsNS4yNSAzLjE1Ljc1LTEuMjMtNC41LTIuNjd6Ii8+PC9zdmc+" />
-                            <span block="scheduledBox-date">{eventContent.eventTime}</span>
+                            <span block="scheduledBox-date">{eventContent?.eventTime}</span>
                         </div>
                     </div>
                     <div block="eventContent">
-                        {eventContent.eventDescription}
+                        <div dangerouslySetInnerHTML={{__html: eventContent?.eventDescription}} />
                     </div>
                     <div block="addEventBox">
                         <div block="addEventContainer">
-                            <button block="addToButton" id="addToButton">Add to Calendar</button>
+                            <button block="addToButton" id="addToButton">{eventContent?.calendarBtnText}</button>
                             <div block="addEventPopup" id="addEventPopup">
                                 <div block="addToCalendarLists">
                                     {
@@ -104,5 +91,3 @@ function EventCalendar(props) {
     );
 }
 export default EventCalendar;
-
-// export default connect(null, mapDispatchToProps)(EventCalendar);
