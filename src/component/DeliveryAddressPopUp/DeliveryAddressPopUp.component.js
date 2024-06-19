@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createRef } from "react";
 import { BluePlus, EditPencil } from "Component/Icons/index";
+import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 import "./DeliveryAddressPopUp.style";
 
 export const DeliveryAddressPopUp = (props) => {
@@ -11,40 +12,12 @@ export const DeliveryAddressPopUp = (props) => {
     addNewAddress,
     defaultShippingAddress,
     autoPopulateCityArea,
+    setExpressPopUp,
   } = props;
 
   const [selectedAddress, setSelectedAddress] = useState(
     defaultShippingAddress ? defaultShippingAddress : {}
   );
-
-  const wrapperRef = createRef();
-
-  useEffect(() => {
-    const html = document.getElementsByTagName("html")[0];
-    if (showPopUp) {
-      html.style.overflow = "hidden";
-    }
-    return () => {
-      html.style.overflow = "auto";
-    };
-  }, [showPopUp]);
-
-  useEffect(() => {
-    window.addEventListener("mousedown", closePopupOnOutsideClick);
-    return () => {
-      window.removeEventListener("mousedown", closePopupOnOutsideClick);
-    };
-  }, [wrapperRef]);
-
-  const closePopupOnOutsideClick = (e) => {
-    if (
-      showPopUp &&
-      wrapperRef.current &&
-      !wrapperRef.current.contains(e.target)
-    ) {
-      showHidePOPUP(false);
-    }
-  };
 
   const changeAddress = (address) => {
     setSelectedAddress(address);
@@ -52,30 +25,38 @@ export const DeliveryAddressPopUp = (props) => {
 
   const onEditButtonClick = (address) => {
     editSelectedAddress(address);
+    setExpressPopUp(true);
   };
 
   const onAddNewClick = () => {
     addNewAddress();
+    setExpressPopUp(true);
   };
 
-  const onDeliveryHereButtonClicked = async (e) => {
-    e.preventDefault();
+  const onDeliveryHereButtonClicked = async () => {
     await autoPopulateCityArea(selectedAddress);
     showHidePOPUP(false);
+    setExpressPopUp(false);
   };
 
-  const render = () => {
-    return (
+  return (
+    <ModalWithOutsideClick
+      show={showPopUp}
+      onClose={() => {
+        setExpressPopUp(false);
+        return showHidePOPUP(false);
+      }}
+    >
       <div block="deliveryAddressMainBlock">
         <div block="deliveryAddressOuterBlock">
           <div block="deliveryAddressPopUp">
-            <div block="deliveryAddressInnerBlock" ref={wrapperRef}>
+            <div block="deliveryAddressInnerBlock">
               <div block="deliveryAddressUpperInnerBlock">
                 <div block="deliveryTextwithAddNewButton">
                   <h1 block="deliveryText">
                     {__("Where should we deliver your order?")}
                   </h1>
-                  <button block="addnewButton" onClick={onAddNewClick}>
+                  <button block="addnewButton" onClick={() => onAddNewClick()}>
                     <img src={BluePlus} alt="plus icon" block="plusIconImage" />
                     {__("Add New")}
                   </button>
@@ -104,7 +85,7 @@ export const DeliveryAddressPopUp = (props) => {
                       <div
                         block="deliveryAddressInfoBlock"
                         id={index}
-                        onClick={() => changeAddress(address)}
+                        onClick={(e) => changeAddress(address, e)}
                         key={index}
                       >
                         <div
@@ -136,7 +117,7 @@ export const DeliveryAddressPopUp = (props) => {
                         {selectedAddress?.id === id && (
                           <div
                             block="editBlock"
-                            onClick={() => onEditButtonClick(address)}
+                            onClick={(e) => onEditButtonClick(address, e)}
                           >
                             <img src={EditPencil} alt="Edit" />
                           </div>
@@ -147,8 +128,8 @@ export const DeliveryAddressPopUp = (props) => {
               </div>
               <div
                 block="deliverHereBlock"
-                onClick={(e) => {
-                  onDeliveryHereButtonClicked(e);
+                onClick={() => {
+                  onDeliveryHereButtonClicked();
                 }}
               >
                 <button block="deliverHereButton">{__("Delivery Here")}</button>
@@ -157,10 +138,8 @@ export const DeliveryAddressPopUp = (props) => {
           </div>
         </div>
       </div>
-    );
-  };
-
-  return render();
+    </ModalWithOutsideClick>
+  );
 };
 
 export default DeliveryAddressPopUp;

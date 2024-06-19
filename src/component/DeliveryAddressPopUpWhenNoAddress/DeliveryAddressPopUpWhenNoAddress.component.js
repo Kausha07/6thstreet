@@ -14,56 +14,13 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
     customer,
   } = props;
 
-  const wrapperRef = createRef();
-
-  useEffect(() => {
-    if (isMobile.any()) {
-      window.addEventListener("mousedown", closePopupOnOutsideClick);
-    } else {
-      window.addEventListener("scroll", closePopupOnOutsideClick);
-      window.addEventListener("mousedown", closePopupOnOutsideClick);
-    }
-
-    return () => {
-      if (isMobile.any()) {
-        window.removeEventListener("mousedown", closePopupOnOutsideClick);
-      } else {
-        window.removeEventListener("scroll", closePopupOnOutsideClick);
-        window.removeEventListener("mousedown", closePopupOnOutsideClick);
-      }
-    };
-  }, [wrapperRef]);
-
-  useEffect(() => {
-    const html = document.getElementsByTagName("html")[0];
-    if (showPopUp && isMobile.any()) {
-      html.style.overflow = "hidden";
-    }
-    return () => {
-      html.style.overflow = "auto";
-    };
-  }, [showPopUp]);
-
-  const closePopupOnOutsideClick = (e) => {
-    if (
-      showPopUp &&
-      wrapperRef.current &&
-      !wrapperRef?.current?.contains(e.target)
-    ) {
-      showHidePOPUP(false);
-    }
-  };
-
   const render = () => {
     const { firstname = "", lastname = "" } = customer;
     return (
       <div block="deliveryAddressPopUpWhenNoAddressBlock">
         <div block="deliveryAddressPopUpWhenNoAddressOuterBlock">
           <div block="deliveryAddressPopUpWhenNoAddressPopUp">
-            <div
-              block="deliveryAddressPopUpWhenNoAddressInnerBlock"
-              ref={wrapperRef}
-            >
+            <div block="deliveryAddressPopUpWhenNoAddressInnerBlock">
               <div block="greetingToUser">
                 <h1>
                   {__("Hello,")} {firstname} {lastname}

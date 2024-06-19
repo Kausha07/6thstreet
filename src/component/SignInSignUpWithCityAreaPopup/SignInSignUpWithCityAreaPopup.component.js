@@ -13,6 +13,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     showPopUp,
     showHideCityAreaSelection,
     isSignInTypePopUp,
+    setExpressPopUp,
   } = props;
 
   const wrapperRef = createRef();
@@ -98,7 +99,10 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
               <Image lazyLoad={false} src={address} alt="" />
               <div
                 block="selectLocationText"
-                onClick={() => showHideCityAreaSelection(true)}
+                onClick={() => {
+                  setExpressPopUp(true);
+                  return showHideCityAreaSelection(true);
+                }}
               >
                 {__("Select your location")}
               </div>

@@ -19,6 +19,7 @@ import {
   setExpressServicable,
   setSelectedCityArea,
   setExpressCutOffTime,
+  setisExpressPopUpOpen,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -889,6 +890,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     if (response) {
       dispatch(setExpressCutOffTime(response));
     }
+  }
+
+  expressPopUpOpen(dispatch, val) {
+    dispatch(setisExpressPopUpOpen(val));
   }
 }
 

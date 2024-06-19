@@ -13,18 +13,18 @@ import {
   EDIT_ADDRESS,
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 
-import Image from "Component/Image";
 import SignInSignUpWithCityAreaPopup from "Component/SignInSignUpWithCityAreaPopup/index";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import CityAreaSelectionPopUp from "Component/CityAreaSelectionPopUp";
 import DeliveryAddressPopUp from "Component/DeliveryAddressPopUp";
 import DeliveryAddressPopUpWhenNoAddress from "Component/DeliveryAddressPopUpWhenNoAddress";
+import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { CART_ITEMS_CACHE_KEY } from "../../store/Cart/Cart.reducer";
 import address from "Component/PDPSummary/icons/address_black.svg";
-import { ChevronDown } from "Component/Icons";
+import { ChevronDown, ChevronLeft } from "Component/Icons";
 import "./CityArea.style";
 
 export const mapStateToProps = (state) => ({
@@ -39,6 +39,7 @@ export const mapStateToProps = (state) => ({
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   pdpProduct: state.PDP.product,
 });
+
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   showAddEditAddressPopup: (payload) =>
@@ -51,6 +52,8 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.selectedCityArea(dispatch, data),
   estimateEddResponseForPDP: (request) =>
     MyAccountDispatcher.estimateEddResponseForPDP(dispatch, request),
+  expressPopUpOpen: (val) =>
+    MyAccountDispatcher.expressPopUpOpen(dispatch, val),
 });
 
 export const CityArea = (props) => {
@@ -76,6 +79,7 @@ export const CityArea = (props) => {
     estimateEddResponseForPDP,
     expressCutOffTime,
     isSignInTypePopUp,
+    expressPopUpOpen,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -132,7 +136,12 @@ export const CityArea = (props) => {
     }
   }, [finalAreaText]);
 
+  const setExpressPopUp = (val) => {
+    expressPopUpOpen(val);
+  };
+
   const editSelectedAddress = (address) => {
+    showHidePOPUP(false);
     setAddAndEditAddressButtonClicked(true);
     openForm();
     showAddEditAddressPopup({
@@ -141,10 +150,10 @@ export const CityArea = (props) => {
       address,
       displayType: !isMobile.any() ? "desktopPopUp" : "",
     });
-    showHidePOPUP(false);
   };
 
   const addNewAddress = () => {
+    showHidePOPUP(false);
     setAddAndEditAddressButtonClicked(true);
     openForm();
     showAddEditAddressPopup({
@@ -153,7 +162,6 @@ export const CityArea = (props) => {
       address: {},
       displayType: !isMobile.any() ? "desktopPopUp" : "",
     });
-    showHidePOPUP(false);
   };
 
   const openForm = () => {
@@ -175,27 +183,42 @@ export const CityArea = (props) => {
       return null;
     }
 
-    if (formContent) {
+    if (addAndEditAddressButtonClicked) {
       return (
-        <div
-          block="MyAccountAddressBook"
-          elem="ContentWrapper"
-          mods={{ formContent }}
+        <ModalWithOutsideClick
+          show={addAndEditAddressButtonClicked}
+          onClose={() => {
+            setExpressPopUp(false);
+            return setAddAndEditAddressButtonClicked(false);
+          }}
         >
-          <button
+          <div
             block="MyAccountAddressBook"
-            elem="backButton"
-            mods={{ isArabic: isArabic() }}
-            onClick={showCards}
-          />
-          <MyAccountAddressPopup
-            formContent={formContent}
-            closeForm={closeForm}
-            openForm={openForm}
-            showCards={showCards}
-            customer={customer}
-          />
-        </div>
+            elem="ContentWrapper"
+            mods={{ formContent }}
+          >
+            <span onClick={() => showCards()} block="popUpBackArrow">
+              {" "}
+              <ChevronLeft
+                style={{
+                  position: "fixed",
+                  top: "30px",
+                  left: "10px",
+                  zIndex: "99999",
+                  width: "20px",
+                  height: "30px",
+                }}
+              />
+            </span>
+            <MyAccountAddressPopup
+              formContent={formContent}
+              closeForm={closeForm}
+              openForm={openForm}
+              showCards={showCards}
+              customer={customer}
+            />{" "}
+          </div>
+        </ModalWithOutsideClick>
       );
     }
   };
@@ -207,10 +230,12 @@ export const CityArea = (props) => {
   const showMyAccountPopup = () => {
     setShowSignInRegisterPopup(true);
     setShowPopUp(false);
+    expressPopUpOpen(true);
   };
 
   const closePopup = () => {
     setShowSignInRegisterPopup(false);
+    setExpressPopUp(false);
   };
 
   const onSignIn = () => {
@@ -222,12 +247,17 @@ export const CityArea = (props) => {
       return null;
     }
     return (
-      <MyAccountOverlay
-        closePopup={closePopup}
-        onSignIn={onSignIn}
-        isPopup
-        showRegisterScreen={isRegisterScreen}
-      />
+      <ModalWithOutsideClick
+        show={showSignInRegisterPopup}
+        onClose={() => closePopup}
+      >
+        <MyAccountOverlay
+          closePopup={closePopup}
+          onSignIn={onSignIn}
+          isPopup
+          showRegisterScreen={isRegisterScreen}
+        />
+      </ModalWithOutsideClick>
     );
   };
 
@@ -388,12 +418,14 @@ export const CityArea = (props) => {
   };
 
   const showHidePOPUP = (val) => {
+    if (val) expressPopUpOpen(val);
     setShowPopUp(val);
   };
 
   const showHideCityAreaSelection = (val) => {
-    setShowCityAreaSelectionPopUp(val);
     showHidePOPUP(false);
+    expressPopUpOpen(val);
+    setShowCityAreaSelectionPopUp(val);
   };
 
   const renderCityAreaSelectionPopUp = () => {
@@ -402,6 +434,7 @@ export const CityArea = (props) => {
         showHideCityAreaSelection={showHideCityAreaSelection}
         showCityAreaSelectionPopUp={showCityAreaSelectionPopUp}
         autoPopulateCityArea={autoPopulateCityArea}
+        setExpressPopUp={setExpressPopUp}
       />
     );
   };
@@ -429,6 +462,7 @@ export const CityArea = (props) => {
           addNewAddress={addNewAddress}
           defaultShippingAddress={defaultShippingAddress}
           autoPopulateCityArea={autoPopulateCityArea}
+          setExpressPopUp={setExpressPopUp}
         />
       );
     } else {
@@ -454,6 +488,7 @@ export const CityArea = (props) => {
           showPopUp={showPopUp}
           showHideCityAreaSelection={showHideCityAreaSelection}
           isSignInTypePopUp={isSignInTypePopUp}
+          setExpressPopUp={setExpressPopUp}
         />
       );
     } else {
@@ -465,7 +500,7 @@ export const CityArea = (props) => {
     return (
       <div block="cityAreaAddressSelection">
         {renderMyAccountOverlay()}
-        {renderForm()}
+        {addAndEditAddressButtonClicked && renderForm()}
         <div
           block={`cityAreaDropdown  ${
             showBackgroundColor ? "showBackgroundColor" : ""

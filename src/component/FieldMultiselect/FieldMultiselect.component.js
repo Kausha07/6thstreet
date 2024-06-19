@@ -48,6 +48,7 @@ import CityArea from "Component/CityArea";
 
 export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  isExpressPopUpOpen: state.MyAccountReducer.isExpressPopUpOpen,
 });
 
 class FieldMultiselect extends PureComponent {
@@ -1297,6 +1298,8 @@ class FieldMultiselect extends PureComponent {
       isMobile.any() && (selectedCategoryCount > 0 || priceCount > 0)
         ? true
         : false;
+        console.log("Shivq1", category, toggleOptionsList);
+      const expressSelectedaddress = JSON.parse(localStorage.getItem("currentSelectedAddress"));
     return (
       <div
         ref={this.filterDropdownRef}
@@ -1323,35 +1326,37 @@ class FieldMultiselect extends PureComponent {
             {this.renderFilterCount()}
           </button>
         )}
-        {toggleOptionsList && !isMobile.any() && (
-          <>
-            {category !== "express_delivery" ? (
-              <>
-                {" "}
-                {Object.keys(conditionalData).length >
-                (category === "sort" ? 10 : 0)
-                  ? this.renderFilterSearchbox(label, category)
-                  : null}
-                {category === "sizes" && !isMobile.any()
-                  ? this.renderSizeDropDown(datakeys)
-                  : null}
-                {category !== "sizes" &&
-                  !isMobile.any() &&
-                  !is_radio &&
-                  this.renderUnselectButton(category)}
-              </>
-            ) : (
-              <>
-                 {category === "express_delivery" && (
-                  <CityArea
-                    isSignInTypePopUp={true}
-                    showBackgroundColor={true}
-                  />
-                )}
-              </>
-            )}
-          </>
-        )}
+        {(toggleOptionsList ||
+          (category === "express_delivery" && this.props.isExpressPopUpOpen)) &&
+          !isMobile.any() && (
+            <>
+              {category !== "express_delivery" ? (
+                <>
+                  {" "}
+                  {Object.keys(conditionalData).length >
+                  (category === "sort" ? 10 : 0)
+                    ? this.renderFilterSearchbox(label, category)
+                    : null}
+                  {category === "sizes" && !isMobile.any()
+                    ? this.renderSizeDropDown(datakeys)
+                    : null}
+                  {category !== "sizes" &&
+                    !isMobile.any() &&
+                    !is_radio &&
+                    this.renderUnselectButton(category)}
+                </>
+              ) : (
+                <>
+                  {category === "express_delivery" && (
+                    <CityArea
+                      isSignInTypePopUp={true}
+                      showBackgroundColor={true}
+                    />
+                  )}
+                </>
+              )}
+            </>
+          )}
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
