@@ -433,6 +433,11 @@
     .CountdownTimerArabic{
       padding-top: 6px;
       float: right;
+      .DynamicContentCountDownTimer{
+        @include desktop{
+          margin-bottom: 5px;
+        }
+      }
     }
 
     .radio-label {
@@ -485,6 +490,7 @@
   .tagsForMsiteProduct {
     @include mobile {
       display: flex;
+      margin-bottom: 5px;
       .ExclusiveMobile {
         background: #e9e9e9;
         border-radius: 12px;
