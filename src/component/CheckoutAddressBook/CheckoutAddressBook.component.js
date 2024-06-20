@@ -12,6 +12,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import MyAccountAddressNationalityFieldForm from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
 import { getStore } from "Store";
+import DeliveryAddress from "Component/DeliveryAddress/DeliveryAddress";
 
 import "./CheckoutAddressBook.style.scss";
 
@@ -139,7 +140,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderAddressList() {
-    const { addresses } = this.props;
+    const { addresses, selectedAddressId, onAddressSelect } = this.props;
     const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
     if (!addresses) {
       return this.renderLoading();
@@ -147,6 +148,14 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     if (!addresses.length || isCountryNotAddressAvailable) {
       return this.renderNoAddresses();
     }
+
+    return (
+      <DeliveryAddress
+        selectedAddressId={selectedAddressId}
+        onAddressSelect={onAddressSelect}
+      />
+    );
+
     
     for(let i=1; i<addresses.length; i++){
       if(addresses[i].default_shipping){

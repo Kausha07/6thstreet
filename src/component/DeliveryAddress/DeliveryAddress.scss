@@ -1,0 +1,50 @@
+.address-card {
+  border: 1px solid #efefef;
+  border-radius: 5px;
+  padding: 20px;
+  // max-width: 600px;
+  max-height: 215px;
+  margin: 20px auto;
+
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      text-transform: none;
+    }
+  }
+
+  &-change-address {
+    font-size: 14px;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  &-content {
+    max-width: 80%;
+
+    .addressCardName {
+      margin: 10px 0;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 5px 0 0 0;
+    }
+
+    p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .cityAreaName {
+      font-weight: 600;
+    }
+  }
+}

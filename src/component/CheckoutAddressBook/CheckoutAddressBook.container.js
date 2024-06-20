@@ -96,7 +96,6 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       : "";
     onTypeOfIdentityChange(typeOfIdentity);
     onIdentityNumberChange(identityNumber);
-    onAddressSelect(selectedAddressId);
     setSelectedAddressID(selectedAddressId);
   }
   componentDidUpdate(prevProps, prevState) {

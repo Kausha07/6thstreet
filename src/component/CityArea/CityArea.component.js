@@ -80,6 +80,8 @@ export const CityArea = (props) => {
     expressCutOffTime,
     isSignInTypePopUp,
     expressPopUpOpen,
+    isNewCheckoutPage,
+    onAddressSelectPopup,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -396,7 +398,10 @@ export const CityArea = (props) => {
       source: null,
     };
 
-    selectedCityArea(requestObj);
+    selectedCityArea(selectedAddress);
+    if(isNewCheckoutPage) {
+      onAddressSelectPopup(selectedAddress);
+    }
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     localStorage.setItem(
@@ -501,31 +506,43 @@ export const CityArea = (props) => {
       <div block="cityAreaAddressSelection">
         {renderMyAccountOverlay()}
         {addAndEditAddressButtonClicked && renderForm()}
-        <div
-          block={`cityAreaDropdown  ${
-            showBackgroundColor ? "showBackgroundColor" : ""
-          }`}
-          onClick={() => showHidePOPUP(!showPopUp)}
-        >
-          <img src={address} alt="" block="locationImage" />
-          {finalAreaText && (
-            <div
-              block={`cityAreaText  ${
-                showEllipsisArea ? "showEllipsisArea" : ""
-              }`}
+        {isNewCheckoutPage ? (
+            <p
+              onClick={() => {
+                showHidePOPUP(true);
+              }}
+              block="address-card"
+              elem="change-address"
             >
-              {finalAreaText}
+              {__("Change Address")}
+            </p>
+          ) : (
+            <div
+              block={`cityAreaDropdown  ${
+                showBackgroundColor ? "showBackgroundColor" : ""
+              }`}
+              onClick={() => showHidePOPUP(!showPopUp)}
+            >
+              <img src={address} alt="" block="locationImage" />
+              {finalAreaText && (
+                <div
+                  block={`cityAreaText  ${
+                    showEllipsisArea ? "showEllipsisArea" : ""
+                  }`}
+                >
+                  {finalAreaText}
+                </div>
+              )}
+              <ChevronDown />
             </div>
           )}
-          <ChevronDown />
-        </div>
         {showPopUp && cityAreaPopUp()}
         {showCityAreaSelectionPopUp && renderCityAreaSelectionPopUp()}
       </div>
     );
   };
 
-  return isExpressDelivery ? render() : null;
+  return isExpressDelivery || isNewCheckoutPage ? render() : null;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CityArea);

@@ -93,6 +93,16 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     guestEmail: "",
   };
   
+  onAddressSelect(id) {
+    this.setState({ selectedCustomerAddressId: id }, () => {
+      this.onAddressSelectNewCheckoutFlow();
+    });
+  }
+
+  onAddressSelectNewCheckoutFlow = async () => {
+    const fields = this._getAddressById(this.state.selectedCustomerAddressId);
+    this.onShippingSuccess(fields);
+  }
 
   async handleClickNCollectPayment(fields) {
     const {
@@ -200,7 +210,20 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     } = address;
     setLoading(true);
 
-    const canEstimate = !Object.values(address).some(
+    const NewAddressObj = {
+      country_code: country_id,
+      street,
+      region: region_id,
+      area: region_id,
+      city,
+      postcode: region_id,
+      phone: phonecode + telephone,
+      telephone: phonecode + telephone,
+      type_of_identity: type_of_identity || this.props.type_of_identity,
+      identity_number: identity_number || this.props.identity_number,
+    };
+
+    const canEstimate = !Object.values(NewAddressObj).some(
       (item) => item === undefined
     );
 
@@ -212,18 +235,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     delete address.region_id;
 
     return estimateShipping(
-      {
-        country_code: country_id,
-        street,
-        region: region_id,
-        area: region_id,
-        city,
-        postcode: region_id,
-        phone: phonecode + telephone,
-        telephone: phonecode + telephone,
-        type_of_identity : type_of_identity || this.props.type_of_identity,
-        identity_number : identity_number || this.props.identity_number,
-      },
+      NewAddressObj,
       isValidted
     );
   }
