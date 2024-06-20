@@ -12,7 +12,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import MyAccountAddressNationalityFieldForm from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
 import { getStore } from "Store";
-import DeliveryAddress from "Component/DeliveryAddress/DeliveryAddress";
+import DeliveryAddress from "Component/DeliveryAddress";
 
 import "./CheckoutAddressBook.style.scss";
 
