@@ -56,6 +56,11 @@ const PDPGalleryStrip = (props) => {
                 }))
 
             } catch (error) {
+                dispatch(setAddtoCartInfo({
+                    "user_view_count":0,
+                    "user_added_to_cart_count":0,
+                    productAPI:true
+                }))
                 console.error('Error fetching data:', error);
             }
         };

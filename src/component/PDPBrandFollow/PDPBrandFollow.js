@@ -124,6 +124,10 @@ const PDPBrandFollow = (props) => {
             
         }
         catch(err){
+            dispatch(setAddtoCartInfo({
+                "is_following_brand":false,
+                followAPI:true
+            }));
             console.error("Error", err);
             setIsLoadingFollow(false);
         }
