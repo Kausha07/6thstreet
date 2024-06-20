@@ -1401,7 +1401,10 @@
     "Customer Rating":"تقييم الزبائن",
     "verified Buyers":"المشترين المعرّفين",
     "Added this to Bag":"تمت الإضافة لحقيبة التسوق",
-    "You Followed this Brand":"لقد قمت بمتابعة هذه العلامة التجارية",
-    "You Unfollowed this Brand":"لقد ألغيت متابعة هذه العلامة التجارية",
-    "Others are viewing":"الآخرين يستعرضو"
+    "Others are viewing":"الآخرين يستعرضو",
+    "Follow":"تابع", 
+    "Following":"مُتابع",
+    "Flash Sale: For limited time only":"تخفيضات سريعة: لفترة محدودة فقط",
+    "You've unfollowed this brand":"قمت باختيار عدم متابعة هذه الماركة", 
+    "You've followed this brand":"قمت باختيار متابعة هذه الماركة"
 }

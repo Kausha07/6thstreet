@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { isSignedIn } from "Util/Auth";
-import heart from './icons/heart.svg';
-import heartFilled from './icons/heartFilled.svg'; 
+import follow_star from './icons/follow_star.svg';
+import follow_starFilled from './icons/follow_starFilled.svg'; 
 import { isArabic } from "Util/App"; 
 import { showNotification } from "Store/Notification/Notification.action";
 import MobileAPI from "Util/API/provider/MobileAPI";
@@ -78,7 +78,7 @@ const PDPBrandFollow = (props) => {
                 setisFollowActive(res?.data?.name !== '') 
                 dispatch(showNotification(
                     'success',
-                    __("You Followed this Brand")
+                    __("You've followed this brand")
                 ));
                 /* MOE events */
                 MOE_trackEvent(EVENT_PDP_FOLLOW_BRAND,eventData);
@@ -91,10 +91,10 @@ const PDPBrandFollow = (props) => {
                 }));
             } else if(res?.data?.length <= 0) {
                 setisFollowActive(res?.data?.name);
-                dispatch(showNotification(
-                    'success',
-                    __("You Unfollowed this Brand")
-                ));
+                // dispatch(showNotification(
+                //     'success',
+                //     __("You've unfollowed this brand")
+                // ));
                 /* MOE events */
                 MOE_trackEvent(EVENT_PDP_UNFOLLOW_BRAND,eventData);
                 /* GTM EVENT */
@@ -146,7 +146,7 @@ const PDPBrandFollow = (props) => {
 
     return <>
         <a className={`brandFollow ${isArabic() ? '_isArabic':''} ${isLoadingFollow ? "disabled" :''}`} onClick={onClickHandler} disabled={isLoadingFollow}>
-            <img block="brandFollow" elem="icon" src={isFollowActive ? heartFilled : heart} />
+            <img block="brandFollow" elem="icon" src={isFollowActive ? follow_starFilled : follow_star} />
             <span block="brandFollow" elem="text">{isFollowActive ? __('Following') :__('Follow')}</span>
         </a>
     </>

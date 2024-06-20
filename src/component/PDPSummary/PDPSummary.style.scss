@@ -477,8 +477,17 @@ div[class^='styles__body'] {
 ._newDesign{
   .PDPbrandName{
     margin-bottom: 10px;
+    .PDPRatings{
+      margin-bottom: 10px;
+    }
     @include desktop{
       margin-bottom: 13px;
+      .PDPRatings{
+        margin-bottom: 13px;
+      }
+    }
+    & > *:last-child{
+      margin-bottom: 0;
     }
   }
   .PDPSummary{
@@ -489,7 +498,9 @@ div[class^='styles__body'] {
     &-Header{
       line-height: normal;
       width: 100%;
-      
+      @include desktop{
+        margin-bottom: 10px;
+      }
     }
     &-Heading{
       margin-bottom: 8px;
@@ -501,13 +512,16 @@ div[class^='styles__body'] {
       flex-direction: column;
       width: 100%;
       position: relative;
-      
+      max-width: 100%;
+      @include desktop{
+        margin-bottom: 6px;
+      }
       @include mobile{
         position: static;
       }
     }
     &-Name{
-      margin-top: 5px;
+      // margin-top: 5px;
       text-transform: capitalize;
       @include mobile{
         font-weight: 400;
@@ -532,7 +546,7 @@ div[class^='styles__body'] {
         line-height: 17px;
         border-radius: 16px;
         padding:5px 10px;
-        margin-bottom: 10px;
+        // margin-bottom: 5px;
         display: inline-block;
       }
       @include mobile{
@@ -544,11 +558,11 @@ div[class^='styles__body'] {
         border-radius: 8px;
       }
     }
-    .PriceContainer{
-      @include desktop{
-        margin-bottom: 12px;
-      }
-    }
+    // .PriceContainer{
+    //   @include desktop{
+    //     margin-bottom: 12px;
+    //   }
+    // }
     // .PriceContainer {
     //   @include desktop{
     //     margin-bottom: 12px;
@@ -641,14 +655,18 @@ div[class^='styles__body'] {
       justify-content: flex-start;
       align-items: flex-start;
       flex-direction: column;
-      @include desktop{
-        flex-direction: column-reverse;
-      }
+      // @include desktop{
+      //   flex-direction: column-reverse;
+      // }
     }
     .ProductContainer{
       display: flex;
       width: 100%;
-      
+      @include desktop{
+        &:empty{
+          margin-bottom: -6px;
+        }
+      }
     }
     .brandName{
       &-title{
@@ -656,11 +674,13 @@ div[class^='styles__body'] {
         @include mobile{
           display:inline-block;
           width: 100%;
+          margin-bottom: 5px;
         }
         @include desktop{
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          margin-bottom: 6px;
           
         }
         .brandFollow{

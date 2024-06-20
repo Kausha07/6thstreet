@@ -1479,6 +1479,15 @@ class PDPSummary extends PureComponent {
               <div block="PDPbrandName">
                 {this.renderBrand()}
                 {isNewDesign && this.renderPDPSummaryHeader()}
+                {isNewDesign && !isMobile && 
+                    <Ratings 
+                      className="PDPRatings" 
+                      rating_sku={rating_sku} 
+                      rating_brand={rating_brand} 
+                      productSku={sku}
+                      isPDPEventsOnly
+                    />
+                  }
               </div> 
             )
           }
@@ -1488,15 +1497,6 @@ class PDPSummary extends PureComponent {
               <div block="PriceAndPDPSummaryHeaderAndTimer">
                 <div block="PriceAndPDPSummaryHeader">
                   {this.renderPriceAndPDPSummaryHeader()}
-                  {isNewDesign && !isMobile && 
-                  <Ratings 
-                    className="PDPRatings" 
-                    rating_sku={rating_sku} 
-                    rating_brand={rating_brand} 
-                    productSku={sku}
-                    isPDPEventsOnly
-                  />
-                }
                 </div>
                   {
                     !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />

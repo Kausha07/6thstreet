@@ -26,7 +26,7 @@ const PDPGalleryStrip = (props) => {
                 const [resSendMyView, resOthersViewing, resAddedToBag] = await Promise.all([
                     MobileAPI.post(`product-view/${productId}`),
                     MobileAPI.get(`product-count/${productId}`),
-                    MobileAPI.get(`brought-count/${sku}`)
+                    MobileAPI.get(`brought-count?sku=${sku}`)
                 ]);
 
                 // Extract data from responses

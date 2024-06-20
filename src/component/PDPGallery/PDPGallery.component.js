@@ -651,7 +651,7 @@ class PDPGallery extends PureComponent {
   renderSaleBlock = () => {
     const { isArabic } = this.state;
     const {getAddToCartInfo, product : {timer_start_time, timer_end_time}} = this.props;
-    const newinfoText = __("Flash sale! Limited Time only!");
+    const newinfoText = __("Flash Sale: For limited time only");
     const now = Date.parse(new Date().toUTCString());
     const startDay = Date.parse(timer_start_time);
     const endDay = Date.parse(timer_end_time);
