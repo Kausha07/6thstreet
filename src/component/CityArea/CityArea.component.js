@@ -114,6 +114,10 @@ export const CityArea = (props) => {
       !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
     ) {
       setFinalAreaText(defaultShippingAddress?.area);
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(defaultShippingAddress)
+      );
     }
   }, [defaultShippingAddress?.area]);
 
