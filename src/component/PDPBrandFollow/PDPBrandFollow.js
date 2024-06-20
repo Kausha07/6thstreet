@@ -134,18 +134,27 @@ const PDPBrandFollow = (props) => {
     }
 
     const getListOnLoad = async () => {
-        const res = await MobileAPI.get('follow/list');
-        const selectedItem = res?.data?.length > 0 && res?.data?.filter(item => {
-            return props.brand_name.toLowerCase() === item?.name?.toLowerCase()
-        });
-        setisFollowActive(selectedItem.length > 0);
-        dispatch(setAddtoCartInfo({
-            "is_following_brand":selectedItem.length > 0 ? true : false,
-            followAPI:true
-        }));
-        // isItemTheir = selectedItem.length > 0;
-        // !isItemTheir && fn && fn();
-        setIsLoadingFollow(false);
+        try {
+            const res = await MobileAPI.get('follow/list');
+            const selectedItem = res?.data?.length > 0 && res?.data?.filter(item => {
+                return props.brand_name.toLowerCase() === item?.name?.toLowerCase()
+            });
+            setisFollowActive(selectedItem.length > 0);
+            dispatch(setAddtoCartInfo({
+                "is_following_brand":selectedItem.length > 0 ? true : false,
+                followAPI:true
+            }));
+            // isItemTheir = selectedItem.length > 0;
+            // !isItemTheir && fn && fn();
+            setIsLoadingFollow(false);
+        } catch(err){
+            dispatch(setAddtoCartInfo({
+                "is_following_brand":false,
+                followAPI:true
+            }));
+            console.error("Error", err);
+            setIsLoadingFollow(false);
+        }
     }
 
     return <>
