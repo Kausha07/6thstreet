@@ -4,7 +4,9 @@ import {
   setPDPLoading,
   setPDPShowSearch,
   setBrandButtonClick,
-  setVueTrendingBrandClick
+  setVueTrendingBrandClick,
+  setNewDesign,
+  setAddtoCartInfo
 } from "Store/PDP/PDP.action";
 import { getStore } from "Store";
 
@@ -52,6 +54,14 @@ export class PDPDispatcher {
       highlighted_attributes,
       ...rest,
     };
+  }
+  
+  async getIsNewDesign(dispatch,isNew){
+    dispatch(setNewDesign(isNew));
+  }
+
+  async getAddToCartInfo(dispatch,data){
+    dispatch(setAddtoCartInfo(data));
   }
 
   async getProductDetailByIdCatalogue(options, dispatch) {
@@ -226,6 +236,7 @@ export class PDPDispatcher {
     const { vueTrendingBrandClick } = payload;
     dispatch(setVueTrendingBrandClick(vueTrendingBrandClick));
   }
+  
 }
 
 export default new PDPDispatcher();

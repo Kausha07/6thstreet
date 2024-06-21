@@ -71,6 +71,12 @@ class ProductDetailEvent extends BaseEvent {
     this.pushEventData({
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
+      product_rating :product?.product_rating ?? "",
+      no_of_ratings :product?.no_of_ratings ?? "",
+      is_flash_sale :product?.is_flash_sale ?? "",
+      user_view_count :product?.user_view_count ?? "",
+      user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
+      is_following_brand :product?.is_following_brand ?? "",
       ecommerce: {
         currency: this.getCurrencyCode(),
         detail: {
@@ -93,7 +99,7 @@ class ProductDetailEvent extends BaseEvent {
             item_category4:product?.categories?.level4?.[0] ?? "",
             item_category5:product?.categories?.level5?.[0] ?? "",
             discount: product?.discount ?? "",
-            variant_availability: product?.variant_availability ?? ""
+            variant_availability: product?.variant_availability ?? "",
           }
         ]
       },

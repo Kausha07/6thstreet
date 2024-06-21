@@ -22,10 +22,12 @@ import Event, {
 } from "Util/Event";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { renderDynamicMetaTags } from "Util/Meta/metaTags";
+import { getPdpSectionConfig } from 'Util/API/endpoint/Config/Config.endpoint';
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   prevPath: state.PLP.prevPath,
+  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -33,6 +35,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+    gnisNewDesign:(isNew) => PDPDispatcher.getIsNewDesign(dispatch,isNew)
+
 });
 
 class PDP extends PureComponent {
@@ -46,15 +50,35 @@ class PDP extends PureComponent {
     showPopup: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     showPopupField: "",
+    PDPJSON:[]
   };
+
+
 
   componentDidMount() {
     this.renderVueHits();
+    this.renderPDPPageSection();
+  
+    
   }
 
-  showMyAccountPopup = () => {
+  async renderPDPPageSection(){
+    try{
+      const response =  await getPdpSectionConfig();
+      this.setState({
+        PDPJSON:response.data
+      });
+      // this.props.gnisNewDesign(response.newDesign);
+    } catch (e) {
+      Logger.log(e);
+    }
+    
+}
+
+
+  showMyAccountPopup = (successCallback) => {
     const { showPopup } = this.state;
-    this.setState({ showPopup: true });
+    this.setState({ showPopup: true, successCallback:successCallback });
     const popupEventData = {
       name: EVENT_SIGN_IN_SCREEN_VIEWED,
       category: "user_login",
@@ -67,6 +91,7 @@ class PDP extends PureComponent {
 
   closePopup = () => {
     this.setState({ signInPopUp: "", showPopup: false });
+    this.state.successCallback && this.state.successCallback()
   };
 
   onSignIn = () => {
@@ -142,9 +167,10 @@ class PDP extends PureComponent {
       />
     );
   }
-  renderMainSection() {
+  renderMainSection(val) {
     return (
       <PDPMainSection
+        renderMainSection={val}
         renderMySignInPopup={this.showMyAccountPopup}
         {...this.props}
         TabbyInstallment={this.TabbyInstallment}
@@ -192,18 +218,45 @@ class PDP extends PureComponent {
       return renderDynamicMetaTags(metaTitle, metaDesc, imageURL, altText);
     }
   }
+  
 
   renderPDP() {
+    const {PDPJSON} = this.state;
+    const {isNewDesign} = this.props;
     return (
       <>
         {this.renderMetaData()}
-        <div block="PDP" onClick={this.onPDPPageClicked}>
-          {this.renderMySignInPopup()}
+        <div block={`PDP ${isNewDesign ? '_newDesign':''}`} onClick={this.onPDPPageClicked}>
+          {
+            PDPJSON.map((data, index) => {
+              
+                if(data.name === 'renderMySignInPopup'){
+                  return this.renderMySignInPopup()
+                }
+                if(data.name === 'renderMainSection'){
+                  return this.renderMainSection(data.sectionData)
+                }
+                 if(data.name === 'renderSeperator'){
+                    return this.renderSeperator()
+                  }
+                  if(data.name === 'renderMixAndMatchSection'){
+                    return this.renderMixAndMatchSection()
+                  }
+                  if(data.name === 'renderDetailsSection'){
+                    return this.renderDetailsSection()
+                  }
+                  if(data.name === 'renderDetail'){
+                    return this.renderDetail()
+                  }
+            })
+           }
+          {/* {this.loadPDPMoreFunction()} */}
+          {/* {this.renderMySignInPopup()}
           {this.renderMainSection()}
           {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
-          {this.renderDetail()}
+          {this.renderDetail()} */}
         </div>
       </>
     );
@@ -268,6 +321,7 @@ class PDP extends PureComponent {
       return this.renderLabelAnimation();
     } else if (!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
+      
     } else if (
       !isLoading &&
       (!nbHits || nbHits === 0) &&

@@ -534,4 +534,9 @@
       }
     }
   }
+  &._newDesign{
+    @include mobile() {
+      margin-top: -52px;
+    }
+  }
 }

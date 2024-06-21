@@ -60,8 +60,11 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
-  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick
+  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick,
+  addtoCartInfo:state.PDP.addtoCartInfo,
+  isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
 });
+
 
 export const mapDispatchToProps = (dispatch) => ({
   requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
@@ -87,6 +90,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  getAddToCartInfo:(data) => PDPDispatcher.getAddToCartInfo(dispatch, data)
 });
 
 export class PDPContainer extends PureComponent {
@@ -188,6 +192,8 @@ export class PDPContainer extends PureComponent {
       menuCategories = [],
       pdpWidgetsData = [],
       gender,
+      addtoCartInfo,
+      isNewDesign
     } = this.props;
     const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
     if (Object.keys(product).length) {
@@ -254,45 +260,48 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
-    if (Object.keys(getDetails).length > 0 && !eventSent) {
+    if (Object.keys(getDetails).length > 0 && !eventSent && ((addtoCartInfo?.productAPI && addtoCartInfo?.followAPI)  || !isNewDesign)) {
       Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-        product: {
-          name: productKeys.name,
-          id: sku,
-          price: specialPrice || originalPrice,
-          brand: productKeys?.brand_name,
-          category: categoryLevel || "",
-          variant: productKeys?.color || "",
+          product: {
+            name: productKeys.name,
+            id: sku,
+            price: specialPrice || originalPrice,
+            brand: productKeys?.brand_name,
+            category: categoryLevel || "",
+            variant: productKeys?.color || "",
+            colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
+            categories: categories, 
+            discount: originalPrice - specialPrice,
+            variant_availability: this.props?.product?.["in_stock"], 
+            ...addtoCartInfo
+          },
+        });
+        const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+        MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          category: currentAppState.gender
+            ? currentAppState?.gender?.toUpperCase()
+            : "",
+          gender: currentAppState.gender
+            ? currentAppState?.gender?.toUpperCase()
+            : "",
+          subcategory: categoryLevel || product_type_6s,
+          color: productKeys?.color || "",
+          brand_name: productKeys?.brand_name || "",
+          full_price: originalPrice || "",
+          product_url: url,
+          currency: getCurrency() || "",
+          product_sku: sku || "",
+          discounted_price: specialPrice || "",
+          product_image_url: thumbnail_url || "",
+          product_name: name || "",
+          isLoggedIn: isSignedIn(),
+          app6thstreet_platform: "Web",
           colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
-          categories: categories, 
-          discount: originalPrice - specialPrice,
-          variant_availability: this.props?.product?.["in_stock"], 
-        },
-      });
-      const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        category: currentAppState.gender
-          ? currentAppState?.gender?.toUpperCase()
-          : "",
-        gender: currentAppState.gender
-          ? currentAppState?.gender?.toUpperCase()
-          : "",
-        subcategory: categoryLevel || product_type_6s,
-        color: productKeys?.color || "",
-        brand_name: productKeys?.brand_name || "",
-        full_price: originalPrice || "",
-        product_url: url,
-        currency: getCurrency() || "",
-        product_sku: sku || "",
-        discounted_price: specialPrice || "",
-        product_image_url: thumbnail_url || "",
-        product_name: name || "",
-        isLoggedIn: isSignedIn(),
-        app6thstreet_platform: "Web",
-        colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No"
-      });
+          ...addtoCartInfo,
+        });
+      
       this.setState({ eventSent: true });
     }
   }
@@ -426,11 +435,18 @@ export class PDPContainer extends PureComponent {
     }
   }
 
+  resetingAddToCartInfo(){
+    this.props.getAddToCartInfo({
+      isForceToEmpty:true
+    });
+  };
+
   componentWillUnmount() {
     this.props.resetProduct();
     document
       .querySelectorAll("script[type='application/ld+json']")
       .forEach((node) => node.remove());
+      this.resetingAddToCartInfo();
   }
 
   getPdpWidgetsVueData() {

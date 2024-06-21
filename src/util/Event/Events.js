@@ -366,3 +366,9 @@ export const EVENT_Track_USER_VARIANT =  "track_user_variant";
 // Home Page Personalisation Tracking Events
 export const EVENT_HOME_SCREEN_VIEW = "home_screen_view";
 export const EVENT_PLP_SCREEN_VIEW = "plp_screen_view";
+
+// Pdp Page Personalisation Tracking Events
+export const EVENT_PDP_RATING_CLICK = "rating_click";
+export const EVENT_PDP_FOLLOW_BRAND = "follow_brand";
+export const EVENT_PDP_UNFOLLOW_BRAND = "unfollow_brand";
+export const EVENT_PDP_CLOSE_POPUP = "close_popup";
