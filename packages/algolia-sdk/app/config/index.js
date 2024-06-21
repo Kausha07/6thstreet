@@ -294,6 +294,8 @@ const config = {
       "6s_also_available_count",
       "gallery_image_urls",
       "color_hex",
+      "rating_brand",
+      "rating_sku",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

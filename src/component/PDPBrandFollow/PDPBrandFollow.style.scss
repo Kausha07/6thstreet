@@ -1,0 +1,64 @@
+.brandFollow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border:1px solid #000;
+    border-radius: 5px;
+    padding: 4px 8px;
+    &-icon{
+        width: 12px;
+        margin-right: 4px;
+        @include desktop{
+            width: 15px;
+            height: auto;
+        }
+    }
+    &-text{
+        font-size: 11px;
+        line-height: 13.8px;
+        font-weight: 500;
+        text-transform: capitalize;
+        letter-spacing: 0;
+        @include desktop{
+            font-size: 12px;
+            // font-weight: 600;
+            line-height: 16px   ;
+        }
+        
+    }
+    &.disabled{
+        pointer-events: none;
+        cursor: none;
+        opacity: .5;
+    }
+    &:link,
+    &:hover,
+    &:visited,
+    &:focus,
+    &:active{
+        text-decoration: none;
+        .brandFollow-text{
+            text-decoration: none;
+        }
+
+    }
+    &._isArabic{
+        left: 0;
+        right: auto;
+        .brandFollow{
+            &-icon{
+                margin-right: 0;
+                margin-left: 4px;        
+            }
+        }
+    }
+}
+
+.PDPbrandName{
+    display: block;
+    position: relative;
+}

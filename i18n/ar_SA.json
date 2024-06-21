@@ -1381,6 +1381,8 @@
     "OFF": "خصم",
     "CODE:": "الكود",
     "Total MRP": "السعر",
+    "Please Note: ": " :يرجى ملاحظة",
+    "will be charged extra for cash on delivery": "سيتم فرض رسوم إضافية  مقابل الدفع عند الإستلام",
     "Total Price" : "إجمالي المبلغ",
     "Please provide National ID No. for custom clearance": "يرجى تقديم رقم الهوية الوطنية لإجراءات التخليص الجمركي",
     "Please provide National ID number for custom clearance": "يرجى تقديم رقم الهوية الوطنية لإجراءات التخليص الجمركي",
@@ -1395,5 +1397,16 @@
     "Customs Clearance Information": "معلومات التخليص الجمركي",
     "Please enter valid number": "يرجى إدخال رقم صالح",
     "Enter a valid Passport number": "أدخل رقم جواز سفر صالح",
-    "Enter a valid National ID number": "أدخل رقم هوية وطنية صالح"
+    "Enter a valid National ID number": "أدخل رقم هوية وطنية صالح",
+    "Flash sale! Limited Time only!":"خصومات فلاش! فترة محددة فقط!",
+    "Ratings":"التقييمات",
+    "Customer Rating":"تقييم الزبائن",
+    "verified Buyers":"المشترين المعرّفين",
+    "Added this to Bag":"تمت الإضافة لحقيبة التسوق",
+    "Others are viewing":"الآخرين يستعرضو",
+    "Follow":"تابع", 
+    "Following":"مُتابع",
+    "Flash Sale: For limited time only":"تخفيضات سريعة: لفترة محدودة فقط",
+    "You've unfollowed this brand":"قمت باختيار عدم متابعة هذه الماركة", 
+    "You've followed this brand":"قمت باختيار متابعة هذه الماركة"
 }

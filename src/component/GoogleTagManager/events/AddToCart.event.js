@@ -51,6 +51,12 @@ class AddToCartEvent extends BaseEvent {
     this.pushEventData({
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
+      product_rating :product?.product_rating ?? "",
+      no_of_ratings :product?.no_of_ratings ?? "",
+      is_flash_sale :product?.is_flash_sale ?? "",
+      user_view_count :product?.user_view_count ?? "",
+      user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
+      is_following_brand :product?.is_following_brand ?? "",
       ecommerce: {
         currency: this.getCurrencyCode(),
         currencyCode:  this.getCurrencyCode(),
@@ -72,7 +78,7 @@ class AddToCartEvent extends BaseEvent {
             discount : product?.discount ?? 0,
             item_size: product?.size ?? "",
             item_size_type : product?.size_id ?? "",
-            variant_availability :product?.variant_availability ?? ""
+            variant_availability :product?.variant_availability ?? "",
           }
         ]
       },

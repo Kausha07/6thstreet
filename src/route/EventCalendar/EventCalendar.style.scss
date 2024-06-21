@@ -1,0 +1,247 @@
+.PageWrapper {
+    .wrap {
+        width: 770px;
+        margin: 0 auto;
+        padding: 30px 0px 80px 0px;
+        @include mobile {
+            width: 94%;
+        }
+    }
+
+    .box {
+        clear: both;
+        position: relative;
+        background: #fff;
+        padding: 28px 60px 8px 60px;
+        border-radius: 4px;
+        // box-shadow: 0 7px 14px 0 rgb(50 50 93 / 10%), 0 3px 6px 0 rgb(0 0 0 / 7%);
+        box-shadow: -2px 2px 8px 2px #ababab;
+        @include mobile {
+            padding: 28px 20px 35px 20px;
+        }
+    }
+
+    .eventTitle {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 110%;
+        color: #1d3054;
+        margin-bottom: 16px;
+    }
+
+    .scheduledBox {
+        clear: both;
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .scheduledBox img {
+        max-width: 24px;
+        height: 24px;
+    }
+
+    .scheduledBox-time {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .scheduledBox-date {
+        padding-left: 20px;
+        font-size: 16px;
+        color: #616161;
+        line-height: 140%;
+    }
+
+    .scheduledBox-timeZone {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .timeZonePickerBox {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f9f9f9;
+        // box-shadow: 0 0 0 0.5px rgb(50 50 93 / 22%), 0 2px 5px 0 rgb(50 50 93 / 14%), 0 1px 1.5px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 12%), 0 0 0 0 transparent;
+        box-shadow: -2px 2px 8px 2px #ababab;
+
+        height: 38px;
+
+        position: relative;
+        padding: 0px 10px 0px 10px;
+        cursor: pointer;
+        border-radius: 34px 10px 10px 34px;
+        margin-left: 20px;
+    }
+
+    .salectedTimezone {
+        display: flex;
+        flex-direction: column;
+        margin: 0 10px;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .salectedTimezone-title {
+        font-size: 11px;
+        line-height: 11px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .salectedTimezone-gmt {
+        font-size: 12px;
+        line-height: 18px;
+        color: #555;
+        font-weight: 600;
+    }
+
+    .eventContent {
+        margin-bottom: 16px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .addEventBox {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .addEventContainer {
+        display: inline-block;
+    }
+
+    .addToButton {
+        display: inline-block;
+        background: #f96446;
+        padding: 0px 16px;
+        line-height: 40px;
+        height: 40px;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        box-shadow: none;
+        border: 0;
+    }
+
+    .addEventPopup {
+        width: 230px;
+        position: absolute;
+        opacity: 0;
+        z-index: -1;
+        top: -50%;
+        left: 0;
+        margin-left: -1px;
+        /* display: none; */
+        padding: 6px 0px 0px 0px;
+        font-family: "Open Sans", Roboto, "Helvetica Neue", Helvetica, Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;
+        color: #000 !important;
+        font-weight: 600;
+        line-height: 100%;
+        background: #fff;
+        font-size: 15px;
+        text-decoration: none;
+        text-align: left;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 26px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 26px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 26px;
+        transform: scale(.98, .98) translateY(5px);
+        transition: transform .15s ease;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .addEventPopupHover {
+        z-index: 9;
+        transform: scale(1, 1) translateY(0px);
+        opacity: 1;
+    }
+
+    .addToCalendarLists {}
+
+    .addToCalendarItem {
+        display: block;
+        line-height: 100%;
+        background: #fff;
+        padding: 10px;
+        margin: -2px 0px;
+
+
+    }
+
+    .addToCalendarItem a {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 15px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .addToCalendarItem img {
+        width: 32px;
+        height: 32px;
+        display: inline-block;
+        margin-right: 16px;
+    }
+
+    .addToCalendarItem:hover {
+        background-color: #f4f4f4;
+        color: #000;
+        text-decoration: none;
+        font-size: 15px;
+    }
+
+    .footer {
+
+        border-top: 1px solid #ddd;
+        padding: 15px 22px 15px 38px;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .footer img {
+        height: 28px;
+    }
+
+    &_isArabic {
+        .scheduledBox-time {
+            .scheduledBox-date {
+                padding-left: 0px;
+                padding-right: 20px;
+            }
+        }
+
+        .addToCalendarItem {
+            a {
+                justify-content: right;
+
+                img {
+                    margin-left: 16px;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    
+}

@@ -42,6 +42,13 @@ import Event, {
 import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
+import { connect } from "react-redux";
+import Ratings from 'Component/Ratings/Ratings';
+import PDPBrandFollow from 'Component/PDPBrandFollow/PDPBrandFollow';
+export const mapStateToProps = (state) => ({
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
+});
+
 class PDPSummary extends PureComponent {
   constructor(props) {
     super(props);
@@ -987,7 +994,7 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: { name, brand_name, gallery_images = [], brandNameclick  },
+      product: { sku, name, brand_name, gallery_images = [], brandNameclick  },isNewDesign,renderMySignInPopup
     } = this.props;
 
     const { isArabic } = this.state;
@@ -1032,8 +1039,8 @@ class PDPSummary extends PureComponent {
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
-          <h1>
-            {brandUrlPath ? (
+          <h1  block="PDPSummary" elem="brandName">
+            <span block="brandName" elem="title">{brandUrlPath ? (
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
@@ -1053,7 +1060,8 @@ class PDPSummary extends PureComponent {
               )
             ) : (
               brand_name
-            )}{" "}
+            )}</span>{" "}
+            {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name} sku={sku}  />}
             <span block="PDPSummary" elem="Name">
               {name}
             </span>
@@ -1063,8 +1071,8 @@ class PDPSummary extends PureComponent {
     }
 
     return (
-      <h1>
-        {brandUrlPath ? (
+      <h1 block="PDPSummary" elem="brandName">
+       <span block="brandName" elem="title">{brandUrlPath ? (
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
@@ -1084,7 +1092,8 @@ class PDPSummary extends PureComponent {
           )
         ) : (
           brand_name
-        )}{" "}
+        )} {isNewDesign && <PDPBrandFollow renderMySignInPopup={renderMySignInPopup} brand_name={brand_name} sku={sku}  />}</span> {" "}
+        
         <span block="PDPSummary" elem="Name">
           {name}
         </span>
@@ -1118,6 +1127,7 @@ class PDPSummary extends PureComponent {
       product: { sku, gallery_images = [] },
       product,
       renderMySignInPopup,
+      isNewDesign
     } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
@@ -1128,7 +1138,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <>
-        {this.renderPDPSummaryHeader()}
+        {!isNewDesign && this.renderPDPSummaryHeader()}
         <div block="ShareAndWishlistButtonContainer" className={`${this.state.isArabic ? "isArabic": ""}`}>
           <ShareButton
             title={document.title}
@@ -1152,7 +1162,8 @@ class PDPSummary extends PureComponent {
   renderPriceAndPDPSummaryHeader() {
     const {
       product: { price, stock_qty, additional_shipping_info },
-      edd_info
+      edd_info,
+      isNewDesign
     } = this.props;
     const { stockAvailibility } = this.state;
 
@@ -1163,7 +1174,7 @@ class PDPSummary extends PureComponent {
     return (
       <div block="PriceContainer">
         <Price price={price} renderSpecialPrice={true} pageType="PDPPage" />
-        {isMobile.any() && this.renderPDPSummaryHeader()}
+        {!isNewDesign && isMobile.any() && this.renderPDPSummaryHeader()}
         {!edd_info || (edd_info && !edd_info.has_cross_border_enabled) && additional_shipping_info ? (
           <span block="AdditionShippingInformation">
             {additional_shipping_info}
@@ -1393,6 +1404,8 @@ class PDPSummary extends PureComponent {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
       product: {
+        sku,
+        name,
         cross_border = 0,
         brand_name = "",
         international_vendor = null,
@@ -1404,10 +1417,15 @@ class PDPSummary extends PureComponent {
         size_eu = [],
         in_stock,
         stock_qty,
+        rating_brand,
+        rating_sku,
       },
       edd_info,
-      intlEddResponse
+      intlEddResponse,
+      renderSummary,
+      isNewDesign,
     } = this.props;
+  
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
     let cross_border_qty = 0;
@@ -1446,11 +1464,82 @@ class PDPSummary extends PureComponent {
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
-        <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+        {renderSummary.map((sectionName, index) => {
+          if(sectionName === "productLabel"){
+            return (
+              <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+                {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
+              </div>
+            )
+          }
+          if(sectionName === "brandName"){
+            
+            return (
+              <div block="PDPbrandName">
+                {this.renderBrand()}
+                {isNewDesign && this.renderPDPSummaryHeader()}
+                {isNewDesign && !isMobile && 
+                    <Ratings 
+                      className="PDPRatings" 
+                      rating_sku={rating_sku} 
+                      rating_brand={rating_brand} 
+                      productSku={sku}
+                      isPDPEventsOnly
+                    />
+                  }
+              </div> 
+            )
+          }
+          if(sectionName === "priceSummary"){
+            return (
+              <>
+              <div block="PriceAndPDPSummaryHeaderAndTimer">
+                <div block="PriceAndPDPSummaryHeader">
+                  {this.renderPriceAndPDPSummaryHeader()}
+                </div>
+                  {
+                    !isNewDesign && timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+                  }
+              </div>
+              </>
+            )
+          }
+          if(sectionName === "shippingInfo"){
+            return (
+              cityResponse &&
+                edd_info &&
+                edd_info.is_enable &&
+                edd_info.has_pdp &&
+                ((isIntlBrand &&
+                  Object.keys(intlEddResponse).length > 0 &&
+                  !edd_info.has_item_level) ||
+                  cross_border_qty === 0 ||
+                  (edd_info.has_item_level && isIntlBrand)) &&
+                  !outOfStockStatus &&
+                this.renderSelectCity(cross_border_qty === 1)
+            )
+          }
+          if(sectionName === 'pdpAddtocart'){
+            return this.renderAddToCartSection()
+          }
+          if(sectionName === 'tamara'){
+            return this.renderTammaraWidget()
+          }
+          if(sectionName === 'tabby'){
+            return this.renderTabby();
+          }
+          if(sectionName === 'pdpTags'){
+            return this.renderPDPTags();
+          }
+          if(sectionName === 'asloAviable'){
+            return this.renderAvailableItemsSection();
+          }
+        })}
+        {/* <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>
         {this.renderBrand()}
-        {/* {this.renderName()} */}
+        {/ * {this.renderName()} * /}
         <div block="PriceAndPDPSummaryHeaderAndTimer">
           <div block="PriceAndPDPSummaryHeader">
             {this.renderPriceAndPDPSummaryHeader()}
@@ -1470,16 +1559,16 @@ class PDPSummary extends PureComponent {
             (edd_info.has_item_level && isIntlBrand)) &&
             !outOfStockStatus &&
           this.renderSelectCity(cross_border_qty === 1)}
-        {/* <div block="Seperator" /> */}
-        {/* { this.renderColors() } */}
+        {/ * <div block="Seperator" /> * /}
+        {/ * { this.renderColors() } * /}
         {this.renderAddToCartSection()}
         {this.renderTammaraWidget()}
         {this.renderTabby()}
         {this.renderPDPTags()}
-        {this.renderAvailableItemsSection()}
+        {this.renderAvailableItemsSection()} */}
       </div>
     );
   }
 }
 
-export default PDPSummary;
+export default connect(mapStateToProps)(PDPSummary);

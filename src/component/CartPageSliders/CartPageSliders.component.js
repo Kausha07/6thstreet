@@ -360,11 +360,11 @@ const CartPageSliders = (props) => {
                         ? __("Out of stock")
                         : __("Add to bag")}
                     </button>
-                    {isMobile.any() && (
+                    {/* {isMobile.any() && (
                       <div className="tagsForMsiteProduct">
                         {renderExclusiveMobile(data)}
                       </div>
-                    )}
+                    )} */}
                   </div>
                 );
               })}
