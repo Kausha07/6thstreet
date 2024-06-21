@@ -43,9 +43,9 @@ class ProductDetailEvent extends BaseEvent {
    * @param pathname
    */
   handler(product, pathname) {
-    const { sku, type_id } = product;
+    const { id, type_id } = product;
     if (
-      this.spamProtection(SPAM_PROTECTION_TIMEOUT, sku) ||
+      this.spamProtection(SPAM_PROTECTION_TIMEOUT, id) ||
       pathname === this.lastPath
     ) {
       return;
@@ -88,7 +88,7 @@ class ProductDetailEvent extends BaseEvent {
         items: [
           {
             item_name: product?.name,
-            item_id: product?.skuFromProps,
+            item_id: product?.id,
             item_brand: product?.brand,
             item_category: product?.category,
             item_variant: product?.variant,
