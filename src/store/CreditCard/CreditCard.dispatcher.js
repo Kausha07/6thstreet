@@ -67,6 +67,10 @@ export class CreditCardDispatcher {
             // If length is 1 card is selected by default
             if(cardsData.length === 1){
                 cardsData[0].selected = true;
+            }else if(cardsData.length > 1) {
+                cardsData = cardsData.map((item) => {
+                    return item.last_used ? ({...item, selected: true}) : item
+                })
             }
             dispatch(setSavedCards([...cardsData]));
             dispatch(setSavedCardsLoading(false));
