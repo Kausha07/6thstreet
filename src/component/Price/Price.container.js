@@ -57,6 +57,7 @@ export class PriceContainer extends PureComponent {
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
     const isSidewideCouponEnabled = vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
     return {
+      price,
       basePrice,
       specialPrice,
       currency,
