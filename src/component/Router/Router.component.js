@@ -33,6 +33,7 @@ import {
   INFLUENCER_STORE,
   MEGAMENU,
   BRANDSMENU,
+  EVENTSCALENDAR,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -55,6 +56,7 @@ const Feedback = lazy(() => import(/* webpackChunkName: 'Feedback' */ "../../rou
 const Influencer = lazy(() => import(/* webpackChunkName: 'Influencer' */ "Route/Influencer"));
 const InfluencerCollection = lazy(() => import(/* webpackChunkName: 'InfluencerCollection' */ "Component/InfluencerCollection"));
 const InfluencerStore = lazy(() => import(/* webpackChunkName: 'InfluencerStore' */ "Component/InfluencerStore"));
+const EventCalendar = lazy(() => import(/* webpackChunkName: 'EventCalendar' */ "Route/EventCalendar"));
 // import LocaleWizard from "Route/LocaleWizard";
 // import UrlRewrites from "Route/UrlRewrites";
 // import VuePLP from "Route/VuePLP/VuePLP.component";
@@ -435,6 +437,19 @@ export class Router extends SourceRouter {
         />
       ),
       position: 96,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("/event-calendar")}
+          render={(props) => (
+            <GTMRouteWrapper route={EVENTSCALENDAR}>
+              <EventCalendar {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 97,
     },
   ];
 
