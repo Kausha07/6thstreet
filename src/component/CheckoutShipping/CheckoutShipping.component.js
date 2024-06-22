@@ -20,6 +20,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
 import CartTotal from "Component/CartTotal";
+import NewCheckoutPayment from "Component/NewCheckoutPayment";
 
 import "./CheckoutShipping.style";
 
@@ -540,6 +541,79 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       />
     );
   }
+
+  renderNewPaymentBlock = () => {
+    const {
+      cashOnDeliveryFee,
+      setLoading,
+      paymentMethods,
+      setDetailsStep,
+      shippingAddress,
+      setCashOnDeliveryFee,
+      savePaymentInformation,
+      savePaymentInformationApplePay,
+      getBinPromotion,
+      updateTotals,
+      setTabbyWebUrl,
+      setPaymentCode,
+      binModal,
+      setCheckoutCreditCardData,
+      processApplePay,
+      placeOrder,
+      isClickAndCollect,
+      couponsItems,
+      removeCouponFromCart,
+      couponLists,
+      applyCouponToCart,
+      isClubApparelEnabled,
+      type_of_identity,
+      identity_number,
+      validationError,
+      onIdentityNumberChange,
+      onTypeOfIdentityChange,
+      onMailingAddressTypeChange,
+      mailing_address_type,
+      setShippingAddress,
+      selectedPaymentMethod,
+    } = this.props;
+
+    return (
+      <NewCheckoutPayment
+        cashOnDeliveryFee={cashOnDeliveryFee}
+        setLoading={setLoading}
+        paymentMethods={paymentMethods}
+        setDetailsStep={setDetailsStep}
+        shippingAddress={shippingAddress}
+        setCashOnDeliveryFee={setCashOnDeliveryFee}
+        savePaymentInformation={savePaymentInformation}
+        savePaymentInformationApplePay={savePaymentInformationApplePay}
+        getBinPromotion={getBinPromotion}
+        updateTotals={updateTotals}
+        setTabbyWebUrl={setTabbyWebUrl}
+        setPaymentCode={setPaymentCode}
+        binModal={binModal}
+        setCheckoutCreditCardData={setCheckoutCreditCardData}
+        processApplePay={processApplePay}
+        placeOrder={placeOrder}
+        isClickAndCollect={isClickAndCollect}
+        couponsItems={couponsItems}
+        removeCouponFromCart={removeCouponFromCart}
+        couponLists={couponLists}
+        applyCouponToCart={applyCouponToCart}
+        isClubApparelEnabled={isClubApparelEnabled}
+        type_of_identity={type_of_identity}
+        identity_number={identity_number}
+        validationError={validationError}
+        onIdentityNumberChange={onIdentityNumberChange}
+        onTypeOfIdentityChange={onTypeOfIdentityChange}
+        onMailingAddressTypeChange={onMailingAddressTypeChange}
+        mailing_address_type={mailing_address_type}
+        setShippingAddress={setShippingAddress} // Delete this if not used
+        selectedPaymentMethod={selectedPaymentMethod}
+      />
+    );
+  };
+
   renderAddNewAddressButton = () => {
     const {
       addresses,
@@ -590,14 +664,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         {isSignedIn() && !checkClickAndCollect() ? (
             <div block="header-new-address-container" mods={{formContent}}>
               <div>
-                <h3>{__("Delivering to")}</h3>
                 <h4 block="CheckoutShipping" elem="DeliveryMessage">
                   {checkClickAndCollect()
                     ? "Please confirm your contact details"
                     : __("Where can we send your order?")}
                 </h4 >
               </div>
-              {this.renderAddNewAddressButton()}
             </div>
           ) : null
         }
@@ -615,8 +687,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           <div>
             {/* {<Loader isLoading={isLoading} />} */}
             {this.renderDelivery()}
-            {this.renderHeading(__("Payment Options"), true)}
-            {this.renderActions()}
+            {this.renderNewPaymentBlock()}
+            {/* {this.renderHeading(__("Payment Options"), true)} */}
           </div>
         </Form>
       </div>

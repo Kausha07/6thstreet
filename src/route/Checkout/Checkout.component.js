@@ -756,6 +756,20 @@ export class Checkout extends SourceCheckout {
       config: { countries },
       config,
       is_nationality_mandatory = false,
+      addresses,
+      paymentMethods = [],
+      getBinPromotion,
+      updateTotals,
+      processApplePay,
+      placeOrder,
+      couponsItems=[],
+      removeCouponFromCart,
+      couponLists,
+      applyCouponToCart,
+      isClubApparelEnabled,
+      isAddressAdded,
+      setIsAddressAdded,
+      selectedPaymentMethod,
     } = this.props;
 
     let platform = "";
@@ -774,6 +788,7 @@ export class Checkout extends SourceCheckout {
       validationError = false,
       isIdentityNumberModified = false,
       mailing_address_type = "",
+      cashOnDeliveryFee,
     } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
@@ -804,6 +819,30 @@ export class Checkout extends SourceCheckout {
           isIdentityNumberModified={isIdentityNumberModified}
           onMailingAddressTypeChange={this.onMailingAddressTypeChange}
           mailing_address_type={mailing_address_type}
+          savePaymentInformationApplePay={this.savePaymentInformationApplePay}
+          setCashOnDeliveryFee={this.setCashOnDeliveryFee}
+          addresses={addresses}
+          paymentMethods={paymentMethods}
+          setDetailsStep={setDetailsStep}
+          savePaymentInformation={this.savePaymentInformation}
+          getBinPromotion={getBinPromotion}
+          updateTotals={updateTotals}
+          setTabbyWebUrl={this.setTabbyWebUrl}
+          setPaymentCode={this.setPaymentCode}
+          binModal={this.showModal}
+          setCheckoutCreditCardData={this.setCheckoutCreditCardData}
+          processApplePay={processApplePay}
+          placeOrder={placeOrder}
+          couponsItems={couponsItems}
+          removeCouponFromCart={removeCouponFromCart}
+          couponLists={couponLists}
+          applyCouponToCart={applyCouponToCart}
+          isClubApparelEnabled={isClubApparelEnabled}
+          cashOnDeliveryFee={cashOnDeliveryFee}
+          isAddressAdded={isAddressAdded}
+          setIsAddressAdded={setIsAddressAdded}
+          setShippingAddress={setShippingAddressCareem}
+          selectedPaymentMethod={selectedPaymentMethod}
         />
       </div>
     );
