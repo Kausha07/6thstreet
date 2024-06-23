@@ -112,9 +112,15 @@ export class CartDispatcher {
   }
 
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
+    const reqObj = JSON.parse(localStorage.getItem("currentSelectedAddress"));
+    const params = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      address_type: reqObj?.mailing_address_type || "37303",
+    };
     try {
       dispatch(processingCartRequest());
-      const response = await getCart(cartId);
+      const response = await getCart(cartId, params);
       if (response == "Request does not match any route.") {
         // MyAccountDispatcher.logout(null, dispatch);
         dispatch(resetCart());

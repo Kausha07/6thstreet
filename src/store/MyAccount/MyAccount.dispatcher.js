@@ -286,21 +286,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       await MobileAPI.get(`order/last?country_specific=true`).then(
         (response) => {
           if (
-            response?.city &&
-            response?.area &&
-            response?.country?.toLowerCase() === country_code?.toLowerCase()
+            response?.data?.city &&
+            response?.data?.area &&
+            response?.data?.country?.toLowerCase() ===
+              country_code?.toLowerCase()
           ) {
             let requestObj = {
               country: country_code,
-              city: response?.city,
-              area: response?.area,
+              city: response?.data?.city,
+              area: response?.data?.area,
               courier: null,
               source: null,
             };
             localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
             localStorage.setItem(
               "currentSelectedAddress",
-              JSON.stringify(response)
+              JSON.stringify(response?.data)
             );
           }
         }

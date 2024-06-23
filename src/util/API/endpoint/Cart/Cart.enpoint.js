@@ -1,6 +1,9 @@
 import MobileAPI from "../../provider/MobileAPI";
 
-export const getCart = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
+export const getCart = (cartId, params) =>
+  MobileAPI.get(
+    `/carts2/${cartId}?city=${params?.city}&area=${params?.area}&address_type=${params?.address_type}`
+  ) || {};
 export const createCart = (cart_id) =>
   MobileAPI.post(`/carts2?cart_id=${cart_id}`) || {};
 

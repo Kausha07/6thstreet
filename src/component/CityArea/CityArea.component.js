@@ -116,6 +116,10 @@ export const CityArea = (props) => {
       !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
     ) {
       setFinalAreaText(defaultShippingAddress?.area);
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(defaultShippingAddress)
+      );
     }
   }, [defaultShippingAddress?.area]);
 
@@ -185,7 +189,7 @@ export const CityArea = (props) => {
       return null;
     }
 
-    if (addAndEditAddressButtonClicked) {
+    if (formContent) {
       return (
         <ModalWithOutsideClick
           show={addAndEditAddressButtonClicked}
@@ -195,7 +199,7 @@ export const CityArea = (props) => {
           }}
         >
           <div
-            block="MyAccountAddressBook"
+            block="MyAccountAddressBook-Express"
             elem="ContentWrapper"
             mods={{ formContent }}
           >
