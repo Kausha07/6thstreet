@@ -43,7 +43,7 @@
 
   &-MethodDiscription {
     font-weight: var(--fw-regular);
-    font-size: 15px;
+    font-size: 14px;
   }
 
   &-MethodImage {
@@ -179,6 +179,25 @@
 
     &_check {
       flex-direction: column;
+    }
+  }
+
+  &-codExtraChargeText {
+    color: #F96446;
+    margin-bottom: auto;
+
+    span {
+      font-weight: 600;
+    }
+
+    .codCharge {
+      font-weight: 700;
+    }
+  }
+
+  &-MethodDiscription {
+    .noteBoldText {
+      font-weight: 700;
     }
   }
 }

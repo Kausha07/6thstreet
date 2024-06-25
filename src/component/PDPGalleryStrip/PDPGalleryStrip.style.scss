@@ -1,0 +1,182 @@
+:root {
+    --animate-duration: .5s;
+    --animate-delay: .5s;
+    --animate-repeat: 1
+}
+
+
+
+
+@-webkit-keyframes flash {
+    0%,50%,to {
+        opacity: 1
+    }
+
+    25%,75% {
+        opacity: 0
+    }
+}
+
+@keyframes flash {
+    0%,50%,to {
+        opacity: 1
+    }
+
+    25%,75% {
+        opacity: 0
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.animate__fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn
+}
+
+.animate__flash {
+    -webkit-animation-name: flash;
+    animation-name: flash
+}
+
+.animate__bounce {
+    -webkit-animation-name: bounce;
+    animation-name: bounce;
+    -webkit-transform-origin: center bottom;
+    transform-origin: center bottom;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-duration: var(--animate-duration);
+    animation-duration: var(--animate-duration);
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+.PDPGalleryStrip{
+    
+    // width: 100%;
+    // position: absolute;
+    // right: 0;
+    // background-color: rgba($color: #fff, $alpha: .9);
+    // padding: 6px 8px;
+    // border-top-left-radius: 10px;
+    // border-bottom-left-radius: 10px;
+    // height: 30px;
+    // text-align: center;
+    // transition: all .25s ease;
+    // -webkit-transition: all .25s ease;
+    
+    // @include mobile{
+    //     bottom: 25px;
+    //     // max-width: 167px;
+    // }
+    // @include desktop{
+    //     bottom: 50px;
+    //     // max-width: 200px;
+    // }
+    &-icon{
+        display: inline-block;
+        width: auto;
+        height: 14px;
+        margin:0 2px;
+        vertical-align: middle;
+    }
+    
+    &-elem{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .23s ease;
+        -webkit-transition: all .5s ease;
+        // position: absolute;
+        // left: 50%;
+        // top: 50%;
+        // transform: translate(-50%, -50%);
+        // -webkit-transform: translate(-50%, -50%);
+
+        position: absolute;
+        right: 0;
+        background-color: rgba($color: #fff, $alpha: .9);
+        padding: 6px 8px;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        height: 30px;
+        text-align: center;
+        transition: all .25s ease;
+        -webkit-transition: all .25s ease;
+
+        @include mobile{
+            bottom: 25px;
+            // max-width: 167px;
+        }
+        @include desktop{
+            bottom: 50px;
+            // max-width: 200px;
+        }
+
+        &.active{
+            opacity: 1;
+            visibility: visible;
+
+            // -webkit-animation-name: bounce;
+            // animation-name: bounce;
+            // -webkit-animation-name: flash;
+            // animation-name: flash;
+
+            // -webkit-animation-name: fadeIn;
+            // animation-name: fadeIn;
+            // -webkit-transform-origin: center bottom;
+            // transform-origin: center bottom;
+            // -webkit-animation-duration: .5s;
+            // animation-duration: .5s;
+            // -webkit-animation-duration: var(--animate-duration);
+            // animation-duration: var(--animate-duration);
+            // -webkit-animation-fill-mode: both;
+            // animation-fill-mode: both
+        }
+    }
+    &-text{
+        display: inline-block;
+        text-transform: uppercase;
+        font-weight: 500;
+        vertical-align: middle;
+        i{
+            color:#F96446;
+            font-style: normal;
+            margin: 0 3px;
+        }
+        @include mobile{
+            font-size: 12px;
+            line-height: 16px;
+        }
+        @include desktop{
+            font-size: 14px;
+            line-height: 19px;
+            font-weight: 500;
+        }
+    }
+    &.isArabic{
+        direction: rtl;
+        .PDPGalleryStrip{
+            &-elem{
+                left: 0;
+                right: auto;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+        }
+    }
+}
+// background: #F96446;

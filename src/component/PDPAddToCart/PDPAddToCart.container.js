@@ -55,7 +55,8 @@ export const mapStateToProps = (state) => ({
   wishListItems: state.WishlistReducer.items,
   edd_info: state.AppConfig.edd_info,
   eddResponse: state.MyAccountReducer.eddResponse,
-  eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP
+  eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
+  addtoCartInfo:state.PDP.addtoCartInfo
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -580,7 +581,8 @@ export class PDPAddToCartContainer extends PureComponent {
       prevPath = null,
       popUpType = "",
       closeAddToCartPopUp,
-      edd_info
+      edd_info,
+      addtoCartInfo
     } = this.props;
 
     const eventPageType = popUpType === "wishListPopUp" ? "wishlist" : "pdp";
@@ -674,7 +676,8 @@ export class PDPAddToCartContainer extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          ...addtoCartInfo
         },
       });
 
@@ -763,7 +766,8 @@ export class PDPAddToCartContainer extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          ...addtoCartInfo
         },
       });
 
@@ -871,7 +875,9 @@ export class PDPAddToCartContainer extends PureComponent {
         size_us = [],
       },
       product,
+      addtoCartInfo
     } = this.props;
+    let newCartInfo = {};
     const { selectedSizeType, selectedSizeCode } = this.state;
 
     const productStock = simple_products;
@@ -916,6 +922,9 @@ export class PDPAddToCartContainer extends PureComponent {
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    if(event === EVENT_MOE_ADD_TO_CART){
+      newCartInfo = addtoCartInfo;
+    }
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -941,6 +950,7 @@ export class PDPAddToCartContainer extends PureComponent {
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      ...newCartInfo
     });
   }
   clearTimeAll() {

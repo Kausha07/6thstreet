@@ -18,6 +18,9 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 
+export const mapStateToProps = (state) => ({
+  addtoCartInfo:state.PDP.addtoCartInfo
+});
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
@@ -262,7 +265,8 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          ...addtoCartInfo
         },
       });
       var data = localStorage.getItem("customer");
@@ -319,6 +323,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
           quantity: 1,
           size: "",
           variant: "",
+          ...addtoCartInfo,
         },
       });
       var data = localStorage.getItem("customer");
@@ -459,5 +464,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
 
 export default connect(
   null,
+  mapStateToProps,
   mapDispatchToProps
 )(PDPMixAndMatchProductContainer);

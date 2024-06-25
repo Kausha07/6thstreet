@@ -568,7 +568,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
     if (user?.email) {
-      MOE_AddUniqueID(user?.email);
+      MOE_AddUniqueID(user?.email?.toLowerCase());
     }
     if (vipCustomer) {
       MOE_addUserAttribute(VIP_CUSTOMER, true);
@@ -614,7 +614,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           }
       );
     if (options?.email){
-       MOE_AddUniqueID(options?.email);
+       MOE_AddUniqueID(options?.email?.toLowerCase());
     }
     const topTierAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "top_tier_customer"
