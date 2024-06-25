@@ -11,6 +11,7 @@ import "./DeliveryAddress.scss";
 
 import { getCountryFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
+import { isArabic as checkIsArabic } from "Util/App";
 import { isArabic } from "Util/App";
 
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
@@ -40,10 +41,14 @@ const DeliveryAddress = (props) => {
     addresses,
     currentSelectedCityArea,
     onAddressSelect,
+    isSignedIn,
   } = props;
 
-  const selectedAddressForRender =
-    getSelectedAddress(selectedAddressId, addresses) || {};
+  const selectedAddressForRender = isSignedIn
+    ? getSelectedAddress(selectedAddressId, addresses) || {}
+    : shippingAddress;
+  const isArabic = checkIsArabic();
+  const isMobileDevice = isMobile.any() || isMobile.tablet();
 
   const onAddressSelectPopup = (selectedAddress) => {
     onAddressSelect(selectedAddress);
@@ -64,11 +69,17 @@ const DeliveryAddress = (props) => {
     return (
       <div block="address-card">
         <div block="address-card" elem="header">
-          <h2>Delivery Address</h2>
-          <CityArea
-            isNewCheckoutPage={true}
-            onAddressSelectPopup={onAddressSelectPopup}
-          />
+          {isMobileDevice ? (
+            <div>^</div>
+          ) : (
+            <>
+              <h2>Delivery Address</h2>
+              <CityArea
+                isNewCheckoutPage={true}
+                onAddressSelectPopup={onAddressSelectPopup}
+              />
+            </>
+          )}
         </div>
         <div block="address-card" elem="content">
           <h3 className="addressCardName">{`${firstname} ${lastname}`}</h3>

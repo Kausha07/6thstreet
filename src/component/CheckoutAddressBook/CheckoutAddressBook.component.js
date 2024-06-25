@@ -40,8 +40,12 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderHeading() {
-    const { isBilling, isSignedIn,isExchange } = this.props;
+    const { isBilling, isSignedIn, isExchange, isAddressSelected } = this.props;
     const { isArabic } = this.state;
+
+    if(isAddressSelected) {
+      return null;
+    }
 
     const addressName = isBilling ? null : isExchange ? ("Select a pick up address"): __("Delivery country");
 
@@ -64,9 +68,24 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       shippingAddress,
       isClickAndCollect,
       clickAndCollectStatus,
-      customer
+      customer,
+      selectedAddressId,
+      onAddressSelect,
+      isAddressSelected,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
+
+    if (isAddressSelected) {
+      return (
+        <div>
+          <DeliveryAddress
+            selectedAddressId={selectedAddressId}
+            onAddressSelect={onAddressSelect}
+            shippingAddress={shippingAddress}
+          />
+        </div>
+      );
+    }
 
     return (
       <CheckoutAddressForm
@@ -140,7 +159,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderAddressList() {
-    const { addresses, selectedAddressId, onAddressSelect } = this.props;
+    const { addresses, selectedAddressId, onAddressSelect, shippingAddress } = this.props;
     const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
     if (!addresses) {
       return this.renderLoading();
@@ -153,6 +172,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       <DeliveryAddress
         selectedAddressId={selectedAddressId}
         onAddressSelect={onAddressSelect}
+        shippingAddress={shippingAddress}
       />
     );
 

@@ -27,6 +27,7 @@ export const mapStateToProps = (state) => ({
   savedCards: state.CreditCardReducer.savedCards,
   newCardVisible: state.CreditCardReducer.newCardVisible,
   processingRequest: state.CartReducer.processingRequest,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
   processingPaymentSelectRequest:
     state.CartReducer.processingPaymentSelectRequest,
 });
@@ -95,6 +96,7 @@ const NewCheckoutPayment = (props) => {
     selectedPaymentMethod,
     processingRequest,
     processingPaymentSelectRequest,
+    isAddressSelected,
   } = props;
 
   const isSignedInUser = isSignedIn();
@@ -270,6 +272,9 @@ const NewCheckoutPayment = (props) => {
   };
 
   const renderActions = () => {
+    if(!isAddressSelected) {
+      return null;
+    }
     return (
       <>
         <PlaceOrderBtn
@@ -336,11 +341,9 @@ const NewCheckoutPayment = (props) => {
     }
   }, [shippingAddress]);
 
-  const isPaymentOptionsVisible = isSignedIn() || false; //change this logic
   return (
     <div className="newCheckoutPayment">
-      <div>NewCheckoutPayment</div>
-      {isPaymentOptionsVisible
+      {isAddressSelected
         ? renderPayments()
         : renderHeading(__("Payment Options"), true)}
       {renderActions()}

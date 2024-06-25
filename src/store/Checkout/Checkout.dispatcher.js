@@ -1,6 +1,6 @@
 import { getStore } from "Store";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
-import { setShipping, setCartTotal } from "Store/Checkout/Checkout.action";
+import { setShipping, setCartTotal, setIsAddressSelected } from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
   createOrder,
@@ -271,6 +271,10 @@ export class CheckoutDispatcher {
 
   async capturePayment(dispatch, paymentId, orderId) {
     return capturePayment({ paymentId, orderId });
+  }
+
+  selectIsAddressSet(dispatch, isAddress) {
+    dispatch(setIsAddressSelected(isAddress))
   }
 }
 

@@ -475,9 +475,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderDelivery() {
-    const { shippingMethods, onShippingMethodSelect } = this.props;
-
+    const { shippingMethods, onShippingMethodSelect, isAddressSelected } = this.props;
     const { isArabic } = this.state;
+
+    if(isAddressSelected) {
+      return null;
+    }
 
     return (
       <div block="CheckoutShippingStep" mods={{ isArabic }}>

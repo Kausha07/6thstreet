@@ -7,7 +7,6 @@ import {
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 import {
   CheckoutAddressBookContainer as SourceCheckoutAddressBookContainer,
-  mapStateToProps,
 } from "SourceComponent/CheckoutAddressBook/CheckoutAddressBook.container";
 import { showPopup } from "Store/Popup/Popup.action";
 import { customerType } from "Type/Account";
@@ -21,6 +20,12 @@ export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
 );
+
+export const mapStateToProps = (state) => ({
+  customer: state.MyAccountReducer.customer,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
+});
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),

@@ -61,6 +61,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {

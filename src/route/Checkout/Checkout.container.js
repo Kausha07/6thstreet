@@ -138,7 +138,10 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.verifyTamaraPayment(dispatch, paymentID),
   updateTamaraPayment: (paymentID, orderId, paymentStatus) =>
     CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus),
+  selectIsAddressSet: (isAddress) =>
+    CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
 });
+
 export const mapStateToProps = (state) => ({
   couponsItems: state.CartReducer.cartCoupons,
   couponLists: state.CartReducer.cartCoupons,
@@ -168,6 +171,7 @@ export const mapStateToProps = (state) => ({
   addressIDSelected: state.MyAccountReducer.addressIDSelected,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -603,7 +607,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async componentDidMount() {
-    const { setMeta, cartId, updateTotals, getCouponList } = this.props;
+    const { setMeta, cartId, updateTotals, getCouponList, isSignedIn } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
@@ -652,6 +656,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
       this.getOrderDetails(paymentData);
     }
+
+    // get payment methods
+    if(isSignedIn) {
+      this.getPaymentMethods();
+    }
   }
 
   componentDidCatch(error, info) {
@@ -683,6 +692,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (checkoutStep === BILLING_STEP && totals?.total !== prevtotals?.total) {
       this.getPaymentMethods();
     }
+
+    if (checkoutStep === SHIPPING_STEP && totals?.total !== prevtotals?.total) {
+      this.getPaymentMethods();
+    }
+    
     if (PaymentRedirect) {
       if (checkoutStep !== prevCheckoutStep) {
         updateStoreCredit();
@@ -777,7 +791,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     });
   }
   componentWillUnmount() {
+    const { selectIsAddressSet } = this.props;
     this.removeBinPromotion();
+    selectIsAddressSet(false);
   }
 
   handleCheckoutGTM(isInitial = false) {
@@ -903,9 +919,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async saveAddressInformation(addressInformation) {
-    const { saveAddressInformation, showErrorNotification } = this.props;
+    const {
+      saveAddressInformation,
+      showErrorNotification,
+      selectIsAddressSet,
+    } = this.props;
     const { shipping_address } = addressInformation;
 
+    selectIsAddressSet(true);
     this.setState({
       isLoading: true,
       shippingAddress: shipping_address,
@@ -1547,7 +1568,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({
           isLoading: false,
           paymentMethods: availablePaymentMethods,
-          checkoutStep: BILLING_STEP,
         });
       }
     }, this._handleError);

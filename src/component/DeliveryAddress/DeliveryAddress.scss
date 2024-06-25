@@ -18,6 +18,10 @@
       font-size: 18px;
       text-transform: none;
     }
+
+    @include mobile {
+      grid-column: 2;
+    }
   }
 
   &-change-address {
@@ -36,6 +40,7 @@
       font-size: 16px;
       font-weight: 600;
       padding: 5px 0 0 0;
+      display: contents;
     }
 
     p {
@@ -45,6 +50,34 @@
 
     .cityAreaName {
       font-weight: 600;
+    }
+
+    @include mobile {
+      grid-column: 1;
+
+      max-width: 90%;
+
+      h3 {
+        display: inline;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  @include mobile {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 80% 20%;
+
+    .address-card>div:nth-child(1) {
+      grid-column: 2;
+    }
+
+    .address-card>div:nth-child(2) {
+      grid-column: 1;
     }
   }
 }
