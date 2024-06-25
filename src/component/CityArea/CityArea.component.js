@@ -479,7 +479,6 @@ export const CityArea = (props) => {
           customer={customer}
           setExpressPopUp={setExpressPopUp}
           isSignInTypePopUp={isSignInTypePopUp}
-          parentRef={parentRef}
         />
       );
     }
