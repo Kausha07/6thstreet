@@ -477,6 +477,9 @@ export const CityArea = (props) => {
           showHideCityAreaSelection={showHideCityAreaSelection}
           addNewAddress={addNewAddress}
           customer={customer}
+          setExpressPopUp={setExpressPopUp}
+          isSignInTypePopUp={isSignInTypePopUp}
+          parentRef={parentRef}
         />
       );
     }
@@ -504,7 +507,7 @@ export const CityArea = (props) => {
     return (
       <div block="cityAreaAddressSelection">
         {renderMyAccountOverlay()}
-        {addAndEditAddressButtonClicked && renderForm()}
+        {renderForm()}
         <div
           block={`cityAreaDropdown  ${
             showBackgroundColor ? "showBackgroundColor" : ""

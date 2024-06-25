@@ -789,6 +789,7 @@ class FieldMultiselect extends PureComponent {
         localStorage.getItem("currentSelectedAddress")
       );
       if (!selctedAddress) {
+        this.props.onUnselectAllPress(category);
         return (
           <p block="expressNotificationPara">
             {__("Express delivery may available. Please select your location.")}
@@ -798,6 +799,7 @@ class FieldMultiselect extends PureComponent {
         selctedAddress &&
         !this.props.isExpressServiceAvailable?.express_eligible
       ) {
+        this.props.onUnselectAllPress(category);
         return (
           <p block="expressNotificationPara">
             {__(
@@ -1349,7 +1351,7 @@ class FieldMultiselect extends PureComponent {
                 <>
                   {category === "express_delivery" && (
                     <CityArea
-                      isSignInTypePopUp={true}
+                    isSignInTypePopUp={true}
                       showBackgroundColor={true}
                     />
                   )}

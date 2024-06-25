@@ -14,30 +14,25 @@ const ModalWithOutsideClick = ({ show, onClose, children }) => {
     };
   }, [show]);
 
-  useEffect(() => {
-    window.addEventListener("mousedown", closePopupOnOutsideClick);
-    return () => {
-      window.removeEventListener("mousedown", closePopupOnOutsideClick);
-    };
-  }, []);
-
-  const closePopupOnOutsideClick = (e) => {
-    if (show && modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
 
   if (!show) {
     return null;
   }
 
-  return ReactDOM.createPortal(
-    <div className="modalWithOutsideClick-overlay">
-      <div className="modalWithOutsideClick-content" ref={modalRef}>
-        {children}
-      </div>
-    </div>,
-    document.body
+  return (
+    <>
+      {ReactDOM.createPortal(
+        <div
+          className="modalWithOutsideClick-overlay"
+          onClick={() => onClose()}
+        ></div>,
+        document.body
+      )}
+      {ReactDOM.createPortal(
+        <div className="modalWithOutsideClick-content">{children}</div>,
+        document.body
+      )}
+    </>
   );
 };
 

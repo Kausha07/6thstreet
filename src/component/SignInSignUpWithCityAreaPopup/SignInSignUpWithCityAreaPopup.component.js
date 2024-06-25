@@ -103,7 +103,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
   };
 
   const render = () => {
-    if (isSignInTypePopUp) {
+    if (isSignInTypePopUp || isMobile.any()) {
       return (
         <ModalWithOutsideClick
           show={showPopUp}
