@@ -32,6 +32,7 @@ import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import { Coupon } from "Component/Icons/index";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CartTotal from "Component/CartTotal";
+import NewCheckoutShippment from "Component/NewCheckoutShippment";
 
 import "./CheckoutOrderSummary.extended.style";
 
@@ -111,37 +112,35 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="HeaderWrapper">
         <span block="CheckoutOrderSummary" elem="ItemCount">
-          {totalQuantity}
-          {totalQuantity === 1 ? __(" Item") : __(" Items")}
+          {__(" Coupon & offer ")}
         </span>
-        <Link
-          block="CheckoutOrderSummary"
-          elem="Edit"
-          mods={{ isArabic }}
-          to="/cart"
-        >
-          <span>{__(" Edit")}</span>
-        </Link>
       </div>
     );
   }
 
   renderItems() {
     const {
-      totals: { items = [] },
+      totals: { items = [], quote_currency_code },
     } = this.props;
 
+    // return (
+    //   <div block="CheckoutOrderSummary" elem="OrderItems">
+    //     <ul block="CheckoutOrderSummary" elem="CartItemList">
+    //       {
+    //         items.map((item) => (
+    //           React.cloneElement(this.renderItem(item), {
+    //             readOnly: true
+    //           })
+    //         ))}
+    //     </ul>
+    //   </div>
+    // );
     return (
-      <div block="CheckoutOrderSummary" elem="OrderItems">
-        <ul block="CheckoutOrderSummary" elem="CartItemList">
-          {
-            items.map((item) => (
-              React.cloneElement(this.renderItem(item), {
-                readOnly: true
-              })
-            ))}
-        </ul>
-      </div>
+      <NewCheckoutShippment
+        items={items}
+        quote_currency_code={quote_currency_code}
+        isSignedIn={this.props.isSignedIn}
+      />
     );
   }
 
@@ -712,13 +711,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
         <Loader isLoading={isCouponRequest} />
-        {this.renderHeading()}
+        <div className="summaryWrapper">
+          {this.renderHeading()}
+          {isMobile ? "" : this.renderDiscountCode()}
+          {this.renderPromo()}
+          {this.renderToggleableDiscountOptions()}
+          {this.renderTotals()}
+        </div>
         {this.renderItems()}
-        {this.renderToggleableDiscountOptions()}
-        {/* {this.renderCartCoupon()} */}
-        {isMobile ? "" : this.renderDiscountCode()}
-        {this.renderPromo()}
-        {this.renderTotals()}
       </article>
     );
   }

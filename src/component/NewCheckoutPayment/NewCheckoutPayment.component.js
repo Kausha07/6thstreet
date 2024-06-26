@@ -298,30 +298,32 @@ const NewCheckoutPayment = (props) => {
       return null;
     }
     return (
-      <CheckoutPayments
-        savePaymentInformationApplePay={savePaymentInformationApplePay}
-        setCashOnDeliveryFee={setCashOnDeliveryFee}
-        setLoading={setLoading}
-        setDetailsStep={setDetailsStep}
-        paymentMethods={paymentMethods}
-        onPaymentMethodSelect={onPaymentMethodSelect}
-        billingAddress={shippingAddress}
-        setOrderButtonEnableStatus={setOrderButtonEnableStatus}
-        setTabbyWebUrl={setTabbyWebUrl}
-        setCreditCardData={setCreditCardData}
-        setOrderButtonDisabled={setOrderButtonDisabled}
-        setOrderButtonEnabled={setOrderButtonEnabled}
-        resetBinApply={resetBinApply}
-        processApplePay={processApplePay}
-        placeOrder={placeOrder}
-        isSignedIn={isSignedInUser}
-        applyPromotionSavedCard={applyPromotionSavedCard}
-        removePromotionSavedCard={removePromotionSavedCard}
-        isClickAndCollect={isClickAndCollect}
-        isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
-        setLimitDisabled={setLimitDisabled}
-        setLimitEnabled={setLimitEnabled}
-      />
+      <div className="paymentWrapper">
+        <CheckoutPayments
+          savePaymentInformationApplePay={savePaymentInformationApplePay}
+          setCashOnDeliveryFee={setCashOnDeliveryFee}
+          setLoading={setLoading}
+          setDetailsStep={setDetailsStep}
+          paymentMethods={paymentMethods}
+          onPaymentMethodSelect={onPaymentMethodSelect}
+          billingAddress={shippingAddress}
+          setOrderButtonEnableStatus={setOrderButtonEnableStatus}
+          setTabbyWebUrl={setTabbyWebUrl}
+          setCreditCardData={setCreditCardData}
+          setOrderButtonDisabled={setOrderButtonDisabled}
+          setOrderButtonEnabled={setOrderButtonEnabled}
+          resetBinApply={resetBinApply}
+          processApplePay={processApplePay}
+          placeOrder={placeOrder}
+          isSignedIn={isSignedInUser}
+          applyPromotionSavedCard={applyPromotionSavedCard}
+          removePromotionSavedCard={removePromotionSavedCard}
+          isClickAndCollect={isClickAndCollect}
+          isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
+          setLimitDisabled={setLimitDisabled}
+          setLimitEnabled={setLimitEnabled}
+        />
+      </div>
     );
   };
 

@@ -14,6 +14,7 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
+import { trimCustomerAddressCheckout } from "Util/checkoutAddress"
 import { capitalize, isArabic } from "Util/App";
 import { getUUID, isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -101,7 +102,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   }
 
   onAddressSelectNewCheckoutFlow = async () => {
-    const fields = this._getAddressById(this.state.selectedCustomerAddressId);
+    const fields = this.getAddressById(this.state.selectedCustomerAddressId);
     this.onShippingSuccess(fields);
   }
 
@@ -127,6 +128,12 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       identity_number: this.props?.identity_number || ""
     };
     this.onShippingSuccess(inputFields);
+  }
+
+  getAddressById(addressId) {
+    const { addresses } = this.props;
+    const address = addresses.find(({ id }) => id === addressId);
+    return trimCustomerAddressCheckout(address);
   }
 
   openForm() {
@@ -158,7 +165,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   validateAddress(address) {
     const {
-      country_id,
+      country_id = "",
       region_id,
       region,
       city,
@@ -168,15 +175,18 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode,
       type_of_identity,
       identity_number,
+      country_code = "",
+      area = "",
+      phone = "",
     } = address;
     const { validateAddress, mailing_address_type, } = this.props;
     return validateAddress({
-      area: region ?? postcode,
+      area: area ? area : region ?? postcode,
       city,
-      country_code: country_id,
-      phone: phonecode + telephone,
-      postcode: region ?? postcode,
-      region: region ?? postcode,
+      country_code: country_id || country_code,
+      phone: phone? phone : phonecode + telephone,
+      postcode: region ?? postcode ?? area,
+      region: region ?? postcode ?? area,
       street: Array.isArray(street) ? street[0] : street,
       type_of_identity: type_of_identity || this.props?.type_of_identity,
       identity_number: identity_number || this.props?.identity_number,
@@ -208,18 +218,21 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       phonecode = "",
       type_of_identity,
       identity_number,
+      country_code = "",
+      area = "",
+      phone = "",
     } = address;
     setLoading(true);
 
     const NewAddressObj = {
-      country_code: country_id,
+      country_code: country_id || country_code,
       street,
-      region: region_id,
-      area: region_id,
+      region: region_id ?? area,
+      area: region_id ?? area,
       city,
-      postcode: region_id,
-      phone: phonecode + telephone,
-      telephone: phonecode + telephone,
+      postcode: region_id ?? area,
+      phone: phonecode + telephone ?? phone,
+      telephone: phonecode + telephone ?? phone,
       type_of_identity: type_of_identity || this.props.type_of_identity,
       identity_number: identity_number || this.props.identity_number,
     };
@@ -254,7 +267,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     } = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
-      ? this._getAddressById(selectedCustomerAddressId)
+      ? this.getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
     const addressForValidation =
       isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
@@ -501,7 +514,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
     const shippingAddress =
       selectedCustomerAddressId && !this.checkClickAndCollect()
-        ? this._getAddressById(selectedCustomerAddressId)
+        ? this.getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
     const {
       city,
@@ -511,14 +524,17 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode,
       type_of_identity = this.props?.type_of_identity || 0,
       identity_number = this.props?.identity_number || "",
+      country_code = "",
+      area = "",
+      phone = "",
     } = shippingAddress;
 
     const shippingAddressMapped = {
       ...shippingAddress,
       street: Array.isArray(street) ? street[0] : street,
-      area: postcode,
-      country_code: country_id,
-      phone: telephone,
+      area: postcode ?? area,
+      country_code: country_id ?? country_code,
+      phone: telephone ?? phone,
       email: isSignedIn() ? email : guestEmail,
       region: city,
       region_id: 0,
@@ -534,9 +550,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         lastname: shippingAddress?.lastname,
         street: shippingAddress?.street,
         city: shippingAddress?.city,
-        area: postcode,
-        phone:shippingAddress?.telephone,
-        country_code: shippingAddress?.country_id,
+        area: postcode ?? area,
+        phone:shippingAddress?.telephone ?? phone,
+        country_code: shippingAddress?.country_id ?? country_code,
         default_shipping: shippingAddress?.default_shipping,
         identity_number: identity_number,
         type_of_identity: type_of_identity,

@@ -1,10 +1,12 @@
 .address-card {
-  border: 1px solid #efefef;
-  border-radius: 5px;
   padding: 20px;
   // max-width: 600px;
   max-height: 215px;
-  margin: 20px auto;
+  margin: 0px auto;
+
+  @include desktop {
+    padding-top: 0;
+  }
 
 
   &-header {
