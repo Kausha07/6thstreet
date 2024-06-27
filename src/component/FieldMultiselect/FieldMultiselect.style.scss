@@ -162,7 +162,10 @@ $select-arrow-width: 6px !default;
     .cityAreaDropdown {
       max-width: 90%;
       padding: 10px;
-      margin: 0 auto;
+      @include mobile{
+        margin: 0 auto;
+      }
+      
     }
   }
 

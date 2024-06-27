@@ -58,7 +58,8 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
-  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1035,7 +1036,8 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
-      pageType
+      pageType,
+      isExpressDelivery,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -1065,7 +1067,9 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
-          {pageType === "plp" && this.renderExpressDeliveryTag()}
+          {pageType === "plp" &&
+            isExpressDelivery &&
+            this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
