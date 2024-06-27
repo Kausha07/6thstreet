@@ -47,6 +47,8 @@ const MsiteAddToCartPopUp = lazy(() =>
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component";
 import Ratings from 'Component/Ratings/Ratings';
+import { ExpressDeliveryTruck } from "Component/Icons";
+
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
 var influencerPDPURL;
@@ -1000,6 +1002,34 @@ class ProductItem extends PureComponent {
     }
   };
 
+  renderExpressDeliveryTag = () => {
+    const {
+      product: { express_delivery = "" },
+    } = this.props;
+
+    if (!express_delivery) {
+      return null;
+    }
+
+    return (
+      <div block="EddExpressDeliveryTextBlock">
+        <ExpressDeliveryTruck />
+        <div block="EddExpressDeliveryText">
+          <span block="EddExpressDeliveryTextRed">
+            {__("Express")} {}
+          </span>
+          <span block="EddExpressDeliveryTextNormal">{__("Delivery by")}</span>
+          <span block="EddExpressDeliveryTextBold">
+            {express_delivery !== 1 &&
+            express_delivery !== 0 &&
+            express_delivery?.toLowerCase() !== "tomorrow delivery"
+              ? __("Today")
+              : __("Tomorrow")}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   render() {
     const { isArabic } = this.state;
@@ -1035,6 +1065,7 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
+          {pageType === "plp" && this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&

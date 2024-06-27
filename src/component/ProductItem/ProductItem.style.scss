@@ -489,6 +489,41 @@
       display: inline-block;
       width: 100%;
     }
+
+    .EddExpressDeliveryTextBlock {
+      svg {
+        width: 26px;
+        height: 26px;
+      }
+  
+      display: flex;
+      align-items: center;
+      background: #f964461a;
+      border-radius: 10px;
+      margin-top: 10px;
+  
+      @include mobile {
+        font-size: 11px;
+      }
+  
+      .EddExpressDeliveryTextRed {
+        color: #f96446;
+        font-weight: 600;
+        font-style: italic;
+        font-size: 12px;
+      }
+  
+      .EddExpressDeliveryTextNormal {
+        font-weight: 400;
+        font-size: 11px;
+      }
+  
+      .EddExpressDeliveryTextBold {
+        font-weight: 600;
+        margin: 0 5px;
+        font-size: 12px;
+      }
+    }
   }
 
   .tagsForMsiteProduct {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
+import { isArabic } from "Util/App";
 import { BluePlus, EditPencil } from "Component/Icons/index";
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 import "./DeliveryAddressPopUp.style";
@@ -47,7 +48,7 @@ export const DeliveryAddressPopUp = (props) => {
         return showHidePOPUP(false);
       }}
     >
-      <div block="deliveryAddressMainBlock">
+      <div block="deliveryAddressMainBlock" mods={{ isArabic: isArabic() }}>
         <div block="deliveryAddressOuterBlock">
           <div block="deliveryAddressPopUp">
             <div block="deliveryAddressInnerBlock">
@@ -89,7 +90,9 @@ export const DeliveryAddressPopUp = (props) => {
                         key={index}
                       >
                         <div
-                          block="nameAndCityAreaBlock"
+                          block={`nameAndCityAreaBlock${
+                            isArabic() ? " isArabic" : ""
+                          }`}
                           mods={{
                             isSelected: selectedAddress?.id === id,
                           }}

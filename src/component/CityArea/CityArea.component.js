@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url";
 import { isArabic } from "Util/App";
@@ -504,7 +503,7 @@ export const CityArea = (props) => {
 
   const render = () => {
     return (
-      <div block="cityAreaAddressSelection">
+      <div block="cityAreaAddressSelection" mods={{ isArabic: isArabic() }}>
         {renderMyAccountOverlay()}
         {renderForm()}
         <div

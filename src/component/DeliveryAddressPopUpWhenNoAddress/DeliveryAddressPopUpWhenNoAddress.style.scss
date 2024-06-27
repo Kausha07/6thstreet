@@ -1,4 +1,7 @@
 .deliveryAddressPopUpWhenNoAddressBlock {
+  &_isArabic {
+    direction: rtl;
+  }
   &-stylePopUp,
   &-false {
     .deliveryAddressPopUpWhenNoAddressOuterBlock {
@@ -37,11 +40,10 @@
 
       .deliveryAddressPopUpWhenNoAddressInnerBlock {
         .greetingToUser {
-          h1 {
+          .headingText {
             font-family: Avenir Next;
             font-weight: 600;
             line-height: 24px;
-            text-align: left;
             font-size: 18px;
           }
         }
@@ -151,11 +153,10 @@
 
     .deliveryAddressPopUpWhenNoAddressInnerBlock {
       .greetingToUser {
-        h1 {
+        .headingText {
           font-family: Avenir Next;
           font-weight: 600;
           line-height: 24px;
-          text-align: left;
           font-size: 18px;
         }
       }

@@ -791,7 +791,7 @@ class FieldMultiselect extends PureComponent {
       if (!selctedAddress) {
         this.props.onUnselectAllPress(category);
         return (
-          <p block="expressNotificationPara">
+          <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
             {__("Express delivery may available. Please select your location.")}
           </p>
         );
@@ -801,7 +801,7 @@ class FieldMultiselect extends PureComponent {
       ) {
         this.props.onUnselectAllPress(category);
         return (
-          <p block="expressNotificationPara">
+          <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
             {__(
               "Express Delivery is not currently available for this location."
             )}

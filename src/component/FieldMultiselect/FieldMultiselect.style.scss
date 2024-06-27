@@ -162,6 +162,7 @@ $select-arrow-width: 6px !default;
     .cityAreaDropdown {
       max-width: 90%;
       padding: 10px;
+      margin: 0 auto;
     }
   }
 
@@ -481,6 +482,10 @@ $select-arrow-width: 6px !default;
 
     @include mobile {
       margin: 10px;
+    }
+    
+    &_isArabic {
+      direction: rtl;
     }
   }
 }
