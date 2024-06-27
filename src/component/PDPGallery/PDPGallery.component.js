@@ -353,7 +353,7 @@ class PDPGallery extends PureComponent {
             height="534"
             src={videos[key]}
             type="video/mp4"
-            controls={!isMobile.any()}
+            controls={isMobile.any()}
             disablepictureinpicture
             playsinline
           />
