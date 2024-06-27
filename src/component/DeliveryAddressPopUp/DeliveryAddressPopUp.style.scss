@@ -1,4 +1,7 @@
 .deliveryAddressMainBlock {
+  &_isArabic {
+    direction: rtl;
+  }
   .deliveryAddressOuterBlock {
     .deliveryAddressPopUp {
       @include mobile {
@@ -167,6 +170,32 @@
                 font-weight: 400;
                 line-height: 16px;
                 margin-top: 5px;
+              }
+            }
+          }
+          .isArabic {
+            padding-left: initial;
+            padding-right: 40px;
+
+            &::before {
+              left: initial;
+              right: 0;
+            }
+            &_isSelected {
+              &::after {
+                opacity: 1;
+                top: 0;
+                left: initial;
+                right: 0;
+                width: 22px;
+                height: 22px;
+                background: url(../Icons/BlueTick/icon.svg) no-repeat;
+                transform: none;
+                -webkit-transform: none;
+              }
+
+              &::before {
+                opacity: 0;
               }
             }
           }

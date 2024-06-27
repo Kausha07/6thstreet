@@ -156,7 +156,7 @@ const Parser = {
     browserHistory.replace(pathname + search);
   },
 
-  setParam(key, values = [], categoryIds =[]) {
+  setParam(key, values = [], categoryIds =[], isScrollBehaviour = false) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     url.searchParams.set("p", 0);
     let isReturn = false;  //checking is key in params or not and is it's current values is empty?
@@ -175,7 +175,10 @@ const Parser = {
     if(isReturn && !moreFilterKeyCheck) {
       return;
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if(!isScrollBehaviour){
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case

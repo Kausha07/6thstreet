@@ -224,6 +224,10 @@ export class Header extends PureComponent {
     if (isMobile && checkoutDetails) {
       return null;
     }
+    if (location.pathname === "/event-calendar") {
+      return null;
+    }
+    
 
     if (hideHeaderFooter && location.pathname !== "/influencer.html") {
       return this.headerSectionsTwo.map(this.renderSection);

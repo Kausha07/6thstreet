@@ -11,6 +11,10 @@
   z-index: 1000;
 }
 
+.modalWithOutsideClick-content {
+  z-index: 10001;
+}
+
 .modalWithOutsideClick-open {
   overflow: hidden !important;
 }

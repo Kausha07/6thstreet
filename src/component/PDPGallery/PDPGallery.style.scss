@@ -127,6 +127,7 @@
       grid-gap: 5px;
       justify-content: left;
       padding: 0px 20px;
+
     }
   }
 
@@ -245,6 +246,9 @@
       height: auto;
     }
   }
+
+ 
+  
 }
 
 .PDP {
@@ -269,4 +273,139 @@
       }
     }
   }
+
+  &._newDesign{
+    .PDPGallery{
+      margin-bottom: 13px;
+      .Slider-Crumbs{
+        grid-gap: 6px;
+      }
+      &-OverlayButton{
+        position: relative;
+      }
+    }
+    .BackArrow{
+      top: 15px;
+    }
+    .OverlayIcons{
+      top: 20px;
+    }
+    .saleBlock{
+      display: inline-block;
+      width: 100%;
+      .DynamicContentCountDownTimer{
+        display: inline-block;
+      width: 100%;
+        background: #000000;
+        padding: 5px 0;
+      }
+      @include desktop{
+        position: absolute;
+        top:0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+
+      }
+      &_isArabic{
+        right: 0;
+        left: auto;
+      }
+      .TimerTitle{
+        text-transform: none;
+      }
+      .PLPOrPDPTimer,
+      .isPLPorPDPBox{
+        background-color: #000;
+        font-size: 10px;
+        line-height: 12px;
+        padding: 0;
+        margin: 0;
+        min-width: auto;
+        
+        b{
+          font-size: 12px;
+          line-height: 12px;
+          font-weight: 600;
+        }
+      }
+      .PLPOrPDPTimer{
+        .clock{
+          width: auto;
+          padding: 0;
+          height: 10px;
+          margin-right: 3px;
+        }
+        .separator{
+          color: white;
+          margin: 0 1px;
+          font-size: 10px;
+          line-height: 12px;
+          text-align: center;
+          display: inline-block;
+          margin-left: 2px;
+        }
+      }
+      .InfoText{
+        color: #fff;
+        font-size: 12px;
+        line-height: 12px;
+        margin: 0;
+        letter-spacing: 0;
+        margin-right: 5px;
+      }
+      &_isArabic{
+        .PLPOrPDPTimer{
+          .clock{
+            margin-right: 0;
+            margin-left: 3px;
+          }
+          .separator{
+            margin-left: 0;
+            margin-right: 2px;
+          }
+        }
+        .InfoText{
+          margin-right: 0;
+          margin-left: 5px;
+        }
+      }
+    }
+    .Slider{
+      &-Wrapper{
+        margin-bottom: 10px;
+      }
+      &-Crumbs{
+        justify-content: center;
+        bottom: 0;
+      }
+      &-Video{
+        
+        .Slider{
+          &-Crumb{
+            
+            background: url(./icons/play.svg);
+            width: 7px;
+            height: 7px;
+            background-size:contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 100%;
+            &_isActive{
+              background: url(./icons/play-active.svg);
+              height: 8px;
+              width: 8px;
+              background-size:contain;
+              background-position: center;
+              background-repeat: no-repeat;
+              
+            }
+          }
+  
+        }
+      }
+    }
+  }
 }
+

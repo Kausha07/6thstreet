@@ -45,7 +45,9 @@ const MsiteAddToCartPopUp = lazy(() =>
   )
 );
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
-import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component"
+import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component";
+import Ratings from 'Component/Ratings/Ratings';
+import { ExpressDeliveryTruck } from "Component/Icons";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -56,6 +58,8 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -107,6 +111,8 @@ class ProductItem extends PureComponent {
       autoplay: false,
       imageScroller: false,
       showImageScroller: false,
+      colorVarientratingSku: null,
+      colorVarientratingBrand: null
     };
   }
   componentDidMount() {
@@ -631,14 +637,14 @@ class ProductItem extends PureComponent {
       if(sku){
         const response = await new Algolia()?.getProductBySku({ sku });
         const {
-          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
+          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = [], rating_sku = {}, rating_brand = {}},
         } = response;
         const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png";
         if(sku === productSku) {
           this.props.setColourVarientsButtonClick(true);
-          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
+          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price, colorVarientratingSku: rating_sku, colorVarientratingBrand: rating_brand });
         }else {
-          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [] });
+          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [], colorVarientratingSku: null, colorVarientratingBrand: null });
         }
       }
 
@@ -881,7 +887,12 @@ class ProductItem extends PureComponent {
   renderLink() {
     const {
       product,
-      product: { url, link },
+      product: { 
+        url, 
+        link,
+        rating_brand,
+        rating_sku,
+      },
       qid,
       isVueData,
       prevPath = null,
@@ -889,7 +900,9 @@ class ProductItem extends PureComponent {
       isStorePage,
       isCollectionPage,
       pageType,
+      isNewDesign
     } = this.props;
+    const {colorVarientratingSku, colorVarientratingBrand } = this.state;
     const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
     const modifiedUrl = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.url : url; 
     const modifiedLink = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.link : link;
@@ -961,8 +974,11 @@ class ProductItem extends PureComponent {
             : linkTo
         }
         onClick={this.handleClick}
+        block="ProductItem" elem="ImgBlock"
+
       >
         {this.renderImage()}
+        {isNewDesign && <Ratings rating_sku={colorVarientratingSku ? colorVarientratingSku : rating_sku} rating_brand={colorVarientratingBrand ? colorVarientratingBrand : rating_brand} className="PLPratings" />}
       </Link>
     );
   }
@@ -987,12 +1003,41 @@ class ProductItem extends PureComponent {
     }
   };
 
+  renderExpressDeliveryTag = () => {
+    const {
+      product: { express_delivery = "" },
+    } = this.props;
+
+    if (!express_delivery) {
+      return null;
+    }
+
+    return (
+      <div block="EddExpressDeliveryTextBlock">
+        <ExpressDeliveryTruck />
+        <div block="EddExpressDeliveryText">
+          <span block="EddExpressDeliveryTextRed">
+            {__("Express")} {}
+          </span>
+          <span block="EddExpressDeliveryTextNormal">{__("Delivery by")}</span>
+          <span block="EddExpressDeliveryTextBold">
+            {express_delivery !== 1 &&
+            express_delivery !== 0 &&
+            express_delivery?.toLowerCase() !== "tomorrow delivery"
+              ? __("Today")
+              : __("Tomorrow")}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   render() {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
       pageType,
+      isExpressDelivery,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -1009,7 +1054,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
-        {this.renderLink()}{" "}
+          {this.renderLink()}{" "}
         {pageType !== "cartSlider" &&
           pageType !== "wishlist" &&
           this.renderOutOfStock()}
@@ -1022,6 +1067,9 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
+          {pageType === "plp" &&
+            isExpressDelivery &&
+            this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
@@ -1029,6 +1077,13 @@ class ProductItem extends PureComponent {
           this.state.hover &&
           this.renderAddToCartOnHover()}
         </div>
+
+        {isMobile.any()  && (
+          <div className="tagsForMsiteProduct">
+            {this.renderExclusiveMobile(true)}
+          </div>
+        )}
+
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer
@@ -1042,11 +1097,8 @@ class ProductItem extends PureComponent {
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}
         
-        {isMobile.any() &&  pageType !== "cartSlider" &&(
-          <div className="tagsForMsiteProduct">
-            {this.renderExclusiveMobile(true)}
-          </div>
-        )}
+        
+
       </li>
     );
   }

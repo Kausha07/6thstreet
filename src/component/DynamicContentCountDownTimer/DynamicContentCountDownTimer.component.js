@@ -31,7 +31,8 @@ function DynamicContentCountDownTimer(props) {
   }, []);
 
   const renderCountDown = () => {
-    const { infoText = "", alignment="", textAlignment="", isPLPOrPDP } = props;
+    const { newtimerIcon = clockIcon, infoText = "", alignment="", textAlignment="", isPLPOrPDP } = props;
+
     const isArabicStore = isArabic();
     return (
       <h3 block={alignment === "left" ? "TimerTitle AlignLeft" : alignment === "right" ? "TimerTitle  AlignRight" : isPLPOrPDP? "TimerTitle AlignCenter PDPPLPMarginZero": "TimerTitle AlignCenter"} mods={{isArabicStore}} >
@@ -46,7 +47,7 @@ function DynamicContentCountDownTimer(props) {
             <span block="separator">:</span>
           */}
           {
-            isPLPOrPDP && <span block="clock"> <img src={clockIcon} alt="countDown"/></span>
+            isPLPOrPDP && <span block="clock"> <img src={newtimerIcon} alt="countDown"/></span>
           }
           <span block={ isPLPOrPDP ? "Box isPLPorPDPBox" : "Box"}><b>{hours}</b>{__("h")}</span> 
           <span block="separator">:</span>

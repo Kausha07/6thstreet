@@ -569,3 +569,307 @@ div[class^='styles__body'] {
     text-align: left;
   }
 }
+
+.productBrandName{
+  text-transform: capitalize;
+  color: #000;
+  font-weight: 600;
+  @include mobile{
+    letter-spacing: .9px;
+    line-height: 20px;
+    font-size: 14px;
+
+    // max-width: 100%;
+    
+  }
+  @include desktop{
+    letter-spacing: 0;
+    font-size: 24px;
+    line-height: 33px;
+  }
+}
+
+._newDesign{
+  .PDPbrandName{
+    margin-bottom: 10px;
+    .PDPRatings{
+      margin-bottom: 10px;
+    }
+    @include desktop{
+      margin-bottom: 13px;
+      .PDPRatings{
+        margin-bottom: 13px;
+      }
+    }
+    & > *:last-child{
+      margin-bottom: 0;
+    }
+  }
+  .PDPSummary{
+    .PDPSummaryHeaderAndShareAndWishlistButtonContainer{
+      z-index: 1;
+      position: relative;
+    }
+    &-Header{
+      line-height: normal;
+      width: 100%;
+      @include desktop{
+        margin-bottom: 10px;
+      }
+    }
+    &-Heading{
+      margin-bottom: 8px;
+      width: 100%;
+      display: flex;
+    }
+    &-brandName{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+      max-width: 100%;
+      @include desktop{
+        margin-bottom: 6px;
+      }
+      @include mobile{
+        position: static;
+      }
+    }
+    &-Name{
+      // margin-top: 5px;
+      text-transform: capitalize;
+      @include mobile{
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+      }
+      @include desktop{
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 25px;
+      }
+    }
+    &-Exclusive{
+      text-transform: uppercase;
+      background: #F3F2F2;
+      color:#000;
+      &:not(:last-child){
+        margin-right:5px;
+      }
+      @include desktop{
+        font-size: 13px;
+        line-height: 17px;
+        border-radius: 16px;
+        padding:5px 10px;
+        // margin-bottom: 5px;
+        display: inline-block;
+      }
+      @include mobile{
+        font-size: 10px;
+        font-weight: 400;
+        padding:5px 8px;
+        line-height: 6px;
+        
+        border-radius: 8px;
+      }
+    }
+    // .PriceContainer{
+    //   @include desktop{
+    //     margin-bottom: 12px;
+    //   }
+    // }
+    // .PriceContainer {
+    //   @include desktop{
+    //     margin-bottom: 12px;
+    //   }
+    //   .Price{
+    //     margin-top:0;
+    //     @include desktop{
+    //       margin-right: 35px;
+    //     }
+    //   }
+    //   .Price-Special{
+    //     font-weight: 600;
+    //     color: #000;
+    //     padding-right: 5px;
+    //     @include mobile{
+    //       font-size: 18px;
+    //       line-height: 30px;
+    //     }
+    //     @include desktop{
+    //       font-size: 20px;
+    //       line-height: 27px;
+    //     }
+    //   }
+    //   .Price-Del{
+    //     color: #777777;
+    //     font-weight: 500;
+    //     @include mobile{
+    //       font-size: 14px;
+    //       line-height: 16px;
+    //     }
+    //     @include desktop{
+    //       font-size: 16px;
+    //       line-height: 22px;
+    //     }
+    //   }
+    // }
+    // .PriceAndPDPSummaryHeaderAndTimer{
+    //   display: flex;
+    //   justify-content: space-between;
+    //   align-items: center;
+    //   flex-wrap: wrap;
+    // }
+    // .PriceAndPDPSummaryHeader{
+    //   width: 100%;
+    //   @include mobile{
+    //     display: flex;
+    //   }
+    //   @include desktop{
+    //     display: inline-block;
+    //   }
+    // }
+    // .PriceContainer{
+    //   width: 100%;
+    //   align-items: center;
+    //   flex-direction: row;
+    //   display: flex;
+    //   @include mobile{
+    //     justify-content: space-between;
+    //   }
+    //   @include desktop{
+    //     justify-content: flex-start;
+    //   }
+    //   .Price{
+    //     &-Discount{
+    //       margin-left: 10px;
+    //     }
+    //   }
+    // }
+    // .PDPSideWideCouponInfo-sidewideCoupon{
+    //   @include desktop{
+    //     font-weight: 400;
+    //     font-size: 14px;
+    //     line-height: 20px;
+    //   }
+    //   @include mobile{
+    //     font-weight: 400;
+    //     font-size: 12px;
+    //     line-height: 20px;
+    //   }
+    //   .discount{
+    //     color: #28D9AA;
+    //     @include desktop{
+    //       font-weight: 500;
+    //     }
+    //   }
+      
+    // }
+    .PDPbrandName{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      // @include desktop{
+      //   flex-direction: column-reverse;
+      // }
+    }
+    .ProductContainer{
+      display: flex;
+      width: 100%;
+      @include desktop{
+        &:empty{
+          margin-bottom: -6px;
+        }
+      }
+    }
+    .brandName{
+      &-title{
+        @extend .productBrandName;
+        @include mobile{
+          display:inline-block;
+          width: 100%;
+          margin-bottom: 5px;
+        }
+        @include desktop{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          margin-bottom: 6px;
+          
+        }
+        .brandFollow{
+          @include desktop{
+            margin-left: 14px;
+            position: relative;
+          }
+        }
+      }
+    }
+    .ProductLabel,
+    .ProductTag{
+      @extend .PDPSummary-Exclusive;
+    }
+    .pdpsummarylinkTagStyle {
+      @extend .productBrandName;
+      @include mobile{
+        &::after{
+          content: '';
+          background-image: url(./icons/brandArrow.svg);
+          height: 10px;
+          background-repeat: no-repeat;
+          background-position: center;
+          width: 10px;
+          display: inline-block;
+          margin-left: 8px;
+        }
+      }
+    }
+    &_isArabic{
+      .brandName{
+        &-title{
+          
+          .brandFollow{
+              @include desktop{
+              margin-left: 0;
+              margin-right: 14px;
+            }
+          }
+        }
+      }
+      .pdpsummarylinkTagStyle {
+        @include mobile{
+          &::after{
+            margin-left: 0px;
+            margin-right: 8px;
+            transform: rotate(180deg);
+            margin-bottom: -2px;
+          }
+        }
+      }
+      .PDPSummary{
+        &-Heading{
+          width: 100%; 
+        }
+      }
+      
+      // .PriceContainer {
+      //   .Price{
+      //     @include desktop{
+      //       margin-right: 0;
+      //       margin-left: 35px;
+      //     }
+      //     &-Discount{
+      //       margin-left: 0px;
+      //       margin-right: 10px;
+      //     }
+      //   }
+      // }
+    }
+  }
+  .brandFollow{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}

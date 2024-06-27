@@ -92,6 +92,10 @@ export class Footer extends PureComponent {
             return null
         }
 
+        if(location.pathname === "/event-calendar") {
+            return null
+        }
+
         return (
             <>
                 <FooterMain />

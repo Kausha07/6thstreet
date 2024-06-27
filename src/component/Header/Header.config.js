@@ -29,3 +29,4 @@ export const INFLUENCER_STORE = "store";
 export const INFLUENCER_COLLECTION = "collection";
 export const MEGAMENU = "megamenu";
 export const BRANDSMENU = "brands-menu";
+export const EVENTSCALENDAR = "event-calender";

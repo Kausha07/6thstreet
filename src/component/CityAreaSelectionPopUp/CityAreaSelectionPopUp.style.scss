@@ -1,4 +1,7 @@
 .cityAreaSelectionMainBlock {
+  &_isArabic {
+    direction: rtl;
+  }
   .cityAreaSelectionOuterblock {
     .cityAreaSelectionPopUp {
       @include mobile {
@@ -53,7 +56,7 @@
           }
         }
 
-        h3 {
+        .headingText {
           font-family: Avenir Next;
           font-size: 16px;
           font-weight: 600;
@@ -97,7 +100,7 @@
         }
 
         .cityAreaList {
-          ul {
+          .cityAreaUL {
             margin: 20px 0;
             overflow-y: scroll;
 
@@ -109,14 +112,15 @@
               height: 375px;
             }
 
-            li::before {
+            .areaListLI::before,
+            .cityListLI::before {
               content: "";
             }
 
-            li {
+            .areaListLI,
+            .cityListLI {
               list-style: none;
               min-height: 50px;
-              text-align: left;
               width: 100%;
               font-family: Avenir Next;
               font-size: 14px;
@@ -126,7 +130,8 @@
               line-height: 50px;
             }
 
-            li:last-child {
+            .areaListLI,
+            .cityListLI:last-child {
               border-bottom: none;
             }
           }

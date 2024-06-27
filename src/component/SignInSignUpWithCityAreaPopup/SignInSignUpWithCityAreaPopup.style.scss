@@ -1,8 +1,16 @@
 .signInSignUpWithCityAreaMainBlock {
   cursor: pointer;
 
+  &_isArabic {
+    direction: rtl;
+  }
+
   &-stylePopUp,
   &-false {
+    &_isArabic {
+      direction: rtl;
+    }
+
     .signInSignUpWithCityAreaOuterBlock {
       .signInSignUpWithCityAreaPopUp {
         @include mobile {
@@ -38,7 +46,6 @@
           font-family: Avenir Next;
           font-weight: 600;
           line-height: 24px;
-          text-align: left;
         }
 
         .signInSignUpWithCityAreaInnerBlock {
@@ -128,16 +135,6 @@
   }
 
   .signInSignUpWithCityAreaOuterBlock {
-    @include mobile {
-      position: fixed;
-      height: 100%;
-      width: 100%;
-      background: #4a4a4a;
-      left: 0;
-      top: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 100;
-    }
     @include desktop {
       position: absolute;
       top: 15px;
@@ -172,7 +169,6 @@
         font-family: Avenir Next;
         font-weight: 600;
         line-height: 24px;
-        text-align: left;
       }
 
       .signInSignUpWithCityAreaInnerBlock {

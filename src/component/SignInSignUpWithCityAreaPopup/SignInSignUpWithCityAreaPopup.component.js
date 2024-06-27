@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createRef } from "react";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 import Image from "Component/Image";
 import address from "Component/PDPSummary/icons/address_black.svg";
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
@@ -64,11 +65,12 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
       <div
         block="signInSignUpWithCityAreaMainBlock"
         elem={isSignInTypePopUp && "stylePopUp"}
+        mods={{ isArabic: isArabic() }}
       >
         <div block="signInSignUpWithCityAreaOuterBlock">
           <div block="signInSignUpWithCityAreaPopUp" ref={wrapperRef}>
             <h1 block="signInSignUpWithCityAreaPopUpHeading">
-              {__("Sign in/ Create Account to see delivery Option")}
+              {__("Sign in or create a account to see delivery location")}
             </h1>
             <div block="signInSignUpWithCityAreaInnerBlock">
               <div block="createAccountSignInButton">
@@ -103,7 +105,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
   };
 
   const render = () => {
-    if (isSignInTypePopUp) {
+    if (isSignInTypePopUp || isMobile.any()) {
       return (
         <ModalWithOutsideClick
           show={showPopUp}

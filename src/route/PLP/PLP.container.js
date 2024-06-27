@@ -825,9 +825,11 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
+    let isScrollBehaviour = category === "express_delivery" ? true : false;
+
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1" && key !== "categories_without_path") {
-        WebUrlParser.setParam(key, activeFilters[key]);
+        WebUrlParser.setParam(key, activeFilters[key], [], isScrollBehaviour);
       }
     });
 
@@ -835,16 +837,14 @@ export class PLPContainer extends PureComponent {
     const key = "categories_without_path";
       //Below code is for Msite - here I am not sending category Ids to Algolia
     if(isMobile.any()) {
-      WebUrlParser.setParam(
-        key,
-        selectedFacetValues,
-      );
+      WebUrlParser.setParam(key, selectedFacetValues, [], isScrollBehaviour);
     }else {
       const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
       WebUrlParser.setParam(
         key,
         selectedFacetValues,
         selectedFacetCategoryIds,
+        isScrollBehaviour
       );
     }
   }

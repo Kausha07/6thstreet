@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url";
 import { isArabic } from "Util/App";
@@ -54,6 +53,8 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.estimateEddResponseForPDP(dispatch, request),
   expressPopUpOpen: (val) =>
     MyAccountDispatcher.expressPopUpOpen(dispatch, val),
+  setExpressPLPAddressForm: (val) =>
+    MyAccountDispatcher.setExpressPLPAddressForm(dispatch, val),
 });
 
 export const CityArea = (props) => {
@@ -82,6 +83,7 @@ export const CityArea = (props) => {
     expressPopUpOpen,
     isNewCheckoutPage,
     onAddressSelectPopup,
+    setExpressPLPAddressForm,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -149,6 +151,7 @@ export const CityArea = (props) => {
   const editSelectedAddress = (address) => {
     showHidePOPUP(false);
     setAddAndEditAddressButtonClicked(true);
+    setExpressPLPAddressForm(true);
     openForm();
     showAddEditAddressPopup({
       action: EDIT_ADDRESS,
@@ -161,6 +164,7 @@ export const CityArea = (props) => {
   const addNewAddress = () => {
     showHidePOPUP(false);
     setAddAndEditAddressButtonClicked(true);
+    setExpressPLPAddressForm(true);
     openForm();
     showAddEditAddressPopup({
       action: ADD_ADDRESS,
@@ -482,6 +486,8 @@ export const CityArea = (props) => {
           showHideCityAreaSelection={showHideCityAreaSelection}
           addNewAddress={addNewAddress}
           customer={customer}
+          setExpressPopUp={setExpressPopUp}
+          isSignInTypePopUp={isSignInTypePopUp}
         />
       );
     }
@@ -507,9 +513,9 @@ export const CityArea = (props) => {
 
   const render = () => {
     return (
-      <div block="cityAreaAddressSelection">
+      <div block="cityAreaAddressSelection" mods={{ isArabic: isArabic() }}>
         {renderMyAccountOverlay()}
-        {addAndEditAddressButtonClicked && renderForm()}
+        {renderForm()}
         {isNewCheckoutPage ? (
             <p
               onClick={() => {

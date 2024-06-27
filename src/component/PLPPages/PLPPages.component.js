@@ -26,6 +26,7 @@ import { Helmet } from 'react-helmet';
 
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 class PLPPages extends PureComponent {
@@ -217,7 +218,7 @@ class PLPPages extends PureComponent {
 
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
-    const inlineFilterList = this.getInlineFilterList(filters);
+    let inlineFilterList = this.getInlineFilterList(filters);
 
     const keyLabel = {
       discount: __("Discount"),
@@ -225,8 +226,24 @@ class PLPPages extends PureComponent {
       sizes: __("Sizes"),
       sort: __("Sort by"),
       age: __("Age"),
+      express_delivery: __("Delivery Time"),
     };
 
+    if (this.props.isExpressDelivery && inlineFilterList?.express_delivery) {
+      const expressDeliveryFilterOBJ = inlineFilterList?.express_delivery;
+      const copiedFilters = { ...inlineFilterList };
+      delete inlineFilterList?.express_delivery;
+      let reOrderedResponse = {};
+
+      Object.keys(copiedFilters).forEach((key, index) => {
+        if (index === 1) {
+          reOrderedResponse["express_delivery"] = expressDeliveryFilterOBJ;
+        }
+        reOrderedResponse[key] = copiedFilters[key];
+      });
+      inlineFilterList = { ...reOrderedResponse };
+    }
+   
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;
     const filterIndex = index === 0 || !requiredPages ? null : index;
@@ -366,7 +383,7 @@ class PLPPages extends PureComponent {
     } =
       this.props;
     const { activeFilters } = this.state;
-    const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
+    let { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
       this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
       return (

@@ -396,6 +396,7 @@ export class CartItem extends PureComponent {
     const {
       item: { color, optionValue, qty },
       isCheckoutPage,
+      isExpressDelivery,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -406,7 +407,7 @@ export class CartItem extends PureComponent {
             <span> {__("Color:")}</span>
             {color}
           </div>
-          {isCheckoutPage && (
+          {isCheckoutPage && isExpressDelivery && (
             <div block="CartItem" elem="Size" mods={{ isArabic }}>
               <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
                 |
@@ -422,7 +423,9 @@ export class CartItem extends PureComponent {
             <span> {__("Size:")} </span>
             {optionValue}
           </div>
-          {!isCheckoutPage && this.renderQuantitySelection()}
+          {!isCheckoutPage &&
+            !isExpressDelivery &&
+            this.renderQuantitySelection()}
         </div>
       );
     }
@@ -433,7 +436,18 @@ export class CartItem extends PureComponent {
           <span> {__("Color:")}</span>
           {color}
         </div>
-        {this.renderQuantitySelection()}
+        {isCheckoutPage && isExpressDelivery && (
+          <div block="CartItem" elem="Size" mods={{ isArabic }}>
+            <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
+              |
+            </span>
+            <span> {__("Qty:")} </span>
+            {qty}
+          </div>
+        )}
+        {!isCheckoutPage &&
+          !isExpressDelivery &&
+          this.renderQuantitySelection()}
       </div>
     );
   }

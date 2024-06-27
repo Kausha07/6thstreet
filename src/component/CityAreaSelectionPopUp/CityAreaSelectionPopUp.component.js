@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-
+import { isArabic } from "Util/App";
+import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 import Search from "Component/Icons/Search/icon.svg";
 import "./CityAreaSelectionPopUp.style.scss";
-import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 
 export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
@@ -64,26 +64,30 @@ export const CityAreaSelectionPopUp = (props) => {
       isAreaButtonActive &&
       selectedCity &&
       Object.values(addressCityData)?.find(
-        (data) => data?.city === selectedCity
+        (data) => data?.[isArabic() ? "city_ar" : "city"] === selectedCity
       );
     const filteredList = isAreaButtonActive
       ? cityAreaSearchedText != ""
-        ? areasForSelectedCity?.areas.filter((val) => {
-            if (
-              val?.toLowerCase()?.includes(cityAreaSearchedText.toLowerCase())
-            ) {
-              return val;
+        ? areasForSelectedCity?.[isArabic() ? "areas_ar" : "areas"]?.filter(
+            (val) => {
+              if (
+                val
+                  ?.toLowerCase()
+                  ?.includes(cityAreaSearchedText?.toLowerCase())
+              ) {
+                return val;
+              }
             }
-          })
+          )
         : Object.values(addressCityData)?.find(
-            (data) => data?.city === selectedCity
-          ).areas
+            (data) => data?.[isArabic() ? "city_ar" : "city"] === selectedCity
+          )?.[isArabic() ? "areas_ar" : "areas"]
       : isCityButtonActive && cityAreaSearchedText != ""
       ? addressCityData.filter((val) => {
           if (
-            val?.city
+            val?.[isArabic() ? "city_ar" : "city"]
               ?.toLowerCase()
-              .includes(cityAreaSearchedText.toLowerCase())
+              ?.includes(cityAreaSearchedText?.toLowerCase())
           ) {
             return val;
           }
@@ -100,7 +104,7 @@ export const CityAreaSelectionPopUp = (props) => {
           return showHideCityAreaSelection(false);
         }}
       >
-        <div block="cityAreaSelectionMainBlock">
+        <div block="cityAreaSelectionMainBlock" mods={{ isArabic: isArabic() }}>
           <div block="cityAreaSelectionOuterblock">
             <div block="cityAreaSelectionPopUp">
               <div block="cityAreaSelectionInnerBlock">
@@ -119,9 +123,13 @@ export const CityAreaSelectionPopUp = (props) => {
                     {activeArea}
                   </button>
                 </div>
-                <h3>{text}</h3>
+                <h3 block="headingText">{text}</h3>
                 <div block="cityAreaSearchBox">
-                  <img block="searchIcon" src={Search} />
+                  <img
+                    block="searchIcon"
+                    src={Search}
+                    mods={{ isArabic: isArabic() }}
+                  />
                   <input
                     type="text"
                     block="cityAreaSearchInputBoxForMobile"
@@ -130,29 +138,43 @@ export const CityAreaSelectionPopUp = (props) => {
                     onChange={handleCityAreaText}
                     value={cityAreaSearchedText}
                     autoComplete="off"
+                    mods={{ isArabic: isArabic() }}
                   />
                 </div>
                 <div block="cityAreaList">
-                  <ul>
-                    {isCityButtonActive
-                      ? Object.entries(filteredList)?.map((val, index) => {
-                          return (
-                            <li
-                              onClick={() => changeCity(val?.[1]?.city)}
-                              key={index}
-                            >
-                              {val?.[1]?.city}
-                            </li>
-                          );
-                        })
-                      : filteredList?.map((val, index) => {
-                          return (
-                            <li onClick={() => changeArea(val)} key={index}>
-                              {val}
-                            </li>
-                          );
-                        })}
-                  </ul>
+                  {isCityButtonActive ? (
+                    <ul block="cityAreaUL">
+                      {Object.entries(filteredList)?.map((val, index) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              changeCity(
+                                val?.[1]?.[isArabic() ? "city_ar" : "city"]
+                              )
+                            }
+                            key={index}
+                            block="cityListLI"
+                          >
+                            {val?.[1]?.[isArabic() ? "city_ar" : "city"]}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <ul block="cityAreaUL">
+                      {filteredList?.map((val, index) => {
+                        return (
+                          <li
+                            onClick={() => changeArea(val)}
+                            key={index}
+                            block="areaListLI"
+                          >
+                            {val}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>

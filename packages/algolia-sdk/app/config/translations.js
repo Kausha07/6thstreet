@@ -65,7 +65,7 @@ const translations = {
     baby_boy: 'طفل',
     unisex: 'الجنسين',
     infant: 'للرضع',
-    express_delivery : "Delivery Time",
+    express_delivery : "وقت التوصيل",
   }
 };
 
