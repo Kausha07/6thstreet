@@ -1,8 +1,15 @@
 import React, { useState, useEffect, createRef } from "react";
+import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { BluePlus, EditPencil } from "Component/Icons/index";
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import "./DeliveryAddressPopUp.style";
+
+export const mapDispatchToProps = (dispatch) => ({
+  expressPopUpOpen: (val) =>
+    MyAccountDispatcher.expressPopUpOpen(dispatch, val),
+});
 
 export const DeliveryAddressPopUp = (props) => {
   const {
@@ -14,6 +21,7 @@ export const DeliveryAddressPopUp = (props) => {
     defaultShippingAddress,
     autoPopulateCityArea,
     setExpressPopUp,
+    expressPopUpOpen,
   } = props;
 
   const [selectedAddress, setSelectedAddress] = useState(
@@ -30,6 +38,7 @@ export const DeliveryAddressPopUp = (props) => {
   };
 
   const onAddNewClick = () => {
+    expressPopUpOpen(true);
     addNewAddress();
     setExpressPopUp(true);
   };
@@ -145,4 +154,4 @@ export const DeliveryAddressPopUp = (props) => {
   );
 };
 
-export default DeliveryAddressPopUp;
+export default connect(null, mapDispatchToProps)(DeliveryAddressPopUp);

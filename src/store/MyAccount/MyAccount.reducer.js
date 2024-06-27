@@ -31,6 +31,7 @@ import {
   SET_SELECTED_CITY_AREA,
   SET_EXPRESS_CUTOFF_TIME,
   SET_EXPRESS_POPUP_OPEN,
+  SET_EXPRESS_PLP_ADDRESS_OPEN,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -266,14 +267,20 @@ export const MyAccountReducer = (state = initialState, action) => {
         cutOffTime: cutOfftime,
       };
 
-      case SET_EXPRESS_POPUP_OPEN:
-        const { val } = action;
-        return {
-          ...state,
-          isExpressPopUpOpen: val,
-        };
-  
-  
+    case SET_EXPRESS_POPUP_OPEN:
+      const { val } = action;
+      return {
+        ...state,
+        isExpressPopUpOpen: val,
+      };
+
+    case SET_EXPRESS_PLP_ADDRESS_OPEN:
+      const { isExpressPLPAddressOpen } = action;
+      return {
+        ...state,
+        isExpressPLPAddressOpen: isExpressPLPAddressOpen,
+      };
+
     default:
       return state;
   }
