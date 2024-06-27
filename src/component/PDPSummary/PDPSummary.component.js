@@ -989,7 +989,7 @@ class PDPSummary extends PureComponent {
       .replace(/\-$/, "")
       .replace("@", "at")
       .toLowerCase();
-    return `${url}.html`;
+    return url ? `${url}.html`:'';
   };
 
   renderBrand() {
@@ -1115,9 +1115,11 @@ class PDPSummary extends PureComponent {
 
   renderPDPSummaryHeader() {
     const { product } = this.props;
+    
+    const updateNewLink = this.getBrandUrl();
     return (
       <div block="PDPSummary" elem="Header">
-        <ProductLabel product={product} section="PDPSummary" />
+        <ProductLabel brandNameLink={updateNewLink} product={product} section="PDPSummary" />
       </div>
     );
   }
