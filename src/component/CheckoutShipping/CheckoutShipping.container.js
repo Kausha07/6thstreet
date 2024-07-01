@@ -133,7 +133,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   getAddressById(addressId) {
     const { addresses } = this.props;
     const address = addresses.find(({ id }) => id === addressId);
-    return trimCustomerAddressCheckout(address);
+    return (address);
   }
 
   openForm() {

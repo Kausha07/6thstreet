@@ -662,7 +662,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     // get payment methods
-    if(isSignedIn) {
+    if(isSignedIn && !QPAY_CHECK && !TABBY_CHECK && !KNET_CHECK && !TAMARA_CHECK) {
       this.getPaymentMethods();
     }
   }

@@ -101,7 +101,7 @@ export class Checkout extends SourceCheckout {
     processingLoader: false,
     careemPayInfo:{},
     careemPayStatus: "",
-    type_of_identity: 0,
+    type_of_identity: "0",
     identity_number : "",
     validationError: false,
     isNationalityClick: true,
