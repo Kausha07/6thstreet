@@ -23,18 +23,17 @@ const PDPGalleryStrip = (props) => {
         const fetchData = async () => {
             try {
                 // Make multiple API calls simultaneously
-                const [resSendMyView, resOthersViewing, resAddedToBag] = await Promise.all([
-                    MobileAPI.post(`product-view/${productId}`),
+                const [resOthersViewing, resAddedToBag] = await Promise.all([
                     MobileAPI.get(`product-count/${productId}`),
                     MobileAPI.get(`brought-count?sku=${sku}`)
                 ]);
 
                 // Extract data from responses
-                const sendMyView = await resSendMyView?.data[0];
+                // const sendMyView = await resSendMyView?.data[0];
                 const otherView = await resOthersViewing?.data[0];
                 const addToBag = await resAddedToBag?.data[0];
 
-                sendMyView.status > 0 && console.log('my view count');
+                // sendMyView.status > 0 && console.log('my view count');
 
                 // Update state with fetched data
                 setisAddTobagCount(addToBag.count);

@@ -34,6 +34,7 @@ import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/Dynami
 import timerIcon from "./icons/flash_Sale.svg";
 import Ratings from 'Component/Ratings/Ratings';
 import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
+import MobileAPI from "Util/API/provider/MobileAPI";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
@@ -81,6 +82,10 @@ class PDPGallery extends PureComponent {
       prod_360_video: React.createRef(),
     };
   }
+
+  componentDidMount(){
+    this.renderMyViewCount();
+  }
   
   componentWillUnmount() {
     const { scrolledSlide } = this.state;
@@ -95,6 +100,22 @@ class PDPGallery extends PureComponent {
         imagesScrolled: scrolledSlide,
       };
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    }
+  }
+
+  renderMyViewCount = async () => {
+    const {
+      product:{
+        objectID:productId,
+      }
+    } = this.props;
+    try {
+      const resSendMyView = await MobileAPI.post(`product-view/${productId}`);
+      const sendMyView = resSendMyView?.data[0];
+      sendMyView.status > 0 && console.log('my view count');
+
+    }catch(err){
+      console.error('Error fetching data:', error);
     }
   }
   
@@ -718,7 +739,7 @@ class PDPGallery extends PureComponent {
 
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} isPDPEventsOnly />}
         
-        {!isNewDesign && this.renderVideoButtons()}
+        {!isNewDesign && this.renderVideoButtons()}       
       </div>
       </>
     );
