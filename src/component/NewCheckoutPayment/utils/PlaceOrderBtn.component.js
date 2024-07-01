@@ -1,7 +1,11 @@
 import React from "react";
 import Applepay from "Component/CheckoutBilling/icons/apple.png";
 import { ThreeDots } from "react-loader-spinner";
+import { Collapse } from "react-collapse";
 import Image from "Component/Image";
+import { getFinalPrice } from "Component/Price/Price.config";
+import { getValueFromTotals } from "Component/CartTotal/utils/CartTotal.helper";
+import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 
 import {
   CHECKOUT_APPLE_PAY,
@@ -22,7 +26,18 @@ const PlaceOrderBtn = (props) => {
     binApplied,
     newCardVisible,
     processPlaceOrder,
+    totals,
+    totals: { total, currency_code, total_segments = [] },
+    vwoData,
+    dropdownToggleIcon,
+    isDropdownOpen,
+    onDropdownClicked,
   } = props;
+
+  const cashOnDeliveryFee = getValueFromTotals(
+    total_segments,
+    "msp_cashondelivery"
+  );
 
   const renderButtonPlaceholder = () => {
     const isCardPayment = CARD === paymentMethod;
@@ -38,6 +53,59 @@ const PlaceOrderBtn = (props) => {
       }
     }
     return <>{placeholder}</>;
+  };
+
+  const renderPriceLine = (price, name, mods) => {
+    return (
+      <li
+        block="CheckoutBillingTotal CheckoutOrderSummary"
+        elem="SummaryItem"
+        mods={mods}
+      >
+        <strong block="CheckoutOrderSummary" elem="Text">
+          {name}
+        </strong>
+        {price !== undefined ? (
+          <strong block="CheckoutOrderSummary" elem="Price">
+            {`${currency_code} ${price}`}
+          </strong>
+        ) : null}
+      </li>
+    );
+  };
+
+  const renderTotals = () => {
+    const grandTotal = getFinalPrice(total, currency_code);
+    const isSidewideCouponEnabled =
+      vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+
+    return (
+      <div block="Checkout" elem="OrderTotals">
+        <div block="Checkout" elem="OrderSummaryTriggerContainer">
+          <div
+            onClick={onDropdownClicked}
+            block="Checkout"
+            elem="OrderSummaryTrigger"
+            type="button"
+            mods={{ dropdownToggleIcon }}
+          ></div>
+        </div>
+        <div block="Checkout" elem="OrderSummaryTotalsContainer">
+          <Collapse isOpened={isDropdownOpen}>
+            <CheckoutOrderSummary
+              checkoutStep="BILLING_STEP"
+              totals={totals}
+              cashOnDeliveryFee={cashOnDeliveryFee}
+            />
+          </Collapse>
+        </div>
+        {!isSidewideCouponEnabled
+          ? renderPriceLine(grandTotal, __("Total Amount"), {
+              isDropdownOpen,
+            })
+          : null}
+      </div>
+    );
   };
 
   const renderActions = () => {
@@ -58,7 +126,7 @@ const PlaceOrderBtn = (props) => {
     return (
       <>
         <div block="Checkout" elem="StickyButtonWrapper">
-          {/* {this.renderTotals()}  // for msite    */}
+          {renderTotals()}
           {isApplePay ? (
             <div block="CheckoutComApplePayPayment" elem="Wrapper">
               <button

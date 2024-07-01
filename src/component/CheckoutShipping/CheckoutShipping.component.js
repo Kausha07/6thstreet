@@ -656,7 +656,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect,
       handleClickNCollectPayment,
     } = this.props;
-    const { formContent } = this.state;
+    const { formContent, isMobile } = this.state;
     return (
       <div
         block="ShippingStep"
@@ -664,7 +664,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       >
         {this.renderOpenPopupButton()}
         {isSignedIn() ? this.renderAddAdress() : null}
-        {isSignedIn() && !checkClickAndCollect() ? (
+        {isSignedIn() && !checkClickAndCollect() && !isMobile ? (
             <div block="header-new-address-container" mods={{formContent}}>
               <div>
                 <h4 block="CheckoutShipping" elem="DeliveryMessage">

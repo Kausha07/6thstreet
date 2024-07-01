@@ -70,7 +70,13 @@ const DeliveryAddress = (props) => {
       <div block="address-card">
         <div block="address-card" elem="header">
           {isMobileDevice ? (
-            <div>^</div>
+            <div>
+            <h2>Delivery Address</h2>
+            <CityArea
+              isNewCheckoutPage={true}
+              onAddressSelectPopup={onAddressSelectPopup}
+            />
+          </div>
           ) : (
             <>
               <h2>Delivery Address</h2>

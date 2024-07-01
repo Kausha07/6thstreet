@@ -28,6 +28,7 @@ export const mapStateToProps = (state) => ({
   newCardVisible: state.CreditCardReducer.newCardVisible,
   processingRequest: state.CartReducer.processingRequest,
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  vwoData: state.AppConfig.vwoData,
   processingPaymentSelectRequest:
     state.CartReducer.processingPaymentSelectRequest,
 });
@@ -97,6 +98,7 @@ const NewCheckoutPayment = (props) => {
     processingRequest,
     processingPaymentSelectRequest,
     isAddressSelected,
+    vwoData,
   } = props;
 
   const isSignedInUser = isSignedIn();
@@ -116,6 +118,8 @@ const NewCheckoutPayment = (props) => {
   const [isOrderButtonVisible, setIsOrderButtonVisible] = useState(true);
   const [isOrderButtonEnabled, setIsOrderButtonEnabled] = useState(true);
   const [applePayDisabled, setApplePayDisabled] = useState(true);
+  const [dropdownToggleIcon, setDropdownToggleIcon] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
 
   const onPaymentMethodSelect = (code) => {
     setCurrentPaymentMethod(code);
@@ -271,6 +275,11 @@ const NewCheckoutPayment = (props) => {
     });
   };
 
+  const onDropdownClicked = () => {
+    setDropdownToggleIcon(!dropdownToggleIcon);
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const renderActions = () => {
     if(!isAddressSelected) {
       return null;
@@ -288,6 +297,11 @@ const NewCheckoutPayment = (props) => {
           binApplied={binApplied}
           newCardVisible={newCardVisible}
           processPlaceOrder={onPlaceOrderClick}
+          totals={totals}
+          vwoData={vwoData}
+          dropdownToggleIcon={dropdownToggleIcon}
+          isDropdownOpen={isDropdownOpen}
+          onDropdownClicked={onDropdownClicked}
         />
       </>
     );

@@ -191,28 +191,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   renderSignedInContent() {
     const { currentPage, isArabic, isMobile } = this.state;
 
-    if (isMobile) {
-      return (
-        <div
-          block="CheckoutAddressBookSlider"
-          elem="Wrapper"
-          mods={{ isArabic }}
-        >
-          <Slider
-            mix={{
-              block: "CheckoutAddressBookSlider",
-              elem: "MobileSlider",
-              mods: { isArabic },
-            }}
-            activeImage={currentPage}
-            onActiveImageChange={this.mobileSliderCallback}
-          >
-            {this.renderAddressList()}
-          </Slider>
-        </div>
-      );
-    }
-
     return (
       <div block="CheckoutAddressBook" elem="Wrapper">
         {this.renderAddressList()}

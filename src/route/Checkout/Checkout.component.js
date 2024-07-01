@@ -1094,7 +1094,6 @@ export class Checkout extends SourceCheckout {
             label={__("Checkout page")}
           >
             <div block="Checkout" elem="Step">
-              {isSuccess ? null : this.renderTitle()}
               {this.renderStep()}
               {this.renderLoader()}
             </div>

@@ -718,7 +718,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           {this.renderToggleableDiscountOptions()}
           {this.renderTotals()}
         </div>
-        {this.renderItems()}
+        {isMobile ? null : this.renderItems()}
       </article>
     );
   }

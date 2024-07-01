@@ -7,4 +7,8 @@
 .paymentWrapper {
     border: 1px solid #d1d3d4;
     // margin-bottom: 10px;
+
+    @include mobile {
+        border: none;
+    }
 }
