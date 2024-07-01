@@ -26,7 +26,7 @@ import {
 } from "../../util/Common/index";
 
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { withRouter } from "react-router";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
@@ -42,6 +42,9 @@ import { getCurrency } from "Util/App";
 
 import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 import isMobile from "Util/Mobile";
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 /**
  * Cart and CartOverlay item
  * @class CartItem
@@ -911,6 +914,7 @@ export class CartItem extends PureComponent {
       item: {
         full_item_info: { cross_border = 0 },
         extension_attributes,
+        is_express_delivery,
       },
       international_shipping_fee,
       isExpressDelivery,
@@ -939,48 +943,16 @@ export class CartItem extends PureComponent {
 
     return (
       <div block="EddExpressWrapper">
-        {isExpressProduct && (
-          <div block="EddExpressDelivery">
-            <div block="EddExpressDeliveryTextBlock">
-              <ExpressDeliveryTruck />
-              <div block="EddExpressDeliveryText">
-                <span block="EddExpressDeliveryTextRed">
-                  {__("Express")} {}
-                </span>
-                <span block="EddExpressDeliveryTextNormal">
-                  {__("Delivery by")}
-                </span>
-                <span block="EddExpressDeliveryTextBold">{__("Tomorrow")}</span>
-              </div>
-            </div>
-            <div block="EddExpressDeliveryCutOffTime">
-              {__("Order within 4hrs 10 Mins")}
-            </div>
-          </div>
-        )}
-
-        {actualEddMess && !isExpressProduct && (
-          <div block="EddStandardDelivery">
-            <div block="EddStandardDeliveryTextBlock">
-              <Shipping />
-              <div block="shipmentText">
-                <span block="EddStandardDeliveryText">
-                  {__("Standard")} {}
-                  {actualEddMess.split(splitKey)[0]} {}
-                  {splitKey} {}
-                </span>
-                <span block="EddStandardDeliveryTextBold">
-                  {actualEddMess.split(splitKey)[1]}
-                </span>
-              </div>
-            </div>
-            <div block="internationalShipmentTag">
-              {isIntlBrand || (international_shipping_fee && +cross_border)
-                ? this.renderIntlTag()
-                : null}
-            </div>
-          </div>
-        )}
+        <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+          <ExpressAndStandardEDD
+            express_delivery={is_express_delivery}
+            actualEddMess={actualEddMess}
+            splitKey={splitKey}
+            isPDP={false}
+            isIntlBrand={isIntlBrand}
+            cross_border={cross_border}
+          />
+        </Suspense>
       </div>
     );
   };
