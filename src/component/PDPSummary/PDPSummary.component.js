@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
-import { PureComponent, Fragment } from "react";
+import { PureComponent, Fragment, lazy, Suspense } from "react";
 import Link from "Component/Link";
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
@@ -50,6 +50,9 @@ import PDPBrandFollow from "Component/PDPBrandFollow/PDPBrandFollow";
 export const mapStateToProps = (state) => ({
   isNewDesign: state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
 });
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 
 class PDPSummary extends PureComponent {
   constructor(props) {
@@ -947,6 +950,29 @@ class PDPSummary extends PureComponent {
     return actualEddMess;
   }
 
+  renderExpressMsg = () => {
+    const selctedAddress = JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    );
+
+    if (!selctedAddress) {
+      return (
+        <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
+          {__("Express delivery may available. Please select your location.")}
+        </p>
+      );
+    } else if (
+      selctedAddress &&
+      !this.props.isExpressServiceAvailable?.express_eligible
+    ) {
+      return (
+        <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
+          {__("Express Delivery is not currently available for this location.")}
+        </p>
+      );
+    }
+  };
+
   renderSelectCityForExpress(crossBorder) {
     const { isMobile, isArabic, selectedSizeCode } = this.state;
 
@@ -990,67 +1016,22 @@ class PDPSummary extends PureComponent {
                 isToMakeEDDCallPage={false}
                 isPDP={true}
               />
+              {this.renderExpressMsg()}
             </>
           )}
         <div block="EddExpressWrapper">
-          {isExpressServiceAvailable?.express_eligible &&
-            isExpressDelivery &&
-            !+express_delivery && (
-              <div block="EddExpressDelivery">
-                <div block="EddExpressDeliveryTextBlock">
-                  <ExpressDeliveryTruck />
-                  <div block="EddExpressDeliveryText">
-                    <span block="EddExpressDeliveryTextRed">
-                      {__("Express")} {}
-                    </span>
-                    <span block="EddExpressDeliveryTextNormal">
-                      {__("Delivery by")}
-                    </span>
-
-                    {+express_delivery === 1 ? (
-                      <span block="EddExpressDeliveryTextBold">
-                        {__("Today")}
-                      </span>
-                    ) : (
-                      <span block="EddExpressDeliveryTextBold">
-                        {__("Tomorrow")}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div block="EddExpressDeliveryCutOffTime">
-                  {__("Order within 4hrs 10 Mins")}
-                </div>
-              </div>
-            )}
-
-          {actualEddMess && (
-            <div block="EddStandardDelivery">
-              <div block="EddStandardDeliveryTextBlock">
-                <Shipping />
-                <span block="EddStandardDeliveryText">
-                  {__("Standard")} {}
-                  {actualEddMess.split(splitKey)[0]} {}
-                  {splitKey} {}
-                </span>
-                <span block="EddStandardDeliveryTextBold">
-                  {actualEddMess.split(splitKey)[1]}
-                </span>
-              </div>
-              <div block="internationalShipmentTag">
-                {/* here we are showing International Shipment tag based on inventory as soon as you select any size of the product*/}
-                {(+simple_products?.[sku]?.cross_border_qty && //from this line
-                  +simple_products?.[sku]?.quantity <=
-                    +simple_products?.[sku]?.cross_border_qty &&
-                  +simple_products?.[sku]?.quantity !== 0) || // to this line (including above 2 lines of code) here we are checking for CB inventory
-                (actualEddMess?.split(splitKey)?.[1]?.includes("-") && // now from this line of code
-                  simple_products?.[selectedSizeCode]?.quantity !== 0 && // we are checking when we don't have city/area then range EDD will get displayed then IS tag should also get visible
-                  !selectedSizeCode) //  but get change as soon as you select any size
-                  ? this.renderIntlTag()
-                  : null}
-              </div>
-            </div>
-          )}
+          <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+            <ExpressAndStandardEDD
+              express_delivery={express_delivery}
+              actualEddMess={actualEddMess}
+              simple_products={simple_products}
+              selectedSizeCode={selectedSizeCode}
+              splitKey={splitKey}
+              sku={sku}
+              isPDP={true}
+              international_vendor={international_vendor}
+            />
+          </Suspense>
         </div>
       </div>
     );

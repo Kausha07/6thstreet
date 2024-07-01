@@ -676,3 +676,20 @@ export function formatDate(inputDate) {
 
   return `${day} ${month} ${year}`;
 }
+
+export const getTodaysWeekDay = () => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const today = new Date();
+  const currentDayIndex = today.getDay();
+  const currentDayName = daysOfWeek[currentDayIndex];
+
+  return currentDayName;
+};
