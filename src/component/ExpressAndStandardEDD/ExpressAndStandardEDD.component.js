@@ -215,7 +215,7 @@ export const ExpressAndStandardEDD = ({
           isExpressDelivery &&
           isProductExpressEligible &&
           isSKUExpressEligible && (
-            <div block="EddExpressDelivery">
+            <div block="eddExpressDelivery">
               <div block="EddExpressDeliveryTextBlock">
                 <ExpressDeliveryTruck />
                 <div block="EddExpressDeliveryText">
@@ -240,7 +240,7 @@ export const ExpressAndStandardEDD = ({
           )}
 
         {actualEddMess && (showStandardDelivery || !isSKUExpressEligible) && (
-          <div block="EddStandardDelivery">
+          <div block="eddStandardDelivery">
             <div block="EddStandardDeliveryTextBlock">
               <Shipping />
               <div block="shipmentText">
