@@ -190,7 +190,7 @@ class HeaderTopBar extends NavigationAbstract {
     return (
       <Fragment key="store-switcher">
         <div block="Switcher">
-          <CityArea />
+          <CityArea showSignInPopUpForGuest={true}/>
           <LanguageSwitcher />
           <CountrySwitcher />
         </div>

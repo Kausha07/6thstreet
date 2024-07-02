@@ -82,9 +82,12 @@ export const CityArea = (props) => {
     isSignInTypePopUp,
     expressPopUpOpen,
     setExpressPLPAddressForm,
+    showSignInPopUpForGuest = false,
   } = props;
 
-  const [showPopUp, setShowPopUp] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(
+    showSignInPopUpForGuest && !isSignedIn ? showSignInPopUpForGuest : false
+  );
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
   const [showCityAreaSelectionPopUp, setShowCityAreaSelectionPopUp] =
