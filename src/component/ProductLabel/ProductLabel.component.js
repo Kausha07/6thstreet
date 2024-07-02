@@ -33,7 +33,7 @@ class ProductLabel extends PureComponent {
   };
   renderExclusiveLink(){
     const { product:{promotion, gender} } = this.props;
-    let urlString = `catalogsearch/result/?q=${gender[0]}&dFR[sort][0]=latest&dFR[promotion][0]=${promotion}&dFR[gender][0]=${gender}`;
+    let urlString = `catalogsearch/result/?q=${gender}&dFR[sort][0]=recommended&dFR[promotion][0]=${promotion}&dFR[gender][0]=${gender}`;
     if (promotion !== undefined) {
       return promotion !== null ? (
         <>
