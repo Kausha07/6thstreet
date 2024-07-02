@@ -110,12 +110,9 @@ class PDPGallery extends PureComponent {
       }
     } = this.props;
     try {
-      const resSendMyView = await MobileAPI.post(`product-view/${productId}`);
-      const sendMyView = resSendMyView?.data[0];
-      sendMyView.status > 0 && console.log('my view count');
-
+      MobileAPI.post(`product-view/${productId}`);
     }catch(err){
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:', err);
     }
   }
   
