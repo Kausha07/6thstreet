@@ -26,12 +26,15 @@ const PlaceOrderBtn = (props) => {
     binApplied,
     newCardVisible,
     processPlaceOrder,
+    onApplePayClick,
+    applePayData,
     totals,
     totals: { total, currency_code, total_segments = [] },
     vwoData,
     dropdownToggleIcon,
     isDropdownOpen,
     onDropdownClicked,
+    isArabic,
   } = props;
 
   const cashOnDeliveryFee = getValueFromTotals(
@@ -109,11 +112,7 @@ const PlaceOrderBtn = (props) => {
   };
 
   const renderActions = () => {
-    // check this for Apple pay
-    // const {
-    //   handleApplePayButtonClick,
-    //   button_style,
-    // } = this.props;
+    const { button_style } = applePayData;
 
     if (!isOrderButtonVisible) {
       return null;
@@ -134,9 +133,9 @@ const PlaceOrderBtn = (props) => {
                 block="CheckoutComApplePayPayment"
                 elem="Button"
                 label="Pay with ApplePay"
-                // onClick={handleApplePayButtonClick}
+                onClick={onApplePayClick}
                 disabled={applePayDisabled}
-                // mods={{ button_style }}
+                mods={{ button_style }}
               >
                 <div>{__("Buy with ")}</div>
                 <Image
@@ -147,7 +146,7 @@ const PlaceOrderBtn = (props) => {
                     block: "CheckoutComApplePayPayment",
                     elem: "icon",
                   }}
-                  // mods={{ button_style, isArabic }}
+                  mods={{ button_style, isArabic }}
                   src={Applepay}
                   alt="Apple Pay"
                 />

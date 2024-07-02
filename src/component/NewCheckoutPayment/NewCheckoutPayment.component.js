@@ -3,13 +3,24 @@ import { connect } from "react-redux";
 
 import { getCountryFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
-import { isArabic } from "Util/App";
+import { isArabic as checkIsArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 
 import CheckoutPayments from "Component/CheckoutPayments";
 import PlaceOrderBtn from "Component/NewCheckoutPayment/utils/PlaceOrderBtn.component";
 import { getTabbyInstallmentFromTotal } from "Component/NewCheckoutPayment/utils/NewCheckoutPayment.helper";
 import { newCheckoutProcessPlaceOrder } from "Component/NewCheckoutPayment/utils/NewCheckoutPlaceOrder.helper";
+import {
+  processApplePayOrder,
+  launchPaymentMethod,
+  requestConfig,
+} from "Component/NewCheckoutPayment/utils/ApplePay.helper";
+
+import {
+  CHECKOUT_APPLE_PAY,
+  CARD,
+  TAMARA,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -29,6 +40,9 @@ export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
   vwoData: state.AppConfig.vwoData,
+  default_title: state.ConfigReducer.default_title,
+  international_shipping_fee: state.AppConfig.international_shipping_amount,
+  customer: state.MyAccountReducer.customer,
   processingPaymentSelectRequest:
     state.CartReducer.processingPaymentSelectRequest,
 });
@@ -52,6 +66,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 const NewCheckoutPayment = (props) => {
   const {
+    customer,
     addresses,
     cashOnDeliveryFee,
     setLoading,
@@ -61,6 +76,8 @@ const NewCheckoutPayment = (props) => {
     setCashOnDeliveryFee,
     savePaymentInformation,
     savePaymentInformationApplePay,
+    default_title,
+    international_shipping_fee,
     updateTotals,
     setTabbyWebUrl,
     setPaymentCode,
@@ -99,9 +116,12 @@ const NewCheckoutPayment = (props) => {
     processingPaymentSelectRequest,
     isAddressSelected,
     vwoData,
+    showError,
   } = props;
 
   const isSignedInUser = isSignedIn();
+  const isArabic = checkIsArabic();
+  const merchant_id = process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID;
 
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState(null);
   const [isTabbyInstallmentAvailable, setIsTabbyInstallmentAvailable] =
@@ -117,9 +137,15 @@ const NewCheckoutPayment = (props) => {
   const [isCODInLimit, setIsCODInLimit] = useState(true);
   const [isOrderButtonVisible, setIsOrderButtonVisible] = useState(true);
   const [isOrderButtonEnabled, setIsOrderButtonEnabled] = useState(true);
-  const [applePayDisabled, setApplePayDisabled] = useState(true);
   const [dropdownToggleIcon, setDropdownToggleIcon] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  // For Apple Pay
+  const [applePayDisabled, setApplePayDisabled] = useState(true);
+  const [isApplePayAvailable, setIsApplePayAvailable] = useState(
+    !!window.ApplePaySession || false
+  );
+  const [applePayData, setApplePayData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const onPaymentMethodSelect = (code) => {
     setCurrentPaymentMethod(code);
@@ -280,8 +306,40 @@ const NewCheckoutPayment = (props) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  // apple pay click
+  const onApplePayClick = () => {
+    processApplePayOrder({
+      savePaymentInformationApplePay,
+      totals,
+      default_title,
+      shippingAddress,
+      international_shipping_fee,
+      isClubApparelEnabled,
+      customer,
+      showError,
+      placeOrder,
+      isApplePayAvailable,
+      merchant_id,
+      isLoading,
+      setIsLoading,
+      applePayData,
+    });
+  };
+
+  // initiate the apple pay
+  const initiateApplePay = () => {
+    launchPaymentMethod({
+      isApplePayAvailable,
+      merchant_id,
+      showError,
+      isLoading,
+      setIsLoading,
+      setApplePayDisabled,
+    });
+  };
+
   const renderActions = () => {
-    if(!isAddressSelected) {
+    if (!isAddressSelected) {
       return null;
     }
     return (
@@ -297,11 +355,14 @@ const NewCheckoutPayment = (props) => {
           binApplied={binApplied}
           newCardVisible={newCardVisible}
           processPlaceOrder={onPlaceOrderClick}
+          onApplePayClick={onApplePayClick}
+          applePayData={applePayData}
           totals={totals}
           vwoData={vwoData}
           dropdownToggleIcon={dropdownToggleIcon}
           isDropdownOpen={isDropdownOpen}
           onDropdownClicked={onDropdownClicked}
+          isArabic={isArabic}
         />
       </>
     );
@@ -356,6 +417,12 @@ const NewCheckoutPayment = (props) => {
       getTabbyData();
     }
   }, [shippingAddress]);
+
+  useEffect(() => {
+    if (currentPaymentMethod === CHECKOUT_APPLE_PAY && isApplePayAvailable) {
+      requestConfig({ setIsLoading, setApplePayData }).then(initiateApplePay);
+    }
+  }, [currentPaymentMethod]);
 
   return (
     <div className="newCheckoutPayment">
