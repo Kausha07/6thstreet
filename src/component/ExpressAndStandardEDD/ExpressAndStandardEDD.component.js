@@ -38,6 +38,7 @@ export const ExpressAndStandardEDD = ({
   whs_quantity = 0,
   store_quantity = 0,
   mp_quantity = 0,
+  isCart = false,
 }) => {
   // get today's week day e.g.: Monday
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
@@ -48,12 +49,10 @@ export const ExpressAndStandardEDD = ({
 
   // get user's mailing address type, if there's no mailing_address_type then default is "home"
   const addressType = currentSelectedAddress?.mailing_address_type
-    ? mailing_address_type
-        .find(
-          (obj) => obj?.value === currentSelectedAddress?.mailing_address_type
-        )
-        ?.label?.[isArabic() ? "ar" : "en"]?.toLowerCase() || "home"
-    : "home";
+    ? mailing_address_type.find(
+        (obj) => obj?.value === currentSelectedAddress?.mailing_address_type
+      )?.value || "37303"
+    : "37303";
 
   // check product is express eligible  or not
   const isProductExpressEligible = [
@@ -63,13 +62,18 @@ export const ExpressAndStandardEDD = ({
 
   // check selected SKU is express eligible or not
   const isSKUExpressEligible =
-    (isPDP &&
-      +simple_products?.[sku]?.quantity !== 0 &&
-      +simple_products?.[sku]?.whs_quantity === 0) ||
-    +simple_products?.[sku]?.store_quantity === 0 ||
+    isPDP &&
+    +simple_products?.[sku]?.quantity !== 0 &&
+    +simple_products?.[sku]?.whs_quantity === 0 &&
+    +simple_products?.[sku]?.store_quantity === 0 &&
     +simple_products?.[sku]?.mp_quantity === 0
       ? false
       : true;
+
+  const isInternationalProduct =
+    edd_info?.international_vendors?.includes(
+      international_vendor // for international products show standard delivery
+    ) || cross_border;
 
   // find appropriate "todaysCutOffTime" based on inventory
   const inventoryCheck = (quantity, cutoffTime) => {
@@ -115,10 +119,10 @@ export const ExpressAndStandardEDD = ({
 
   const getTimeRemaining = () => {
     const now = new Date();
-    const cutoffTimeParts = todaysCutOffTime.split(":");
+    const cutoffTimeParts = todaysCutOffTime?.split(":");
     const deadline = new Date();
-    deadline.setHours(cutoffTimeParts[0]);
-    deadline.setMinutes(cutoffTimeParts[1]);
+    deadline.setHours(cutoffTimeParts?.[0]);
+    deadline.setMinutes(cutoffTimeParts?.[1]);
 
     const time = deadline - now;
     if (time <= 0) {
@@ -145,10 +149,10 @@ export const ExpressAndStandardEDD = ({
   useEffect(() => {
     const initializeTimer = () => {
       const now = new Date();
-      const cutoffTimeParts = todaysCutOffTime.split(":");
+      const cutoffTimeParts = todaysCutOffTime?.split(":");
       const deadline = new Date();
-      deadline.setHours(cutoffTimeParts[0]);
-      deadline.setMinutes(cutoffTimeParts[1]);
+      deadline.setHours(cutoffTimeParts?.[0]);
+      deadline.setMinutes(cutoffTimeParts?.[1]);
 
       const time = deadline - now;
       if (time > 0) {
@@ -184,12 +188,12 @@ export const ExpressAndStandardEDD = ({
 
     checkMidnight();
 
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timerRef?.current);
   }, []);
 
   useEffect(() => {
     if (isTimeExpired) {
-      clearInterval(timerRef.current);
+      clearInterval(timerRef?.current);
     }
   }, [isTimeExpired]);
 
@@ -201,11 +205,11 @@ export const ExpressAndStandardEDD = ({
 
   const render = () => {
     // If customer is VIP then don't show standard delivery but show in case of international product
-    const showStandardDelivery = edd_info?.international_vendors?.includes(
-      international_vendor
-    )
+    const showStandardDelivery = isInternationalProduct
       ? true
-      : isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer
+      : isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer // for vip customer don't show standard delivery
+      ? false
+      : isProductExpressEligible && isCart
       ? false
       : true;
 
@@ -214,7 +218,8 @@ export const ExpressAndStandardEDD = ({
         {isExpressServiceAvailable?.express_eligible &&
           isExpressDelivery &&
           isProductExpressEligible &&
-          isSKUExpressEligible && (
+          isSKUExpressEligible &&
+          !isInternationalProduct && (
             <div block="eddExpressDelivery">
               <div block="EddExpressDeliveryTextBlock">
                 <ExpressDeliveryTruck />
@@ -233,9 +238,11 @@ export const ExpressAndStandardEDD = ({
                   </span>
                 </div>
               </div>
-              <div block="EddExpressDeliveryCutOffTime">
-                {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
-              </div>
+              {!isTimeExpired && (
+                <div block="EddExpressDeliveryCutOffTime">
+                  {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
+                </div>
+              )}
             </div>
           )}
 
