@@ -8,6 +8,7 @@
 import { PureComponent } from "react";
 import Logger from "Util/Logger";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import Link from "Component/Link";
 
 class ProductLabel extends PureComponent {
   static propTypes = {
@@ -30,6 +31,22 @@ class ProductLabel extends PureComponent {
     });
     this.setState({ date });
   };
+  renderExclusiveLink(){
+    const { product:{promotion, gender} } = this.props;
+    let urlString = `catalogsearch/result/?q=${gender}&dFR[sort][0]=recommended&dFR[promotion][0]=${promotion}&dFR[gender][0]=${gender}`;
+    if (promotion !== undefined) {
+      return promotion !== null ? (
+        <>
+          <Link
+            block="PDPSummary" elem="Exclusive"
+            to={ urlString }
+          >
+            {promotion}
+          </Link>
+        </>
+      ) : null;
+    }
+  }
 
   renderNew() {
     const {
@@ -86,7 +103,8 @@ class ProductLabel extends PureComponent {
       <div block={productTag ? "ProductTagContainer" : "ProductContainer"}>
         {this.renderNew()}
         {/* { this.renderDash() } */}
-        {section === "PDPSummary" && this.renderExclusive()}
+        {/* {section !== "PDPSummary" && this.renderExclusive()} */}
+        {section === "PDPSummary" && this.renderExclusiveLink()}
       </div>
     );
   }

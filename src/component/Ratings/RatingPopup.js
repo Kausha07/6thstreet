@@ -8,14 +8,14 @@ const RatingPopup = (props) => {
     let ratingTitle = __("Customer Rating");
     let verifierBuyer = __("verified Buyers");
     const {
-        average_ratings, 
-        total_ratings, 
-        one_rating,
-        two_rating, 
-        three_rating, 
-        four_rating, 
-        five_rating,
-        prdAverageRatings = +average_ratings,
+        average_ratings = 0, 
+        total_ratings = 0, 
+        one_rating = 0,
+        two_rating = 0, 
+        three_rating = 0, 
+        four_rating = 0, 
+        five_rating = 0,
+        prdAverageRatings = formatNumber(Number(average_ratings).toFixed(1)),
         prdTotalRatings = +total_ratings,
     } =  props;
 
