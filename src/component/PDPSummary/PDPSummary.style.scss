@@ -473,6 +473,23 @@ div[class^='styles__body'] {
     line-height: 33px;
   }
 }
+.Price{
+  &_isArabic{
+    .Price-Wrapper{
+      direction: rtl;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .Price-Special{
+        padding-right: 0;
+        padding-left: 8px;
+      }
+      .Price-Del{
+        top: 0;
+      }
+    }
+  }
+}
 
 ._newDesign{
   .PDPbrandName{
@@ -736,7 +753,17 @@ div[class^='styles__body'] {
         &-Heading{
           width: 100%; 
         }
+        &-Exclusive{
+          &:not(:last-child){
+            margin-right: 0;
+            margin-left: 5px;
+          }
+        } 
       }
+      .ProductLabel,
+      .ProductTag{
+        @extend .PDPSummary-Exclusive;
+        }
       
       // .PriceContainer {
       //   .Price{

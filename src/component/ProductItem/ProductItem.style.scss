@@ -491,6 +491,7 @@
     }
   }
 
+
   .tagsForMsiteProduct {
     @include mobile {
       display: flex;
@@ -585,6 +586,24 @@
       &-icon{
         @include mobile{
           width: 6px;
+        }
+      }
+    }
+  }
+
+  .Price{
+    &_isArabic{
+      .Price-Wrapper{
+        direction: rtl;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        .Price-Special{
+          padding-right: 0;
+          padding-left: 8px;
+        }
+        .Price-Del{
+          top: 0;
         }
       }
     }
