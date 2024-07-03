@@ -106,10 +106,17 @@ export const CityArea = (props) => {
   );
 
   useEffect(() => {
+    expressCutOffTime();
+  }, []);
+
+  // Effect to update finalAreaText based on localStorage changes
+  useEffect(() => {
     if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
       setFinalAreaText(
         JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
       );
+    } else if (!isSignedIn) {
+      setFinalAreaText(__("Select Area"));
     }
   }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
 
@@ -141,7 +148,6 @@ export const CityArea = (props) => {
       if (data?.city && data?.area) {
         expressService(data);
       }
-      expressCutOffTime();
     }
   }, [finalAreaText]);
 
@@ -451,24 +457,12 @@ export const CityArea = (props) => {
   };
 
   const renderAddressPopUp = () => {
-    const countryWiseAddresses = addresses
-      ?.filter((obj) => obj?.country_code === getCountryFromUrl())
-      .sort((a, b) => {
-        if (a.default_shipping === true && b.default_shipping !== true) {
-          return -1;
-        }
-        if (a.default_shipping !== true && b.default_shipping === true) {
-          return 1;
-        }
-        return 0;
-      });
-
-    if (countryWiseAddresses && countryWiseAddresses?.length > 0) {
+    if (addresses && addresses?.length > 0) {
       return (
         <DeliveryAddressPopUp
           showHidePOPUP={showHidePOPUP}
           showPopUp={showPopUp}
-          countryWiseAddresses={countryWiseAddresses}
+          addresses={addresses}
           editSelectedAddress={editSelectedAddress}
           addNewAddress={addNewAddress}
           defaultShippingAddress={defaultShippingAddress}
