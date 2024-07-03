@@ -28,7 +28,8 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
-  "rating_sku.total_ratings"
+  "rating_sku.total_ratings",
+  "rating_sku.average_ratings"
 ];
 
 const MORE_FILTERS = [
