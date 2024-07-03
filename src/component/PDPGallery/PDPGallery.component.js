@@ -371,7 +371,7 @@ class PDPGallery extends PureComponent {
             height="534"
             src={videos[key]}
             type="video/mp4"
-            controls={isMobile.any()}
+            controls={!isMobile.any()}
             disablepictureinpicture
             playsinline
           />
@@ -736,7 +736,7 @@ class PDPGallery extends PureComponent {
 
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} isPDPEventsOnly />}
         
-        {!isNewDesign && this.renderVideoButtons()}       
+        {!isNewDesign && this.renderVideoButtons()}  
       </div>
       </>
     );
