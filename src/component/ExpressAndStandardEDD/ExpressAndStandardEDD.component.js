@@ -90,8 +90,8 @@ export const ExpressAndStandardEDD = ({
     const { warehouse_cutoff_time, store_cutoff_time, mp_cutoff_time } =
       cutOffTime?.data?.find(
         (item) =>
-          item.day?.toLowerCase() === todaysWeekDayName &&
-          item.address_type?.toLowerCase() === addressType
+          item?.day?.toLowerCase() === todaysWeekDayName &&
+          item?.address_type === addressType
       ) || {};
 
     todaysCutOffTime = isPDP
