@@ -2,6 +2,7 @@
 export const PDP = "product";
 export const CATEGORY = "category";
 export const CUSTOMER_ACCOUNT = "customer_account";
+export const WISHLIST = 'Wishlist';
 export const CUSTOMER_SUB_ACCOUNT = "customer_sub_account";
 export const CUSTOMER_ACCOUNT_PAGE = "customer_account_page";
 export const HOME_PAGE = "homepage";

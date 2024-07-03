@@ -538,6 +538,11 @@ div[class^='styles__body'] {
       text-transform: uppercase;
       background: #F3F2F2;
       color:#000;
+      &:hover,
+      &:active{
+        background: #e4e3e3;
+        text-decoration: none;
+      }
       &:not(:last-child){
         margin-right:5px;
       }
@@ -694,6 +699,10 @@ div[class^='styles__body'] {
     .ProductLabel,
     .ProductTag{
       @extend .PDPSummary-Exclusive;
+      &:hover,
+      &:active{
+        background: #F3F2F2;
+      }
     }
     .pdpsummarylinkTagStyle {
       @extend .productBrandName;

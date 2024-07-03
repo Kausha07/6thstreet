@@ -20,6 +20,7 @@ import {
   CHECKOUT,
   CMS_PAGE,
   CUSTOMER_ACCOUNT,
+  WISHLIST,
   HOME_PAGE,
   SEARCH,
   VIEWALL,
@@ -245,11 +246,17 @@ export class Router extends SourceRouter {
       component: (
         <SentryRoute
           path={withStoreRegex("/my-account/:tab?")}
-          render={(props) => (
-            <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
-              <MyAccount {...props} />
-            </GTMRouteWrapper>
+          render={(props) => {
+            let routeName = CUSTOMER_ACCOUNT;
+            if(props?.history?.location?.pathname === '/my-account/my-wishlist') {
+              routeName = WISHLIST;
+            }
+            return (
+              <GTMRouteWrapper route={routeName}>
+                <MyAccount {...props} />
+              </GTMRouteWrapper>
           )}
+        }
         />
       ),
       position: 70,
