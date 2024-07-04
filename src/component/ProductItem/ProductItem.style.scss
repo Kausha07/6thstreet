@@ -593,14 +593,20 @@
 
   .Price{
     &_isArabic{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
       .Price-Wrapper{
         direction: rtl;
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
+        margin-right: 0;
+        margin-left: 5px;
         .Price-Special{
           padding-right: 0;
-          padding-left: 8px;
+          padding-left: 0;
         }
         .Price-Del{
           top: 0;
@@ -608,3 +614,22 @@
       }
     }
   }
+  .PageWrapper_isArabic .PLPPage{
+  .ProductItem{
+    &_isArabic{
+      .Price{
+        &_isArabic{
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          width: 100%;
+        }
+      }
+      .Price-Wrapper{
+        margin-right: 0;
+        margin-left: 5px;
+        flex-direction: row;
+      }
+    }
+  }
+}
