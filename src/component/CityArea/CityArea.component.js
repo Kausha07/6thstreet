@@ -21,6 +21,7 @@ import DeliveryAddressPopUpWhenNoAddress from "Component/DeliveryAddressPopUpWhe
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { CART_ITEMS_CACHE_KEY } from "../../store/Cart/Cart.reducer";
 import address from "Component/PDPSummary/icons/address_black.svg";
 import { ChevronDown, ChevronLeft } from "Component/Icons";
@@ -37,6 +38,7 @@ export const mapStateToProps = (state) => ({
   EddAddress: state.MyAccountReducer.EddAddress,
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   pdpProduct: state.PDP.product,
+  cartId: state.Cart.cartId,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -55,6 +57,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.expressPopUpOpen(dispatch, val),
   setExpressPLPAddressForm: (val) =>
     MyAccountDispatcher.setExpressPLPAddressForm(dispatch, val),
+  getCart: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export const CityArea = (props) => {
@@ -83,6 +86,9 @@ export const CityArea = (props) => {
     expressPopUpOpen,
     setExpressPLPAddressForm,
     showSignInPopUpForGuest = false,
+    getCart,
+    cartId,
+    cartItems,
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(
@@ -420,6 +426,11 @@ export const CityArea = (props) => {
       "currentSelectedAddress",
       JSON.stringify(selectedAddress)
     );
+
+    // whenever you change address make get carts API call to send the current selected city and area to backend team in API params
+    if (cartItems?.length > 0) {
+      getCart(cartId);
+    }
 
     if (window.pageType === "PRODUCT") {
       // checking this condition rather than isPDP bcz if we are on PDP page and

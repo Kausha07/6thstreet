@@ -6,20 +6,45 @@
   border-radius: 8px;
   margin-top: 10px;
   text-transform: initial;
-  padding-bottom: 10px;
+  padding: 7px 0;
 
   svg {
-    width: 30px;
-    height: 30px;
-    margin: 0 5px;
+    width: 24px;
+    height: 24px;
+    margin: 0 7px;
   }
 
   .EddExpressDeliveryTextBlock {
     display: flex;
     align-items: center;
+    word-wrap: break-word;
+    line-height: 0;
 
     @include mobile {
       font-size: 11px;
+    }
+
+    &_isVip_1 {
+      .EddExpressDeliveryTextBold {
+        &:after {
+          content: "";
+          background: url(../HeaderAccount/icons/vip.png) no-repeat;
+          background-size: 26px;
+          width: 27px;
+          height: 12px;
+          display: flex;
+          font-size: 0;
+          margin: 0 5px;
+          position: absolute;
+          top: -10px;
+        }
+
+        // &_isArabic {
+        //   &:after {
+        //     right: 8px;
+        //   }
+        // }
+      }
     }
 
     .EddExpressDeliveryTextRed {
@@ -39,6 +64,13 @@
       margin: 0 5px;
       font-size: 13px;
     }
+
+    .freeVIPText {
+      font-weight: 600;
+      margin: 0 5px;
+      font-size: 13px;
+      color: green;
+    }
   }
 }
 
@@ -48,6 +80,7 @@
   color: #606060;
   margin-top: 2px;
   margin: 0 38px;
+  padding-bottom: 7px;
 }
 
 .eddStandardDelivery {

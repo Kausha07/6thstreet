@@ -351,7 +351,7 @@ class PLPFilterOption extends PureComponent {
 
       return (
         <label block="PLPFilterOption" htmlFor={facet_value}>
-          <ExpressDeliveryTruck style={{ height: "35px", width: "35px" }} />
+          <ExpressDeliveryTruck style={{ height: "25px", width: "25px" }} />
           <span
             style={{
               color: "#f96446",
