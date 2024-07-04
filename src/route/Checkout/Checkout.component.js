@@ -853,13 +853,6 @@ export class Checkout extends SourceCheckout {
           ? null
           : this.renderHeading(__("Login / Sign Up"), false)}
         <div block="Checkout" elem="GuestCheckout" mods={{ continueAsGuest }}>
-          {continueAsGuest ? (
-            <h3 block="Checkout" elem="DeliveryMessageGuest">
-              {isClickAndCollect
-                ? __("Please Confirm your contact details")
-                : __("Where can we send your order?")}
-            </h3>
-          ) : null}
           {this.renderGuestForm()}
           <div
             block="Checkout"

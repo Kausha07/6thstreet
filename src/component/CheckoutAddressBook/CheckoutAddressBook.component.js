@@ -60,6 +60,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     );
   }
 
+  editCheckoutAddress = () => {
+    const { selectIsAddressSet } = this.props;
+    selectIsAddressSet(false);
+  }
+
   renderCustomAddress() {
     const {
       isBilling,
@@ -82,6 +87,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
             selectedAddressId={selectedAddressId}
             onAddressSelect={onAddressSelect}
             shippingAddress={shippingAddress}
+            editCheckoutAddress={this.editCheckoutAddress}
           />
         </div>
       );
@@ -173,6 +179,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         selectedAddressId={selectedAddressId}
         onAddressSelect={onAddressSelect}
         shippingAddress={shippingAddress}
+        editCheckoutAddress={this.editCheckoutAddress}
       />
     );
 

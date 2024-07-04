@@ -42,6 +42,7 @@ const DeliveryAddress = (props) => {
     currentSelectedCityArea,
     onAddressSelect,
     isSignedIn,
+    editCheckoutAddress,
   } = props;
 
   const selectedAddressForRender = isSignedIn
@@ -67,31 +68,31 @@ const DeliveryAddress = (props) => {
     } = selectedAddressForRender;
 
     return (
-      <div block="address-card">
+      <div block="address-card" mods={{ isGuestUser: !isSignedIn }}>
         <div block="address-card" elem="header">
-          {isMobileDevice ? (
-            <div>
-            <h2>Delivery Address</h2>
-            <CityArea
-              isNewCheckoutPage={true}
-              onAddressSelectPopup={onAddressSelectPopup}
-            />
-          </div>
-          ) : (
             <>
               <h2>Delivery Address</h2>
-              <CityArea
-                isNewCheckoutPage={true}
-                onAddressSelectPopup={onAddressSelectPopup}
-              />
+              {isSignedIn ? (
+                <CityArea
+                  isNewCheckoutPage={true}
+                  onAddressSelectPopup={onAddressSelectPopup}
+                />
+              ) : (
+                <button
+                  className="editAddressBtn"
+                  type="button"
+                  onClick={editCheckoutAddress}
+                >
+                  Edit
+                </button>
+              )}
             </>
-          )}
         </div>
         <div block="address-card" elem="content">
           <h3 className="addressCardName">{`${firstname} ${lastname}`}</h3>
           <p className="cityAreaName">{`${area}`}</p>
           <p>{`${area}, ${street}`}</p>
-          <p>{`${phone}`}</p>
+          <p className="contactNumber">{`${phone}`}</p>
         </div>
       </div>
     );

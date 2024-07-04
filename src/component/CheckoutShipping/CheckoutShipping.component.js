@@ -301,8 +301,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderActions() {
-    const { isPaymentLoading } = this.props;
+    const { isPaymentLoading, isAddressSelected } = this.props;
     const { isButtondisabled } = this.state;
+
+    if(isAddressSelected){
+      return null;
+    }
+
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
         {this.renderTotals()}
@@ -692,6 +697,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             {this.renderDelivery()}
             {this.renderNewPaymentBlock()}
             {/* {this.renderHeading(__("Payment Options"), true)} */}
+            {isMobile ? this.renderActions() : null}
           </div>
         </Form>
       </div>

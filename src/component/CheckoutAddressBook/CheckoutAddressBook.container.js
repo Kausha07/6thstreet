@@ -19,6 +19,7 @@ export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
 );
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
@@ -38,6 +39,8 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.estimateEddResponse(dispatch, request, type)
     ),
     setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
+  selectIsAddressSet: (isAddress) =>
+    CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
 });
 
 export class CheckoutAddressBookContainer extends PureComponent {
