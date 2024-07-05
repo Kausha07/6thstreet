@@ -337,11 +337,12 @@ export const ExpressAndStandardEDD = ({
                   </span>
                 </div>
               </div>
-              {!isTimeExpired && (
-                <div block="EddExpressDeliveryCutOffTime">
-                  {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
-                </div>
-              )}
+              {!isTimeExpired &&
+                express_delivery?.toLowerCase() !== "tomorrow delivery" && (
+                  <div block="EddExpressDeliveryCutOffTime">
+                    {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
+                  </div>
+                )}
             </div>
           )}
 
