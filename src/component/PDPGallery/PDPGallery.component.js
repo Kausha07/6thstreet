@@ -333,6 +333,7 @@ class PDPGallery extends PureComponent {
     return <PDPGalleryTag tag={prod_tag_2} />;
   }
   renderSlider() {
+    const { isArabic } = this.state;
     const { gallery, currentIndex, onSliderChange} = this.props;
    
 
@@ -345,9 +346,11 @@ class PDPGallery extends PureComponent {
       <Slider
         activeImage={currentIndex}
         onActiveImageChange={this.onSlideChange}
-        mix={{ block: "PDPGallery", elem: "Slider" }}
+        mix={{ block: "PDPGallery", elem: `${isArabic ? "Slider_isArabic":"Slider"}` }}
+        mods={{  }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
+        direction={isArabic ? 'rtl':'ltr'}
        
       >
         {this.renderGallery()}
@@ -371,7 +374,7 @@ class PDPGallery extends PureComponent {
             height="534"
             src={videos[key]}
             type="video/mp4"
-            controls={!isMobile.any()}
+            controls={isMobile.any()}
             disablepictureinpicture
             playsinline
           />
