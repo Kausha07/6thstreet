@@ -687,6 +687,8 @@ class PDPGallery extends PureComponent {
             url: url
           })
         }
+      } else {
+        this.copyToClipboard();
       }
  
     };
