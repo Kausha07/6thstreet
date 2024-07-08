@@ -460,8 +460,8 @@ class PDPGallery extends PureComponent {
       },
     } = this.props;
     const { isVideoPlaying, listener, scrolledSlide } = this.state;
-    this.setState({isVideoPlayPause:false}); 
-    this.setState({isMute:true});
+    this.setState({isVideoPlayPause:false,isMute:true}); 
+
     if (activeSlide > scrolledSlide) {
       this.setState({ scrolledSlide: activeSlide });
     }
@@ -604,8 +604,7 @@ class PDPGallery extends PureComponent {
             block="PDPGallery-VideoButtonsContainer-VideoButtons"
             elem="ViewGallery"
             onClick={() => {
-              this.setState({isVideoPlayPause:false}); 
-              this.setState({isMute:true});
+              this.setState({isVideoPlayPause:false,isMute:true});
               this.stopVideo();
             }}
           >
@@ -618,8 +617,7 @@ class PDPGallery extends PureComponent {
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="StyleVideo"
                 onClick={() => {
-                  this.setState({isVideoPlayPause:false}); 
-                  this.setState({isMute:true});
+                  this.setState({isVideoPlayPause:false,isMute:true});
                   this.playVideo("prod_style_video")}}
               >
                 {__("Video")}
@@ -630,8 +628,7 @@ class PDPGallery extends PureComponent {
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="360DegreeVideo"
                 onClick={() => {
-                  this.setState({isVideoPlayPause:false}); 
-                this.setState({isMute:true});
+                  this.setState({isVideoPlayPause:false,isMute:true});
                 this.playVideo("prod_360_video")
               }}
               >
