@@ -452,6 +452,9 @@ div[class^='styles__body'] {
     font-weight: 500;
     line-height: 20px;
     text-align: left;
+    &_isArabic{
+      text-align: right;
+    }
   }
 }
 
