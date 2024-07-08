@@ -35,8 +35,8 @@ import timerIcon from "./icons/flash_Sale.svg";
 import Ratings from 'Component/Ratings/Ratings';
 import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
 import MobileAPI from "Util/API/provider/MobileAPI";
-import mute from "./icons/sound_off@3x.png";
-import unmute from "./icons/sound_on@3x.png";
+import unmute from "./icons/sound_off@3x.png";
+import mute from "./icons/sound_on@3x.png";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
@@ -79,7 +79,7 @@ class PDPGallery extends PureComponent {
       isFirstTimeZoomedIn: true,
       scrolledSlide: 0,
       isVideoPlayPause:false,
-      isMute:false
+      isMute:true
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
@@ -461,7 +461,7 @@ class PDPGallery extends PureComponent {
     } = this.props;
     const { isVideoPlaying, listener, scrolledSlide } = this.state;
     this.setState({isVideoPlayPause:false}); 
-    this.setState({isMute:false});
+    this.setState({isMute:true});
     if (activeSlide > scrolledSlide) {
       this.setState({ scrolledSlide: activeSlide });
     }
@@ -605,7 +605,7 @@ class PDPGallery extends PureComponent {
             elem="ViewGallery"
             onClick={() => {
               this.setState({isVideoPlayPause:false}); 
-              this.setState({isMute:false});
+              this.setState({isMute:true});
               this.stopVideo();
             }}
           >
@@ -619,7 +619,7 @@ class PDPGallery extends PureComponent {
                 elem="StyleVideo"
                 onClick={() => {
                   this.setState({isVideoPlayPause:false}); 
-                  this.setState({isMute:false});
+                  this.setState({isMute:true});
                   this.playVideo("prod_style_video")}}
               >
                 {__("Video")}
@@ -631,7 +631,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => {
                   this.setState({isVideoPlayPause:false}); 
-                this.setState({isMute:false});
+                this.setState({isMute:true});
                 this.playVideo("prod_360_video")
               }}
               >
@@ -725,14 +725,14 @@ class PDPGallery extends PureComponent {
         <span className={`btn__mute ${isMute ? 'muteActive':''} ${isArabic ?'_isArabic':''}`} onClick={(event) => {
           event.stopPropagation();
           if(isMute){
-            this.videoRef[key].current.muted = false;
-          } else {
             this.videoRef[key].current.muted = true;
+          } else {
+            this.videoRef[key].current.muted = false;
           }
           this.setState({isMute:!isMute});
         } }>
-          {isMute && <img src={mute} className="icon icon__mute" alt="mute"/>}
-          {!isMute && <img src={unmute} className="icon icon__unmute"alt="unmute"/>}
+          {!isMute && <img src={mute} className="icon icon__mute" alt="mute"/>}
+          {isMute && <img src={unmute} className="icon icon__unmute"alt="unmute"/>}
         </span>
       ));
   }
