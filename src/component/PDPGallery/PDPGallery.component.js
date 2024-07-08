@@ -35,6 +35,8 @@ import timerIcon from "./icons/flash_Sale.svg";
 import Ratings from 'Component/Ratings/Ratings';
 import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
 import MobileAPI from "Util/API/provider/MobileAPI";
+import mute from "./icons/sound_off@3x.png";
+import unmute from "./icons/sound_on@3x.png";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
@@ -76,6 +78,8 @@ class PDPGallery extends PureComponent {
       listener: "",
       isFirstTimeZoomedIn: true,
       scrolledSlide: 0,
+      isVideoPlayPause:false,
+      isMute:false
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
@@ -362,6 +366,7 @@ class PDPGallery extends PureComponent {
   renderVideos() {
     const { prod_style_video, prod_360_video } = this.props;
     const videos = { prod_style_video, prod_360_video };
+    const {isVideoPlayPause, isMute} = this.state;
     return Object.keys(videos)
       .filter((key) => !!videos[key])
       .map((key, index) => (
@@ -374,9 +379,19 @@ class PDPGallery extends PureComponent {
             height="534"
             src={videos[key]}
             type="video/mp4"
-            controls={isMobile.any()}
+            controls={!isMobile.any()}
             disablepictureinpicture
             playsinline
+            muted={isMute}
+            onClick={(event) => {
+              event.stopPropagation();
+              if(isVideoPlayPause){
+                this.videoRef[key].current.play();
+              } else{
+                this.videoRef[key].current.pause();
+              }
+              this.setState({isVideoPlayPause:!isVideoPlayPause});  
+            }}
           />
       ));
   }
@@ -445,7 +460,8 @@ class PDPGallery extends PureComponent {
       },
     } = this.props;
     const { isVideoPlaying, listener, scrolledSlide } = this.state;
-
+    this.setState({isVideoPlayPause:false}); 
+    this.setState({isMute:false});
     if (activeSlide > scrolledSlide) {
       this.setState({ scrolledSlide: activeSlide });
     }
@@ -587,7 +603,11 @@ class PDPGallery extends PureComponent {
           <button
             block="PDPGallery-VideoButtonsContainer-VideoButtons"
             elem="ViewGallery"
-            onClick={() => this.stopVideo()}
+            onClick={() => {
+              this.setState({isVideoPlayPause:false}); 
+              this.setState({isMute:false});
+              this.stopVideo();
+            }}
           >
             {__("View Gallery")}
           </button>
@@ -597,7 +617,10 @@ class PDPGallery extends PureComponent {
               <button
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="StyleVideo"
-                onClick={() => this.playVideo("prod_style_video")}
+                onClick={() => {
+                  this.setState({isVideoPlayPause:false}); 
+                  this.setState({isMute:false});
+                  this.playVideo("prod_style_video")}}
               >
                 {__("Video")}
               </button>
@@ -606,7 +629,11 @@ class PDPGallery extends PureComponent {
               <button
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="360DegreeVideo"
-                onClick={() => this.playVideo("prod_360_video")}
+                onClick={() => {
+                  this.setState({isVideoPlayPause:false}); 
+                this.setState({isMute:false});
+                this.playVideo("prod_360_video")
+              }}
               >
                 {__("360°")}
               </button>
@@ -687,8 +714,31 @@ class PDPGallery extends PureComponent {
 
   }
 
+  renderMuteUnmute= () =>{
+    const { prod_style_video, prod_360_video } = this.props;
+    const videos = { prod_style_video, prod_360_video };
+    const {isMute, isArabic} = this.state;
+    return Object.keys(videos)
+      .filter((key) => !!videos[key])
+      .map((key, index) => (
+        
+        <span className={`btn__mute ${isMute ? 'muteActive':''} ${isArabic ?'_isArabic':''}`} onClick={(event) => {
+          event.stopPropagation();
+          if(isMute){
+            this.videoRef[key].current.muted = false;
+          } else {
+            this.videoRef[key].current.muted = true;
+          }
+          this.setState({isMute:!isMute});
+        } }>
+          {isMute && <img src={mute} className="icon icon__mute" alt="mute"/>}
+          {!isMute && <img src={unmute} className="icon icon__unmute"alt="unmute"/>}
+        </span>
+      ));
+  }
+
   render() {
-    const { openGalleryOverlay, isArabic } = this.state;
+    const { openGalleryOverlay, isArabic, isVideoPlaying } = this.state;
     const { 
       renderMySignInPopup,
       isNewDesign,
@@ -735,6 +785,9 @@ class PDPGallery extends PureComponent {
           {this.renderSlider()}
           {this.renderGalleryTag()}
           {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" productId={objectID} sku={sku}/>}
+
+        {isMobile.any() && isVideoPlaying && this.renderMuteUnmute()}
+          
         </button>
 
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} isPDPEventsOnly />}

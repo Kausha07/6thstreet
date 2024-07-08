@@ -170,7 +170,7 @@ export class SliderVertical extends PureComponent {
     } = this.state;
 
     if (isSlider) {
-      if (activeImage > prevActiveImage) {
+      if (activeImage >= prevActiveImage) {
         this.handleSliderDown(
           activeImage,
           count,
@@ -182,7 +182,7 @@ export class SliderVertical extends PureComponent {
         );
       }
 
-      if (activeImage < prevActiveImage) {
+      if (activeImage <= prevActiveImage) {
         this.handleSliderUp(
           activeImage,
           count,

@@ -192,13 +192,13 @@ export class Slider extends PureComponent {
             return 0;
         }
         if (translate < -fullSliderSize && direction !== 'rtl') {
-            const activeSlide = Math.round(fullSliderSize / -slideSize);
+            const activeSlide = Math.round(fullSliderSize / (direction === 'rtl' ? slideSize : -slideSize));
             onActiveImageChange(direction === 'rtl' ? activeSlide : -activeSlide);
             return activeSlide;
         }
 
         if (translate > fullSliderSize && direction === 'rtl') {
-            const activeSlide = Math.round(fullSliderSize / -slideSize);
+            const activeSlide = Math.round(fullSliderSize / (direction === 'rtl' ? slideSize : -slideSize));
             onActiveImageChange(direction === 'rtl' ? activeSlide : -activeSlide);
             return activeSlide;
         }

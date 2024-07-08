@@ -259,6 +259,7 @@
     .PDPGallery {
       &-OverlayButton {
         height: fit-content;
+        position: relative;
         .Image_imageStatus_2 {
           display: flex;
           height: 400px !important;
@@ -275,6 +276,36 @@
         margin: 15px 0 0 0;
       }
     }
+  }
+  .btn__mute{
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 1rem;
+    width: 24px;
+    height: 24px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 5px 2px #606060;
+    transition: all .2s ease-in-out;
+    -webkit-transition: all .1s ease-in-out;
+    &:active{
+      transform: translate(0,2px);
+      box-shadow: 0px 2px 3px 2px #606060;
+    }
+    &._isArabic{
+      right: auto;
+      left: 20px;
+    }
+  }
+  
+  .icon{
+    width: 15px;
+    height: 15px;
   }
 
   &._newDesign{
@@ -406,6 +437,20 @@
             }
           }
   
+        }
+      }
+    }
+    .btn__mute{
+      bottom: 75px;
+    }
+    .PDPGallery{
+      &-Slider{
+        &_isArabic{
+          .Slider-Video {
+            .Slider-Crumb{
+              transform: rotateY(180deg);
+            }
+          }
         }
       }
     }
