@@ -676,15 +676,22 @@ class PDPGallery extends PureComponent {
           }),
         ],
       };
-      if (navigator.share && navigator.canShare(productData)) {
-        try {
-          await navigator.share(productData);
-        } catch (err) {
-          console.log("ERROR", err);
+      if (navigator.share) {
+        if(navigator.canShare(productData)) {
+          try {
+            await navigator.share(productData);
+          } catch (err) {
+            console.log("ERROR", err);
+          }
+        } else {
+          navigator.share({
+            title: document.title,
+            text: `Hey check this out: ${document.title}`,
+            url: url
+          })
         }
-      } else {
-        this.copyToClipboard();
       }
+ 
     };
     return (
       <>
