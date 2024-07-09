@@ -1077,7 +1077,7 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
-          {pageType === "plp" &&
+          {!isMobile.any() && pageType === "plp" &&
             isExpressDelivery &&
             this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
@@ -1093,6 +1093,9 @@ class ProductItem extends PureComponent {
             {this.renderExclusiveMobile(true)}
           </div>
         )}
+        {isMobile.any() && pageType === "plp" &&
+            isExpressDelivery &&
+            this.renderExpressDeliveryTag()}
 
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (

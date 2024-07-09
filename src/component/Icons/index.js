@@ -38,6 +38,7 @@ import EditPencil from "./EditPencil";
 import OrangeDotSelector from "./OrangeDotSelector";
 import BlackDotSelector from "./BlackDotSelector";
 import ExpressDeliveryTruck from "./ExpressDeliveryTruck";
+import ExpressIcon from "./ExpressIcon";
 
 export {
   Account,
@@ -80,4 +81,5 @@ export {
   OrangeDotSelector,
   BlackDotSelector,
   ExpressDeliveryTruck,
+  ExpressIcon,
 };

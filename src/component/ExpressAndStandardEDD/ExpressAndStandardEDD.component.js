@@ -307,7 +307,8 @@ export const ExpressAndStandardEDD = ({
       <div>
         {isExpressServiceAvailable?.express_eligible &&
           isExpressDelivery &&
-          (isProductExpressEligible || isSKUExpressEligible) &&
+          ((isProductExpressEligible && isSKUExpressEligible) ||
+            isSKUExpressEligible) &&
           !isInternationalProduct &&
           isProductOfficeServicable && (
             <div block="eddExpressDelivery">
