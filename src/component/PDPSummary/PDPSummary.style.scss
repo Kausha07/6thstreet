@@ -23,6 +23,10 @@
     display: flex;
     justify-content: space-between;
 
+    z-index: 1;
+    position: relative;
+
+
     .ShareAndWishlistButtonContainer {
       display: flex;
       justify-content: center;

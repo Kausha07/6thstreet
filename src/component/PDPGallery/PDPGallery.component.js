@@ -79,7 +79,8 @@ class PDPGallery extends PureComponent {
       isFirstTimeZoomedIn: true,
       scrolledSlide: 0,
       isVideoPlayPause:false,
-      isMute:true
+      isMute:true,
+      getProductImage:""
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
@@ -89,6 +90,7 @@ class PDPGallery extends PureComponent {
 
   componentDidMount(){
     this.renderMyViewCount();
+    this.getproductFile();
   }
   
   componentWillUnmount() {
@@ -653,28 +655,33 @@ class PDPGallery extends PureComponent {
     }
   };
 
+  async getproductFile() {
+    const response = await fetch(gallery_images[0], {
+      mode: "no-cors",
+    });
+    const blob = await response.blob();
+    const file = new File([blob], "file.jpeg", {
+      type: blob.type,
+    }); 
+    this.setState({getProductImage : file})
+  }
+
+
   renderShareButton() {
     const {
       product: { gallery_images, name },
     } = this.props;
+    const {getProductImage} = this.state;
     const url = new URL(window.location.href).href;
     const navigatorShare = async () => {
       if (navigator.share) {
         if ('canShare' in navigator) {
           try {
-            const response = await fetch(gallery_images[0], {
-              mode: "no-cors",
-            });
-            const blob = await response.blob();
             const productData = {
               title: document.title,
               text: `Hey check this out: ${document.title}`,
               url: url,
-              files: [
-                new File([blob], "file.jpg", {
-                  type: blob.type,
-                }),
-              ],
+              files: [getProductImage],
             };
             await navigator.share(productData);
           } catch (err) {
