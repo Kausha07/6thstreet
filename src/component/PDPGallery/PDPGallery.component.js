@@ -688,6 +688,7 @@ class PDPGallery extends PureComponent {
             };
             await navigator.share(productData);
           } catch (err) {
+            this.copyToClipboard();
             console.log("ERROR", err);
           }
         } else {
