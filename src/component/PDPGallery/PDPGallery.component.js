@@ -656,6 +656,9 @@ class PDPGallery extends PureComponent {
   };
 
   async getproductFile() {
+    const {
+      product: { gallery_images },
+    } = this.props;
     const response = await fetch(gallery_images[0], {
       mode: "no-cors",
     });
