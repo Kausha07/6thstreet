@@ -45,9 +45,9 @@ class PLPPage extends PureComponent {
   sendProductImpression = (product) => {
     const { newActiveFilters = {}, activeFilters = {} } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
-    if(!skuImpressionList[product?.sku]) {
+    if(!skuImpressionList[product?.[0]?.sku]) {
       gtmProdArr.push([product]);
-      skuImpressionList[product?.sku] = true
+      skuImpressionList[product?.[0]?.sku] = true
     }
     const product_numbers = isMobile.any() ? 4 : 6;
     if (gtmProdArr.length > product_numbers - 1) {
