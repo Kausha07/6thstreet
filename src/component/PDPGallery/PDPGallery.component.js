@@ -659,23 +659,23 @@ class PDPGallery extends PureComponent {
     } = this.props;
     const url = new URL(window.location.href).href;
     const navigatorShare = async () => {
-      const response = await fetch(gallery_images[0], {
-        mode: "no-cors",
-      });
-      const blob = await response.blob();
-      const productData = {
-        title: document.title,
-        text: `Hey check this out: ${document.title}`,
-        url: url,
-        files: [
-          new File([blob], "file.jpg", {
-            type: blob.type,
-          }),
-        ],
-      };
       if (navigator.share) {
-        if(navigator.canShare(productData)) {
+        if ('canShare' in navigator) {
           try {
+            const response = await fetch(gallery_images[0], {
+              mode: "no-cors",
+            });
+            const blob = await response.blob();
+            const productData = {
+              title: document.title,
+              text: `Hey check this out: ${document.title}`,
+              url: url,
+              files: [
+                new File([blob], "file.jpg", {
+                  type: blob.type,
+                }),
+              ],
+            };
             await navigator.share(productData);
           } catch (err) {
             console.log("ERROR", err);
