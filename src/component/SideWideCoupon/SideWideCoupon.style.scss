@@ -149,6 +149,10 @@
             line-height: 17.76px;
             text-align: center;
             color: #28D9AA;
+
+            &_isHidden {
+                display: none;
+            }
         }
     }
 
