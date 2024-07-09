@@ -56,7 +56,9 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   eddResponse: state.MyAccountReducer.eddResponse,
   eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
-  addtoCartInfo:state.PDP.addtoCartInfo
+  addtoCartInfo:state.PDP.addtoCartInfo,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -453,7 +455,9 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag=()=>null
+      addTag=()=>null,
+      isExpressDelivery,
+      isExpressServiceAvailable,
     } = this.props;
     const {
       mappedSizeObject,
@@ -478,7 +482,9 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag
+      addTag,
+      isExpressDelivery,
+      isExpressServiceAvailable,
     };
   };
 

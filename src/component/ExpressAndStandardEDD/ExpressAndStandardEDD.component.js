@@ -279,6 +279,10 @@ export const ExpressAndStandardEDD = ({
       return true;
     }
 
+    if (!express_delivery) {
+      return true;
+    }
+
     if (isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer) {
       if (isExpressServiceAvailable?.is_vip_chargeable) {
         return true;
@@ -307,9 +311,11 @@ export const ExpressAndStandardEDD = ({
       <div>
         {isExpressServiceAvailable?.express_eligible &&
           isExpressDelivery &&
-          (isProductExpressEligible || isSKUExpressEligible) &&
+          ((isProductExpressEligible && isSKUExpressEligible) ||
+            isSKUExpressEligible) &&
           !isInternationalProduct &&
-          isProductOfficeServicable && (
+          isProductOfficeServicable &&
+          express_delivery && (
             <div block="eddExpressDelivery">
               <div
                 block="EddExpressDeliveryTextBlock"
@@ -339,7 +345,7 @@ export const ExpressAndStandardEDD = ({
               {!isTimeExpired &&
                 express_delivery?.toLowerCase() !== "tomorrow delivery" && (
                   <div block="EddExpressDeliveryCutOffTime">
-                    {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
+                    {__("Order within %sHrs %sMins", hours, minutes)}
                   </div>
                 )}
             </div>
