@@ -424,7 +424,32 @@ export class CartPage extends PureComponent {
       total: this.props?.totals?.total || "",
     };
     Event.dispatch(EVENT_GTM_COUPON, eventData);
-    this.props.removeCouponFromCart();
+    // if coupon is Sitewide coupon then pass isSiteWide flag as true
+    const {
+      isSignedIn,
+      totals: { site_wide_applied = 0, coupon_code = "" },
+      config,
+    } = this.props;
+    let isSiteWideCoupon = false;
+    const countryCode = getCountryFromUrl();
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode =
+      config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+
+    if (
+      coupon_code &&
+      coupon_code != "" &&
+      sidewideCouponCode &&
+      sidewideCouponCode != "" &&
+      coupon_code.toLowerCase() === sidewideCouponCode.toLowerCase()
+    ) {
+      isSiteWideCoupon = true;
+    }
+
+    this.props.removeCouponFromCart({
+      is_guest: !isSignedIn,
+      isSiteWide: isSiteWideCoupon,
+    });
   };
   getCouponModuleStatus = async () => {
     const { country, config } = this.props;
