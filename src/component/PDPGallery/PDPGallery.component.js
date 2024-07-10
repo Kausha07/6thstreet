@@ -659,9 +659,7 @@ class PDPGallery extends PureComponent {
     const {
       product: { gallery_images },
     } = this.props;
-    const response = await fetch(gallery_images[0], {
-      mode: "no-cors",
-    });
+    const response = await fetch(gallery_images[0]);
     const blob = await response.blob();
     const file = new File([blob], "file.jpeg", {
       type: blob.type,
@@ -680,13 +678,13 @@ class PDPGallery extends PureComponent {
       if (navigator.share) {
         if ('canShare' in navigator) {
           try {
-            const productData = {
+            let productData = {
               title: document.title,
               text: `Hey check this out: ${document.title}`,
               url: url
             };
             if(getProductImage?.size?.length > 0) {
-              productData.files = [getProductImage]
+              productData.files = [getProductImage];
             }
             await navigator.share(productData);
           } catch (err) {
