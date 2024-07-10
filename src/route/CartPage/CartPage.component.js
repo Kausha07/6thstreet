@@ -64,6 +64,7 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import TamaraWidget from "Component/TamaraWidget/TamaraWidget";
 import SideWideCoupon from "Component/SideWideCoupon";
 import CartTotal from "Component/CartTotal";
+import { handleSwcToPromoCall } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -366,7 +367,31 @@ export class CartPage extends PureComponent {
   }
 
   handleSideWideCoupon = async (flag, sidewideCouponCode) => {
-    const { isSignedIn, updateSidewideCoupon } = this.props;
+    const {
+      isSignedIn,
+      updateSidewideCoupon,
+      applyCouponToCart,
+      removeCouponFromCart,
+      config,
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const SWCPromoCall =
+      config?.countries?.[countryCode]?.swc_promo_call || false;
+
+    if (SWCPromoCall) {
+      handleSwcToPromoCall({
+        SWCPromoCall,
+        applyCouponToCart,
+        pageType: "CartPage",
+        setLoader: this.setLoader,
+        removeCouponFromCart,
+        flag,
+        sidewideCouponCode,
+        sendSiteWideCouponEvents: this.sendSiteWideCouponEvents,
+        isSignedIn,
+      });
+      return;
+    }
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
     const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
@@ -472,6 +497,9 @@ export class CartPage extends PureComponent {
     const langCode = getLanguageFromUrl();
     const sidewideCouponCode =
       config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+    const promoCodeText =
+      config?.countries?.[countryCode]?.promo_code_text?.[langCode] ||
+      __("Enter coupon or promo code");
 
     return (
       <>
@@ -513,7 +541,7 @@ export class CartPage extends PureComponent {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                   </button>
@@ -546,7 +574,7 @@ export class CartPage extends PureComponent {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                     <span block="couponCodeSelectText">{__("Select")}</span>

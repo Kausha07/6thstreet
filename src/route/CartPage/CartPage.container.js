@@ -105,7 +105,7 @@ export const mapDispatchToProps = (dispatch) => ({
   getCouponList: () => CartDispatcher.getCoupon(dispatch),
   applyCouponToCart: (couponCode) =>
     CartDispatcher.applyCouponCode(dispatch, couponCode),
-  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
+  removeCouponFromCart: (data={}) => CartDispatcher.removeCouponCode(dispatch, data),
   getTabbyInstallment: (price) =>
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),

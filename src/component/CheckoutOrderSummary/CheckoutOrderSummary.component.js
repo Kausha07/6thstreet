@@ -32,6 +32,7 @@ import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import { Coupon } from "Component/Icons/index";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CartTotal from "Component/CartTotal";
+import { handleSwcToPromoCall } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 
 import "./CheckoutOrderSummary.extended.style";
 
@@ -269,7 +270,31 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 
   handleSideWideCoupon = async (flag, sidewideCouponCode) => {
-    const { isSignedIn, updateSidewideCoupon } = this.props;
+    const {
+      isSignedIn,
+      updateSidewideCoupon,
+      applyCouponToCart,
+      removeCouponFromCart,
+      config,
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const SWCPromoCall =
+      config?.countries?.[countryCode]?.swc_promo_call || false;
+
+    if (SWCPromoCall) {
+      handleSwcToPromoCall({
+        SWCPromoCall,
+        applyCouponToCart,
+        pageType: "CheckoutPage",
+        setLoader: this.setLoader,
+        removeCouponFromCart,
+        flag,
+        sidewideCouponCode,
+        sendSiteWideCouponEvents: this.sendSiteWideCouponEvents,
+        isSignedIn,
+      });
+      return;
+    }
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
     const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
@@ -349,6 +374,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const langCode = getLanguageFromUrl();
     const sidewideCouponCode =
       config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+      const promoCodeText =
+      config?.countries?.[countryCode]?.promo_code_text?.[langCode] ||
+      __("Enter coupon or promo code");
 
     return (
       <div block="wrapperCartCouponBlock" mods={{ isArabic }}>
@@ -390,7 +418,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                   </button>
@@ -423,7 +451,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                     <span block="couponCodeSelectText">{__("Select")}</span>
