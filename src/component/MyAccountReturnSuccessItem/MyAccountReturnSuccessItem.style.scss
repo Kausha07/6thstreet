@@ -76,6 +76,15 @@
         text-decoration: line-through;
       }
     }
+    .PriceRegular{
+      &_isArabic{
+        direction: rtl;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+    }
 
     .SearchProduct {
       &-Discount {

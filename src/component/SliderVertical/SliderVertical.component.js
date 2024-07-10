@@ -170,7 +170,7 @@ export class SliderVertical extends PureComponent {
     } = this.state;
 
     if (isSlider) {
-      if (activeImage > prevActiveImage) {
+      if (activeImage >= prevActiveImage) {
         this.handleSliderDown(
           activeImage,
           count,
@@ -182,7 +182,7 @@ export class SliderVertical extends PureComponent {
         );
       }
 
-      if (activeImage < prevActiveImage) {
+      if (activeImage <= prevActiveImage) {
         this.handleSliderUp(
           activeImage,
           count,
@@ -206,6 +206,7 @@ export class SliderVertical extends PureComponent {
   ) => {
     if (activeImage >= count && draggableRef) {
       const { oldTranslate } = this.state;
+      const { direction } = this.props;
       const newTranslate =
         sliderChildren.length - count < countPerPage
           ? oldTranslate -
@@ -218,7 +219,7 @@ export class SliderVertical extends PureComponent {
         `${Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION)}ms`
       );
 
-      CSS.setVariable(draggableRef, "translateY", `${newTranslate}px`);
+      CSS.setVariable(draggableRef, "translateY", `${direction === 'rtl' ? -newTranslate : newTranslate}px`);
 
       if (activeImage === sliderChildren.length - 1) {
         this.setState({

@@ -156,6 +156,10 @@
         .Slider {
             margin: auto 10px;
             bottom: 0;
+            // direction: ltr;
+            // &.PDPGalleryOverlay-Slider_isArabic{
+            //     direction: rtl;
+            //   }
         }
         .ZoomGuide {
             position: absolute;
@@ -243,10 +247,10 @@
     }
 }
 
-.react-transform-wrapper {
-    left: 50%;
-    transform: translateX(-50%);
-}
+// .react-transform-wrapper {
+//     left: 50%;
+//     transform: translateX(-50%);
+// }
 .CurrentImage {
     pointer-events: unset!important;
     cursor: -moz-zoom-in!important; 
@@ -257,5 +261,40 @@
         cursor: -moz-zoom-out!important;
         cursor: -webkit-zoom-out!important;
         cursor: zoom-out!important
+    }
+}
+.PDPGalleryOverlay-Slider,
+.PDPGalleryOverlay-Slider_isArabic{
+    .Slider-Wrapper{
+        & > * {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.Slider{
+    &_isArabic{
+        .SliderHorizontal{
+            &-ButtonLeft{
+                left: auto;
+                right: 0;
+            }
+            &-ButtonRight{
+                right: auto;
+                left: 0;
+            }
+            &-ArrowLeft{
+                transform: rotate(-45deg);
+                left: auto;
+                right: 7px;
+            }
+            &-ArrowRight{
+                transform: rotate(135deg);
+                left: 7px;
+                right: auto;
+            }
+        }
     }
 }
