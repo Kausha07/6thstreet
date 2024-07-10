@@ -23,6 +23,10 @@
     display: flex;
     justify-content: space-between;
 
+    z-index: 1;
+    position: relative;
+
+
     .ShareAndWishlistButtonContainer {
       display: flex;
       justify-content: center;
@@ -452,6 +456,9 @@ div[class^='styles__body'] {
     font-weight: 500;
     line-height: 20px;
     text-align: left;
+    &_isArabic{
+      text-align: right;
+    }
   }
 }
 
@@ -471,6 +478,23 @@ div[class^='styles__body'] {
     letter-spacing: 0;
     font-size: 24px;
     line-height: 33px;
+  }
+}
+.Price{
+  &_isArabic{
+    .Price-Wrapper{
+      direction: rtl;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      .Price-Special{
+        padding-right: 0;
+        padding-left: 8px;
+      }
+      .Price-Del{
+        top: 0;
+      }
+    }
   }
 }
 
@@ -745,7 +769,17 @@ div[class^='styles__body'] {
         &-Heading{
           width: 100%; 
         }
+        &-Exclusive{
+          &:not(:last-child){
+            margin-right: 0;
+            margin-left: 5px;
+          }
+        } 
       }
+      .ProductLabel,
+      .ProductTag{
+        @extend .PDPSummary-Exclusive;
+        }
       
       // .PriceContainer {
       //   .Price{
