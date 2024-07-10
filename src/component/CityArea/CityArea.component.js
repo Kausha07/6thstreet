@@ -21,6 +21,7 @@ import DeliveryAddressPopUpWhenNoAddress from "Component/DeliveryAddressPopUpWhe
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { CART_ITEMS_CACHE_KEY } from "../../store/Cart/Cart.reducer";
 import address from "Component/PDPSummary/icons/address_black.svg";
 import { ChevronDown, ChevronLeft } from "Component/Icons";
@@ -37,6 +38,7 @@ export const mapStateToProps = (state) => ({
   EddAddress: state.MyAccountReducer.EddAddress,
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   pdpProduct: state.PDP.product,
+  cartId: state.Cart.cartId,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -55,6 +57,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.expressPopUpOpen(dispatch, val),
   setExpressPLPAddressForm: (val) =>
     MyAccountDispatcher.setExpressPLPAddressForm(dispatch, val),
+  getCart: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export const CityArea = (props) => {
@@ -84,9 +87,15 @@ export const CityArea = (props) => {
     isNewCheckoutPage,
     onAddressSelectPopup,
     setExpressPLPAddressForm,
+    showSignInPopUpForGuest = false,
+    getCart,
+    cartId,
+    cartItems,
   } = props;
 
-  const [showPopUp, setShowPopUp] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(
+    showSignInPopUpForGuest && !isSignedIn ? showSignInPopUpForGuest : false
+  );
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
   const [showCityAreaSelectionPopUp, setShowCityAreaSelectionPopUp] =
@@ -105,10 +114,17 @@ export const CityArea = (props) => {
   );
 
   useEffect(() => {
+    expressCutOffTime();
+  }, []);
+
+  // Effect to update finalAreaText based on localStorage changes
+  useEffect(() => {
     if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
       setFinalAreaText(
         JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
       );
+    } else if (!isSignedIn) {
+      setFinalAreaText(__("Select Area"));
     }
   }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
 
@@ -140,7 +156,6 @@ export const CityArea = (props) => {
       if (data?.city && data?.area) {
         expressService(data);
       }
-      expressCutOffTime();
     }
   }, [finalAreaText]);
 
@@ -417,6 +432,11 @@ export const CityArea = (props) => {
       JSON.stringify(selectedAddress)
     );
 
+    // whenever you change address make get carts API call to send the current selected city and area to backend team in API params
+    if (cartItems?.length > 0) {
+      getCart(cartId);
+    }
+
     if (window.pageType === "PRODUCT") {
       // checking this condition rather than isPDP bcz if we are on PDP page and
       // select address from the top header section then there's no EDD call for PDP
@@ -453,24 +473,12 @@ export const CityArea = (props) => {
   };
 
   const renderAddressPopUp = () => {
-    const countryWiseAddresses = addresses
-      ?.filter((obj) => obj?.country_code === getCountryFromUrl())
-      .sort((a, b) => {
-        if (a.default_shipping === true && b.default_shipping !== true) {
-          return -1;
-        }
-        if (a.default_shipping !== true && b.default_shipping === true) {
-          return 1;
-        }
-        return 0;
-      });
-
-    if (countryWiseAddresses && countryWiseAddresses?.length > 0) {
+    if (addresses && addresses?.length > 0) {
       return (
         <DeliveryAddressPopUp
           showHidePOPUP={showHidePOPUP}
           showPopUp={showPopUp}
-          countryWiseAddresses={countryWiseAddresses}
+          addresses={addresses}
           editSelectedAddress={editSelectedAddress}
           addNewAddress={addNewAddress}
           defaultShippingAddress={defaultShippingAddress}

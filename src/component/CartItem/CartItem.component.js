@@ -12,7 +12,7 @@
  */
 
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { isObject } from "Util/API/helper/Object";
@@ -38,6 +38,10 @@ import "./CartItem.style";
 import "./CartItem.extended.style";
 import { getDefaultEddMessage } from "Util/Date/index";
 import { getCountryFromUrl } from "Util/Url";
+
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 
 /**
  * Cart and CartOverlay item
@@ -563,7 +567,13 @@ export class CartItem extends PureComponent {
     const {
       edd_info,
       item: {
-        full_item_info: { cross_border = 0 },
+        full_item_info: {
+          cross_border = 0,
+          express_delivery = "",
+          mp_quantity = 0,
+          store_quantity = 0,
+          whs_quantity = 0,
+        },
         extension_attributes,
       },
       international_shipping_fee,
@@ -586,7 +596,6 @@ export class CartItem extends PureComponent {
       return null;
     }
 
-    const isExpressProduct = false;
     if (extension_attributes?.click_to_collect_store) {
       return (
         <div block="AreaText" mods={{ isArabic }}>
@@ -599,48 +608,20 @@ export class CartItem extends PureComponent {
 
     return (
       <div block="EddExpressWrapper">
-        {isExpressProduct && (
-          <div block="EddExpressDelivery">
-            <div block="EddExpressDeliveryTextBlock">
-              <ExpressDeliveryTruck />
-              <div block="EddExpressDeliveryText">
-                <span block="EddExpressDeliveryTextRed">
-                  {__("Express")} {}
-                </span>
-                <span block="EddExpressDeliveryTextNormal">
-                  {__("Delivery by")}
-                </span>
-                <span block="EddExpressDeliveryTextBold">{__("Tomorrow")}</span>
-              </div>
-            </div>
-            <div block="EddExpressDeliveryCutOffTime">
-              {__("Order within 4hrs 10 Mins")}
-            </div>
-          </div>
-        )}
-
-        {actualEddMess && !isExpressProduct && (
-          <div block="EddStandardDelivery">
-            <div block="EddStandardDeliveryTextBlock">
-              <Shipping />
-              <div block="shipmentText">
-                <span block="EddStandardDeliveryText">
-                  {__("Standard")} {}
-                  {actualEddMess.split(splitKey)[0]} {}
-                  {splitKey} {}
-                </span>
-                <span block="EddStandardDeliveryTextBold">
-                  {actualEddMess.split(splitKey)[1]}
-                </span>
-              </div>
-            </div>
-            <div block="internationalShipmentTag">
-              {isIntlBrand || (international_shipping_fee && +cross_border)
-                ? this.renderIntlTag()
-                : null}
-            </div>
-          </div>
-        )}
+        <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+          <ExpressAndStandardEDD
+            express_delivery={express_delivery}
+            actualEddMess={actualEddMess}
+            splitKey={splitKey}
+            isPDP={false}
+            isIntlBrand={isIntlBrand}
+            cross_border={cross_border}
+            isCart={true}
+            whs_quantity={whs_quantity}
+            store_quantity={store_quantity}
+            mp_quantity={mp_quantity}
+          />
+        </Suspense>
       </div>
     );
   };

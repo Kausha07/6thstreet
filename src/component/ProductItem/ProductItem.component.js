@@ -60,6 +60,7 @@ export const mapStateToProps = (state) => ({
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1008,7 +1009,16 @@ class ProductItem extends PureComponent {
       product: { express_delivery = "" },
     } = this.props;
 
-    if (!express_delivery) {
+    const selctedAddress = JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    );
+
+    if (
+      !express_delivery ||
+      !selctedAddress ||
+      (selctedAddress &&
+        !this.props.isExpressServiceAvailable?.express_eligible)
+    ) {
       return null;
     }
 
@@ -1067,7 +1077,7 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
-          {pageType === "plp" &&
+          {!isMobile.any() && pageType === "plp" &&
             isExpressDelivery &&
             this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
@@ -1083,6 +1093,9 @@ class ProductItem extends PureComponent {
             {this.renderExclusiveMobile(true)}
           </div>
         )}
+        {isMobile.any() && pageType === "plp" &&
+            isExpressDelivery &&
+            this.renderExpressDeliveryTag()}
 
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (

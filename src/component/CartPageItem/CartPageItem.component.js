@@ -912,9 +912,14 @@ export class CartItem extends PureComponent {
     const {
       edd_info,
       item: {
-        full_item_info: { cross_border = 0 },
+        full_item_info: {
+          cross_border = 0,
+          express_delivery = "",
+          mp_quantity = 0,
+          store_quantity = 0,
+          whs_quantity = 0,
+        },
         extension_attributes,
-        is_express_delivery,
       },
       international_shipping_fee,
       isExpressDelivery,
@@ -945,12 +950,16 @@ export class CartItem extends PureComponent {
       <div block="EddExpressWrapper">
         <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
           <ExpressAndStandardEDD
-            express_delivery={is_express_delivery}
+            express_delivery={express_delivery}
             actualEddMess={actualEddMess}
             splitKey={splitKey}
             isPDP={false}
             isIntlBrand={isIntlBrand}
             cross_border={cross_border}
+            isCart={true}
+            whs_quantity={whs_quantity}
+            store_quantity={store_quantity}
+            mp_quantity={mp_quantity}
           />
         </Suspense>
       </div>

@@ -491,9 +491,11 @@
     }
 
     .EddExpressDeliveryTextBlock {
+      padding: 3px;
       svg {
-        width: 26px;
-        height: 26px;
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
       }
   
       display: flex;
@@ -504,6 +506,7 @@
   
       @include mobile {
         font-size: 11px;
+        margin-top: 0px;
       }
   
       .EddExpressDeliveryTextRed {
@@ -511,17 +514,27 @@
         font-weight: 600;
         font-style: italic;
         font-size: 12px;
+  
+        @include mobile {
+          font-size: 11px;
+        }
       }
   
       .EddExpressDeliveryTextNormal {
         font-weight: 400;
         font-size: 11px;
+        @include mobile {
+          font-size: 10px;
+        }
       }
   
       .EddExpressDeliveryTextBold {
         font-weight: 600;
         margin: 0 5px;
         font-size: 12px;
+        @include mobile {
+          font-size: 11px;
+        }
       }
     }
   }

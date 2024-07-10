@@ -18,7 +18,6 @@ export const mapDispatchToProps = (_dispatch) => ({
   setExpressPLPAddressForm: (val) =>
     MyAccountDispatcher.setExpressPLPAddressForm(_dispatch, val),
   hideActiveOverlay: () => {
-    console.log("hideActiveOverlay");
     _dispatch(hideActiveOverlay());
   },
 });

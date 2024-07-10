@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
 import { isArabic } from "Util/App";
+import { getCountryFromUrl } from "Util/Url";
 import { BluePlus, EditPencil } from "Component/Icons/index";
 import ModalWithOutsideClick from "Component/ModalWithOutsideClick";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
@@ -15,7 +16,7 @@ export const DeliveryAddressPopUp = (props) => {
   const {
     showHidePOPUP,
     showPopUp,
-    countryWiseAddresses,
+    addresses,
     editSelectedAddress,
     addNewAddress,
     defaultShippingAddress,
@@ -25,7 +26,11 @@ export const DeliveryAddressPopUp = (props) => {
   } = props;
 
   const [selectedAddress, setSelectedAddress] = useState(
-    defaultShippingAddress ? defaultShippingAddress : {}
+    JSON.parse(localStorage?.getItem("currentSelectedAddress"))
+      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))
+      : defaultShippingAddress
+      ? defaultShippingAddress
+      : {}
   );
 
   const changeAddress = (address) => {
@@ -48,6 +53,33 @@ export const DeliveryAddressPopUp = (props) => {
     showHidePOPUP(false);
     setExpressPopUp(false);
   };
+
+  let currentSelectedAddressId = JSON.parse(
+    localStorage?.getItem("currentSelectedAddress")
+  )?.id;
+
+  let countryWiseAddresses = addresses
+    ?.filter((obj) => obj?.country_code === getCountryFromUrl())
+    .sort((a, b) => {
+      // Priority 1: Sort by currentSelectedAddressId if it exists
+      if (currentSelectedAddressId) {
+        if (a.id === currentSelectedAddressId) {
+          return -1; // a should come before b
+        } else if (b.id === currentSelectedAddressId) {
+          return 1; // b should come before a
+        }
+      }
+
+      // Priority 2: Sort by default_shipping flag
+      if (a.default_shipping === true && b.default_shipping !== true) {
+        return -1; // a should come before b
+      } else if (a.default_shipping !== true && b.default_shipping === true) {
+        return 1; // b should come before a
+      }
+
+      // If none of the above conditions apply, maintain the current order
+      return 0;
+    });
 
   return (
     <ModalWithOutsideClick

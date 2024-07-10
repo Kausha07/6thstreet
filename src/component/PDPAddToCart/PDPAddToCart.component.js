@@ -337,6 +337,14 @@ class PDPAddToCart extends PureComponent {
 
     const isCurrentSizeSelected = selectedSizeCode === code;
     const { edd_info } = this.props;
+    const product = productStock[code];
+    const whs_quantity = +product?.whs_quantity || 0;
+    const store_quantity = +product?.store_quantity || 0;
+    const mp_quantity = +product?.mp_quantity || 0;
+
+    const isExpressEligibleSKU =
+      quantity !== 0 &&
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0);
 
     return (
       <div
@@ -362,6 +370,8 @@ class PDPAddToCart extends PureComponent {
           <label
             for={code}
             style={isCurrentSizeSelected ? selectedLabelStyle : this.state.recommendedSizeSku==code ? recommendedLabelStyle : {}}
+            block="sizeOptionLabel"
+            mods={{isExpressEligibleSKU: isExpressEligibleSKU}}
           >
             {label}
           </label>
