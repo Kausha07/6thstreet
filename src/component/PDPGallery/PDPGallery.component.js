@@ -683,17 +683,13 @@ class PDPGallery extends PureComponent {
             const productData = {
               title: document.title,
               text: `Hey check this out: ${document.title}`,
-              url: url,
-              files: [getProductImage],
+              url: url
             };
+            if(getProductImage?.size?.length > 0) {
+              productData.files = [getProductImage]
+            }
             await navigator.share(productData);
           } catch (err) {
-            // this.copyToClipboard();
-            navigator.share({
-              title: document.title,
-              text: `Hey check this out: ${document.title}`,
-              url: url
-            })
             console.log("ERROR", err);
           }
         } else {
