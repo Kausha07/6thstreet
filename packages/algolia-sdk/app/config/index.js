@@ -54,8 +54,8 @@ const MORE_FILTERS = [
   "price.OMR.default",
   "price.BHD.default",
   "price.QAR.default",
-  "rating_sku.total_ratings",
-  "rating_sku.average_ratings"
+  // "rating_sku.total_ratings",
+  // "rating_sku.average_ratings"
 ]
 
 const config = {
