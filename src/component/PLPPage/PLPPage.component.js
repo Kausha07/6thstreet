@@ -10,6 +10,7 @@ import isMobile from "Util/Mobile";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 
 let gtmProdArr = [];
+let skuImpressionList = {};
 class PLPPage extends PureComponent {
   static propTypes = {
     products: Products.isRequired,
@@ -44,7 +45,10 @@ class PLPPage extends PureComponent {
   sendProductImpression = (product) => {
     const { newActiveFilters = {}, activeFilters = {} } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
-    gtmProdArr.push([product]);
+    if(!skuImpressionList[product?.[0]?.sku]) {
+      gtmProdArr.push([product]);
+      skuImpressionList[product?.[0]?.sku] = true
+    }
     const product_numbers = isMobile.any() ? 4 : 6;
     if (gtmProdArr.length > product_numbers - 1) {
       let clubbedProducts = gtmProdArr.slice(0, product_numbers);
