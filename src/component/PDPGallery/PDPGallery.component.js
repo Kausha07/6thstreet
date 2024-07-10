@@ -680,13 +680,13 @@ class PDPGallery extends PureComponent {
       if (navigator.share) {
         if ('canShare' in navigator) {
           try {
-            const productData = {
+            let productData = {
               title: document.title,
               text: `Hey check this out: ${document.title}`,
               url: url
             };
             if(getProductImage?.size?.length > 0) {
-              productData['files'] = [getProductImage]
+              productData['files'] = [getProductImage];
             }
             await navigator.share(productData);
           } catch (err) {
