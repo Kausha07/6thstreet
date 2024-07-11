@@ -28,6 +28,20 @@
       color: #28d9aa;
     }
   }
+  .EddExpressDeliveryTextBlock {
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    background: #f964461a;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 5px;
+     svg {
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
+    }
+  }
   &-Name {
     margin: 0 0 10px 0;
   }
