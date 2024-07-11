@@ -351,9 +351,10 @@ class PDPAddToCart extends PureComponent {
     const isInternationalProduct =
       edd_info?.international_vendors?.includes(international_vendor) ||
       cross_border;
-    
-    const isExpressEligibleSKU = !isInternationalProduct;
-    isExpressServiceAvailable?.express_eligible &&
+
+    const isExpressEligibleSKU =
+      !isInternationalProduct &&
+      isExpressServiceAvailable?.express_eligible &&
       isExpressDelivery &&
       quantity !== 0 &&
       (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0);

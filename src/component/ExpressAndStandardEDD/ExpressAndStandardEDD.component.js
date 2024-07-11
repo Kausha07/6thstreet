@@ -18,7 +18,7 @@ export const mapStateToProps = (state) => ({
 
 export const ExpressAndStandardEDD = ({
   isExpressDelivery = false,
-  isExpressServiceAvailable = false,
+  isExpressServiceAvailable = {},
   express_delivery = "",
   actualEddMess = "",
   simple_products = {},
@@ -280,6 +280,10 @@ export const ExpressAndStandardEDD = ({
     }
 
     if (!express_delivery) {
+      return true;
+    }
+
+    if (!isExpressServiceAvailable) {
       return true;
     }
 
