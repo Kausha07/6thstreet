@@ -85,7 +85,7 @@ export class CheckoutAddressBookContainer extends PureComponent {
 
     if (defaultAddressId) {
         onAddressSelect(defaultAddressId);
-        this.estimateShipping(defaultAddressId);
+        // this.estimateShipping(defaultAddressId);
     }
 
     this.state = {
@@ -98,6 +98,12 @@ export class CheckoutAddressBookContainer extends PureComponent {
     const { customer, isBilling, shippingAddress, addresses } = props;
     const defaultKey = isBilling ? "default_billing" : "default_shipping";
     const { [defaultKey]: defaultAddressId } = customer;
+    const reqObj = JSON.parse(localStorage.getItem("currentSelectedAddress"));
+
+    // if user selected address
+    if(reqObj && reqObj.id) {
+      return +reqObj.id;
+    }
 
     // if the user has default address selected
     if (defaultAddressId) {

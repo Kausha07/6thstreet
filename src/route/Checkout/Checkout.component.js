@@ -224,22 +224,21 @@ export class Checkout extends SourceCheckout {
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
     }
-    if (checkoutStep === SHIPPING_STEP && cashOnDeliveryFee) {
-      this.setState({ cashOnDeliveryFee: null });
-      const countryCode = ["AE", "SA"].includes(getCountryFromUrl());
-      selectPaymentMethod(
-        countryCode && !!!window.ApplePaySession ? CHECKOUT_APPLE_PAY : CARD
-      )
-        .then(() => {
-          updateTotals(cartId);
-          finishPaymentRequest();
-        })
-        .catch(() => {
-          const { showError } = this.props;
-
-          showError(__("Something went wrong"));
-        });
-    }
+    // if (checkoutStep === SHIPPING_STEP && cashOnDeliveryFee) {
+    //   this.setState({ cashOnDeliveryFee: null });
+    //   const countryCode = ["AE", "SA"].includes(getCountryFromUrl());
+    //   selectPaymentMethod(
+    //     countryCode && !!!window.ApplePaySession ? CHECKOUT_APPLE_PAY : CARD
+    //   )
+    //     .then(() => {
+    //       updateTotals(cartId);
+    //       finishPaymentRequest();
+    //     })
+    //     .catch(() => {
+    //       const { showError } = this.props;
+    //       showError(__("Something went wrong"));
+    //     });
+    // }
     if (
      ( prevState?.identity_number !== this.state?.identity_number ||
       prevState?.type_of_identity !== this.state?.type_of_identity) && !this.state.isIdentityNumberModified

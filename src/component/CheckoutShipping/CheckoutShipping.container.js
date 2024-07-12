@@ -281,9 +281,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         const { success } = response;
         if (edd_info && edd_info.is_enable) {
           if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
-            const { country_id, city, postcode } = addressForValidation;
+            const { country_id, city, postcode, country_code="", area="" } = addressForValidation;
             let request = {
-              country: country_id,
+              country: country_id ?? country_code,
               courier: null,
               source: null,
             };
@@ -308,10 +308,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                   }
                 }
               );
-              request["area"] = arabicArea[0];
+              request["area"] = arabicArea[0] ?? area;
               request["city"] = finalResp[0].city_ar;
             } else {
-              request["area"] = postcode;
+              request["area"] = postcode ?? area;
               request["city"] = city;
             }
             let payload = {};
@@ -388,9 +388,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     } else {
       if (edd_info && edd_info.is_enable) {
         if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
-          const { country_id, city, postcode } = addressForValidation;
+          const { country_id, city, postcode, country_code="", area="" } = addressForValidation;
           let request = {
-            country: country_id,
+            country: country_id ?? country_code,
             courier: null,
             source: null,
           };
@@ -413,10 +413,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                 }
               }
             );
-            request["area"] = arabicArea[0];
+            request["area"] = arabicArea[0] ?? area;
             request["city"] = finalResp[0].city_ar;
           } else {
-            request["area"] = postcode;
+            request["area"] = postcode ?? area;
             request["city"] = city;
           }
           let payload = {};
