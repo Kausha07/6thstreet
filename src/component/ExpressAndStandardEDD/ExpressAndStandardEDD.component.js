@@ -18,7 +18,7 @@ export const mapStateToProps = (state) => ({
 
 export const ExpressAndStandardEDD = ({
   isExpressDelivery = false,
-  isExpressServiceAvailable = false,
+  isExpressServiceAvailable = {},
   express_delivery = "",
   actualEddMess = "",
   simple_products = {},
@@ -279,6 +279,14 @@ export const ExpressAndStandardEDD = ({
       return true;
     }
 
+    if (!express_delivery) {
+      return true;
+    }
+
+    if (!isExpressServiceAvailable) {
+      return true;
+    }
+
     if (isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer) {
       if (isExpressServiceAvailable?.is_vip_chargeable) {
         return true;
@@ -310,7 +318,8 @@ export const ExpressAndStandardEDD = ({
           ((isProductExpressEligible && isSKUExpressEligible) ||
             isSKUExpressEligible) &&
           !isInternationalProduct &&
-          isProductOfficeServicable && (
+          isProductOfficeServicable &&
+          express_delivery && (
             <div block="eddExpressDelivery">
               <div
                 block="EddExpressDeliveryTextBlock"
@@ -340,7 +349,7 @@ export const ExpressAndStandardEDD = ({
               {!isTimeExpired &&
                 express_delivery?.toLowerCase() !== "tomorrow delivery" && (
                   <div block="EddExpressDeliveryCutOffTime">
-                    {__("Order within") + ` ${hours}Hrs ${minutes}Min`}
+                    {__("Order within %sHrs %sMins", hours, minutes)}
                   </div>
                 )}
             </div>

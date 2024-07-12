@@ -47,7 +47,7 @@ const MsiteAddToCartPopUp = lazy(() =>
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component";
 import Ratings from 'Component/Ratings/Ratings';
-import { ExpressDeliveryTruck } from "Component/Icons";
+import ExpressDeliveryTag from "Component/ExpressDeliveryTag";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -1005,41 +1005,9 @@ class ProductItem extends PureComponent {
   };
 
   renderExpressDeliveryTag = () => {
-    const {
-      product: { express_delivery = "" },
-    } = this.props;
+    const { product } = this.props;
 
-    const selctedAddress = JSON.parse(
-      localStorage.getItem("currentSelectedAddress")
-    );
-
-    if (
-      !express_delivery ||
-      !selctedAddress ||
-      (selctedAddress &&
-        !this.props.isExpressServiceAvailable?.express_eligible)
-    ) {
-      return null;
-    }
-
-    return (
-      <div block="EddExpressDeliveryTextBlock">
-        <ExpressDeliveryTruck />
-        <div block="EddExpressDeliveryText">
-          <span block="EddExpressDeliveryTextRed">
-            {__("Express")} {}
-          </span>
-          <span block="EddExpressDeliveryTextNormal">{__("Delivery by")}</span>
-          <span block="EddExpressDeliveryTextBold">
-            {express_delivery !== 1 &&
-            express_delivery !== 0 &&
-            express_delivery?.toLowerCase() !== "tomorrow delivery"
-              ? __("Today")
-              : __("Tomorrow")}
-          </span>
-        </div>
-      </div>
-    );
+    return <ExpressDeliveryTag productInfo={product} />;
   };
 
   render() {
@@ -1052,6 +1020,7 @@ class ProductItem extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const showExpressDeliveryTagArr = ["wishlist", "plp", "cartSlider"];
     return (
       <li
         id={sku}
@@ -1077,7 +1046,8 @@ class ProductItem extends PureComponent {
           {this.renderBrand()}
           {this.renderTitle()}
           {this.renderPrice()}
-          {!isMobile.any() && pageType === "plp" &&
+          {!isMobile.any() &&
+            showExpressDeliveryTagArr?.includes(pageType) &&
             isExpressDelivery &&
             this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
@@ -1093,10 +1063,10 @@ class ProductItem extends PureComponent {
             {this.renderExclusiveMobile(true)}
           </div>
         )}
-        {isMobile.any() && pageType === "plp" &&
-            isExpressDelivery &&
-            this.renderExpressDeliveryTag()}
-
+        {isMobile.any() &&
+          showExpressDeliveryTagArr?.includes(pageType) &&
+          isExpressDelivery &&
+          this.renderExpressDeliveryTag()}
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer

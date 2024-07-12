@@ -43,7 +43,8 @@
           justify-content: space-between;
           background: #fff2f0;
           align-items: center;
-          padding: 0 10px 5px 30px;
+          height: 52px;
+          padding: 0 10px 0px 30px;
           &::before,
           &::after {
             content: "";
@@ -88,11 +89,11 @@
             justify-content: center;
             flex-direction: column;
             text-transform: initial;
-            padding-bottom: 5px;
 
             svg {
-              width: 30px;
-              height: 30px;
+              width: 24px;
+              height: 24px;
+              margin: 0 7px;
             }
 
             .EddExpressDeliveryTextBlock {
@@ -128,7 +129,7 @@
             font-weight: 400;
             color: #606060;
             margin-top: 2px;
-            margin: 2px 32px;
+            margin: 2px 12px;
           }
 
           .ExpressPrice {
@@ -146,7 +147,7 @@
           border-top: none;
 
           padding: 0 10px 0 40px;
-          height: 57px;
+          height: 52px;
           &::before,
           &::after {
             content: "";

@@ -108,7 +108,6 @@
     @include after-mobile {
       grid-template-columns: 32.66% 32.66% 32.66%;
       grid-column-gap: 2%;
-      grid-row-gap: 65px;
     }
     @include mobile {
       grid-template-columns: repeat(2, 1fr);
