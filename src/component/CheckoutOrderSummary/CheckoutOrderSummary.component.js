@@ -543,8 +543,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         eligible_amount,
       },
     } = this.props;
+    const { isMobile } = this.state;
 
-    if (!isSignedIn()) {
+    if (!isSignedIn() || isMobile) {
       return null;
     }
 

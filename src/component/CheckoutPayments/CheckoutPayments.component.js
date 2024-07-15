@@ -11,6 +11,7 @@ import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPay
 import { isArabic, getDiscountFromTotals } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
+import { isSignedIn } from "Util/Auth";
 import Loader from "Component/Loader";
 import {
   CARD,
@@ -22,10 +23,15 @@ import {
   TABBY_PAYMENT_CODES,
   KNET_PAY,
   TAMARA,
+  HIDDEN_PAYMENTS
 } from "./CheckoutPayments.config";
 import "./CheckoutPayments.extended.style";
 import Applepay from "./icons/apple-pay@3x.png";
 import TamaraCard from "Component/TamaraCard/TamaraCard";
+import addNewCardIcon from "./icons/addnewcard.png";
+import CheckoutPaymentMsite from "Component/CheckoutPaymentMsite";
+import StoreCredit from "Component/StoreCredit";
+import UseMyWallet from "Component/MyWallet/UseMyWallet/UseMyWallet";
 
 export class CheckoutPayments extends SourceCheckoutPayments {
   static propTypes = {
@@ -55,6 +61,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     [TAMARA]: this.renderTamara.bind(this),
   };
 
+  paymentRenderMapMsite = {
+    [CARD]: this.renderCreditCardMsite.bind(this),
+  };
+
   state = {
     activeSliderImage: 0,
     tabbyPaymentMethods: [],
@@ -62,6 +72,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     tooltipContent: null,
     isArabic: isArabic(),
     isMobile: isMobile.any() || isMobile.tablet(),
+    isRenderEmmptyCard: true,
   };
 
   componentDidMount() {
@@ -99,6 +110,48 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     this.setState({ activeSliderImage: activeImage });
   };
 
+  renderMsitePayment = (method) => {
+    const {
+      selectPaymentMethod,
+      selectedPaymentCode,
+      setCashOnDeliveryFee,
+    } = this.props;
+    const { m_code } = method;
+    
+    if (
+      HIDDEN_PAYMENTS.includes(m_code) ||
+      (m_code === CHECKOUT_APPLE_PAY && !window.ApplePaySession)
+    ) {
+      return null;
+    }
+
+    if(m_code !== CARD) {
+      return (
+        <CheckoutPaymentMsite 
+          key={method?.m_code}
+          method={method}
+          paymentRenderMap={this.paymentRenderMap}
+          selectPaymentMethod={selectPaymentMethod}
+          selectedPaymentCode={selectedPaymentCode}
+          setCashOnDeliveryFee={setCashOnDeliveryFee}
+        />
+      );
+    }
+    
+    const render = this.paymentRenderMapMsite[m_code]
+
+    if (!render) {
+      return null;
+    }
+
+    return (
+      <>
+        {render(method)}
+        { this.renderEmptyCreditCard(method)}
+      </>
+    );
+  }
+
   renderPayment = (method) => {
     const {
       selectPaymentMethod,
@@ -123,8 +176,22 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     const isSelected = selectedPaymentCode === m_code;
-    const { tabbyPaymentMethods = [] } = this.state;
+    const { tabbyPaymentMethods = [], isMobile } = this.state;
     const isTabbySelected = TABBY_PAYMENT_CODES.includes(selectedPaymentCode);
+    
+    if (isMobile) {
+      if (
+        TABBY_PAYMENT_CODES.includes(m_code) &&
+        tabbyPaymentMethods.length > 0
+      ) {
+        if (!isTabbyInstallmentAvailable) {
+          return null;
+        }
+      }
+
+      return this.renderMsitePayment(method);
+    }
+
     if (
       TABBY_PAYMENT_CODES.includes(m_code) &&
       tabbyPaymentMethods.length > 0
@@ -442,6 +509,16 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderHeading() {
+    const { isMobile } = this.state;
+
+    if (isMobile) {
+      return (
+        <p block="CheckoutPayments" elem="HeadingMsite">
+          {__("Payment Method")}
+        </p>
+      );
+    }
+
     return (
       <h2 block="CheckoutPayments" elem="Heading">
         {__("Payment type")}
@@ -475,6 +552,99 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     return render();
+  }
+
+  renderCreditCardMsite(method) {
+    const {
+      paymentMethods,
+      setCreditCardData,
+      setOrderButtonDisabled,
+      setOrderButtonEnabled,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
+      isSignedIn,
+      selectPaymentMethod,
+      selectedPaymentCode,
+    } = this.props;
+    const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
+
+    return (
+      <>
+        <CreditCard
+          cardData={cardData}
+          isSignedIn={isSignedIn}
+          setCreditCardData={setCreditCardData}
+          setOrderButtonDisabled={setOrderButtonDisabled}
+          setOrderButtonEnabled={setOrderButtonEnabled}
+          applyPromotionSavedCard={applyPromotionSavedCard}
+          removePromotionSavedCard={removePromotionSavedCard}
+          setIsRenderEmmptyCard={this.setIsRenderEmmptyCard}
+          method={method}
+          selectPaymentMethod={selectPaymentMethod}
+          selectedPaymentCode={selectedPaymentCode}
+        />
+      </>
+    );
+  }
+
+  setIsRenderEmmptyCard = (currState) => {
+    this.setState({ isRenderEmmptyCard: currState });
+  };
+
+  renderEmptyCreditCard(method) {
+    const {
+      paymentMethods,
+      setCreditCardData,
+      setOrderButtonDisabled,
+      setOrderButtonEnabled,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
+      isSignedIn,
+      selectPaymentMethod,
+      selectedPaymentCode,
+    } = this.props;
+    const { isRenderEmmptyCard } = this.state;
+    const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
+    const { m_code } = method;
+    const isSelected = m_code === selectedPaymentCode;
+
+    return (
+      <div
+        onClick={() => {
+          this.setIsRenderEmmptyCard(false);
+          selectPaymentMethod(method);
+        }}
+        block="addNewCardContainer"
+        mods={{ isSelected: isSelected && !isRenderEmmptyCard }}
+      >
+        <div className="add-new-card">
+          <label htmlFor="newCard">
+            <img src={addNewCardIcon} alt="Card Icon" className="card-icon" />
+            <span>Add New Card</span>
+          </label>
+
+          <div
+            block="radioSelect"
+            mods={{ isSelected: isSelected && !isRenderEmmptyCard }}
+          ></div>
+        </div>
+
+        {!isRenderEmmptyCard && (
+          <div className="wrapperAddNewCard">
+            <CreditCard
+              cardData={cardData}
+              isSignedIn={isSignedIn}
+              setCreditCardData={setCreditCardData}
+              setOrderButtonDisabled={setOrderButtonDisabled}
+              setOrderButtonEnabled={setOrderButtonEnabled}
+              applyPromotionSavedCard={applyPromotionSavedCard}
+              removePromotionSavedCard={removePromotionSavedCard}
+              isRenderEmmptyCard={true}
+            />
+          </div>
+        )}
+      </div>
+    );
   }
 
   renderCreditCard() {
@@ -533,8 +703,25 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     return paymentMethods.map(this.renderPayment);
   }
 
+  renderDiscountOptions() {
+    const {
+      totals: { eligible_amount },
+    } = this.props;
+
+    if (!isSignedIn()) {
+      return null;
+    }
+
+    return (
+      <>
+        <StoreCredit canApply hideIfZero />
+        <UseMyWallet eligibleAmount={eligible_amount} />
+      </>
+    );
+  }
+
   renderContent() {
-    const { hasError, activeSliderImage } = this.state;
+    const { hasError, activeSliderImage, isMobile } = this.state;
 
     if (hasError) {
       return (
@@ -543,6 +730,18 @@ export class CheckoutPayments extends SourceCheckoutPayments {
             "The error occurred during initializing payment methods. Please try again later!"
           )}
         </p>
+      );
+    }
+
+    if (isMobile) {
+      return (
+        <>
+          {this.renderHeading()}
+          {this.renderDiscountOptions()}
+          <ul block="CheckoutPayments" elem="Methods">
+            {this.renderPayments()}
+          </ul>
+        </>
       );
     }
 

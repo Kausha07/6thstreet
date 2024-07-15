@@ -1,0 +1,46 @@
+.checkoutPaymentMsite {
+    &_lastMethod {
+        margin-bottom: 250px;
+    }
+}
+
+.add-new-card {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    justify-content: space-between;
+}
+
+.radioSelect {
+    border: 1px solid #979797;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+
+    &_isSelected {
+        background: url(/static/media/icon.c13e0696.svg) no-repeat center;
+    }
+}
+
+.add-new-card label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-new-card .card-icon {
+    width: 24px;
+    margin-right: 8px;
+}
+
+.cashOnDeliveryMsite {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    margin-top: 10px;
+
+    &-select {
+        padding: 16px;
+        padding-top: 0;
+    }
+}
