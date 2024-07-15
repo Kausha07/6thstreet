@@ -91,6 +91,7 @@ export const CityArea = (props) => {
     getCart,
     cartId,
     cartItems,
+    renderSelectedAddressMsite = () => {},
   } = props;
 
   const [showPopUp, setShowPopUp] = useState(
@@ -520,11 +521,21 @@ export const CityArea = (props) => {
   };
 
   const render = () => {
+    const isMobileDevice = isMobile.any() || isMobile.tablet();
     return (
       <div block="cityAreaAddressSelection" mods={{ isArabic: isArabic() }}>
         {renderMyAccountOverlay()}
         {renderForm()}
         {isNewCheckoutPage ? (
+          isMobileDevice ? (
+            <div
+              onClick={() => {
+                showHidePOPUP(true);
+              }}
+            >
+              {renderSelectedAddressMsite()}
+            </div>
+          ) : (
             <p
               onClick={() => {
                 showHidePOPUP(true);
@@ -534,26 +545,27 @@ export const CityArea = (props) => {
             >
               {__("Change Address")}
             </p>
-          ) : (
-            <div
-              block={`cityAreaDropdown  ${
-                showBackgroundColor ? "showBackgroundColor" : ""
-              }`}
-              onClick={() => showHidePOPUP(!showPopUp)}
-            >
-              <img src={address} alt="" block="locationImage" />
-              {finalAreaText && (
-                <div
-                  block={`cityAreaText  ${
-                    showEllipsisArea ? "showEllipsisArea" : ""
-                  }`}
-                >
-                  {finalAreaText}
-                </div>
-              )}
-              <ChevronDown />
-            </div>
-          )}
+          )
+        ) : (
+          <div
+            block={`cityAreaDropdown  ${
+              showBackgroundColor ? "showBackgroundColor" : ""
+            }`}
+            onClick={() => showHidePOPUP(!showPopUp)}
+          >
+            <img src={address} alt="" block="locationImage" />
+            {finalAreaText && (
+              <div
+                block={`cityAreaText  ${
+                  showEllipsisArea ? "showEllipsisArea" : ""
+                }`}
+              >
+                {finalAreaText}
+              </div>
+            )}
+            <ChevronDown />
+          </div>
+        )}
         {showPopUp && cityAreaPopUp()}
         {showCityAreaSelectionPopUp && renderCityAreaSelectionPopUp()}
       </div>

@@ -6,6 +6,7 @@ import {
   ADDRESS_POPUP_ID,
   EDIT_ADDRESS,
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import address from "Component/PDPSummary/icons/address_black.svg";
 
 import "./DeliveryAddress.scss";
 
@@ -55,6 +56,26 @@ const DeliveryAddress = (props) => {
     onAddressSelect(selectedAddress);
   };
 
+  const renderSelectedAddressMsite = () => {
+    const { area = "", city = "", street = "" } = selectedAddressForRender;
+
+    return (
+      <div block="address-card-Msite">
+        <div block="address-card-Msite" elem="icon-container">
+          <img src={address} alt="" />
+        </div>
+        <div block="address-card-Msite" elem="text-container">
+          <p block="address-card-Msite" elem="title">
+            {__("HOME")}
+          </p>
+          <p block="address-card-Msite" elem="description">
+            <span>{area}</span> <span>{city}</span> <span>{street}</span>
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   const renderSelectedAddress = () => {
     const {
       firstname = "",
@@ -67,26 +88,41 @@ const DeliveryAddress = (props) => {
       street = "",
     } = selectedAddressForRender;
 
+    if (isMobileDevice) {
+      if (isSignedIn) {
+        return (
+          <CityArea
+            isNewCheckoutPage={true}
+            onAddressSelectPopup={onAddressSelectPopup}
+            renderSelectedAddressMsite={renderSelectedAddressMsite}
+          />
+        );
+      }
+      return (
+        <div onClick={editCheckoutAddress}>{renderSelectedAddressMsite()}</div>
+      );
+    }
+
     return (
       <div block="address-card" mods={{ isGuestUser: !isSignedIn }}>
         <div block="address-card" elem="header">
-            <>
-              <h2>Delivery Address</h2>
-              {isSignedIn ? (
-                <CityArea
-                  isNewCheckoutPage={true}
-                  onAddressSelectPopup={onAddressSelectPopup}
-                />
-              ) : (
-                <button
-                  className="editAddressBtn"
-                  type="button"
-                  onClick={editCheckoutAddress}
-                >
-                  Edit
-                </button>
-              )}
-            </>
+          <>
+            <h2>Delivery Address</h2>
+            {isSignedIn ? (
+              <CityArea
+                isNewCheckoutPage={true}
+                onAddressSelectPopup={onAddressSelectPopup}
+              />
+            ) : (
+              <button
+                className="editAddressBtn"
+                type="button"
+                onClick={editCheckoutAddress}
+              >
+                Edit
+              </button>
+            )}
+          </>
         </div>
         <div block="address-card" elem="content">
           <h3 className="addressCardName">{`${firstname} ${lastname}`}</h3>
