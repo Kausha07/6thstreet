@@ -68,6 +68,7 @@ import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMulti
 import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { getAddressType } from "Util/Common/index";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -825,7 +826,7 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
-    let isScrollBehaviour = category === "express_delivery" ? true : false;
+    let isScrollBehaviour = category === `express_delivery_${getAddressType()}` ? true : false;
 
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1" && key !== "categories_without_path") {

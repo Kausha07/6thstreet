@@ -31,7 +31,9 @@ const translations = {
     baby_boy: 'Baby Boy',
     unisex: 'Unisex',
     infant: 'Infant',
-    express_delivery : "Delivery Time",
+    express_delivery_home : "Delivery Time",
+    express_delivery_work : "Delivery Time",
+    express_delivery_others : "Delivery Time",
   },
 
   ar: {
@@ -65,7 +67,9 @@ const translations = {
     baby_boy: 'طفل',
     unisex: 'الجنسين',
     infant: 'للرضع',
-    express_delivery : "وقت التوصيل",
+    express_delivery_home : "وقت التوصيل",
+    express_delivery_work : "وقت التوصيل",
+    express_delivery_others : "وقت التوصيل",
   }
 };
 

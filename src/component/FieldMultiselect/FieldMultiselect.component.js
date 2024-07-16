@@ -45,6 +45,7 @@ import {
   getLevelsFromCategoryKey,
 } from "./utils/FieldMultiselect.helper";
 import CityArea from "Component/CityArea";
+import { getAddressType } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
@@ -784,7 +785,7 @@ class FieldMultiselect extends PureComponent {
       );
     }
 
-    if (category === "express_delivery") {
+    if (category === `express_delivery_${getAddressType()}`) {
       const selctedAddress = JSON.parse(
         localStorage.getItem("currentSelectedAddress")
       );
@@ -912,7 +913,7 @@ class FieldMultiselect extends PureComponent {
     const { isArabic } = this.state;
     const currency = getCountryCurrencyCode();
 
-    if (category === "express_delivery") {
+    if (category === `express_delivery_${getAddressType()}`) {
       return <CityArea isSignInTypePopUp={true} showBackgroundColor={true} />;
     }
 
@@ -1300,7 +1301,6 @@ class FieldMultiselect extends PureComponent {
       isMobile.any() && (selectedCategoryCount > 0 || priceCount > 0)
         ? true
         : false;
-        console.log("Shivq1", category, toggleOptionsList);
       const expressSelectedaddress = JSON.parse(localStorage.getItem("currentSelectedAddress"));
     return (
       <div
@@ -1329,10 +1329,10 @@ class FieldMultiselect extends PureComponent {
           </button>
         )}
         {(toggleOptionsList ||
-          (category === "express_delivery" && this.props.isExpressPopUpOpen)) &&
+          (category === `express_delivery_${getAddressType()}` && this.props.isExpressPopUpOpen)) &&
           !isMobile.any() && (
             <>
-              {category !== "express_delivery" ? (
+              {category !== `express_delivery_${getAddressType()}` ? (
                 <>
                   {" "}
                   {Object.keys(conditionalData).length >
@@ -1349,7 +1349,7 @@ class FieldMultiselect extends PureComponent {
                 </>
               ) : (
                 <>
-                  {category === "express_delivery" && (
+                  {(category === `express_delivery_${getAddressType()}`) && (
                     <CityArea
                     isSignInTypePopUp={true}
                       showBackgroundColor={true}
@@ -1371,7 +1371,7 @@ class FieldMultiselect extends PureComponent {
         >
           {isMobile.any() &&
           (Object.keys(conditionalData).length > 10 ||
-            category === "express_delivery")
+          category === `express_delivery_${getAddressType()}`)
             ? this.renderFilterSearchbox(label, category)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>

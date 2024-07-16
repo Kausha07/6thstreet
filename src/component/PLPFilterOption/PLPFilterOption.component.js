@@ -31,6 +31,7 @@ import Event,{
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { ExpressDeliveryTruck } from "Component/Icons";
+import { getAddressType } from "Util/Common/index";
 
 class PLPFilterOption extends PureComponent {
   static propTypes = {
@@ -342,7 +343,7 @@ class PLPFilterOption extends PureComponent {
       );
     }
 
-    if (facet_key === "express_delivery") {
+    if (facet_key === `express_delivery_${getAddressType()}`) {
       let finalLabel = label;
       const words = label?.split(" ");
       if (words.length > 1) {
@@ -351,7 +352,7 @@ class PLPFilterOption extends PureComponent {
 
       return (
         <label block="PLPFilterOption" htmlFor={facet_value}>
-          <ExpressDeliveryTruck style={{ height: "25px", width: "25px" }} />
+          <ExpressDeliveryTruck style={{ height: "24px", width: "24px" }} />
           <span
             style={{
               color: "#f96446",

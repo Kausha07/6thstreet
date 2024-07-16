@@ -693,3 +693,18 @@ export const getTodaysWeekDay = () => {
 
   return currentDayName;
 };
+
+export const getAddressType = () => {
+  const currentSelectedAddress =
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+  switch (currentSelectedAddress?.mailing_address_type) {
+    case "37303":
+      return "home";
+    case "37304":
+      return "work";
+    case "37305":
+      return "other";
+    default:
+      return "home";
+  }
+};
