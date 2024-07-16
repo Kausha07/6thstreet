@@ -400,7 +400,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const sidewideCouponCode =
       config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
       const promoCodeText =
-      config?.countries?.[countryCode]?.promo_code_text?.[langCode] ||
+      config?.countries?.[countryCode]?.sidewideCouponData?.heading?.[langCode] ||
       __("Enter coupon or promo code");
 
     return (
