@@ -930,7 +930,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = this.props;
     const { shipping_address } = addressInformation;
 
-    selectIsAddressSet(true);
     this.setState({
       isLoading: true,
       shippingAddress: shipping_address,
@@ -946,6 +945,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       } else {
         const { totals } = data;
 
+        selectIsAddressSet(true);
         BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
 
         this.setState({
