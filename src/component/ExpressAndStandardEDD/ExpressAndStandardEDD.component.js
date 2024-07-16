@@ -20,6 +20,9 @@ export const ExpressAndStandardEDD = ({
   isExpressDelivery = false,
   isExpressServiceAvailable = {},
   express_delivery = "",
+  express_delivery_home = "",
+  express_delivery_work = "",
+  express_delivery_others = "",
   actualEddMess = "",
   simple_products = {},
   selectedSizeCode = "",
@@ -63,11 +66,27 @@ export const ExpressAndStandardEDD = ({
       )?.value || "37303"
     : "37303";
 
+  const getFinalExpressDeliveryKey = () => {
+    if (isPDP) {
+      if (addressType === "37303" && express_delivery_home) {
+        return express_delivery_home;
+      } else if (addressType === "37304" && express_delivery_work) {
+        return express_delivery_work;
+      } else if (addressType === "37305" && express_delivery_others) {
+        return express_delivery_others;
+      } else return express_delivery_home;
+    } else {
+      return express_delivery;
+    }
+  };
+
+  const express_delivery_key = getFinalExpressDeliveryKey();
+
   // check product is express eligible  or not
   const isProductExpressEligible = [
     "today delivery",
     "tomorrow delivery",
-  ].includes?.(express_delivery?.toLowerCase());
+  ].includes?.(express_delivery_key?.toLowerCase());
 
   // check selected SKU is express eligible or not
   const isSKUExpressEligible =
@@ -279,7 +298,7 @@ export const ExpressAndStandardEDD = ({
       return true;
     }
 
-    if (!express_delivery) {
+    if (!express_delivery_key) {
       return true;
     }
 
@@ -288,7 +307,7 @@ export const ExpressAndStandardEDD = ({
     }
 
     if (isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer) {
-      if (isExpressServiceAvailable?.is_vip_chargeable) {
+      if (isExpressServiceAvailable?.is_vip_chargeable && !isCart) {
         return true;
       } else {
         return false;
@@ -319,7 +338,7 @@ export const ExpressAndStandardEDD = ({
             isSKUExpressEligible) &&
           !isInternationalProduct &&
           isProductOfficeServicable &&
-          express_delivery && (
+          express_delivery_key && (
             <div block="eddExpressDelivery">
               <div
                 block="EddExpressDeliveryTextBlock"
@@ -339,15 +358,15 @@ export const ExpressAndStandardEDD = ({
                     {__("Delivery by")}
                   </span>
                   <span block="EddExpressDeliveryTextBold">
-                    {express_delivery?.toLowerCase() !== "tomorrow delivery" &&
-                    !isTimeExpired
+                    {express_delivery_key?.toLowerCase() !==
+                      "tomorrow delivery" && !isTimeExpired
                       ? __("Today")
                       : __("Tomorrow")}
                   </span>
                 </div>
               </div>
               {!isTimeExpired &&
-                express_delivery?.toLowerCase() !== "tomorrow delivery" && (
+                express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
                   <div block="EddExpressDeliveryCutOffTime">
                     {__("Order within %sHrs %sMins", hours, minutes)}
                   </div>
@@ -361,7 +380,6 @@ export const ExpressAndStandardEDD = ({
               <Shipping />
               <div block="shipmentText">
                 <span block="EddStandardDeliveryText">
-                  {__("Standard")} {}
                   {actualEddMess?.split(splitKey)?.[0]} {}
                   {splitKey} {}
                 </span>

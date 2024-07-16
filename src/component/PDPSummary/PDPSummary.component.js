@@ -981,7 +981,9 @@ class PDPSummary extends PureComponent {
       product: {
         international_vendor = null,
         simple_products = {},
-        express_delivery,
+        express_delivery_home = "",
+        express_delivery_work = "",
+        express_delivery_others = "",
       },
       isExpressDelivery,
       isExpressServiceAvailable,
@@ -1022,7 +1024,9 @@ class PDPSummary extends PureComponent {
         <div block="EddExpressWrapper">
           <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
             <ExpressAndStandardEDD
-              express_delivery={express_delivery}
+              express_delivery_home={express_delivery_home}
+              express_delivery_work={express_delivery_work}
+              express_delivery_others={express_delivery_others}
               actualEddMess={actualEddMess}
               simple_products={simple_products}
               selectedSizeCode={selectedSizeCode}

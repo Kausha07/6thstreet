@@ -19,6 +19,10 @@
     align-items: center;
     word-wrap: break-word;
 
+    @include desktop{
+      line-height: 0;
+    }
+
     @include mobile {
       font-size: 11px;
     }
