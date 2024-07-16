@@ -94,6 +94,7 @@ import { exchangeFormatGroupStatus } from "Util/Common";
 import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 
 import {  ARABIC_MONTHS } from "../MyAccountOrderListItem/MyAccountOrderListItem.config";
+import { ExpressDeliveryTruck } from "Component/Icons";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -427,7 +428,8 @@ class MyAccountOrderView extends PureComponent {
     image,
     status = null,
     deliveryDate = null,
-    exchangeType = ""
+    exchangeType = "",
+    is_express_delivery = false
   ) {
     const {
       order: { is_exchange_order: exchangeCount, groups },
@@ -477,6 +479,9 @@ class MyAccountOrderView extends PureComponent {
           )}
 
         </h3>
+        {
+          is_express_delivery && <div className="ExpressDeliveryBlock"> <div className="ExpressDeliveryTextBlock"><ExpressDeliveryTruck /> {__("Express")}</div></div>
+        }
         {(status === DELIVERY_SUCCESSFUL && deliveryDate && isProductRatingEnabled) ?
         <div className="subTitle">{__("Delivered")}: &nbsp;
           {isArabic()
@@ -800,7 +805,8 @@ class MyAccountOrderView extends PureComponent {
             getIcon,
             item.status,
             item.courier_deliver_date,
-            item?.exchange_type
+            item?.exchange_type,
+            item?.is_express_delivery
           )}
           MyAccountSection={true}
         >
@@ -1079,6 +1085,7 @@ class MyAccountOrderView extends PureComponent {
   }
 
   renderPriceLine(price, name, mods = {}, allowZero = false) {
+    console.log("price ", price, name)
     const { isArabic } = this.state;
     if (!price && !allowZero) {
       return null;
@@ -1162,6 +1169,7 @@ class MyAccountOrderView extends PureComponent {
         fulfilled_from = "",
         total_mrp= 0,
         total_discount= 0,
+        express_delivery_charges = 0
       },
       isSidewideCouponEnabled,
     } = this.props;
@@ -1195,6 +1203,11 @@ class MyAccountOrderView extends PureComponent {
                   divider: true,
                 }
               )}
+            {express_delivery_charges &&
+              this.renderPriceLine(express_delivery_charges, __("Express Delivery Charges"), {
+                divider: true,
+              })
+            }
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
                   isStoreCredit: true,

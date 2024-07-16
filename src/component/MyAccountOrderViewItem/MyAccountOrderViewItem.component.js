@@ -24,7 +24,7 @@ import RatingStar from "./icons/rating_star.png";
 import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { ThreeDots } from "react-loader-spinner";
-
+import { ExpressDeliveryTruck } from "Component/Icons";
 
 
 export class MyAccountOrderViewItem extends SourceComponent {
@@ -183,8 +183,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null },
+      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null, is_express_delivery = false },
       intlEddResponse,
+      itemStatus= this.props
     } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
@@ -267,7 +268,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
 
     return (
-      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }} className={ is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? "EddExpressDeliveryTextBlock":"" }>
+        {is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? 
+          <>
+            <ExpressDeliveryTruck />  
+            &nbsp;{__("Express")}
+          </>
+          :null
+        }
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
