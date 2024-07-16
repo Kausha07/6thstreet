@@ -112,6 +112,7 @@ class PDPGalleryOverlay extends PureComponent {
           onActiveImageChange={onSliderChange}
           isInteractionDisabled
           isZoomEnabled={isZoomEnabled}
+          direction={isArabic() ? 'rtl':'ltr'}
         >
           {crumbs.map(this.renderCrumb)}
         </SliderHorizontal>
@@ -201,9 +202,11 @@ class PDPGalleryOverlay extends PureComponent {
       <Slider
         activeImage={currentIndex}
         onActiveImageChange={onSliderChange}
-        mix={{ block: "PDPGalleryOverlay", elem: "Slider" }}
+        mix={{ block: "PDPGalleryOverlay",elem: `${isArabic() ? "Slider_isArabic":"Slider"}` }}
+
         showCrumbs={false}
         isInteractionDisabled={!isMobile.any()}
+        direction={isArabic() ? 'rtl':'ltr'}
       >
         {this.renderGallery()}
       </Slider>

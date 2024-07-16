@@ -34,6 +34,9 @@ import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/Dynami
 import timerIcon from "./icons/flash_Sale.svg";
 import Ratings from 'Component/Ratings/Ratings';
 import PDPGalleryStrip from 'Component/PDPGalleryStrip/PDPGalleryStrip';
+import MobileAPI from "Util/API/provider/MobileAPI";
+import unmute from "./icons/sound_off@3x.png";
+import mute from "./icons/sound_on@3x.png";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
@@ -75,11 +78,19 @@ class PDPGallery extends PureComponent {
       listener: "",
       isFirstTimeZoomedIn: true,
       scrolledSlide: 0,
+      isVideoPlayPause:false,
+      isMute:true,
+      getProductImage:""
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
       prod_360_video: React.createRef(),
     };
+  }
+
+  componentDidMount(){
+    this.renderMyViewCount();
+    this.getproductFile();
   }
   
   componentWillUnmount() {
@@ -95,6 +106,19 @@ class PDPGallery extends PureComponent {
         imagesScrolled: scrolledSlide,
       };
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    }
+  }
+
+  renderMyViewCount = async () => {
+    const {
+      product:{
+        objectID:productId,
+      }
+    } = this.props;
+    try {
+      MobileAPI.post(`product-view/${productId}`);
+    }catch(err){
+      console.error('Error fetching data:', err);
     }
   }
   
@@ -315,6 +339,7 @@ class PDPGallery extends PureComponent {
     return <PDPGalleryTag tag={prod_tag_2} />;
   }
   renderSlider() {
+    const { isArabic } = this.state;
     const { gallery, currentIndex, onSliderChange} = this.props;
    
 
@@ -327,9 +352,11 @@ class PDPGallery extends PureComponent {
       <Slider
         activeImage={currentIndex}
         onActiveImageChange={this.onSlideChange}
-        mix={{ block: "PDPGallery", elem: "Slider" }}
+        mix={{ block: "PDPGallery", elem: `${isArabic ? "Slider_isArabic":"Slider"}` }}
+        mods={{  }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
+        direction={isArabic ? 'rtl':'ltr'}
        
       >
         {this.renderGallery()}
@@ -341,6 +368,7 @@ class PDPGallery extends PureComponent {
   renderVideos() {
     const { prod_style_video, prod_360_video } = this.props;
     const videos = { prod_style_video, prod_360_video };
+    const {isVideoPlayPause, isMute} = this.state;
     return Object.keys(videos)
       .filter((key) => !!videos[key])
       .map((key, index) => (
@@ -356,6 +384,16 @@ class PDPGallery extends PureComponent {
             controls={!isMobile.any()}
             disablepictureinpicture
             playsinline
+            muted={isMute}
+            onClick={(event) => {
+              event.stopPropagation();
+              if(isVideoPlayPause){
+                this.videoRef[key].current.play();
+              } else{
+                this.videoRef[key].current.pause();
+              }
+              this.setState({isVideoPlayPause:!isVideoPlayPause});  
+            }}
           />
       ));
   }
@@ -424,6 +462,7 @@ class PDPGallery extends PureComponent {
       },
     } = this.props;
     const { isVideoPlaying, listener, scrolledSlide } = this.state;
+    this.setState({isVideoPlayPause:false,isMute:true}); 
 
     if (activeSlide > scrolledSlide) {
       this.setState({ scrolledSlide: activeSlide });
@@ -566,7 +605,10 @@ class PDPGallery extends PureComponent {
           <button
             block="PDPGallery-VideoButtonsContainer-VideoButtons"
             elem="ViewGallery"
-            onClick={() => this.stopVideo()}
+            onClick={() => {
+              this.setState({isVideoPlayPause:false,isMute:true});
+              this.stopVideo();
+            }}
           >
             {__("View Gallery")}
           </button>
@@ -576,7 +618,9 @@ class PDPGallery extends PureComponent {
               <button
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="StyleVideo"
-                onClick={() => this.playVideo("prod_style_video")}
+                onClick={() => {
+                  this.setState({isVideoPlayPause:false,isMute:true});
+                  this.playVideo("prod_style_video")}}
               >
                 {__("Video")}
               </button>
@@ -585,7 +629,10 @@ class PDPGallery extends PureComponent {
               <button
                 block="PDPGallery-VideoButtonsContainer-VideoButtons"
                 elem="360DegreeVideo"
-                onClick={() => this.playVideo("prod_360_video")}
+                onClick={() => {
+                  this.setState({isVideoPlayPause:false,isMute:true});
+                this.playVideo("prod_360_video")
+              }}
               >
                 {__("360°")}
               </button>
@@ -608,35 +655,54 @@ class PDPGallery extends PureComponent {
     }
   };
 
+  async getproductFile() {
+    const {
+      product: { gallery_images },
+    } = this.props;
+    const response = await fetch(gallery_images[0], {
+      mode: "no-cors",
+    });
+    const blob = await response.blob();
+    const file = new File([blob], "file.jpeg", {
+      type: blob.type,
+    }); 
+    this.setState({getProductImage : file})
+  }
+
+
   renderShareButton() {
     const {
       product: { gallery_images, name },
     } = this.props;
+    const {getProductImage} = this.state;
     const url = new URL(window.location.href).href;
     const navigatorShare = async () => {
-      const response = await fetch(gallery_images[0], {
-        mode: "no-cors",
-      });
-      const blob = await response.blob();
-      const productData = {
-        title: document.title,
-        text: `Hey check this out: ${document.title}`,
-        url: url,
-        files: [
-          new File([blob], "file.jpg", {
-            type: blob.type,
-          }),
-        ],
-      };
-      if (navigator.share && navigator.canShare(productData)) {
-        try {
-          await navigator.share(productData);
-        } catch (err) {
-          console.log("ERROR", err);
+      if (navigator.share) {
+        if ('canShare' in navigator) {
+          try {
+            let productData = {
+              title: document.title,
+              text: `Hey check this out: ${document.title}`,
+              url: url
+            };
+            if(getProductImage?.size?.length > 0) {
+              productData['files'] = [getProductImage];
+            }
+            await navigator.share(productData);
+          } catch (err) {
+            console.log("ERROR", err);
+          }
+        } else {
+          navigator.share({
+            title: document.title,
+            text: `Hey check this out: ${document.title}`,
+            url: url
+          })
         }
       } else {
         this.copyToClipboard();
       }
+ 
     };
     return (
       <>
@@ -656,9 +722,13 @@ class PDPGallery extends PureComponent {
     const startDay = Date.parse(timer_start_time);
     const endDay = Date.parse(timer_end_time);
     if (!(endDay >= startDay) || !(now <= endDay) ||  startDay >= now) {
-      getAddToCartInfo({"is_flash_sale":false});
+      if(this.props?.addtoCartInfo?.is_flash_sale === true) {
+        getAddToCartInfo({"is_flash_sale":false});
+      }
     } else {
-      getAddToCartInfo({"is_flash_sale":true});
+        if(this.props?.addtoCartInfo?.is_flash_sale === false) {
+            getAddToCartInfo({"is_flash_sale":true});
+          }
       return(
         <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer  newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
       )
@@ -666,8 +736,31 @@ class PDPGallery extends PureComponent {
 
   }
 
+  renderMuteUnmute= () =>{
+    const { prod_style_video, prod_360_video } = this.props;
+    const videos = { prod_style_video, prod_360_video };
+    const {isMute, isArabic} = this.state;
+    return Object.keys(videos)
+      .filter((key) => !!videos[key])
+      .map((key, index) => (
+        
+        <span className={`btn__mute ${isMute ? 'muteActive':''} ${isArabic ?'_isArabic':''}`} onClick={(event) => {
+          event.stopPropagation();
+          if(isMute){
+            this.videoRef[key].current.muted = true;
+          } else {
+            this.videoRef[key].current.muted = false;
+          }
+          this.setState({isMute:!isMute});
+        } }>
+          {!isMute && <img src={mute} className="icon icon__mute" alt="mute"/>}
+          {isMute && <img src={unmute} className="icon icon__unmute"alt="unmute"/>}
+        </span>
+      ));
+  }
+
   render() {
-    const { openGalleryOverlay, isArabic } = this.state;
+    const { openGalleryOverlay, isArabic, isVideoPlaying } = this.state;
     const { 
       renderMySignInPopup,
       isNewDesign,
@@ -714,11 +807,14 @@ class PDPGallery extends PureComponent {
           {this.renderSlider()}
           {this.renderGalleryTag()}
           {isNewDesign && <PDPGalleryStrip className="PDPGalleryStrip" productId={objectID} sku={sku}/>}
+
+        {isMobile.any() && isVideoPlaying && this.renderMuteUnmute()}
+          
         </button>
 
           {isNewDesign && isMobile.any() && <Ratings className="PDPRatings" rating_sku={rating_sku} rating_brand={rating_brand} productSku={sku} isPDPEventsOnly />}
         
-        {!isNewDesign && this.renderVideoButtons()}
+        {!isNewDesign && this.renderVideoButtons()}  
       </div>
       </>
     );

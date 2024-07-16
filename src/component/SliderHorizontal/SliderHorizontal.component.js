@@ -106,8 +106,8 @@ export class SliderHorizontal extends SliderVertical {
     }
 
     renderCrumb(_, i) {
-        const { activeImage } = this.props;
-        const isActive = i === Math.abs(-activeImage);
+        const { activeImage, direction } = this.props;
+        const isActive = i === Math.abs(direction === 'rtl' ? activeImage : -activeImage);
 
         return (
             <button
@@ -132,7 +132,8 @@ export class SliderHorizontal extends SliderVertical {
             showCrumbs,
             mix,
             activeImage,
-            children
+            children,
+            direction
         } = this.props;
 
         const { isArrowUpHidden, isArrowDownHidden } = this.state;
@@ -160,7 +161,7 @@ export class SliderHorizontal extends SliderVertical {
                   onDragEnd={ this.handleDragEnd }
                   onDrag={ this.handleDrag }
                   onClick={ this.handleClick }
-                  shiftX={ -activeImage * this.sliderWidth }
+                  shiftX={ (direction === 'rtl' ? activeImage : -activeImage) * this.sliderWidth }
                 >
                     { children }
                 </Draggable>

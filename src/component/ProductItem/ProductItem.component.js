@@ -117,7 +117,10 @@ class ProductItem extends PureComponent {
     };
   }
   componentDidMount() {
-    this.registerViewPortEvent();
+    const { pageType } = this.props;
+    if(pageType !== "wishlist") {
+      this.registerViewPortEvent();
+    }
   }
 
   registerViewPortEvent() {
