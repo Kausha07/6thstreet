@@ -100,14 +100,23 @@ export class CheckoutAddressBookContainer extends PureComponent {
     const { [defaultKey]: defaultAddressId } = customer;
     const reqObj = JSON.parse(localStorage.getItem("currentSelectedAddress"));
 
-    // if user selected address
-    if(reqObj && reqObj.id) {
+    // if user selected address - from current country
+    if(reqObj && (reqObj?.country_code === getCountryFromUrl()) && reqObj.id) {
       return +reqObj.id;
     }
 
     // if the user has default address selected
     if (defaultAddressId) {
-      return +defaultAddressId;
+      // check is default address belongs to current store
+      const defaultAddress = addresses.find(
+        ({ id }) => id === +defaultAddressId
+      );
+      if (
+        defaultAddress &&
+        defaultAddress?.country_code === getCountryFromUrl()
+      ) {
+        return +defaultAddressId;
+      }
     }
 
     // if user added address for current store
