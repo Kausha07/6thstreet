@@ -20,8 +20,16 @@ export const CityAreaSelectionPopUp = (props) => {
 
   const [isCityButtonActive, setCityButtonActive] = useState(true);
   const [isAreaButtonActive, setAreaButtonActive] = useState(false);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedArea, setSelectedArea] = useState("");
+  const [selectedCity, setSelectedCity] = useState(
+    JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.city
+      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.city
+      : ""
+  );
+  const [selectedArea, setSelectedArea] = useState(
+    JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.area
+      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.area
+      : ""
+  );
   const [cityAreaSearchedText, setCityAreaSearchedText] = useState("");
 
   const setActiveButton = (id) => {

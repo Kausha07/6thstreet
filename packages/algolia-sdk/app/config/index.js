@@ -308,6 +308,8 @@ const config = {
       "express_delivery_home",
       "express_delivery_work",
       "express_delivery_other",
+      "international_vendor",
+      "cross_border",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

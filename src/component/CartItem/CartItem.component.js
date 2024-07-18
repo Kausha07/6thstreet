@@ -623,7 +623,18 @@ export class CartItem extends PureComponent {
   };
 
   renderEdd = (crossBorder) => {
-    const { item: { extension_attributes } } = this.props;
+    const {
+      edd_info,
+      item: {
+        extension_attributes,
+        full_item_info: { cross_border = 0 },
+        international_vendor = null,
+      },
+      international_shipping_fee,
+      isExpressDelivery,
+      isCheckoutPage,
+    } = this.props;
+
     let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;
@@ -631,21 +642,37 @@ export class CartItem extends PureComponent {
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
 
+    const { isArabic } = this.state;
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+
     return (
-      <div block="AreaText" mods={{ isArabic }}>
-        {extension_attributes?.click_to_collect_store ? (
-          <span>{splitReadyByKey}</span>
-        ) : (
-          <span>
-            {actualEddMess.split(splitKey)[0]}
-            {splitKey}
-          </span>
-        )}
-        {extension_attributes?.click_to_collect_store ? (
-          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
-        ) : (
-          <span>{actualEddMess.split(splitKey)[1]}</span>
-        )}
+      <div>
+        <div block="AreaText" mods={{ isArabic }}>
+          {extension_attributes?.click_to_collect_store ? (
+            <span>{splitReadyByKey}</span>
+          ) : (
+            <span>
+              {actualEddMess.split(splitKey)[0]}
+              {splitKey}
+            </span>
+          )}
+          {extension_attributes?.click_to_collect_store ? (
+            <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+          ) : (
+            <span>{actualEddMess.split(splitKey)[1]}</span>
+          )}
+        </div>
+        {!isCheckoutPage &&
+        !isExpressDelivery &&
+        (isIntlBrand ||
+          (international_shipping_fee &&
+            (+cross_border ||
+              (edd_info.international_vendors &&
+                edd_info.international_vendors.indexOf(international_vendor) >
+                  -1))))
+          ? this.renderIntlTag()
+          : null}
       </div>
     );
   };
@@ -723,11 +750,7 @@ export class CartItem extends PureComponent {
               edd_info.has_item_level) &&
             !isNotAvailble &&
             this.renderEddWhenExpressEnabled(cross_border === 1)}
-          {!isCheckoutPage &&
-          !isExpressDelivery &&
-          (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor) > -1)) ))
-            ? this.renderIntlTag()
-            : null}
+
           {row_total === 0 ? null : this.renderActions()}
         </div>
       </figcaption>

@@ -19,6 +19,8 @@ export const ExpressDeliveryTag = (props) => {
       simple_products = {},
       international_vendor = "",
       cross_border = 0,
+      in_stock = 1,
+      stock_qty = 1,
     },
     edd_info,
     isExpressServiceAvailable,
@@ -56,6 +58,8 @@ export const ExpressDeliveryTag = (props) => {
       cross_border;
 
     if (
+      in_stock === 0 ||
+      (in_stock === 1 && stock_qty === 0) ||
       !isExpressDelivery ||
       isInternationalProduct ||
       !express_delivery ||

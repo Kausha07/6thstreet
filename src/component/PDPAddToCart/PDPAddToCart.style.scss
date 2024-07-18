@@ -298,7 +298,7 @@ $select-arrow-width: 6px !default;
         &_isExpressEligibleSKU {
           &:before {
             content: "";
-            background: url(../Icons/ExpressIcon/icon.svg) no-repeat;
+            background: url(../Icons/ExpressDeliveryTruck/) no-repeat;
             width: 12px;
             height: 10px;
             position: absolute;
@@ -309,7 +309,7 @@ $select-arrow-width: 6px !default;
         &_isArabic {
           &:before {
             content: "";
-            background: url(../Icons/ExpressIcon/icon.svg) no-repeat;
+            background: url(../Icons/ExpressDeliveryTruck/icon.svg) no-repeat;
             width: 12px;
             height: 10px;
             font-size: 0;
