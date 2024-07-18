@@ -1,6 +1,11 @@
 import { getStore } from "Store";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
-import { setShipping, setCartTotal, setIsAddressSelected } from "Store/Checkout/Checkout.action";
+import {
+  setShipping,
+  setCartTotal,
+  setIsAddressSelected,
+  setShipment,
+} from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
   createOrder,
@@ -23,6 +28,8 @@ import {
   removeBinPromotion,
   getPaymentAuthorizationQPay,
   getPaymentAuthorizationKNET,
+  getShipment,
+  updateShipment,
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,
@@ -36,7 +43,7 @@ import {
   getInstallmentForTamara,
   createSessionTamara,
   verifyTamaraPayment,
-  updateTamaraPayment
+  updateTamaraPayment,
 } from "Util/API/endpoint/Tamara/Tamara.endpoint";
 
 export class CheckoutDispatcher {
@@ -113,14 +120,14 @@ export class CheckoutDispatcher {
       cartId,
       data: address,
     });
-    dispatch(setCartTotal(resp?.data?.totals?.total || 0 ));
+    dispatch(setCartTotal(resp?.data?.totals?.total || 0));
     return resp;
   }
 
   async getPaymentMethods() {
     const {
       Cart: { cartId },
-    } = getStore().getState();  
+    } = getStore().getState();
 
     return getPaymentMethods({
       cart_id: cartId.toString(),
@@ -134,19 +141,19 @@ export class CheckoutDispatcher {
   async createTamaraSession(dispatch, billingData = {}) {
     const {
       Cart: { cartId },
-    } = getStore().getState();    
+    } = getStore().getState();
 
     return createSessionTamara({
       cart_id: cartId.toString(),
     });
   }
 
-  async verifyTamaraPayment (dispatch, paymentID) {
+  async verifyTamaraPayment(dispatch, paymentID) {
     return verifyTamaraPayment(paymentID);
   }
 
-  async updateTamaraPayment (dispatch, paymentID, orderId, paymentStatus) {
-    return updateTamaraPayment(paymentID, orderId, paymentStatus)
+  async updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus) {
+    return updateTamaraPayment(paymentID, orderId, paymentStatus);
   }
 
   async getTabbyInstallment(dispatch, price) {
@@ -262,10 +269,10 @@ export class CheckoutDispatcher {
     if (qpaymethod) {
       return getPaymentAuthorizationQPay({ paymentId });
     }
-    if(KNETpay) {
+    if (KNETpay) {
       return getPaymentAuthorizationKNET({ paymentId });
     }
-    
+
     return getPaymentAuthorization({ paymentId });
   }
 
@@ -274,7 +281,49 @@ export class CheckoutDispatcher {
   }
 
   selectIsAddressSet(dispatch, isAddress) {
-    dispatch(setIsAddressSelected(isAddress))
+    dispatch(setIsAddressSelected(isAddress));
+  }
+
+  async getShipment(dispatch, cartId) {
+    const reqObj = await JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    );
+    const params = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      address_type: reqObj?.mailing_address_type || "37303",
+    };
+
+    try {
+      const response = await getShipment({ cartId, params });
+      if(response) {
+        dispatch(setShipment(response));
+      }
+      return response;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async updateShipment(dispatch, shipmentData = {}) {
+    const reqObj = await JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    );
+    const data = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      ...shipmentData,
+    };
+
+    try {
+      const response = await updateShipment({ data });
+
+      if (response) {
+        this.getShipment(dispatch, shipmentData?.quote_id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 

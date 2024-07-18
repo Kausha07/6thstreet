@@ -78,3 +78,11 @@ export const createOrderCareemPay = ({ data }) =>
 
 export const getNewOrderData = (orderID) =>
   MobileAPI.get(`orders/${orderID}`) || {};
+
+export const getShipment = ({ cartId, params }) =>
+  MobileAPI.get(
+    `/get_shipments?cartid=${cartId}&is_express=1&city=${params?.city}&area=${params?.area}&address_type=${params?.address_type}`
+  ) || {};
+
+export const updateShipment = ({ data }) =>
+  MobileAPI.post("/update-shipment-type", data) || {};

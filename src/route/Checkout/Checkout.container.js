@@ -144,6 +144,7 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus),
   selectIsAddressSet: (isAddress) =>
     CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
+  getShipment: (cartId) => CheckoutDispatcher.getShipment(dispatch, cartId),
 });
 
 export const mapStateToProps = (state) => ({
@@ -611,7 +612,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async componentDidMount() {
-    const { setMeta, cartId, updateTotals, getCouponList, isSignedIn } = this.props;
+    const { setMeta, cartId, updateTotals, getCouponList, isSignedIn, getShipment } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
@@ -665,6 +666,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if(isSignedIn && !QPAY_CHECK && !TABBY_CHECK && !KNET_CHECK && !TAMARA_CHECK) {
       this.getPaymentMethods();
     }
+    // calling get shipment
+    getShipment(cartId);
   }
 
   componentDidCatch(error, info) {

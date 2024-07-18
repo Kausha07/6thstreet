@@ -2,12 +2,14 @@ import {
     SET_SHIPPING,
     SET_CART_TOTAL,
     SET_IS_ADDRESS_SELECTED,
+    SET_SHIPMENT,
 } from './Checkout.action';
 
 export const getInitialState = () => ({
     shipping: {},
     cartTotal: 0,
     isAddressSelected: false,
+    shipment: {},
 });
 
 export const CheckoutReducer = (state = getInitialState(), action) => {
@@ -35,6 +37,13 @@ export const CheckoutReducer = (state = getInitialState(), action) => {
         ...state,
         isAddressSelected: isAddress,
       }
+
+    case SET_SHIPMENT:
+        const { shipment } = action;
+        return {
+            ...state,
+            shipment,
+        }
 
     default:
         return state;

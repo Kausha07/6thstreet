@@ -21,6 +21,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
 import CartTotal from "Component/CartTotal";
 import NewCheckoutPayment from "Component/NewCheckoutPayment";
+import NewCheckoutShippment from "Component/NewCheckoutShippment";
 
 import "./CheckoutShipping.style";
 
@@ -299,6 +300,21 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       });
     }
   };
+
+  renderItems() {
+    const {
+      totals: { items = [], quote_currency_code },
+    } = this.props;
+    const { isSignedIn } = this.state;
+
+    return (
+      <NewCheckoutShippment
+        items={items}
+        quote_currency_code={quote_currency_code}
+        isSignedIn={isSignedIn}
+      />
+    );
+  }
 
   renderActions() {
     const { isPaymentLoading, isAddressSelected } = this.props;
@@ -697,6 +713,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             {this.renderDelivery()}
             {this.renderNewPaymentBlock()}
             {/* {this.renderHeading(__("Payment Options"), true)} */}
+            {isMobile ? this.renderItems() : null}
             {isMobile ? this.renderActions() : null}
           </div>
         </Form>

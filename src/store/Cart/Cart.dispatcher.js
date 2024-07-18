@@ -27,6 +27,7 @@ import Logger from "Util/Logger";
 import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { resetCart } from "Store/Cart/Cart.action";
 import { setCartTotal } from "Store/Checkout/Checkout.action";
 export class CartDispatcher {
@@ -335,6 +336,7 @@ export class CartDispatcher {
       }
 
       await this.getCartTotals(dispatch, cartId);
+      CheckoutDispatcher.getShipment(dispatch, cartId);
       
       if(response === null){
         dispatch(showNotification("success", __("Coupon was applied!")));
@@ -368,6 +370,7 @@ export class CartDispatcher {
       dispatch(setIsCouponRequest(true));
       const resp = await removeCouponCode({ cartId, couponCode });
       await this.getCartTotals(dispatch, cartId);
+      CheckoutDispatcher.getShipment(dispatch, cartId);
       dispatch(setIsCouponRequest(false));
       if(resp && typeof resp === "string") {
         dispatch(showNotification("error", resp));
@@ -410,6 +413,7 @@ export class CartDispatcher {
       const Response = await siteWideCouponUpdate({ quoteId, flag, is_guest });
       if(Response) {
         await this.getCartTotals(dispatch, cartId);
+        CheckoutDispatcher.getShipment(dispatch, cartId);        
       }
       if(!Response?.status){
         dispatch(showNotification("error", Response?.msg ));

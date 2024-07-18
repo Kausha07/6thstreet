@@ -259,7 +259,7 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <p block="CartItem" elem="Heading" mods={{ isArabic }}>
+      <p block="CartItem" elem="Heading" mods={{ isArabic, brandName: true }}>
         {brand_name}
       </p>
     );
@@ -696,7 +696,7 @@ export class CartItem extends PureComponent {
         mods={{ isLikeTable, isArabic }}
       >
         {this.renderBrandName()}
-        {/* {this.renderProductName()} */}
+        {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
