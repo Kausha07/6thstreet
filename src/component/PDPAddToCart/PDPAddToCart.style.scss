@@ -298,8 +298,8 @@ $select-arrow-width: 6px !default;
         &_isExpressEligibleSKU {
           &:before {
             content: "";
-            background: url(../Icons/ExpressDeliveryTruck/) no-repeat;
-            width: 12px;
+            background: url(../Icons/ExpressDeliveryTruck/icon.svg) no-repeat;
+            width: 13px;
             height: 10px;
             position: absolute;
             top: 2px;
@@ -310,7 +310,7 @@ $select-arrow-width: 6px !default;
           &:before {
             content: "";
             background: url(../Icons/ExpressDeliveryTruck/icon.svg) no-repeat;
-            width: 12px;
+            width: 13px;
             height: 10px;
             font-size: 0;
             position: absolute;

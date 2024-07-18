@@ -8,6 +8,20 @@
   text-transform: initial;
   padding: 4px 0;
 
+  .eddExpressDeliveryBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .freeVIPText {
+      font-family: Avenir Next;
+      font-size: 13px;
+      font-weight: 600;
+      color: #28d9aa;
+      margin: 0 10px;
+    }
+  }
+
   svg {
     width: 24px;
     height: 24px;

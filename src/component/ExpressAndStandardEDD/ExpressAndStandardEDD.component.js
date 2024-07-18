@@ -367,34 +367,41 @@ export const ExpressAndStandardEDD = ({
           isProductOfficeServicable &&
           express_delivery_key && (
             <div block="eddExpressDelivery">
-              <div
-                block="EddExpressDeliveryTextBlock"
-                mods={{ isArabic: isArabic() }}
-              >
-                <ExpressDeliveryTruck />
-                <div block="EddExpressDeliveryText">
-                  <span block="EddExpressDeliveryTextRed">
-                    {__("Express")} {}
-                  </span>
-                  {isExpressServiceAvailable?.express_eligible &&
-                  +customer?.vipCustomer &&
-                  !isCart ? (
-                    <img block="expressVipImage" src={VIPIcon} alt="vipIcon" />
-                  ) : null}
-                  <span block="EddExpressDeliveryTextNormal">
-                    {__("Delivery by")}
-                  </span>
-                  <span block="EddExpressDeliveryTextBold">
-                    {express_delivery_key?.toLowerCase() !==
-                      "tomorrow delivery" && !isTimeExpired
-                      ? __("Today")
-                      : __("Tomorrow")}
-                  </span>
+              <div block="eddExpressDeliveryBlock">
+                <div
+                  block="EddExpressDeliveryTextBlock"
+                  mods={{ isArabic: isArabic() }}
+                >
+                  <ExpressDeliveryTruck />
+                  <div block="EddExpressDeliveryText">
+                    <span block="EddExpressDeliveryTextRed">
+                      {__("Express")} {}
+                    </span>
+                    {isExpressServiceAvailable?.express_eligible &&
+                    +customer?.vipCustomer &&
+                    !isCart ? (
+                      <img
+                        block="expressVipImage"
+                        src={VIPIcon}
+                        alt="vipIcon"
+                      />
+                    ) : null}
+                    <span block="EddExpressDeliveryTextNormal">
+                      {__("Delivery by")}
+                    </span>
+                    <span block="EddExpressDeliveryTextBold">
+                      {express_delivery_key?.toLowerCase() !==
+                        "tomorrow delivery" && !isTimeExpired
+                        ? __("Today")
+                        : __("Tomorrow")}
+                    </span>
+                  </div>
                 </div>
                 {isExpressServiceAvailable?.express_eligible &&
                 +customer?.vipCustomer &&
-                !isExpressServiceAvailable?.is_vip_chargeable ? (
-                  <span block="freeVIPText">{__("FREE")}</span>
+                !isExpressServiceAvailable?.is_vip_chargeable &&
+                !isCart ? (
+                  <span block="freeVIPText">{__("Free")}</span>
                 ) : null}
               </div>
               {!isTimeExpired &&
