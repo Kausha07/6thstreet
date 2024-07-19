@@ -120,10 +120,9 @@ export const ExpressAndStandardEDD = ({
   // check selected SKU is express eligible or not
   const isSKUExpressEligible = checkSKUExpressEligible();
 
-  const isInternationalProduct =
-    edd_info?.international_vendors?.includes(
-      international_vendor // for international products show standard delivery
-    ) || cross_border;
+  const isInternationalProduct = edd_info?.international_vendors?.includes(
+    international_vendor // for international products show standard delivery
+  );
 
   const inventoryCheck = (quantity, cutoffTime) => {
     return +quantity !== 0 ? cutoffTime : "00:00";
@@ -183,6 +182,12 @@ export const ExpressAndStandardEDD = ({
         isTimeExpired
       ) {
         return true;
+      } else if (
+        isOfficeSameDayExpressServicable &&
+        !isOfficeNextDayExpressServicable &&
+        express_delivery_key?.toLowerCase()?.includes("tomorrow")
+      ) {
+        return false;
       }
     }
     return true;

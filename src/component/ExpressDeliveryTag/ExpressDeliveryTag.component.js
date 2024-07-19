@@ -54,8 +54,7 @@ export const ExpressDeliveryTag = (props) => {
 
   const renderExpressDeliveryTag = () => {
     const isInternationalProduct =
-      edd_info?.international_vendors?.includes(international_vendor) ||
-      cross_border;
+      edd_info?.international_vendors?.includes(international_vendor)
 
     if (
       in_stock === 0 ||
