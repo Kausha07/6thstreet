@@ -133,7 +133,7 @@ export const mapDispatchToProps = (dispatch) => ({
   getCouponList: () => CartDispatcher.getCoupon(dispatch),
   applyCouponToCart: (couponCode) =>
     CartDispatcher.applyCouponCode(dispatch, couponCode),
-  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
+  removeCouponFromCart: (data={}) => CartDispatcher.removeCouponCode(dispatch, data),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
   createTamaraSession: () =>

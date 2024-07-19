@@ -340,6 +340,7 @@ export class CartDispatcher {
       }else {
         dispatch(showNotification("success", __("Coupon was applied!")));
       }
+      return response;
       
     } catch (e) {
       dispatch(
@@ -353,14 +354,14 @@ export class CartDispatcher {
     }
   }
 
-  async removeCouponCode(dispatch, couponCode) {
+  async removeCouponCode(dispatch, data={}) {
     const {
       Cart: { cartId },
     } = getStore().getState();
 
     try {
       dispatch(setIsCouponRequest(true));
-      const resp = await removeCouponCode({ cartId, couponCode });
+      const resp = await removeCouponCode({ cartId, ...data });
       await this.getCartTotals(dispatch, cartId);
       dispatch(setIsCouponRequest(false));
       if(resp && typeof resp === "string") {
@@ -368,6 +369,7 @@ export class CartDispatcher {
       }else {
         dispatch(showNotification("success", __("Coupon was removed!")));
       }
+      return resp;
     } catch (e) {
       dispatch(setIsCouponRequest(false));
       dispatch(

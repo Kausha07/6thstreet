@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { Coupon } from "Component/Icons/index";
 import { isArabic as checkIsArabic } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { handleSwcToPromoCall } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 import Event, {
   EVENT_GTM_COUPON,
   MOE_trackEvent,
@@ -20,6 +21,9 @@ export const mapDispatchToProps = (dispatch) => ({
   updateSidewideCoupon: (quoteId, flag, is_guest) =>
     CartDispatcher.updateSidewideCoupon(dispatch, quoteId, flag, is_guest),
   getCart: () => CartDispatcher.getCart(dispatch, false, false),
+  applyCouponToCart: (couponCode) =>
+    CartDispatcher.applyCouponCode(dispatch, couponCode),
+  removeCouponFromCart: (data={}) => CartDispatcher.removeCouponCode(dispatch, data),
 });
 
 export const mapStateToProps = (state) => {
@@ -38,11 +42,15 @@ function SideWideCoupon(props) {
     isSignedIn,
     config,
     openCouponPopup,
+    applyCouponToCart,
+    removeCouponFromCart,
   } = props;
   const isArabic = checkIsArabic();
   const countryCode = getCountryFromUrl();
   const langCode = getLanguageFromUrl();
   const sidewideCouponCode = config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+  const SWCPromoCall =
+    config?.countries?.[countryCode]?.swc_promo_call || false;
   const sideWideRecommendedCode =
     config?.countries?.[countryCode]?.sidewideCouponData?.coupon_text?.[
       langCode
@@ -71,6 +79,21 @@ function SideWideCoupon(props) {
   }
 
   const handleSideWideCoupon = async (flag) => {
+
+    if (SWCPromoCall) {
+      handleSwcToPromoCall({
+        SWCPromoCall,
+        applyCouponToCart,
+        pageType: "",
+        removeCouponFromCart,
+        flag,
+        sidewideCouponCode,
+        sendSiteWideCouponEvents,
+        isSignedIn,
+      });
+      return;
+    }
+
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
     const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
 

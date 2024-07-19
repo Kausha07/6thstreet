@@ -64,6 +64,7 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import TamaraWidget from "Component/TamaraWidget/TamaraWidget";
 import SideWideCoupon from "Component/SideWideCoupon";
 import CartTotal from "Component/CartTotal";
+import { handleSwcToPromoCall } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -366,7 +367,31 @@ export class CartPage extends PureComponent {
   }
 
   handleSideWideCoupon = async (flag, sidewideCouponCode) => {
-    const { isSignedIn, updateSidewideCoupon } = this.props;
+    const {
+      isSignedIn,
+      updateSidewideCoupon,
+      applyCouponToCart,
+      removeCouponFromCart,
+      config,
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const SWCPromoCall =
+      config?.countries?.[countryCode]?.swc_promo_call || false;
+
+    if (SWCPromoCall) {
+      handleSwcToPromoCall({
+        SWCPromoCall,
+        applyCouponToCart,
+        pageType: "CartPage",
+        setLoader: this.setLoader,
+        removeCouponFromCart,
+        flag,
+        sidewideCouponCode,
+        sendSiteWideCouponEvents: this.sendSiteWideCouponEvents,
+        isSignedIn,
+      });
+      return;
+    }
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
     const resp = await updateSidewideCoupon(cart_id, flag, !isSignedIn);
@@ -399,7 +424,32 @@ export class CartPage extends PureComponent {
       total: this.props?.totals?.total || "",
     };
     Event.dispatch(EVENT_GTM_COUPON, eventData);
-    this.props.removeCouponFromCart();
+    // if coupon is Sitewide coupon then pass isSiteWide flag as true
+    const {
+      isSignedIn,
+      totals: { site_wide_applied = 0, coupon_code = "" },
+      config,
+    } = this.props;
+    let isSiteWideCoupon = false;
+    const countryCode = getCountryFromUrl();
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode =
+      config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+
+    if (
+      coupon_code &&
+      coupon_code != "" &&
+      sidewideCouponCode &&
+      sidewideCouponCode != "" &&
+      coupon_code.toLowerCase() === sidewideCouponCode.toLowerCase()
+    ) {
+      isSiteWideCoupon = true;
+    }
+
+    this.props.removeCouponFromCart({
+      is_guest: !isSignedIn,
+      isSiteWide: isSiteWideCoupon,
+    });
   };
   getCouponModuleStatus = async () => {
     const { country, config } = this.props;
@@ -472,6 +522,9 @@ export class CartPage extends PureComponent {
     const langCode = getLanguageFromUrl();
     const sidewideCouponCode =
       config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+    const promoCodeText =
+      config?.countries?.[countryCode]?.sidewideCouponData?.heading?.[langCode] ||
+      __("Enter coupon or promo code");
 
     return (
       <>
@@ -513,7 +566,7 @@ export class CartPage extends PureComponent {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                   </button>
@@ -546,7 +599,7 @@ export class CartPage extends PureComponent {
                     <span block="showCouponBtnLeftBlock">
                       <img block="couponImage" src={Coupon} alt="couponImage" />
                       <span block="couponText" mods={{ isArabic }}>
-                        {__("Enter coupon or promo code")}
+                        {promoCodeText}
                       </span>
                     </span>
                     <span block="couponCodeSelectText">{__("Select")}</span>
