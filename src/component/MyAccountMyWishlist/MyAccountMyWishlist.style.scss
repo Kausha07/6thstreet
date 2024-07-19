@@ -139,12 +139,15 @@
     .MyAccountMyWishlist {
       .Price {
         text-align: right;
-        flex-direction: row-reverse;
-      
+        display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+        // flex-direction: row-reverse;
         &-Wrapper {
           // display: flex;
-          flex-direction: row-reverse;
-          margin: 0;
+          // flex-direction: row-reverse;
+          // margin: 0;
         }
       }
       .ProductItem {

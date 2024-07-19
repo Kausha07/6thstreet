@@ -66,11 +66,17 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             };
 
             // this will invalidate config after one year
-            BrowserDatabase.setItem(
-                newState,
-                APP_CONFIG_CACHE_KEY,
-                ONE_YEAR_IN_SECONDS
-            );
+            try {
+                BrowserDatabase.setItem(
+                    newState,
+                    APP_CONFIG_CACHE_KEY,
+                    ONE_YEAR_IN_SECONDS
+                );
+            } 
+            catch(e) {
+                localStorage.clear();
+                window.location.reload();
+            }
 
             // We do not care about multiple state update,
             // the Redux will not trigger component update

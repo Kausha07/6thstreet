@@ -28,8 +28,6 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
-  "rating_sku.total_ratings",
-  "rating_sku.average_ratings"
 ];
 
 const MORE_FILTERS = [
@@ -56,6 +54,8 @@ const MORE_FILTERS = [
   "price.OMR.default",
   "price.BHD.default",
   "price.QAR.default",
+  "rating_sku.total_ratings",
+  "rating_sku.average_ratings"
 ]
 
 const config = {
@@ -71,6 +71,8 @@ const config = {
     "price.OMR.default",
     "price.BHD.default",
     "price.QAR.default",
+    "rating_sku.total_ratings",
+    "rating_sku.average_ratings"
   ],
 
   VISIBLE_FILTERS: [
@@ -83,6 +85,8 @@ const config = {
     "price",
     "discount",
     "in_stock",
+    // "rating_sku.total_ratings",
+    // "rating_sku.average_ratings"
   ],
 
   SIZE_FILTERS: ["size_uk", "size_eu", "size_us"],
