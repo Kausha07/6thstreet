@@ -255,11 +255,11 @@ export class CartItem extends PureComponent {
   }
 
   renderBrandName() {
-    const { brand_name } = this.props;
+    const { brand_name, isCheckoutPage= false } = this.props;
     const { isArabic } = this.state;
 
     return (
-      <p block="CartItem" elem="Heading" mods={{ isArabic, brandName: true }}>
+      <p block="CartItem" elem="Heading" mods={{ isArabic, brandName: true && isCheckoutPage }}>
         {brand_name}
       </p>
     );
@@ -708,7 +708,7 @@ export class CartItem extends PureComponent {
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
-      isCheckoutPage
+      isCheckoutPage =false,
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -723,7 +723,7 @@ export class CartItem extends PureComponent {
         mods={{ isLikeTable, isArabic }}
       >
         {this.renderBrandName()}
-        {this.renderProductName()}
+        {isCheckoutPage &&  this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}

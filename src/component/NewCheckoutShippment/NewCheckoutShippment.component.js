@@ -143,7 +143,7 @@ export const NewCheckoutShippment = (props) => {
                   : null}
               </div> */}
             </div>
-            <div block="StandardPrice">{`+ ${currencyCode} ${express_fee}`}</div>
+            <div block="StandardPrice">{__("Free")}</div>
           </div>
         </div>
 
