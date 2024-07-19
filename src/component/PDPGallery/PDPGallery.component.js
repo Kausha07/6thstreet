@@ -722,9 +722,13 @@ class PDPGallery extends PureComponent {
     const startDay = Date.parse(timer_start_time);
     const endDay = Date.parse(timer_end_time);
     if (!(endDay >= startDay) || !(now <= endDay) ||  startDay >= now) {
-      getAddToCartInfo({"is_flash_sale":false});
+      if(this.props?.addtoCartInfo?.is_flash_sale === true) {
+        getAddToCartInfo({"is_flash_sale":false});
+      }
     } else {
-      getAddToCartInfo({"is_flash_sale":true});
+        if(this.props?.addtoCartInfo?.is_flash_sale === false) {
+            getAddToCartInfo({"is_flash_sale":true});
+          }
       return(
         <div block="saleBlock"   mods={{ isArabic }}> <DynamicContentCountDownTimer  newtimerIcon={timerIcon}  infoText={newinfoText} start={timer_start_time} end={timer_end_time} isPLPOrPDP /></div>
       )

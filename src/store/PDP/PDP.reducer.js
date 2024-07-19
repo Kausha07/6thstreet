@@ -23,7 +23,7 @@ export const getInitialState = () => ({
     brandButtonClick : false,
     vueTrendingBrandClick: false,
     isNewDesign: false,
-    addtoCartInfo:{}
+    addtoCartInfo:{ is_flash_sale : false }
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
@@ -110,7 +110,7 @@ export const PDPReducer = (state = getInitialState(), action) => {
 
         case SET_ADDTOCART_INFO:
             const { addtoCartInfo } = action;
-            let getCartObject = addtoCartInfo.isForceToEmpty ? {} : state.addtoCartInfo;
+            let getCartObject = addtoCartInfo.isForceToEmpty ? { is_flash_sale : false } : state.addtoCartInfo;
             return {
                 ...state,
                 addtoCartInfo:{

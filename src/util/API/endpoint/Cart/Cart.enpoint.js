@@ -46,10 +46,18 @@ export const applyCouponCode = ({ cartId, couponCode }) =>
     coupon_code: couponCode,
   }) || {};
 
-export const removeCouponCode = ({ cartId, couponCode }) =>
-  MobileAPI.delete(`/carts/${cartId}/coupons`, {
-    coupon_code: couponCode,
-  }) || {};
+export const removeCouponCode = ({
+  cartId,
+  couponCode,
+  isSiteWide = false,
+  is_guest,
+}) =>
+  MobileAPI.delete(
+    `/carts/${cartId}/coupons?sitewide_remove=${isSiteWide}&is_guest=${is_guest}`,
+    {
+      coupon_code: couponCode,
+    }
+  ) || {};
 
 export const removeCart = ({ cartId }) =>
   MobileAPI.delete(`/carts2/${cartId}`) || {};

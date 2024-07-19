@@ -72,11 +72,43 @@ export class CartCoupon extends SourceCartCoupon {
     }
   };
 
+  // if coupon is sitewide copon
+  handleRemoveCouponFromCart() {
+    const {
+      removeCouponFromCart,
+      isSignedIn,
+      totals: { coupon_code = "" },
+      config,
+    } = this.props;
+    let isSiteWideCoupon = false;
+    const countryCode = getCountryFromUrl();
+    const langCode = getLanguageFromUrl();
+    const sidewideCouponCode =
+      config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+
+    this.setState({ isLoading: true });
+
+    if (
+      coupon_code &&
+      coupon_code != "" &&
+      sidewideCouponCode &&
+      sidewideCouponCode != "" &&
+      coupon_code.toLowerCase() === sidewideCouponCode.toLowerCase()
+    ) {
+      isSiteWideCoupon = true;
+    }
+
+    removeCouponFromCart({
+      is_guest: !isSignedIn,
+      isSiteWide: isSiteWideCoupon,
+    }).then(
+        () => this.setState({ isLoading: false })
+    );
+}
+
   handleRemoveCoupon = () => {
-    const { handleRemoveCouponFromCart } = this.props;
-    const { couponCode } = this.props;
     localStorage.removeItem("lastCouponCode");
-    handleRemoveCouponFromCart();
+    this.handleRemoveCouponFromCart();
 
     // We need to reset input field. If we do it in applyCouponCode,
     // then it will disappear if code is incorrect. We want to avoid it
