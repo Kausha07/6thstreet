@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { ExpressDeliveryTruck } from "Component/Icons";
 import "./ExpressDeliveryTag.style";
-import { createReducer } from "Store/index";
 
 export const mapStateToProps = (state) => ({
   isExpressDelivery: state.AppConfig.isExpressDelivery,

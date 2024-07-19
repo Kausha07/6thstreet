@@ -160,6 +160,13 @@ export const ExpressAndStandardEDD = ({
           inventoryCheck(store_quantity, store_cutoff_time)) ||
         (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
 
+    if (
+      !tempTodaysCutOffTime &&
+      express_delivery_key?.toLowerCase()?.includes("today")
+    ) {
+      tempTodaysCutOffTime = warehouse_cutoff_time;
+    }
+
     return tempTodaysCutOffTime;
   };
 
@@ -395,10 +402,16 @@ export const ExpressAndStandardEDD = ({
                       {__("Delivery by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
-                      {express_delivery_key?.toLowerCase() !==
-                        "tomorrow delivery" && !isTimeExpired
+                      {express_delivery_key?.toLowerCase() ===
+                        "today delivery" && !isTimeExpired
                         ? __("Today")
-                        : __("Tomorrow")}
+                        : express_delivery_key?.toLowerCase() ===
+                            "tomorrow delivery" ||
+                          (express_delivery_key?.toLowerCase() ===
+                            "today delivery" &&
+                            isTimeExpired)
+                        ? __("Tomorrow")
+                        : ""}
                     </span>
                   </div>
                 </div>
