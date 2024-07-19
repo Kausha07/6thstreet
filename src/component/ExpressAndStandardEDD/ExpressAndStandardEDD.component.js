@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
+import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import { getTodaysWeekDay } from "Util/Common";
 import { isArabic } from "Util/App";
 import "./ExpressAndStandardEDD.style";
@@ -20,6 +21,9 @@ export const ExpressAndStandardEDD = ({
   isExpressDelivery = false,
   isExpressServiceAvailable = {},
   express_delivery = "",
+  express_delivery_home = "",
+  express_delivery_work = "",
+  express_delivery_others = "",
   actualEddMess = "",
   simple_products = {},
   selectedSizeCode = "",
@@ -63,28 +67,64 @@ export const ExpressAndStandardEDD = ({
       )?.value || "37303"
     : "37303";
 
+  const getFinalExpressDeliveryKey = () => {
+    if (isPDP) {
+      if (addressType === "37303" && express_delivery_home) {
+        return express_delivery_home;
+      } else if (addressType === "37304" && express_delivery_work) {
+        return express_delivery_work;
+      } else if (addressType === "37305" && express_delivery_others) {
+        return express_delivery_others;
+      } else return express_delivery_home;
+    } else {
+      return express_delivery;
+    }
+  };
+
+  const express_delivery_key = getFinalExpressDeliveryKey();
+
   // check product is express eligible  or not
   const isProductExpressEligible = [
     "today delivery",
     "tomorrow delivery",
-  ].includes?.(express_delivery?.toLowerCase());
+  ].includes?.(express_delivery_key?.toLowerCase());
+
+  const checkSKUExpressEligible = () => {
+    if (isPDP) {
+      if (
+        +simple_products?.[sku]?.cross_border_qty &&
+        +simple_products?.[sku]?.quantity <=
+          +simple_products?.[sku]?.cross_border_qty
+      ) {
+        return false;
+      } else if (
+        +simple_products?.[sku]?.quantity !== 0 &&
+        +simple_products?.[sku]?.whs_quantity === 0 &&
+        +simple_products?.[sku]?.store_quantity === 0 &&
+        +simple_products?.[sku]?.mp_quantity === 0
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (
+      whs_quantity === 0 &&
+      store_quantity === 0 &&
+      mp_quantity === 0
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   // check selected SKU is express eligible or not
-  const isSKUExpressEligible =
-    isPDP &&
-    +simple_products?.[sku]?.quantity !== 0 &&
-    +simple_products?.[sku]?.whs_quantity === 0 &&
-    +simple_products?.[sku]?.store_quantity === 0 &&
-    +simple_products?.[sku]?.mp_quantity === 0
-      ? false
-      : true;
+  const isSKUExpressEligible = checkSKUExpressEligible();
 
   const isInternationalProduct =
     edd_info?.international_vendors?.includes(
       international_vendor // for international products show standard delivery
     ) || cross_border;
 
-  // find appropriate "todaysCutOffTime" based on inventory
   const inventoryCheck = (quantity, cutoffTime) => {
     return +quantity !== 0 ? cutoffTime : "00:00";
   };
@@ -103,18 +143,23 @@ export const ExpressAndStandardEDD = ({
     ) || {};
 
     tempTodaysCutOffTime = isPDP
-      ? inventoryCheck(
-          simple_products?.[sku]?.whs_quantity,
-          warehouse_cutoff_time
-        ) ||
-        inventoryCheck(
-          simple_products?.[sku]?.store_quantity,
-          store_cutoff_time
-        ) ||
-        inventoryCheck(simple_products?.[sku]?.mp_quantity, mp_cutoff_time)
-      : inventoryCheck(whs_quantity, warehouse_cutoff_time) ||
-        inventoryCheck(store_quantity, store_cutoff_time) ||
-        inventoryCheck(mp_quantity, mp_cutoff_time);
+      ? (+simple_products?.[sku]?.whs_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[sku]?.whs_quantity,
+            warehouse_cutoff_time
+          )) ||
+        (+simple_products?.[sku]?.store_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[sku]?.store_quantity,
+            store_cutoff_time
+          )) ||
+        (+simple_products?.[sku]?.mp_quantity != 0 &&
+          inventoryCheck(simple_products?.[sku]?.mp_quantity, mp_cutoff_time))
+      : (+whs_quantity != 0 &&
+          inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
+        (+store_quantity != 0 &&
+          inventoryCheck(store_quantity, store_cutoff_time)) ||
+        (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
 
     return tempTodaysCutOffTime;
   };
@@ -279,7 +324,7 @@ export const ExpressAndStandardEDD = ({
       return true;
     }
 
-    if (!express_delivery) {
+    if (!express_delivery_key) {
       return true;
     }
 
@@ -288,7 +333,7 @@ export const ExpressAndStandardEDD = ({
     }
 
     if (isExpressServiceAvailable?.express_eligible && +customer?.vipCustomer) {
-      if (isExpressServiceAvailable?.is_vip_chargeable) {
+      if (isExpressServiceAvailable?.is_vip_chargeable && !isCart) {
         return true;
       } else {
         return false;
@@ -313,41 +358,54 @@ export const ExpressAndStandardEDD = ({
 
     return (
       <div>
-        {isExpressServiceAvailable?.express_eligible &&
+        {currentSelectedAddress &&
+          isExpressServiceAvailable?.express_eligible &&
           isExpressDelivery &&
-          ((isProductExpressEligible && isSKUExpressEligible) ||
+          ((isProductExpressEligible && !selectedSizeCode) ||
             isSKUExpressEligible) &&
           !isInternationalProduct &&
           isProductOfficeServicable &&
-          express_delivery && (
+          express_delivery_key && (
             <div block="eddExpressDelivery">
-              <div
-                block="EddExpressDeliveryTextBlock"
-                mods={{ isVip: +customer?.vipCustomer, isArabic: isArabic() }}
-              >
-                <ExpressDeliveryTruck />
-                <div block="EddExpressDeliveryText">
-                  {isExpressServiceAvailable?.express_eligible &&
-                  +customer?.vipCustomer &&
-                  !isExpressServiceAvailable?.is_vip_chargeable ? (
-                    <span block="freeVIPText">{__("FREE")}</span>
-                  ) : null}
-                  <span block="EddExpressDeliveryTextRed">
-                    {__("Express")} {}
-                  </span>
-                  <span block="EddExpressDeliveryTextNormal">
-                    {__("Delivery by")}
-                  </span>
-                  <span block="EddExpressDeliveryTextBold">
-                    {express_delivery?.toLowerCase() !== "tomorrow delivery" &&
-                    !isTimeExpired
-                      ? __("Today")
-                      : __("Tomorrow")}
-                  </span>
+              <div block="eddExpressDeliveryBlock">
+                <div
+                  block="EddExpressDeliveryTextBlock"
+                  mods={{ isArabic: isArabic() }}
+                >
+                  <ExpressDeliveryTruck />
+                  <div block="EddExpressDeliveryText">
+                    <span block="EddExpressDeliveryTextRed">
+                      {__("Express")} {}
+                    </span>
+                    {isExpressServiceAvailable?.express_eligible &&
+                    +customer?.vipCustomer &&
+                    !isCart ? (
+                      <img
+                        block="expressVipImage"
+                        src={VIPIcon}
+                        alt="vipIcon"
+                      />
+                    ) : null}
+                    <span block="EddExpressDeliveryTextNormal">
+                      {__("Delivery by")}
+                    </span>
+                    <span block="EddExpressDeliveryTextBold">
+                      {express_delivery_key?.toLowerCase() !==
+                        "tomorrow delivery" && !isTimeExpired
+                        ? __("Today")
+                        : __("Tomorrow")}
+                    </span>
+                  </div>
                 </div>
+                {isExpressServiceAvailable?.express_eligible &&
+                +customer?.vipCustomer &&
+                !isExpressServiceAvailable?.is_vip_chargeable &&
+                !isCart ? (
+                  <span block="freeVIPText">{__("Free")}</span>
+                ) : null}
               </div>
               {!isTimeExpired &&
-                express_delivery?.toLowerCase() !== "tomorrow delivery" && (
+                express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
                   <div block="EddExpressDeliveryCutOffTime">
                     {__("Order within %sHrs %sMins", hours, minutes)}
                   </div>
@@ -361,7 +419,6 @@ export const ExpressAndStandardEDD = ({
               <Shipping />
               <div block="shipmentText">
                 <span block="EddStandardDeliveryText">
-                  {__("Standard")} {}
                   {actualEddMess?.split(splitKey)?.[0]} {}
                   {splitKey} {}
                 </span>
@@ -391,7 +448,13 @@ export const ExpressAndStandardEDD = ({
               </div>
             ) : (
               <div block="internationalShipmentTag">
-                {isIntlBrand || (international_shipping_fee && +cross_border)
+                {isIntlBrand ||
+                (international_shipping_fee &&
+                  (+cross_border ||
+                    (edd_info.international_vendors &&
+                      edd_info.international_vendors.indexOf(
+                        international_vendor
+                      ) > -1)))
                   ? renderIntlTag()
                   : null}
               </div>

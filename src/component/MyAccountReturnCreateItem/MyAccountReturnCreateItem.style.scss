@@ -241,3 +241,16 @@
     overflow-y: auto;
   }
 }
+
+
+.MyAccountReturnCreateItem{
+  &-PriceRegular{
+    &_isArabic{
+      direction: rtl;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+  }
+}

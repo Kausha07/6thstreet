@@ -37,8 +37,8 @@ export class PDPGalleryContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { currentIndex, product, renderMySignInPopup } = this.props;
-
+    const { currentIndex, product, renderMySignInPopup, 
+      addtoCartInfo } = this.props;
     return {
       gallery: this.getGallery(),
       prod_style_video: this.getStyleVideo(),
@@ -46,7 +46,8 @@ export class PDPGalleryContainer extends PureComponent {
       crumbs: this.getCrumbs(),
       currentIndex,
       product,
-      renderMySignInPopup
+      renderMySignInPopup,
+      addtoCartInfo
     };
   };
 

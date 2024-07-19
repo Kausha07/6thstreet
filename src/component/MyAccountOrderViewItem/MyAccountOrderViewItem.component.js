@@ -125,7 +125,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
           )}
         </div>
         <p block="MyAccountReturnSuccessItem" elem="Price">
-          <span block="MyAccountReturnSuccessItem" elem="PriceRegular">
+          <span block="MyAccountReturnSuccessItem" elem="PriceRegular" mods={{ isArabic: isArabic() ? true : false }}>
             {discountPercentage && (site_wide_applied || discount_code)
               ? this.renderSitewidePriceLine()
               : `${formatPrice(+price, currency)}`}

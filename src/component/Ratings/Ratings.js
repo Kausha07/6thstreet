@@ -42,8 +42,7 @@ const Ratings = (props) => {
            }));
         }
     },[]);
-
-    if(!rating_sku || !rating_sku?.total_ratings){
+    if((!rating_sku || !rating_sku?.total_ratings) && Object.keys(rating_sku).length > 8){
         if(!addtoCartInfo.hasOwnProperty("product_rating") && isPDPEventsOnly){
             dispatch(setAddtoCartInfo({
                 "product_rating":0,

@@ -11,33 +11,61 @@ export const mapStateToProps = (state) => ({
 });
 
 export const ExpressDeliveryTag = (props) => {
+  const {
+    productInfo: {
+      express_delivery_home = "",
+      express_delivery_work = "",
+      express_delivery_others = "",
+      simple_products = {},
+      international_vendor = "",
+      cross_border = 0,
+      in_stock = 1,
+      stock_qty = 1,
+    },
+    edd_info,
+    isExpressServiceAvailable,
+    isExpressDelivery,
+  } = props;
+
+  const currentSelectedAddress = JSON.parse(
+    localStorage.getItem("currentSelectedAddress")
+  );
+
+  const getFinalExpressDeliveryKey = () => {
+    if (
+      currentSelectedAddress?.mailing_address_type === "37303" &&
+      express_delivery_home
+    ) {
+      return express_delivery_home;
+    } else if (
+      currentSelectedAddress?.mailing_address_type === "37304" &&
+      express_delivery_work
+    ) {
+      return express_delivery_work;
+    } else if (
+      currentSelectedAddress?.mailing_address_type === "37305" &&
+      express_delivery_others
+    ) {
+      return express_delivery_others;
+    } else return express_delivery_home;
+  };
+
+  const express_delivery = getFinalExpressDeliveryKey();
+
   const renderExpressDeliveryTag = () => {
-    const {
-      productInfo: {
-        express_delivery = "",
-        simple_products = {},
-        international_vendor = "",
-        cross_border = 0,
-      },
-      edd_info,
-      isExpressServiceAvailable,
-      isExpressDelivery,
-    } = props;
-
-    const selctedAddress = JSON.parse(
-      localStorage.getItem("currentSelectedAddress")
-    );
-
     const isInternationalProduct =
       edd_info?.international_vendors?.includes(international_vendor) ||
       cross_border;
 
     if (
+      in_stock === 0 ||
+      (in_stock === 1 && stock_qty === 0) ||
       !isExpressDelivery ||
       isInternationalProduct ||
       !express_delivery ||
-      !selctedAddress ||
-      (selctedAddress && !isExpressServiceAvailable?.express_eligible) ||
+      !currentSelectedAddress ||
+      (currentSelectedAddress &&
+        !isExpressServiceAvailable?.express_eligible) ||
       express_delivery === 1 ||
       express_delivery === 0 ||
       !["today delivery", "tomorrow delivery"].includes?.(

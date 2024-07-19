@@ -231,9 +231,30 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
   return false;
 };
 
-const expressDataOBJ = ({ allFacets, facetKey }) => {
+const getAddressType = () => {
+  const currentSelectedAddress =
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+
+  if (currentSelectedAddress) {
+    switch (currentSelectedAddress?.mailing_address_type) {
+      case "37303":
+        return "home";
+      case "37304":
+        return "work";
+      case "37305":
+        return "other";
+      default:
+        return "home";
+    }
+  }
+  return "";
+};
+
+const expressDataOBJ = ({ allFacets }) => {
+  const addressType = getAddressType();
+  let facetKey = `express_delivery_${addressType}`;
   const data = allFacets?.[facetKey];
-  if(data){
+  if (data) {
     const result = Object?.keys?.(data)?.reduce((acc, facetValue) => {
       acc[facetValue] = {
         facet_value: facetValue,
@@ -242,10 +263,10 @@ const expressDataOBJ = ({ allFacets, facetKey }) => {
         is_selected: false,
         product_count: data[facetValue],
       };
-  
+
       return acc;
     }, {});
-  
+
     return result;
   }
   return {};
@@ -376,13 +397,14 @@ function getFilters({
   };
 
   // ExpressDelivery
-  filtersObject.express_delivery = {
-    label: translate("express_delivery", lang),
-    category: "express_delivery",
+  let expressFacetKey = `express_delivery_${getAddressType()}`;
+  filtersObject[expressFacetKey] = {
+    label: translate(expressFacetKey, lang),
+    category: expressFacetKey,
     is_radio: false,
     selected_filters_count: 0,
-    data: expressDataOBJ({ allFacets: facets, facetKey: "express_delivery" })
-  }
+    data: expressDataOBJ({ allFacets: facets }),
+  };
 
   // Discount
   filtersObject.discount = {

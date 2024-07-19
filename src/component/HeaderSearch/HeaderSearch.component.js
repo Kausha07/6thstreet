@@ -331,7 +331,9 @@ class HeaderSearch extends PureComponent {
           }}
         >
           <div block="HeaderSearch" mods={{ isArabic, isPLP}} style={mobileMegaMenuStyle}>
-            {!showSearch && this.renderCityArea()}
+            {!showSearch &&
+              !showMegaMenuHeaderSearchStyle &&
+              this.renderCityArea()}
             {this.renderField()}
           </div>
         </ClickOutside>

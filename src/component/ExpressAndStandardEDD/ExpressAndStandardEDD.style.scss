@@ -8,6 +8,20 @@
   text-transform: initial;
   padding: 4px 0;
 
+  .eddExpressDeliveryBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .freeVIPText {
+      font-family: Avenir Next;
+      font-size: 13px;
+      font-weight: 600;
+      color: #28d9aa;
+      margin: 0 10px;
+    }
+  }
+
   svg {
     width: 24px;
     height: 24px;
@@ -19,25 +33,26 @@
     align-items: center;
     word-wrap: break-word;
 
+    @include desktop {
+      line-height: 0;
+    }
+
     @include mobile {
       font-size: 11px;
     }
 
-    &_isVip_1 {
-      .EddExpressDeliveryTextBold {
-        &:after {
-          content: "";
-          background: url(../HeaderAccount/icons/vip.png) no-repeat;
-          background-size: 26px;
-          width: 27px;
-          height: 12px;
-          display: flex;
-          font-size: 0;
-          margin: 0 5px;
-          position: absolute;
-          top: -10px;
-        }
-      }
+    .EddExpressDeliveryText {
+      display: flex;
+      align-items: center;
+    }
+
+    .expressVipImage {
+      background-size: 26px;
+      width: 27px;
+      height: 12px;
+      display: flex;
+      font-size: 0;
+      margin: 0 3px;
     }
 
     .EddExpressDeliveryTextRed {
@@ -50,11 +65,11 @@
     .EddExpressDeliveryTextNormal {
       font-weight: 400;
       font-size: 12px;
+      margin: 0 3px;
     }
 
     .EddExpressDeliveryTextBold {
       font-weight: 600;
-      margin: 0 5px;
       font-size: 13px;
     }
 

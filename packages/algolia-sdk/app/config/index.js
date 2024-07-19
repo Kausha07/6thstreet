@@ -28,7 +28,9 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
-  "express_delivery",
+  "express_delivery_home",
+  "express_delivery_work",
+  "express_delivery_other",
 ];
 
 const MORE_FILTERS = [
@@ -55,6 +57,8 @@ const MORE_FILTERS = [
   "price.OMR.default",
   "price.BHD.default",
   "price.QAR.default",
+  "rating_sku.total_ratings",
+  "rating_sku.average_ratings"
 ]
 
 const config = {
@@ -70,6 +74,8 @@ const config = {
     "price.OMR.default",
     "price.BHD.default",
     "price.QAR.default",
+    "rating_sku.total_ratings",
+    "rating_sku.average_ratings"
   ],
 
   VISIBLE_FILTERS: [
@@ -82,6 +88,8 @@ const config = {
     "price",
     "discount",
     "in_stock",
+    // "rating_sku.total_ratings",
+    // "rating_sku.average_ratings"
   ],
 
   SIZE_FILTERS: ["size_uk", "size_eu", "size_us"],
@@ -295,9 +303,13 @@ const config = {
       "6s_also_available_count",
       "gallery_image_urls",
       "color_hex",
-      "express_delivery",
       "rating_brand",
       "rating_sku",
+      "express_delivery_home",
+      "express_delivery_work",
+      "express_delivery_other",
+      "international_vendor",
+      "cross_border",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

@@ -28,8 +28,12 @@ const getLabel = (facetKey, lang) => {
       return translate('size_uk', lang);
     case 'size_us':
       return translate('size_us', lang);
-    case "express_delivery":
-      return translate('express_delivery', lang);
+    case "express_delivery_home":
+      return translate("express_delivery_home", lang);
+    case "express_delivery_work":
+      return translate("express_delivery_work", lang);
+    case "express_delivery_other":
+      return translate("express_delivery_other", lang);
 
     default:
       return '';
