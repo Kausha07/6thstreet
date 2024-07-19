@@ -496,10 +496,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderDelivery() {
-    const { shippingMethods, onShippingMethodSelect, isAddressSelected } = this.props;
+    const { shippingMethods, onShippingMethodSelect, isAddressSelected, addresses } = this.props;
     const { isArabic } = this.state;
 
-    if(isAddressSelected) {
+    const isCountryAddressAvailable =
+    addresses.some((add) => add.country_code === getCountryFromUrl());
+
+    if(isAddressSelected || isCountryAddressAvailable) {
       return null;
     }
 
@@ -676,6 +679,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       isClickAndCollect,
       checkClickAndCollect,
       handleClickNCollectPayment,
+      isPaymentLoading,
     } = this.props;
     const { formContent, isMobile } = this.state;
     return (
@@ -715,6 +719,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             {/* {this.renderHeading(__("Payment Options"), true)} */}
             {isMobile ? this.renderItems() : null}
             {isMobile ? this.renderActions() : null}
+            <Loader isLoading={isPaymentLoading}/>
           </div>
         </Form>
       </div>

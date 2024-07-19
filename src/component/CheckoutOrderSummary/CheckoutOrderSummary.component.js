@@ -121,20 +121,24 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   renderItems() {
     const {
       totals: { items = [], quote_currency_code },
+      isSignedIn,
     } = this.props;
 
-    // return (
-    //   <div block="CheckoutOrderSummary" elem="OrderItems">
-    //     <ul block="CheckoutOrderSummary" elem="CartItemList">
-    //       {
-    //         items.map((item) => (
-    //           React.cloneElement(this.renderItem(item), {
-    //             readOnly: true
-    //           })
-    //         ))}
-    //     </ul>
-    //   </div>
-    // );
+    if(!isSignedIn) {
+      return (
+        <div block="CheckoutOrderSummary" elem="OrderItems">
+          <ul block="CheckoutOrderSummary" elem="CartItemList">
+            {
+              items.map((item) => (
+                React.cloneElement(this.renderItem(item), {
+                  readOnly: true
+                })
+              ))}
+          </ul>
+        </div>
+      );
+    }
+
     return (
       <NewCheckoutShippment
         items={items}
