@@ -43,6 +43,12 @@ function SideWideCoupon(props) {
   const countryCode = getCountryFromUrl();
   const langCode = getLanguageFromUrl();
   const sidewideCouponCode = config?.countries?.[countryCode]?.sidewideCouponCode?.[langCode] || "";
+  const sideWideRecommendedCode =
+    config?.countries?.[countryCode]?.sidewideCouponData?.coupon_text?.[
+      langCode
+    ] || __("Recommended code: ");
+  const isApplyButtonVisible =
+    config?.countries?.[countryCode]?.sidewideCouponData?.show_apply || false;
 
   const sendSiteWideCouponEvents = (event, coupon) => {
     MOE_trackEvent(event, { 
@@ -99,7 +105,7 @@ function SideWideCoupon(props) {
                 </div>
               ) : (
                 <span block="couponText" mods={{ isArabic }}>
-                  {__("Recommended code: ")}
+                  {sideWideRecommendedCode}{" "}
                   <span block="sideWideCouponBlock" elem="recommendedCode">
                     {sidewideCouponCode}
                   </span>
@@ -110,6 +116,7 @@ function SideWideCoupon(props) {
 
             <button
               block="sidewideSelectText"
+              mods={{isHidden: !isApplyButtonVisible}}
               onClick={(e) => {
                 handleSideWideCoupon(1);
               }}
