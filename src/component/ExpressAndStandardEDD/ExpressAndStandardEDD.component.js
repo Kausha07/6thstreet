@@ -422,12 +422,12 @@ export const ExpressAndStandardEDD = ({
                   <span block="freeVIPText">{__("Free")}</span>
                 ) : null}
               </div>
-              {!isTimeExpired &&
-                express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
-                  <div block="EddExpressDeliveryCutOffTime">
-                    {__("Order within %sHrs %sMins", hours, minutes)}
-                  </div>
-                )}
+              {express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
+                <ExpressTimer
+                  todaysCutOffTime={todaysCutOffTime}
+                  setTimerStateThroughProps={setTimerStateThroughProps}
+                />
+              )}
             </div>
           )}
 
@@ -437,6 +437,7 @@ export const ExpressAndStandardEDD = ({
               <Shipping />
               <div block="shipmentText">
                 <span block="EddStandardDeliveryText">
+                  {__("Standard")} {}
                   {actualEddMess?.split(splitKey)?.[0]} {}
                   {splitKey} {}
                 </span>

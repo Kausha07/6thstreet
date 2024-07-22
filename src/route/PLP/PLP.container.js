@@ -92,6 +92,7 @@ export const mapStateToProps = (state) => ({
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1075,6 +1076,16 @@ export class PLPContainer extends PureComponent {
         moreActiveFilters: newMoreActiveFilters,
       });
     }
+
+    if (
+      this.props.currentSelectedCityArea.mailing_address_type !=
+      prevProps.currentSelectedCityArea.mailing_address_type
+    ) {
+      const addressType = getAddressType(prevProps.currentSelectedCityArea);
+      this.onUnselectAllPress(`express_delivery_${addressType}`);
+      PLPContainer.requestProductList(this.props);
+    }
+    
     let element = document.getElementById(lastHomeItem);
     if (element) {
       // window.focus();
