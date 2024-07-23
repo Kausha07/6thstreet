@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
+import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import { getTodaysWeekDay } from "Util/Common";
 import { isArabic } from "Util/App";
