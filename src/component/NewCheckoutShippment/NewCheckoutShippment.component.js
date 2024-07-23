@@ -8,8 +8,8 @@ import {
 import { ExpressDeliveryTruck } from "Component/Icons";
 import "./NewCheckoutShippment.style";
 import {
-  getFomatedItem,
   getEddForShipment,
+  getShipmentItems,
 } from "./utils/NewCheckoutShippment.helper";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { getCurrency } from "Util/App";
@@ -90,6 +90,7 @@ export const NewCheckoutShippment = (props) => {
 
     const EddForShipment = getEddForShipment({ shipmentItem, eddResponse }) || {};
     const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
+    const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
     return (
@@ -176,14 +177,13 @@ export const NewCheckoutShippment = (props) => {
         </div>
 
         <div block="ProductInfo">
-          {shipmentItem?.items?.map((item, i) => {
-            const fomatedItem = getFomatedItem({ item });
+          {shipmentItems?.map((item, i) => {
             return (
               <CartItem
-                key={fomatedItem.item_id}
-                item={fomatedItem}
+                key={item.item_id}
+                item={item}
                 currency_code={currencyCode}
-                brand_name={fomatedItem.brand_name}
+                brand_name={item.brand_name}
                 isCheckoutPage={true}
                 eddMessageForCheckoutPage={eddMessageForCheckoutPage}
               />
