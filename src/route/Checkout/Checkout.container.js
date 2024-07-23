@@ -145,6 +145,8 @@ export const mapDispatchToProps = (dispatch) => ({
   selectIsAddressSet: (isAddress) =>
     CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
   getShipment: (cartId) => CheckoutDispatcher.getShipment(dispatch, cartId),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
 
 export const mapStateToProps = (state) => ({
@@ -662,10 +664,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.getOrderDetails(paymentData);
     }
 
-    // get payment methods
-    if(isSignedIn && !QPAY_CHECK && !TABBY_CHECK && !KNET_CHECK && !TAMARA_CHECK) {
-      this.getPaymentMethods();
-    }
     // calling get shipment
     getShipment(cartId);
   }
@@ -930,6 +928,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       saveAddressInformation,
       showErrorNotification,
       selectIsAddressSet,
+      getShipment,
+      cartId,
     } = this.props;
     const { shipping_address } = addressInformation;
 
@@ -956,6 +956,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         });
 
         this.getPaymentMethods();
+        //get shipment after update address
+        getShipment(cartId);
       }
     }, this._handleError);
   }
@@ -1564,7 +1566,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   getPaymentMethods() {
-    const { getPaymentMethods } = this.props;
+    const { getPaymentMethods, setCheckoutLoader } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
@@ -1583,6 +1585,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           paymentMethods: availablePaymentMethods,
         });
       }
+      setCheckoutLoader(false);
     }, this._handleError);
   }
 

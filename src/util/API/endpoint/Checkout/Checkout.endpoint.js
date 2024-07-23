@@ -81,7 +81,7 @@ export const getNewOrderData = (orderID) =>
 
 export const getShipment = ({ cartId, params }) =>
   MobileAPI.get(
-    `/get_shipments?cartid=${cartId}&is_express=1&city=${params?.city}&area=${params?.area}&address_type=${params?.address_type}`
+    `/get_shipments?cartid=${cartId}&city=${params?.city}&area=${params?.area}&address_type=${params?.address_type}`
   ) || {};
 
 export const updateShipment = ({ data }) =>

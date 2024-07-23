@@ -48,6 +48,8 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcherDefalut.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
 
 export const mapStateToProps = (state) => ({
@@ -63,6 +65,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  checkoutLoader: state.CheckoutReducer.checkoutLoader,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {

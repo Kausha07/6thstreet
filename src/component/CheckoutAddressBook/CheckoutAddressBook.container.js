@@ -38,9 +38,11 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.estimateEddResponse(dispatch, request, type)
     ),
-    setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
+  setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
   selectIsAddressSet: (isAddress) =>
     CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
 
 export class CheckoutAddressBookContainer extends PureComponent {
@@ -74,7 +76,8 @@ export class CheckoutAddressBookContainer extends PureComponent {
         requestCustomerData,
         customer,
         onAddressSelect,
-        isSignedIn
+        isSignedIn,
+        setCheckoutLoader,
     } = props;
 
     if (isSignedIn && !Object.keys(customer).length) {
@@ -84,6 +87,7 @@ export class CheckoutAddressBookContainer extends PureComponent {
     const defaultAddressId = CheckoutAddressBookContainer._getDefaultAddressId(props);
 
     if (defaultAddressId) {
+        setCheckoutLoader(true);
         onAddressSelect(defaultAddressId);
         // this.estimateShipping(defaultAddressId);
     }

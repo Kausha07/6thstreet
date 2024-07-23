@@ -7,14 +7,23 @@ import {
 } from "../../util/Common/index";
 import { ExpressDeliveryTruck } from "Component/Icons";
 import "./NewCheckoutShippment.style";
-import { getFomatedItem } from "./utils/NewCheckoutShippment.helper";
+import {
+  getFomatedItem,
+  getEddForShipment,
+} from "./utils/NewCheckoutShippment.helper";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { getCurrency } from "Util/App";
+import Loader from "Component/Loader";
+import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   shipment: state.CheckoutReducer.shipment,
   cartId: state.CartReducer.cartId,
+  totals: state.CartReducer.cartTotals,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -24,32 +33,40 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export const NewCheckoutShippment = (props) => {
   const {
-    items,
-    quote_currency_code,
     isSignedIn,
     shipment = {},
     updateShipment,
     cartId,
+    isExpressServiceAvailable = {},
+    eddResponse,
+    totals: { items = [], quote_currency_code },
+    isExpressDelivery,
   } = props;
   const { expected_shipments = [] } = shipment;
   const totalShipmentCount = expected_shipments.length || 0;
   const currencyCode = getCurrency();
   const [actualEddMess, setActualEddMess] = useState("");
   const [isIntlBrand, setIsIntlBrand] = useState(false);
+  const [loadingShipmentId, setLoadingShipmentId] = useState(null);
+  const { is_vip_chargeable = true, express_eligible = true } =
+    isExpressServiceAvailable;
+  const isArSite = isArabic();
 
-  const updateShipmentData = (DeliveryType = "", shipmentItem = {}) => {
+  const updateShipmentData = async (DeliveryType = "", shipmentItem = {}) => {
     const { shipment_id = "", selected_delivery_type = "" } = shipmentItem;
 
     if (DeliveryType == selected_delivery_type) {
       return;
     }
 
+    setLoadingShipmentId(shipment_id);
     if (DeliveryType === 0 || DeliveryType === 1) {
-      updateShipment({
+      await updateShipment({
         shipment_id,
         shipment_type: DeliveryType,
         quote_id: cartId,
       });
+      setLoadingShipmentId(null);
     }
   };
 
@@ -58,11 +75,12 @@ export const NewCheckoutShippment = (props) => {
     setIsIntlBrand(IntlBrand);
   };
 
-  const renderItem = (shipmentItem, i) => {
+  const renderShipmentItem = (shipmentItem, i) => {
     const {
       express_fee = 0,
       available_delivery_type = {},
       selected_delivery_type,
+      shipment_id = "",
     } = shipmentItem;
     const shipmentNumber = ++i;
     const isExpressDeliveryAvailable =
@@ -70,6 +88,8 @@ export const NewCheckoutShippment = (props) => {
       available_delivery_type[1].toLowerCase().includes("today");
     const isExpressDeliverySelected = selected_delivery_type == 1;
 
+    const EddForShipment = getEddForShipment({ shipmentItem, eddResponse });
+    const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
     return (
@@ -78,7 +98,6 @@ export const NewCheckoutShippment = (props) => {
           <span block="NumOfShipments">
             {__(`Shipment ${shipmentNumber} of ${totalShipmentCount}`)}
           </span>
-          <span block="ShippedBy">{__("Shipped from 6thStreet")}</span>
         </div>
         <div block="ExpressOrStandadrdDeliverySelection">
           {isExpressDeliveryAvailable && (
@@ -112,7 +131,20 @@ export const NewCheckoutShippment = (props) => {
                   {__("Order within 4hrs 10 Mins")}
                 </div>
               </div>
-              <div block="ExpressPrice">{`+ ${currencyCode} ${express_fee}`}</div>
+              {/* check is VIP chargeable or not */}
+              <div block="ExpressPrice">
+                {!is_vip_chargeable && (
+                  <span block="ExpressPrice" elem="freeExpressText">
+                    {__("Free")}
+                  </span>
+                )}
+                <span
+                  block="ExpressPrice"
+                  elem={!is_vip_chargeable ? "freeExpressPrice" : ""}
+                >
+                  {`+ ${currencyCode} ${express_fee}`}
+                </span>
+              </div>
             </div>
           )}
           <div
@@ -128,12 +160,8 @@ export const NewCheckoutShippment = (props) => {
               <div block="EddStandardDeliveryTextBlock">
                 <div block="shipmentText">
                   <span block="EddStandardDeliveryText">
-                    {/* {__("Standard")} {} */}
-                    {actualEddMess.split(splitKey)[0]} {}
-                    {splitKey} {}
-                  </span>
-                  <span block="EddStandardDeliveryTextBold">
-                    {actualEddMess.split(splitKey)[1]}
+                    {__("Standard")} {}
+                    {isArSite ? edd_message_ar : edd_message_en}
                   </span>
                 </div>
               </div>
@@ -162,16 +190,49 @@ export const NewCheckoutShippment = (props) => {
             );
           })}
         </div>
+        <Loader isLoading={shipment_id === loadingShipmentId ? true : false} />
       </li>
+    );
+  };
+
+
+  const renderItem = (item, i) => {
+    return (
+      <CartItem
+        key={item.item_id}
+        item={item}
+        currency_code={currencyCode}
+        brand_name={item.brand_name}
+        isCheckoutPage={true}
+        eddMessageForCheckoutPage={eddMessageForCheckoutPage}
+      />
+    );
+  };
+
+  const renderContent = () => {
+    if (isExpressDelivery && isSignedIn) {
+      return (
+        <>
+          {expected_shipments.map((shipmentItem, i) =>
+            renderShipmentItem(shipmentItem, i)
+          )}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {items.map((item, i) => {
+          return renderItem(item, i);
+        })}
+      </>
     );
   };
 
   return (
     <div block="NewCheckoutOrderShippment" elem="OrderItems">
       <ul block="NewCheckoutOrderShippment" elem="CartItemList">
-        {expected_shipments.map((shipmentItem, i) =>
-          renderItem(shipmentItem, i)
-        )}
+        {renderContent()}
       </ul>
     </div>
   );

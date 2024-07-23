@@ -3,6 +3,7 @@ import {
     SET_CART_TOTAL,
     SET_IS_ADDRESS_SELECTED,
     SET_SHIPMENT,
+    SET_CHECKOUT_LOADER,
 } from './Checkout.action';
 
 export const getInitialState = () => ({
@@ -10,6 +11,7 @@ export const getInitialState = () => ({
     cartTotal: 0,
     isAddressSelected: false,
     shipment: {},
+    checkoutLoader: false,
 });
 
 export const CheckoutReducer = (state = getInitialState(), action) => {
@@ -44,6 +46,14 @@ export const CheckoutReducer = (state = getInitialState(), action) => {
             ...state,
             shipment,
         }
+
+    case SET_CHECKOUT_LOADER:
+        const { currState } = action;
+
+        return {
+            ...state,
+            checkoutLoader : currState,
+        };
 
     default:
         return state;

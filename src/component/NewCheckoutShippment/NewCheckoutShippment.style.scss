@@ -138,6 +138,17 @@
             font-family: Avenir Next;
             font-size: 10px;
             font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+
+            &-freeExpressText {
+              color: #28D9AA;
+              padding-bottom: 5px;
+            }
+            &-freeExpressPrice {
+              text-decoration: line-through;
+            }
           }
         }
 

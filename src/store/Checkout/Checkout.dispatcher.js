@@ -1,10 +1,12 @@
 import { getStore } from "Store";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import {
   setShipping,
   setCartTotal,
   setIsAddressSelected,
   setShipment,
+  setCheckoutLoader,
 } from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -280,6 +282,10 @@ export class CheckoutDispatcher {
     return capturePayment({ paymentId, orderId });
   }
 
+  setCheckoutLoader(dispatch, currState) {
+    return setCheckoutLoader(currState);
+  }
+
   selectIsAddressSet(dispatch, isAddress) {
     dispatch(setIsAddressSelected(isAddress));
   }
@@ -319,7 +325,8 @@ export class CheckoutDispatcher {
       const response = await updateShipment({ data });
 
       if (response) {
-        this.getShipment(dispatch, shipmentData?.quote_id);
+        await this.getShipment(dispatch, shipmentData?.quote_id);
+        await CartDispatcher.getCartTotals(dispatch, shipmentData?.quote_id)
       }
     } catch (e) {
       console.error(e);

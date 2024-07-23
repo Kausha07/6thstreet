@@ -1,3 +1,5 @@
+import { isObject } from "Util/API/helper/Object";
+
 export const getFomatedItem = ({ item = {} }) => {
   const newItem = {
     customizable_options: [],
@@ -36,4 +38,24 @@ export const getFomatedItem = ({ item = {} }) => {
   };
 
   return newItem || {};
+};
+
+export const getEddForShipment = ({ shipmentItem = {}, eddResponse = {} }) => {
+  const { items = [] } = shipmentItem;
+  const sku = items[0].sku;
+
+  if (
+    eddResponse &&
+    isObject(eddResponse) &&
+    Object.keys(eddResponse).length &&
+    eddResponse["checkout"]
+  ) {
+    const edd = eddResponse["checkout"].filter((eddVal) => {
+      if (eddVal.sku == sku) {
+        return eddVal;
+      }
+    });
+
+    return edd[0];
+  }
 };
