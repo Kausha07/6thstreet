@@ -57,6 +57,10 @@ export const ExpressAndStandardEDD = ({
   // get today's week day e.g.: Monday
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
 
+  const setTimerStateThroughProps = (val) => {
+    setIsTimeExpired(val);
+  };
+
   // get current selected address of user
   const currentSelectedAddress =
     JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
