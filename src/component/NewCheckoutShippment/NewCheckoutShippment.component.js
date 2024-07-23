@@ -88,7 +88,7 @@ export const NewCheckoutShippment = (props) => {
       available_delivery_type[1].toLowerCase().includes("today");
     const isExpressDeliverySelected = selected_delivery_type == 1;
 
-    const EddForShipment = getEddForShipment({ shipmentItem, eddResponse });
+    const EddForShipment = getEddForShipment({ shipmentItem, eddResponse }) || {};
     const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
