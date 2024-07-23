@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { getCurrentTimeForCountry } from "Util/Common";
+import { getLocaleFromUrl } from "Util/Url/Url";
 import "./ExpressTimer.style";
 
 export const ExpressTimer = (props) => {
@@ -10,11 +12,13 @@ export const ExpressTimer = (props) => {
   const { todaysCutOffTime = "00:00", setTimerStateThroughProps } = props;
 
   const getTimeRemaining = () => {
-    const now = new Date();
-    const cutoffTimeParts = todaysCutOffTime?.split(":");
-    const deadline = new Date();
-    deadline.setHours(cutoffTimeParts?.[0]);
-    deadline.setMinutes(cutoffTimeParts?.[1]);
+    const locale = getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    const now = getCurrentTimeForCountry(country);
+    const cutoffTimeParts = todaysCutOffTime.split(":");
+    const deadline = new Date(now);
+    deadline.setUTCHours(parseInt(cutoffTimeParts[0], 10));
+    deadline.setUTCMinutes(parseInt(cutoffTimeParts[1], 10));
 
     const time = deadline - now;
     if (time <= 0) {
@@ -26,26 +30,26 @@ export const ExpressTimer = (props) => {
       return;
     }
 
-    const Hours =
-      Math.floor(time / (1000 * 60 * 60)) > 9
-        ? Math.floor(time / (1000 * 60 * 60))
-        : "0" + Math.floor(time / (1000 * 60 * 60));
-    const Minutes =
-      Math.floor((time / 1000 / 60) % 60) > 9
-        ? Math.floor((time / 1000 / 60) % 60)
-        : "0" + Math.floor((time / 1000 / 60) % 60);
+    const Hours = Math.floor(time / (1000 * 60 * 60))
+      .toString()
+      .padStart(2, "0");
+    const Minutes = Math.floor((time / 1000 / 60) % 60)
+      .toString()
+      .padStart(2, "0");
 
-    setHours(Hours.toString());
-    setMinutes(Minutes.toString());
+    setHours(Hours);
+    setMinutes(Minutes);
   };
 
   useEffect(() => {
     const initializeTimer = () => {
-      const now = new Date();
-      const cutoffTimeParts = todaysCutOffTime?.split(":");
-      const deadline = new Date();
-      deadline.setHours(cutoffTimeParts?.[0]);
-      deadline.setMinutes(cutoffTimeParts?.[1]);
+      const locale = getLocaleFromUrl();
+      const [lang, country] = locale && locale.split("-");
+      const now = getCurrentTimeForCountry(country);
+      const cutoffTimeParts = todaysCutOffTime.split(":");
+      const deadline = new Date(now);
+      deadline.setUTCHours(parseInt(cutoffTimeParts[0], 10));
+      deadline.setUTCMinutes(parseInt(cutoffTimeParts[1], 10));
 
       const time = deadline - now;
       if (time > 0) {
@@ -65,7 +69,9 @@ export const ExpressTimer = (props) => {
     initializeTimer();
 
     const checkMidnight = () => {
-      const now = new Date();
+      const locale = getLocaleFromUrl();
+      const [lang, country] = locale && locale.split("-");
+      const now = getCurrentTimeForCountry(country);
       const midnight = new Date(
         now.getFullYear(),
         now.getMonth(),
@@ -93,6 +99,7 @@ export const ExpressTimer = (props) => {
       clearInterval(timerRef?.current);
     }
   }, [isTimeExpired]);
+
   return (
     <>
       {!isTimeExpired && (

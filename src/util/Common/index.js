@@ -691,12 +691,13 @@ export const getTodaysWeekDay = () => {
   const currentDayIndex = today.getDay();
   const currentDayName = daysOfWeek[currentDayIndex];
 
-  return currentDayName;
+  return currentDayName?.toLowerCase();
 };
 
-export const getAddressType = () => {
-  const currentSelectedAddress =
-    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+export const getAddressType = (addressType) => {
+  const currentSelectedAddress = addressType
+    ? addressType
+    : JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
   switch (currentSelectedAddress?.mailing_address_type) {
     case "37303":
       return "home";
@@ -707,4 +708,32 @@ export const getAddressType = () => {
     default:
       return "home";
   }
+};
+
+export const getCurrentTimeForCountry = (countryCode) => {
+  const now = new Date();
+  switch (countryCode) {
+    case "ae":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+    case "sa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for KSA
+      break;
+    case "qa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Qatar
+      break;
+    case "kw":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Kuwait
+      break;
+    case "om":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for Oman
+      break;
+    case "bh":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Bahrain
+      break;
+    default:
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+  }
+  return now;
 };
