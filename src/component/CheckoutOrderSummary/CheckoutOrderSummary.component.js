@@ -124,21 +124,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       isSignedIn,
     } = this.props;
 
-    if(!isSignedIn) {
-      return (
-        <div block="CheckoutOrderSummary" elem="OrderItems">
-          <ul block="CheckoutOrderSummary" elem="CartItemList">
-            {
-              items.map((item) => (
-                React.cloneElement(this.renderItem(item), {
-                  readOnly: true
-                })
-              ))}
-          </ul>
-        </div>
-      );
-    }
-
     return (
       <NewCheckoutShippment
         items={items}

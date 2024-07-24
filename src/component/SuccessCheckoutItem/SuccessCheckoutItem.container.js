@@ -10,6 +10,10 @@ export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
 );
 
+export const mapStateToProps = (state) => ({
+    isExpressDelivery: state.AppConfig.isExpressDelivery,
+  });
+
 export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
@@ -98,4 +102,4 @@ export class SuccessCheckoutItemContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SuccessCheckoutItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SuccessCheckoutItemContainer);

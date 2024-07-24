@@ -87,8 +87,8 @@ export const NewCheckoutShippment = (props) => {
       available_delivery_type[1] &&
       available_delivery_type[1].toLowerCase().includes("today");
     const isExpressDeliverySelected = selected_delivery_type == 1;
-
-    const EddForShipment = getEddForShipment({ shipmentItem, eddResponse }) || {};
+    const EddForShipment =
+      getEddForShipment({ shipmentItem, eddResponse }) || {};
     const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
     const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;
@@ -150,6 +150,7 @@ export const NewCheckoutShippment = (props) => {
           )}
           <div
             block="StandardDeliveryBlock"
+            className={isExpressDeliveryAvailable ? "" : "topBorder"}
             mods={{
               isSelected: !isExpressDeliverySelected,
             }}
@@ -195,7 +196,6 @@ export const NewCheckoutShippment = (props) => {
     );
   };
 
-
   const renderItem = (item, i) => {
     return (
       <CartItem
@@ -210,7 +210,9 @@ export const NewCheckoutShippment = (props) => {
   };
 
   const renderContent = () => {
-    if (isExpressDelivery && isSignedIn) {
+    const isShipmentAvailable =
+      expected_shipments && expected_shipments.length ? true : false;
+    if (isExpressDelivery && isShipmentAvailable) {
       return (
         <>
           {expected_shipments.map((shipmentItem, i) =>

@@ -642,11 +642,7 @@ export class CheckoutSuccess extends PureComponent {
 
   renderTotalsItems() {
     const { paymentMethod, order } = this.props;
-    if (
-      (paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments" ||
-      paymentMethod?.code === TAMARA) && order
-    ) {
+    if (paymentMethod?.code === "checkout_qpay" && order) {
       const {
         order: { status, unship = [], base_currency_code: currency },
         incrementID,
@@ -690,7 +686,12 @@ export class CheckoutSuccess extends PureComponent {
       );
     } else {
       const {
-        initialTotals: { items = [], quote_currency_code, site_wide_applied = 0, coupon_code= "" },
+        initialTotals: {
+          items = [],
+          quote_currency_code,
+          site_wide_applied = 0,
+          coupon_code = "",
+        },
         incrementID,
         isFailed,
       } = this.props;
@@ -702,7 +703,9 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
-          {(incrementID || incrementID != undefined) ? `${__("Order")} #${incrementID} ${__("Details")}` : "Order Details"}
+            {incrementID || incrementID != undefined
+              ? `${__("Order")} #${incrementID} ${__("Details")}`
+              : "Order Details"}
           </div>
           <ul block="TotalItems" elem="Items">
             {items.map((item) => (
@@ -1561,6 +1564,7 @@ export class CheckoutSuccess extends PureComponent {
         fulfilled_from = "",
         total_mrp = 0,
         total_discount = 0,
+        express_delivery_charges = 0,
       } = {},
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1594,6 +1598,10 @@ export class CheckoutSuccess extends PureComponent {
                   divider: true,
                 }
               )}
+            {this.renderSitewidePriceLine(
+              express_delivery_charges,
+              __("Express Delivery Fee")
+            )}
             {store_credit_amount !== 0
               ? this.renderSitewidePriceLine(
                   store_credit_amount,
@@ -1651,6 +1659,7 @@ export class CheckoutSuccess extends PureComponent {
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_charges= 0,
+        express_delivery_charges = 0
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1667,6 +1676,10 @@ export class CheckoutSuccess extends PureComponent {
             {this.renderPriceLineQPAY(
               international_shipping_charges,
               __("International Shipping fee")
+            )}
+            {this.renderPriceLineQPAY(
+              express_delivery_charges,
+              __("Express Delivery Fee")
             )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(

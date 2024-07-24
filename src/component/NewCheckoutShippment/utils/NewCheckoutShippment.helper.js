@@ -2,7 +2,11 @@ import { isObject } from "Util/API/helper/Object";
 
 export const getEddForShipment = ({ shipmentItem = {}, eddResponse = {} }) => {
   const { items = [] } = shipmentItem;
-  const sku = items[0].sku;
+  const sku = items?.[0]?.sku;
+
+  if(!sku) {
+    return null;
+  }
 
   if (
     eddResponse &&
