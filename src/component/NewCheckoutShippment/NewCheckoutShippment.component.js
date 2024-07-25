@@ -63,7 +63,7 @@ export const NewCheckoutShippment = (props) => {
     }
 
     setLoadingShipmentId(shipment_id);
-    if (DeliveryType === 0 || DeliveryType === 1) {
+    if (DeliveryType === 0 || DeliveryType === 1 || DeliveryType === 2) {
       await updateShipment({
         shipment_id,
         shipment_type: DeliveryType,
@@ -87,6 +87,13 @@ export const NewCheckoutShippment = (props) => {
     } = shipmentItem;
     const shipmentNumber = ++i;
     const isExpressDeliveryAvailable =
+      (available_delivery_type[1] &&
+        available_delivery_type[1].toLowerCase().includes("today")) ||
+      (available_delivery_type[2] &&
+        available_delivery_type[2].toLowerCase().includes("tomorrow"));
+    const isVipCustomerChargeable =
+      express_eligible && customer?.vipCustomer && !is_vip_chargeable;
+    const expressDeliveryToday =
       available_delivery_type[1] &&
       available_delivery_type[1].toLowerCase().includes("today");
     const isExpressDeliverySelected = selected_delivery_type == 1;
@@ -96,7 +103,7 @@ export const NewCheckoutShippment = (props) => {
     const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
-    if(shipmentItems && !shipmentItems.length) {
+    if (shipmentItems && !shipmentItems.length) {
       return null;
     }
     return (
@@ -114,7 +121,7 @@ export const NewCheckoutShippment = (props) => {
                 isSelected: isExpressDeliverySelected,
               }}
               onClick={() => {
-                updateShipmentData(1, shipmentItem);
+                updateShipmentData(expressDeliveryToday ? 1 : 2, shipmentItem);
               }}
             >
               <div block="EddExpressDelivery">
@@ -124,9 +131,7 @@ export const NewCheckoutShippment = (props) => {
                     <span block="EddExpressDeliveryTextRed">
                       {__("Express")} {}
                     </span>
-                    {isExpressServiceAvailable?.express_eligible &&
-                    +customer?.vipCustomer &&
-                    !isExpressServiceAvailable?.is_vip_chargeable ? (
+                    {isVipCustomerChargeable ? (
                       <img
                         block="expressVipImage"
                         src={VIPIcon}
@@ -137,9 +142,7 @@ export const NewCheckoutShippment = (props) => {
                       {__("Delivery by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
-                      {isExpressDeliveryAvailable
-                        ? __("Today")
-                        : __("Tomorrow")}
+                      {expressDeliveryToday ? __("Today") : __("Tomorrow")}
                     </span>
                   </div>
                 </div>
@@ -149,16 +152,14 @@ export const NewCheckoutShippment = (props) => {
               </div>
               {/* check is VIP chargeable or not */}
               <div block="ExpressPrice">
-                {express_eligible &&
-                +customer?.vipCustomer &&
-                !is_vip_chargeable && (
+                {isVipCustomerChargeable && (
                   <span block="ExpressPrice" elem="freeExpressText">
                     {__("Free")}
                   </span>
                 )}
                 <span
                   block="ExpressPrice"
-                  elem={!is_vip_chargeable ? "freeExpressPrice" : ""}
+                  elem={isVipCustomerChargeable ? "freeExpressPrice" : ""}
                 >
                   {`+ ${currencyCode} ${express_fee}`}
                 </span>
