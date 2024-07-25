@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
+import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import { getTodaysWeekDay } from "Util/Common";
 import { isArabic } from "Util/App";
@@ -15,6 +16,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   edd_info: state.AppConfig.edd_info,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
 });
 
 export const ExpressAndStandardEDD = ({
@@ -43,11 +45,16 @@ export const ExpressAndStandardEDD = ({
   store_quantity = 0,
   mp_quantity = 0,
   isCart = false,
+  isSignedIn,
 }) => {
-  const [hours, setHours] = useState("00");
-  const [minutes, setMinutes] = useState("00");
   const [isTimeExpired, setIsTimeExpired] = useState(false);
-  const timerRef = useRef(null);
+  const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
+    currentSelectedCityArea
+      ? currentSelectedCityArea
+      : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      : {}
+  );
   let todaysCutOffTime = "00:00";
   let isProductOfficeServicable = true;
   let isOfficeSameDayExpressServicable = true;
@@ -56,9 +63,9 @@ export const ExpressAndStandardEDD = ({
   // get today's week day e.g.: Monday
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
 
-  // get current selected address of user
-  const currentSelectedAddress =
-    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+  const setTimerStateThroughProps = (val) => {
+    setIsTimeExpired(val);
+  };
 
   // get user's mailing address type, if there's no mailing_address_type then default is "home"
   const addressType = currentSelectedAddress?.mailing_address_type
@@ -123,7 +130,17 @@ export const ExpressAndStandardEDD = ({
   const isInternationalProduct =
     edd_info?.international_vendors?.includes(
       international_vendor // for international products show standard delivery
-    ) || cross_border;
+    ) || +cross_border;
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area) {
+      setCurrentSelectedAddress(
+        JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      );
+    } else if (!isSignedIn) {
+      setCurrentSelectedAddress(null);
+    }
+  }, [JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area]);
 
   const inventoryCheck = (quantity, cutoffTime) => {
     return +quantity !== 0 ? cutoffTime : "00:00";
@@ -161,6 +178,13 @@ export const ExpressAndStandardEDD = ({
           inventoryCheck(store_quantity, store_cutoff_time)) ||
         (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
 
+    if (
+      !tempTodaysCutOffTime &&
+      express_delivery_key?.toLowerCase()?.includes("today")
+    ) {
+      tempTodaysCutOffTime = warehouse_cutoff_time;
+    }
+
     return tempTodaysCutOffTime;
   };
 
@@ -183,6 +207,12 @@ export const ExpressAndStandardEDD = ({
         isTimeExpired
       ) {
         return true;
+      } else if (
+        isOfficeSameDayExpressServicable &&
+        !isOfficeNextDayExpressServicable &&
+        express_delivery_key?.toLowerCase()?.includes("tomorrow")
+      ) {
+        return false;
       }
     }
     return true;
@@ -233,87 +263,6 @@ export const ExpressAndStandardEDD = ({
       todaysCutOffTime = getTodaysCutOffTime() || "00:00";
     }
   }
-
-  const getTimeRemaining = () => {
-    const now = new Date();
-    const cutoffTimeParts = todaysCutOffTime?.split(":");
-    const deadline = new Date();
-    deadline.setHours(cutoffTimeParts?.[0]);
-    deadline.setMinutes(cutoffTimeParts?.[1]);
-
-    const time = deadline - now;
-    if (time <= 0) {
-      setHours("00");
-      setMinutes("00");
-      setIsTimeExpired(true);
-      clearInterval(timerRef.current);
-      return;
-    }
-
-    const Hours =
-      Math.floor(time / (1000 * 60 * 60)) > 9
-        ? Math.floor(time / (1000 * 60 * 60))
-        : "0" + Math.floor(time / (1000 * 60 * 60));
-    const Minutes =
-      Math.floor((time / 1000 / 60) % 60) > 9
-        ? Math.floor((time / 1000 / 60) % 60)
-        : "0" + Math.floor((time / 1000 / 60) % 60);
-
-    setHours(Hours.toString());
-    setMinutes(Minutes.toString());
-  };
-
-  useEffect(() => {
-    const initializeTimer = () => {
-      const now = new Date();
-      const cutoffTimeParts = todaysCutOffTime?.split(":");
-      const deadline = new Date();
-      deadline.setHours(cutoffTimeParts?.[0]);
-      deadline.setMinutes(cutoffTimeParts?.[1]);
-
-      const time = deadline - now;
-      if (time > 0) {
-        timerRef.current = setInterval(() => {
-          getTimeRemaining();
-          setIsTimeExpired(false);
-        }, 1000);
-      } else {
-        setHours("00");
-        setMinutes("00");
-        setIsTimeExpired(true);
-      }
-    };
-
-    initializeTimer();
-
-    const checkMidnight = () => {
-      const now = new Date();
-      const midnight = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate() + 1,
-        0,
-        1,
-        0
-      );
-
-      const timeUntilMidnight = midnight - now;
-      setTimeout(() => {
-        setIsTimeExpired(false);
-        initializeTimer();
-      }, timeUntilMidnight);
-    };
-
-    checkMidnight();
-
-    return () => clearInterval(timerRef?.current);
-  }, [todaysCutOffTime, isTimeExpired]);
-
-  useEffect(() => {
-    if (isTimeExpired) {
-      clearInterval(timerRef?.current);
-    }
-  }, [isTimeExpired]);
 
   const checkStandardDeliveryAvailable = () => {
     if (!isProductOfficeServicable) {
@@ -379,7 +328,8 @@ export const ExpressAndStandardEDD = ({
                     </span>
                     {isExpressServiceAvailable?.express_eligible &&
                     +customer?.vipCustomer &&
-                    !isCart ? (
+                    !isCart &&
+                    !isExpressServiceAvailable?.is_vip_chargeable ? (
                       <img
                         block="expressVipImage"
                         src={VIPIcon}
@@ -390,10 +340,16 @@ export const ExpressAndStandardEDD = ({
                       {__("Delivery by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
-                      {express_delivery_key?.toLowerCase() !==
-                        "tomorrow delivery" && !isTimeExpired
+                      {express_delivery_key?.toLowerCase() ===
+                        "today delivery" && !isTimeExpired
                         ? __("Today")
-                        : __("Tomorrow")}
+                        : express_delivery_key?.toLowerCase() ===
+                            "tomorrow delivery" ||
+                          (express_delivery_key?.toLowerCase() ===
+                            "today delivery" &&
+                            isTimeExpired)
+                        ? __("Tomorrow")
+                        : ""}
                     </span>
                   </div>
                 </div>
@@ -404,12 +360,12 @@ export const ExpressAndStandardEDD = ({
                   <span block="freeVIPText">{__("Free")}</span>
                 ) : null}
               </div>
-              {!isTimeExpired &&
-                express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
-                  <div block="EddExpressDeliveryCutOffTime">
-                    {__("Order within %sHrs %sMins", hours, minutes)}
-                  </div>
-                )}
+              {express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
+                <ExpressTimer
+                  todaysCutOffTime={todaysCutOffTime}
+                  setTimerStateThroughProps={setTimerStateThroughProps}
+                />
+              )}
             </div>
           )}
 
@@ -419,6 +375,7 @@ export const ExpressAndStandardEDD = ({
               <Shipping />
               <div block="shipmentText">
                 <span block="EddStandardDeliveryText">
+                  {__("Standard")} {}
                   {actualEddMess?.split(splitKey)?.[0]} {}
                   {splitKey} {}
                 </span>

@@ -23,6 +23,7 @@ import { getIsShowMoreFilters } from "./utils/PLPPages.helper";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
 import { getSelectedFiltersFacetValues, getCategoryIds } from "Route/PLP/utils/PLP.helper";
 import { Helmet } from 'react-helmet';
+import { getAddressType } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
@@ -219,6 +220,7 @@ class PLPPages extends PureComponent {
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
     let inlineFilterList = this.getInlineFilterList(filters);
+    let expressDeliveryKeyLabel = `express_delivery_${getAddressType()}`;
 
     const keyLabel = {
       discount: __("Discount"),
@@ -226,21 +228,28 @@ class PLPPages extends PureComponent {
       sizes: __("Sizes"),
       sort: __("Sort by"),
       age: __("Age"),
-      express_delivery: __("Delivery Time"),
     };
-
-    if (this.props.isExpressDelivery && inlineFilterList?.express_delivery) {
-      const expressDeliveryFilterOBJ = inlineFilterList?.express_delivery;
-      const copiedFilters = { ...inlineFilterList };
-      delete inlineFilterList?.express_delivery;
+    keyLabel[expressDeliveryKeyLabel] = __("Delivery Time");
+  
+    if (this.props.isExpressDelivery && inlineFilterList?.[expressDeliveryKeyLabel]) {
+      const expressDeliveryFilterOBJ = inlineFilterList[expressDeliveryKeyLabel];
+      delete inlineFilterList[expressDeliveryKeyLabel];
+  
+      // Prepare a new object to reorder keys
       let reOrderedResponse = {};
-
-      Object.keys(copiedFilters).forEach((key, index) => {
-        if (index === 1) {
-          reOrderedResponse["express_delivery"] = expressDeliveryFilterOBJ;
+  
+      // Insert express delivery key as the second key
+      let count = 0;
+      Object.keys(inlineFilterList).forEach((key) => {
+        count++;
+        if (count === 1) {
+          reOrderedResponse[key] = inlineFilterList[key]; // keep the first key
+          reOrderedResponse[expressDeliveryKeyLabel] = expressDeliveryFilterOBJ; // insert after the first key
+        } else {
+          reOrderedResponse[key] = inlineFilterList[key];
         }
-        reOrderedResponse[key] = copiedFilters[key];
       });
+  
       inlineFilterList = { ...reOrderedResponse };
     }
    
@@ -257,6 +266,7 @@ class PLPPages extends PureComponent {
       filterKey && filterKey.includes("price")
         ? __("Price Range")
         : keyLabel[filterKey];
+    
     return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
   };
 

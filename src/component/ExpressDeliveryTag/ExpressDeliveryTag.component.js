@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { ExpressDeliveryTruck } from "Component/Icons";
 import "./ExpressDeliveryTag.style";
-import { createReducer } from "Store/index";
 
 export const mapStateToProps = (state) => ({
   isExpressDelivery: state.AppConfig.isExpressDelivery,
@@ -54,8 +53,7 @@ export const ExpressDeliveryTag = (props) => {
 
   const renderExpressDeliveryTag = () => {
     const isInternationalProduct =
-      edd_info?.international_vendors?.includes(international_vendor) ||
-      cross_border;
+      edd_info?.international_vendors?.includes(international_vendor)
 
     if (
       in_stock === 0 ||

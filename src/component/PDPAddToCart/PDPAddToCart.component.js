@@ -70,7 +70,8 @@ class PDPAddToCart extends PureComponent {
     OOSrendered: false,
     OOS_mailSent: false,
     sizePredictorMessage:'',
-    recommendedSizeSku:''
+    recommendedSizeSku:'',
+    selectedCityArea: {},
   };
 
   componentDidMount() {
@@ -129,6 +130,20 @@ class PDPAddToCart extends PureComponent {
     const { selectedSizeCode } = this.props;
     if(prevProps.selectedSizeCode !== selectedSizeCode) {
       this.getRecommendedSize("size_bar");
+    }
+
+    if (prevProps.isSignedIn != this.props.isSignedIn) {
+      if (this.props.isSignedIn) {
+        this.setState({
+          selectedCityArea: this.props.currentSelectedCityArea
+            ? this.props.currentSelectedCityArea
+            : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            : {},
+        });
+      } else if (!this.props.isSignedIn) {
+        this.setState({ selectedCityArea: null });
+      }
     }
   }
 
@@ -352,13 +367,14 @@ class PDPAddToCart extends PureComponent {
       edd_info?.international_vendors?.includes(international_vendor) ||
       cross_border;
 
-    const isExpressEligibleSKU =
+      const isExpressEligibleSKU =
+      this.state.selectedCityArea &&
       !isInternationalProduct &&
       isExpressServiceAvailable?.express_eligible &&
       isExpressDelivery &&
       quantity !== 0 &&
-      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0);
-
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
+      !(+product?.quantity <= +product?.cross_border_qty);
     return (
       <div
         block="PDPAddToCart-SizeSelector"
