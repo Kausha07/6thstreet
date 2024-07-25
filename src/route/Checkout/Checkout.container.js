@@ -665,7 +665,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     // calling get shipment
-    getShipment(cartId);
+    if(!isSignedIn) {
+      getShipment(cartId);
+    }
   }
 
   componentDidCatch(error, info) {
