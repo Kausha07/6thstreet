@@ -3,6 +3,10 @@
   &_isArabic {
     direction: rtl;
   }
+
+  ::-webkit-scrollbar {
+    display: none;
+}
   .cityAreaSelectionOuterblock {
     .cityAreaSelectionPopUp {
       @include mobile {

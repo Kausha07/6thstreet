@@ -16,6 +16,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   edd_info: state.AppConfig.edd_info,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
 });
 
 export const ExpressAndStandardEDD = ({
@@ -44,11 +45,16 @@ export const ExpressAndStandardEDD = ({
   store_quantity = 0,
   mp_quantity = 0,
   isCart = false,
+  isSignedIn,
 }) => {
-  const [hours, setHours] = useState("00");
-  const [minutes, setMinutes] = useState("00");
   const [isTimeExpired, setIsTimeExpired] = useState(false);
-  const timerRef = useRef(null);
+  const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
+    currentSelectedCityArea
+      ? currentSelectedCityArea
+      : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      : {}
+  );
   let todaysCutOffTime = "00:00";
   let isProductOfficeServicable = true;
   let isOfficeSameDayExpressServicable = true;
@@ -60,10 +66,6 @@ export const ExpressAndStandardEDD = ({
   const setTimerStateThroughProps = (val) => {
     setIsTimeExpired(val);
   };
-
-  // get current selected address of user
-  const currentSelectedAddress =
-    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
 
   // get user's mailing address type, if there's no mailing_address_type then default is "home"
   const addressType = currentSelectedAddress?.mailing_address_type
@@ -125,9 +127,20 @@ export const ExpressAndStandardEDD = ({
   // check selected SKU is express eligible or not
   const isSKUExpressEligible = checkSKUExpressEligible();
 
-  const isInternationalProduct = edd_info?.international_vendors?.includes(
-    international_vendor // for international products show standard delivery
-  );
+  const isInternationalProduct =
+    edd_info?.international_vendors?.includes(
+      international_vendor // for international products show standard delivery
+    ) || +cross_border;
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area) {
+      setCurrentSelectedAddress(
+        JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      );
+    } else if (!isSignedIn) {
+      setCurrentSelectedAddress(null);
+    }
+  }, [JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area]);
 
   const inventoryCheck = (quantity, cutoffTime) => {
     return +quantity !== 0 ? cutoffTime : "00:00";
@@ -315,7 +328,8 @@ export const ExpressAndStandardEDD = ({
                     </span>
                     {isExpressServiceAvailable?.express_eligible &&
                     +customer?.vipCustomer &&
-                    !isCart ? (
+                    !isCart &&
+                    !isExpressServiceAvailable?.is_vip_chargeable ? (
                       <img
                         block="expressVipImage"
                         src={VIPIcon}

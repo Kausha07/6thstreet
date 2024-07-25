@@ -59,6 +59,8 @@ export const mapStateToProps = (state) => ({
   addtoCartInfo:state.PDP.addtoCartInfo,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -458,6 +460,8 @@ export class PDPAddToCartContainer extends PureComponent {
       addTag=()=>null,
       isExpressDelivery,
       isExpressServiceAvailable,
+      currentSelectedCityArea, 
+      isSignedIn,
     } = this.props;
     const {
       mappedSizeObject,
@@ -485,6 +489,8 @@ export class PDPAddToCartContainer extends PureComponent {
       addTag,
       isExpressDelivery,
       isExpressServiceAvailable,
+      currentSelectedCityArea,
+      isSignedIn,
     };
   };
 
