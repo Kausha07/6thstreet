@@ -6,6 +6,7 @@ import {
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { ExpressDeliveryTruck } from "Component/Icons";
+import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import "./NewCheckoutShippment.style";
 import {
   getEddForShipment,
@@ -24,6 +25,7 @@ export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   eddResponse: state.MyAccountReducer.eddResponse,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  customer: state.MyAccountReducer.customer,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -41,6 +43,7 @@ export const NewCheckoutShippment = (props) => {
     eddResponse,
     totals: { items = [], quote_currency_code },
     isExpressDelivery,
+    customer,
   } = props;
   const { expected_shipments = [] } = shipment;
   const totalShipmentCount = expected_shipments.length || 0;
@@ -93,6 +96,9 @@ export const NewCheckoutShippment = (props) => {
     const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+    if(shipmentItems && !shipmentItems.length) {
+      return null;
+    }
     return (
       <li block="NewShippmentItem">
         <div block="CartItemHeading">
@@ -118,6 +124,15 @@ export const NewCheckoutShippment = (props) => {
                     <span block="EddExpressDeliveryTextRed">
                       {__("Express")} {}
                     </span>
+                    {isExpressServiceAvailable?.express_eligible &&
+                    +customer?.vipCustomer &&
+                    !isExpressServiceAvailable?.is_vip_chargeable ? (
+                      <img
+                        block="expressVipImage"
+                        src={VIPIcon}
+                        alt="vipIcon"
+                      />
+                    ) : null}
                     <span block="EddExpressDeliveryTextNormal">
                       {__("Delivery by")}
                     </span>
@@ -134,7 +149,9 @@ export const NewCheckoutShippment = (props) => {
               </div>
               {/* check is VIP chargeable or not */}
               <div block="ExpressPrice">
-                {!is_vip_chargeable && (
+                {express_eligible &&
+                +customer?.vipCustomer &&
+                !is_vip_chargeable && (
                   <span block="ExpressPrice" elem="freeExpressText">
                     {__("Free")}
                   </span>
