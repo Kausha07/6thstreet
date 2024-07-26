@@ -3,7 +3,16 @@ import { connect } from "react-redux";
 import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
-import { getTodaysWeekDay } from "Util/Common";
+import {
+  getTodaysWeekDay,
+  inventoryCheck,
+  getTodaysCutOffTime,
+  checkProductOfficeServicable,
+  getFinalExpressDeliveryKey,
+  getNumericAddressType,
+  productOfficeServicable,
+  checkProductExpressEligible,
+} from "Util/Common";
 import { isArabic } from "Util/App";
 import "./ExpressAndStandardEDD.style";
 
@@ -57,8 +66,6 @@ export const ExpressAndStandardEDD = ({
   );
   let todaysCutOffTime = "00:00";
   let isProductOfficeServicable = true;
-  let isOfficeSameDayExpressServicable = true;
-  let isOfficeNextDayExpressServicable = true;
 
   // get today's week day e.g.: Monday
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
@@ -68,33 +75,19 @@ export const ExpressAndStandardEDD = ({
   };
 
   // get user's mailing address type, if there's no mailing_address_type then default is "home"
-  const addressType = currentSelectedAddress?.mailing_address_type
-    ? mailing_address_type.find(
-        (obj) => obj?.value === currentSelectedAddress?.mailing_address_type
-      )?.value || "37303"
-    : "37303";
+  const addressType = getNumericAddressType();
 
-  const getFinalExpressDeliveryKey = () => {
-    if (isPDP) {
-      if (addressType === "37303" && express_delivery_home) {
-        return express_delivery_home;
-      } else if (addressType === "37304" && express_delivery_work) {
-        return express_delivery_work;
-      } else if (addressType === "37305" && express_delivery_others) {
-        return express_delivery_others;
-      } else return express_delivery_home;
-    } else {
-      return express_delivery;
-    }
-  };
-
-  const express_delivery_key = getFinalExpressDeliveryKey();
+  const express_delivery_key = getFinalExpressDeliveryKey({
+    isPDP,
+    express_delivery_home,
+    express_delivery_work,
+    express_delivery_others,
+    express_delivery,
+  });
 
   // check product is express eligible  or not
-  const isProductExpressEligible = [
-    "today delivery",
-    "tomorrow delivery",
-  ].includes?.(express_delivery_key?.toLowerCase());
+  const isProductExpressEligible =
+    checkProductExpressEligible(express_delivery_key);
 
   const checkSKUExpressEligible = () => {
     if (isPDP) {
@@ -142,127 +135,23 @@ export const ExpressAndStandardEDD = ({
     }
   }, [JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area]);
 
-  const inventoryCheck = (quantity, cutoffTime) => {
-    return +quantity !== 0 ? cutoffTime : "00:00";
-  };
+  isProductOfficeServicable = productOfficeServicable({
+    cutOffTime,
+    express_delivery_key,
+    isTimeExpired,
+  });
 
-  const getTodaysCutOffTime = () => {
-    let tempTodaysCutOffTime = "00:00";
-
-    const {
-      warehouse_cutoff_time = "00:00",
-      store_cutoff_time = "00:00",
-      mp_cutoff_time = "00:00",
-    } = cutOffTime?.data?.find(
-      (item) =>
-        item.day?.toLowerCase() === todaysWeekDayName &&
-        item?.address_type === addressType
-    ) || {};
-
-    tempTodaysCutOffTime = isPDP
-      ? (+simple_products?.[sku]?.whs_quantity != 0 &&
-          inventoryCheck(
-            simple_products?.[sku]?.whs_quantity,
-            warehouse_cutoff_time
-          )) ||
-        (+simple_products?.[sku]?.store_quantity != 0 &&
-          inventoryCheck(
-            simple_products?.[sku]?.store_quantity,
-            store_cutoff_time
-          )) ||
-        (+simple_products?.[sku]?.mp_quantity != 0 &&
-          inventoryCheck(simple_products?.[sku]?.mp_quantity, mp_cutoff_time))
-      : (+whs_quantity != 0 &&
-          inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
-        (+store_quantity != 0 &&
-          inventoryCheck(store_quantity, store_cutoff_time)) ||
-        (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
-
-    if (
-      !tempTodaysCutOffTime &&
-      express_delivery_key?.toLowerCase()?.includes("today")
-    ) {
-      tempTodaysCutOffTime = warehouse_cutoff_time;
-    }
-
-    return tempTodaysCutOffTime;
-  };
-
-  const checkProductOfficeServicable = () => {
-    if (addressType === "37304") {
-      if (
-        isOfficeSameDayExpressServicable &&
-        !isOfficeNextDayExpressServicable &&
-        isTimeExpired
-      ) {
-        return false;
-      } else if (
-        !isOfficeSameDayExpressServicable &&
-        !isOfficeNextDayExpressServicable
-      ) {
-        return false;
-      } else if (
-        !isOfficeSameDayExpressServicable &&
-        isOfficeNextDayExpressServicable &&
-        isTimeExpired
-      ) {
-        return true;
-      } else if (
-        isOfficeSameDayExpressServicable &&
-        !isOfficeNextDayExpressServicable &&
-        express_delivery_key?.toLowerCase()?.includes("tomorrow")
-      ) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  if (
-    cutOffTime?.data &&
-    todaysWeekDayName &&
-    addressType &&
-    isProductExpressEligible
-  ) {
-    if (
-      addressType === "37304" &&
-      ["friday", "saturday", "sunday"].includes?.(
-        todaysWeekDayName?.toLowerCase()
-      )
-    ) {
-      switch (todaysWeekDayName?.toLowerCase()) {
-        case "friday":
-          isOfficeSameDayExpressServicable = true;
-          isOfficeNextDayExpressServicable = false;
-          isProductOfficeServicable = checkProductOfficeServicable();
-          todaysCutOffTime = getTodaysCutOffTime() || "00:00";
-          break;
-
-        case "saturday":
-          isOfficeSameDayExpressServicable = false;
-          isOfficeNextDayExpressServicable = false;
-          isProductOfficeServicable = checkProductOfficeServicable();
-          todaysCutOffTime = "00:00";
-          break;
-
-        case "sunday":
-          isOfficeSameDayExpressServicable = false;
-          isOfficeNextDayExpressServicable = true;
-          isProductOfficeServicable = checkProductOfficeServicable();
-          todaysCutOffTime = "00:00";
-          break;
-
-        default:
-          isOfficeSameDayExpressServicable = true;
-          isOfficeNextDayExpressServicable = true;
-          todaysCutOffTime = getTodaysCutOffTime() || "00:00";
-      }
-    } else {
-      isOfficeSameDayExpressServicable = true;
-      isOfficeNextDayExpressServicable = true;
-      todaysCutOffTime = getTodaysCutOffTime() || "00:00";
-    }
-  }
+  todaysCutOffTime =
+    getTodaysCutOffTime({
+      cutOffTime,
+      isPDP,
+      simple_products,
+      sku,
+      express_delivery_key,
+      whs_quantity,
+      store_quantity,
+      mp_quantity,
+    }) || "00:00";
 
   const checkStandardDeliveryAvailable = () => {
     if (!isProductOfficeServicable) {

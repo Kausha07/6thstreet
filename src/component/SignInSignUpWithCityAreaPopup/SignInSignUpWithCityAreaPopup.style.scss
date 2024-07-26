@@ -14,7 +14,7 @@
     .signInSignUpWithCityAreaOuterBlock {
       .signInSignUpWithCityAreaPopUp {
         @include mobile {
-          height: 350px;
+          height: 259px;
           width: 100%;
           position: fixed;
           left: 0;
@@ -46,6 +46,7 @@
           font-family: Avenir Next;
           font-weight: 600;
           line-height: 24px;
+          font-size: 20px;
         }
 
         .signInSignUpWithCityAreaInnerBlock {
@@ -53,10 +54,10 @@
             display: flex;
             justify-content: space-evenly;
             align-items: center;
-            margin: 30px 0;
+            margin: 20px 0;
 
             @include desktop {
-              margin: 25px 0;
+              margin: 20px 0;
             }
 
             button {
@@ -111,7 +112,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            margin: 25px 0;
+            margin: 20px 0;
 
             @include desktop {
               margin: 18px 0;
@@ -137,13 +138,12 @@
   .signInSignUpWithCityAreaOuterBlock {
     @include desktop {
       position: absolute;
-      top: 15px;
-      right: 0;
+      top: 6px;
     }
 
     .signInSignUpWithCityAreaPopUp {
       @include mobile {
-        height: 350px;
+        height: 259px;
         width: 100%;
         position: fixed;
         left: 0;
@@ -169,6 +169,7 @@
         font-family: Avenir Next;
         font-weight: 600;
         line-height: 24px;
+        font-size: 20px;
       }
 
       .signInSignUpWithCityAreaInnerBlock {
@@ -176,10 +177,10 @@
           display: flex;
           justify-content: space-evenly;
           align-items: center;
-          margin: 30px 0;
+          margin: 20px 0;
 
           @include desktop {
-            margin: 25px 0;
+            margin: 20px 0;
           }
 
           button {
@@ -234,7 +235,7 @@
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          margin: 25px 0;
+          margin: 20px 0;
 
           @include desktop {
             margin: 18px 0;
