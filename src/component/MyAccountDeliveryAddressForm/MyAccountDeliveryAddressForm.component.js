@@ -67,7 +67,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       identity_number: identity_number || "",
       validationError: false,
       isNationalityClick: null,
-      mailing_address_type: "37303"
+      mailing_address_type: ""
     };
   }
 
@@ -132,7 +132,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   };
 
   onFormSuccess = (fields) => {
-    const { onSave,setNewAddressSaved } = this.props;
+    const { onSave, setNewAddressSaved, address } = this.props;
     const {
       region_id,
       region_string: region,
@@ -143,7 +143,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     newAddress.telephone = this.addPhoneCode() + telephone;
     newAddress.type_of_identity = this.state.type_of_identity;
     newAddress.identity_number = this.state.identity_number;
-    newAddress.mailing_address_type = this.state.mailing_address_type;
+    newAddress.mailing_address_type = this.state.mailing_address_type
+      ? this.state.mailing_address_type
+      : address.mailing_address_type;
     setNewAddressSaved(true);
     onSave(newAddress);
   };
