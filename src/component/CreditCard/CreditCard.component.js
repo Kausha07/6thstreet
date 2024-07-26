@@ -419,12 +419,12 @@ class CreditCard extends PureComponent {
               key={entity_id}
               ref={this.ScrollerRef}
             >
-              <div block="selectedSavedCardMsite">
+              <div block="selectedSavedCardMsite" mods={{ isArabic }}>
                 <div>
                   <img src={ccimg} alt={"selected"} />
                 </div>
 
-                <div block="selectedSavedCardMsite" elem="headerWrap">
+                <div block="selectedSavedCardMsite" elem="headerWrap" mods={{ isArabic }}>
                   <span>{this.renderMiniCard(scheme.toLowerCase())}</span>
                   <span>Credit Card</span> <br />
                   <span block="SelectedSavedCard" elem="CardNumber">
@@ -478,12 +478,12 @@ class CreditCard extends PureComponent {
               this.props.applyPromotionSavedCard();
             }}
           >
-            <div block="selectedSavedCardMsite">
+            <div block="selectedSavedCardMsite" mods={{ isArabic }}>
               <div>
                 <img src={ccimg} alt={"selected"} />
               </div>
 
-              <div block="selectedSavedCardMsite" elem="headerWrap">
+              <div block="selectedSavedCardMsite" elem="headerWrap" mods={{ isArabic }}>
                 <span>{this.renderMiniCard(scheme.toLowerCase())}</span>
                 <span>Credit Card</span> <br />
                 <span block="SavedCard" elem="CardNumber">

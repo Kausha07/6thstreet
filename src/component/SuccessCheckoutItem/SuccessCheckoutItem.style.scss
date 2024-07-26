@@ -92,7 +92,7 @@
 
   &-Wrapper {
     display: grid;
-    grid-template-columns: 135px calc(87% - 135px);
+    grid-template-columns: 135px calc(100% - 135px);
     background: var(--successcheckout-item-background);
     padding-top: 15px;
     text-transform: capitalize;

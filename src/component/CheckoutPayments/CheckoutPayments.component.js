@@ -603,7 +603,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       selectPaymentMethod,
       selectedPaymentCode,
     } = this.props;
-    const { isRenderEmmptyCard } = this.state;
+    const { isRenderEmmptyCard, isArabic } = this.state;
     const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
     const { m_code } = method;
     const isSelected = m_code === selectedPaymentCode;
@@ -619,8 +619,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       >
         <div className="add-new-card">
           <label htmlFor="newCard">
-            <img src={addNewCardIcon} alt="Card Icon" className="card-icon" />
-            <span>Add New Card</span>
+            <img src={addNewCardIcon} alt="Card Icon" block="card-icon" mods={{ isArabic }} />
+            <span>{__("Add New Card")}</span>
           </label>
 
           <div
