@@ -851,17 +851,17 @@ export const getFinalExpressDeliveryKey = ({
   isPDP = false,
   express_delivery_home = "",
   express_delivery_work = "",
-  express_delivery_others = "",
+  express_delivery_other = "",
   express_delivery = "",
 }) => {
   const addressType = getNumericAddressType();
   if (isPDP) {
-    if (addressType === "37303" && express_delivery_home) {
+    if (addressType === "37303") {
       return express_delivery_home;
-    } else if (addressType === "37304" && express_delivery_work) {
+    } else if (addressType === "37304") {
       return express_delivery_work;
-    } else if (addressType === "37305" && express_delivery_others) {
-      return express_delivery_others;
+    } else if (addressType === "37305") {
+      return express_delivery_other;
     } else return express_delivery_home;
   } else {
     return express_delivery;
