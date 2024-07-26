@@ -33,7 +33,7 @@ const translations = {
     infant: 'Infant',
     express_delivery_home : "Delivery Time",
     express_delivery_work : "Delivery Time",
-    express_delivery_others : "Delivery Time",
+    express_delivery_other : "Delivery Time",
   },
 
   ar: {
@@ -69,7 +69,7 @@ const translations = {
     infant: 'للرضع',
     express_delivery_home : "وقت التوصيل",
     express_delivery_work : "وقت التوصيل",
-    express_delivery_others : "وقت التوصيل",
+    express_delivery_other : "وقت التوصيل",
   }
 };
 
