@@ -87,10 +87,10 @@ export class AppConfigDispatcher {
     }
 
     const getVwoDataExpressDelivery = () => {
-
         const isEnable = config?.countries?.[country]?.isExpressDelivery || false;
         const callVwo = abTestingConfig?.Express?.getConfigVwo || false;
-        let defaultVariationName = abTestingConfig?.Express?.defaultVariant || "control";
+        let defaultVariationName =
+          abTestingConfig?.Express?.defaultVariant || "control";
         let campaignName =
           abTestingConfig?.Express?.campaignName || "ExpressDeliveryUAE";
         let isExpressDeliveryEnable =
@@ -109,17 +109,22 @@ export class AppConfigDispatcher {
             `${userId}`,
             options
           );
-            const variationName = window.vwoClientInstance?.activate(
-                campaignName,
-                `${userId}`,
-                options
-              );
-
+  
+          const variationName = vwoClientInstance.getVariationName(
+            campaignName,
+            `${userId}`,
+            options
+          );
+  
           result = {
             variationName: variationName ? variationName : defaultVariationName,
-            vwo: variationName ? '1': '0',
+            vwo: variationName ? "1" : "0",
             campaignName,
-            isFeatureEnabled: variationName ? variationName === "control" ? false : true : isFeatureEnabled,
+            isFeatureEnabled: variationName
+              ? variationName === "control"
+                ? false
+                : true
+              : isFeatureEnabled,
           };
         }
         return result;
