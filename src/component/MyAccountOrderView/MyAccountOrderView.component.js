@@ -93,7 +93,7 @@ import { exchangeFormatGroupStatus } from "Util/Common";
 
 import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 
-import {  ARABIC_MONTHS } from "../MyAccountOrderListItem/MyAccountOrderListItem.config";
+import { ARABIC_MONTHS } from "../MyAccountOrderListItem/MyAccountOrderListItem.config";
 import { ExpressDeliveryTruck } from "Component/Icons";
 
 class MyAccountOrderView extends PureComponent {
@@ -108,7 +108,7 @@ class MyAccountOrderView extends PureComponent {
 
   static defaultProps = {
     order: null,
-    productsRating:{},
+    productsRating: {},
     displayDiscountPercentage: true,
   };
 
@@ -137,7 +137,7 @@ class MyAccountOrderView extends PureComponent {
         <p>{`${firstname} ${middlename || ""} ${lastname}`.trim()}</p>
         <p block="Address" elem="Street">{`${street} ${postcode}`}</p>
         <p>{`${city} - ${getCountryNameById(country_id)}`}</p>
-        <p className={isArabic ? "telephone":""}>{`${telephone}`}</p>
+        <p className={isArabic ? "telephone" : ""}>{`${telephone}`}</p>
       </div>
     );
   };
@@ -146,7 +146,13 @@ class MyAccountOrderView extends PureComponent {
     this.setState({ eddEventSent: true });
   };
 
-  renderItem = (item, eddItem, isItemUnderProcessing = false, increment_id="", itemStatus) => {
+  renderItem = (
+    item,
+    eddItem,
+    isItemUnderProcessing = false,
+    increment_id = "",
+    itemStatus
+  ) => {
     const {
       order: { order_currency_code: currency, status },
       displayDiscountPercentage,
@@ -189,12 +195,12 @@ class MyAccountOrderView extends PureComponent {
           edd_info={edd_info}
           currency={currency}
           displayDiscountPercentage={displayDiscountPercentage}
-          international_shipping_fee = {international_shipping_fee}
-          incrementId= {increment_id}
-          productsRating = {productsRating}
-          itemStatus = {itemStatus}
-          updateRating = {updateRating}
-          isProductRatingEnabled = {isProductRatingEnabled}
+          international_shipping_fee={international_shipping_fee}
+          incrementId={increment_id}
+          productsRating={productsRating}
+          itemStatus={itemStatus}
+          updateRating={updateRating}
+          isProductRatingEnabled={isProductRatingEnabled}
           orderDetailsCartTotal={order}
         />
       </>
@@ -235,7 +241,7 @@ class MyAccountOrderView extends PureComponent {
         order_id,
         parent_increment_id = "",
       },
-      is_exchange_enabled = false
+      is_exchange_enabled = false,
     } = this.props;
 
     const date = new Date(created_at?.replace(/-/g, "/"));
@@ -243,12 +249,15 @@ class MyAccountOrderView extends PureComponent {
       ARABIC_MONTHS[date.getMonth()]
     } ${date.getFullYear()}`;
 
-    const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
+    const modifiedStatus =
+      is_exchange_order === 1 && status === "complete"
+        ? "exchange_complete"
+        : status;
     const finalStatus = isArabic()
       ? translateArabicStatus(modifiedStatus)
       : modifiedStatus
-        ? modifiedStatus.split("_").join(" ")
-        : "";
+      ? modifiedStatus.split("_").join(" ")
+      : "";
     if (STATUS_FAILED.includes(status)) {
       const title =
         status === STATUS_PAYMENT_ABORTED
@@ -284,12 +293,11 @@ class MyAccountOrderView extends PureComponent {
             {__("Order placed")}: &nbsp;
             <span>
               {isArabic()
-                  ? arabicDate
-                  : formatDate(
+                ? arabicDate
+                : formatDate(
                     "DD MMM YYYY",
                     new Date(created_at.replace(/-/g, "/"))
-                  )
-              }
+                  )}
             </span>
           </p>
           {parent_increment_id && (
@@ -315,12 +323,11 @@ class MyAccountOrderView extends PureComponent {
                 {RETURN_ITEM_LABEL}
               </button>
             )}
-            {
-              is_exchangeable && is_exchange_enabled &&
+            {is_exchangeable && is_exchange_enabled && (
               <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
                 {EXCHANGE_ITEM_LABEL}
               </button>
-            }
+            )}
             {is_cancelable && +is_exchange_order === 1 ? (
               <div block="MyAccountOrderView" elem="HeadingButton">
                 <button
@@ -433,7 +440,7 @@ class MyAccountOrderView extends PureComponent {
   ) {
     const {
       order: { is_exchange_order: exchangeCount, groups },
-      isProductRatingEnabled
+      isProductRatingEnabled,
     } = this.props;
     const packageStatus = this.formatGroupStatus(status);
     const exchangePackageStatus = exchangeFormatGroupStatus(status);
@@ -444,12 +451,11 @@ class MyAccountOrderView extends PureComponent {
         ? __("Normal Exchange")
         : null;
 
-
     const date = new Date(deliveryDate?.replace(/-/g, "/"));
     const arabicDate = `${date.getDate()} ${
       ARABIC_MONTHS[date.getMonth()]
     } ${date.getFullYear()}`;
-   
+
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -477,21 +483,29 @@ class MyAccountOrderView extends PureComponent {
             !!packageStatus &&
             exchangeCount === 0 && <span>{` - ${packageStatus}`}</span>
           )}
-
         </h3>
-        {
-          is_express_delivery && <div className="ExpressDeliveryBlock"> <div className="ExpressDeliveryTextBlock"><ExpressDeliveryTruck /> {__("Express")}</div></div>
-        }
-        {(status === DELIVERY_SUCCESSFUL && deliveryDate && isProductRatingEnabled) ?
-        <div className="subTitle">{__("Delivered")}: &nbsp;
-          {isArabic()
-                ? arabicDate
-                : formatDate(
+        {is_express_delivery &&
+          (status.toLowerCase() === DELIVERY_SUCCESSFUL || status.toLowerCase() === "processing" || status.toLowerCase() === "delivery_failed") && (
+            <div className="ExpressDeliveryBlock">
+              {" "}
+              <div className="ExpressDeliveryTextBlock">
+                <ExpressDeliveryTruck /> {__("Express")}
+              </div>
+            </div>
+          )}
+        {status === DELIVERY_SUCCESSFUL &&
+        deliveryDate &&
+        isProductRatingEnabled ? (
+          <div className="subTitle">
+            {__("Delivered")}: &nbsp;
+            {isArabic()
+              ? arabicDate
+              : formatDate(
                   "DD MMMM YYYY",
                   new Date(deliveryDate.replace(/-/g, "/"))
-                )
-          }</div>: null
-        }
+                )}
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -500,7 +514,7 @@ class MyAccountOrderView extends PureComponent {
     switch (status) {
       case STATUS_DISPATCHED:
       case STATUS_IN_TRANSIT: {
-        return true
+        return true;
       }
       case DELIVERY_SUCCESSFUL: {
         return this.props.isProductRatingEnabled ? false : true;
@@ -605,8 +619,9 @@ class MyAccountOrderView extends PureComponent {
                 {label}
               </p>
               {index === 2 &&
-              edd_info &&
-              edd_info.is_enable && finalEdd &&
+                edd_info &&
+                edd_info.is_enable &&
+                finalEdd &&
                 this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
@@ -754,8 +769,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [], increment_id
-      },
+      order: { groups: shipped = [], increment_id },
       edd_info,
     } = this.props;
     const { isArabic } = this.state;
@@ -772,8 +786,8 @@ class MyAccountOrderView extends PureComponent {
       item?.label === "المنتجات قيد التجهيز";
 
     const isInternational =
-    parseInt(item?.cross_border) === 1 &&
-    edd_info?.international_vendors?.indexOf(item?.international_vendor) > -1;
+      parseInt(item?.cross_border) === 1 &&
+      edd_info?.international_vendors?.indexOf(item?.international_vendor) > -1;
     const isEDDEnabled = edd_info ? true : false;
     const { message } = this.getDeliveryMessage(
       item?.exchange_type,
@@ -782,7 +796,9 @@ class MyAccountOrderView extends PureComponent {
       isEDDEnabled
     );
     const date_range =
-      edd_info?.intl_vendor_edd_range?.[item?.international_vendor?.toLowerCase()];
+      edd_info?.intl_vendor_edd_range?.[
+        item?.international_vendor?.toLowerCase()
+      ];
     const deliveryDays =
       item?.exchange_type?.toLowerCase() === "normal" && !isInternational
         ? "3-4"
@@ -810,6 +826,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           MyAccountSection={true}
         >
+          {this.renderMessage(item?.status, item)}
           {item?.exchange_type !== "" &&
           item?.exchange_type !== null &&
           item?.status !== "" &&
@@ -864,7 +881,13 @@ class MyAccountOrderView extends PureComponent {
           )}
           <div></div>
           {item.items.map((data) =>
-            this.renderItem(data, item, isItemUnderProcessing, increment_id, item.status)
+            this.renderItem(
+              data,
+              item,
+              isItemUnderProcessing,
+              increment_id,
+              item.status
+            )
           )}
         </Accordion>
       </div>
@@ -983,7 +1006,11 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-            this.renderMiniCard(scheme_local === "mada" ? scheme_local?.toLowerCase() : scheme?.toLowerCase())
+            this.renderMiniCard(
+              scheme_local === "mada"
+                ? scheme_local?.toLowerCase()
+                : scheme?.toLowerCase()
+            )
           )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
@@ -1085,7 +1112,6 @@ class MyAccountOrderView extends PureComponent {
   }
 
   renderPriceLine(price, name, mods = {}, allowZero = false) {
-    console.log("price ", price, name)
     const { isArabic } = this.state;
     if (!price && !allowZero) {
       return null;
@@ -1162,14 +1188,14 @@ class MyAccountOrderView extends PureComponent {
         tax_amount = 0,
         customer_balance_amount = 0,
         store_credit_amount = 0,
-       // club_apparel_amount = 0,
+        // club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_amount = 0,
         reward_currency_amount = 0,
         fulfilled_from = "",
-        total_mrp= 0,
-        total_discount= 0,
-        express_delivery_charges = 0
+        total_mrp = 0,
+        total_discount = 0,
+        express_delivery_charges = 0,
       },
       isSidewideCouponEnabled,
     } = this.props;
@@ -1188,9 +1214,9 @@ class MyAccountOrderView extends PureComponent {
                   couponSavings: true,
                 })
               : null}
-            {
-              isSidewideCouponEnabled && total_discount ? this.renderPriceLine(subTotal, __("Subtotal")) : null
-            }
+            {isSidewideCouponEnabled && total_discount
+              ? this.renderPriceLine(subTotal, __("Subtotal"))
+              : null}
             {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderPriceLine(shipping_amount, __("Shipping fee"), {
                 divider: true,
@@ -1204,10 +1230,13 @@ class MyAccountOrderView extends PureComponent {
                 }
               )}
             {express_delivery_charges &&
-              this.renderPriceLine(express_delivery_charges, __("Express Delivery Charges"), {
-                divider: true,
-              })
-            }
+              this.renderPriceLine(
+                express_delivery_charges,
+                __("Express Delivery Charges"),
+                {
+                  divider: true,
+                }
+              )}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
                   isStoreCredit: true,
@@ -1272,6 +1301,77 @@ class MyAccountOrderView extends PureComponent {
         />
       </Link>
     );
+  }
+
+  formatRefundDate = (dateStr) => {
+    // Convert the date string to a Date object
+
+    const countryCode = getCountryFromUrl();
+
+    const dateObj = new Date(dateStr);
+
+    // Define options for formatting the date
+    const options = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    // Format the date to the desired string
+    return dateObj
+      .toLocaleString("en-" + countryCode.toUpperCase(), options)
+      .replace(",", "");
+  };
+
+  renderMessage(groupStatus, group) {
+    const {
+      order: { status, order_currency_code, refund_amount, refund_date },
+    } = this.props;
+    const { isArabic } = this.state;
+    let message = "";
+    let date = "";
+    if (
+      status == "canceled" &&
+      refund_date &&
+      refund_amount &&
+      order_currency_code
+    ) {
+      message = __(
+        "Refund of %s %s has been initiated to your original payment method. For card payments, it should reflect within 5-7 days.",
+        order_currency_code,
+        parseFloat(refund_amount)
+      );
+      date = this.formatRefundDate(refund_date);
+    } else if(groupStatus == "delivery_failed" && order_currency_code && group.rto_refund_amount && group.rto_date) {
+      message = __(
+        "Refund of %s %s initiated to your original payment method. For card payments, it will reflect within 5-7 days.", 
+        order_currency_code, 
+        parseFloat(group.rto_refund_amount)
+      );
+      date = this.formatRefundDate(group.rto_date);
+    }
+    if(message && date) {
+      return (
+        <div
+          block="MyAccountOrderView"
+          elem="PackagesMessage"
+          mods={{ isArabic }}
+        >
+          <div className="order-group-message">
+            <p>
+              {message}
+            </p>
+            <p className="color-grey">
+              {date}
+            </p>
+          </div>
+        </div>
+      );
+    }
+    return null;
   }
 
   renderShipmentTracking(name, logo, link) {
