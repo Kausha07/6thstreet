@@ -16,7 +16,7 @@ export const AddressTypeSelection = (props) => {
   } = props;
 
   const [selectedAddressType, setSelectedAddressType] = useState(
-    address?.mailing_address_type
+    address?.mailing_address_type || "37303"
   );
 
   const handleAddressTypeChange = (value) => {

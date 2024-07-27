@@ -145,7 +145,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     newAddress.identity_number = this.state.identity_number;
     newAddress.mailing_address_type = this.state.mailing_address_type
       ? this.state.mailing_address_type
-      : address.mailing_address_type;
+      : address?.mailing_address_type
+      ? address?.mailing_address_type
+      : "37303";
     setNewAddressSaved(true);
     onSave(newAddress);
   };
