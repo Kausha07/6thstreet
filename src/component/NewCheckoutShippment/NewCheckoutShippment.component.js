@@ -6,11 +6,13 @@ import {
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { ExpressDeliveryTruck } from "Component/Icons";
+import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import "./NewCheckoutShippment.style";
 import {
   getEddForShipment,
   getShipmentItems,
+  getCutOffTimeCheckoutPage,
 } from "./utils/NewCheckoutShippment.helper";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { getCurrency } from "Util/App";
@@ -26,6 +28,8 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   customer: state.MyAccountReducer.customer,
+  cutOffTime: state.MyAccountReducer.cutOffTime,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -44,6 +48,8 @@ export const NewCheckoutShippment = (props) => {
     totals: { items = [], quote_currency_code },
     isExpressDelivery,
     customer,
+    cutOffTime,
+    vwoData,
   } = props;
   const { expected_shipments = [] } = shipment;
   const totalShipmentCount = expected_shipments.length || 0;
@@ -96,13 +102,17 @@ export const NewCheckoutShippment = (props) => {
     const expressDeliveryToday =
       available_delivery_type[1] &&
       available_delivery_type[1].toLowerCase().includes("today");
-    const isExpressDeliverySelected = selected_delivery_type == 1;
+    const isExpressDeliverySelected =
+      selected_delivery_type == 1 || selected_delivery_type == 2;
     const EddForShipment =
       getEddForShipment({ shipmentItem, eddResponse }) || {};
     const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
     const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+    const todaysCutOffTime = isExpressDeliveryAvailable
+      ? getCutOffTimeCheckoutPage({ shipmentItems, cutOffTime }) || "00:00"
+      : "00:00";
     if (shipmentItems && !shipmentItems.length) {
       return null;
     }
@@ -139,16 +149,19 @@ export const NewCheckoutShippment = (props) => {
                       />
                     ) : null}
                     <span block="EddExpressDeliveryTextNormal">
-                      {__("Delivery by")}
+                      &nbsp;{__("Delivery by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
                       {expressDeliveryToday ? __("Today") : __("Tomorrow")}
                     </span>
                   </div>
                 </div>
-                <div block="EddExpressDeliveryCutOffTime">
-                  {__("Order within 4hrs 10 Mins")}
-                </div>
+                {expressDeliveryToday && (
+                  <ExpressTimer
+                    todaysCutOffTime={todaysCutOffTime}
+                    setTimerStateThroughProps={() => {}}
+                  />
+                )}
               </div>
               {/* check is VIP chargeable or not */}
               <div block="ExpressPrice">

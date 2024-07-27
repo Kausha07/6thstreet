@@ -1,10 +1,11 @@
 import { isObject } from "Util/API/helper/Object";
+import { getTodaysCutOffTime } from "Util/Common";
 
 export const getEddForShipment = ({ shipmentItem = {}, eddResponse = {} }) => {
   const { items = [] } = shipmentItem;
   const sku = items?.[0]?.sku;
 
-  if(!sku) {
+  if (!sku) {
     return null;
   }
 
@@ -43,4 +44,36 @@ export const getShipmentItems = ({ shipmentItem = {}, cartItems = [] }) => {
   });
 
   return shipmentItems;
+};
+
+export const getCutOffTimeCheckoutPage = ({
+  shipmentItems = [],
+  cutOffTime = {},
+}) => {
+  let cutOffTimeShipment = [];
+
+  shipmentItems.map((item, i) => {
+    const {
+      full_item_info: { mp_quantity = 0, store_quantity = 0, whs_quantity = 0 },
+    } = item;
+
+    let cutOffTimeSku = getTodaysCutOffTime({
+      cutOffTime,
+      whs_quantity,
+      store_quantity,
+      mp_quantity,
+    });
+
+    if (cutOffTimeSku) {
+      cutOffTimeShipment.push(cutOffTimeSku);
+    }
+  });
+
+  // Find the minimum time
+  const minTime = cutOffTimeShipment.reduce(
+    (min, time) => (time < min ? time : min),
+    cutOffTimeShipment[0]
+  );
+
+  return minTime;
 };
