@@ -337,6 +337,7 @@ export class SuccessCheckoutItem extends PureComponent {
             whs_quantity={whs_quantity}
             store_quantity={store_quantity}
             mp_quantity={mp_quantity}
+            showTimer={false}
           />
         </Suspense>
       </div>

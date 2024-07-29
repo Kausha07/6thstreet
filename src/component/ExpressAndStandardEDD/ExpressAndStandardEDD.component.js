@@ -55,6 +55,7 @@ export const ExpressAndStandardEDD = ({
   mp_quantity = 0,
   isCart = false,
   isSignedIn,
+  showTimer = true,
 }) => {
   const [isTimeExpired, setIsTimeExpired] = useState(false);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
@@ -249,7 +250,7 @@ export const ExpressAndStandardEDD = ({
                   <span block="freeVIPText">{__("Free")}</span>
                 ) : null}
               </div>
-              {express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
+              {showTimer && express_delivery_key?.toLowerCase() !== "tomorrow delivery" && (
                 <ExpressTimer
                   todaysCutOffTime={todaysCutOffTime}
                   setTimerStateThroughProps={setTimerStateThroughProps}
