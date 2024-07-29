@@ -25,6 +25,7 @@ import { Helmet } from "react-helmet";
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 class HomePage extends PureComponent {
@@ -191,6 +192,7 @@ class HomePage extends PureComponent {
   }
 
   render() {
+    const { isExpressDelivery } = this.props;
     return (
       <>
         {this.renderMetaData()}
@@ -199,7 +201,7 @@ class HomePage extends PureComponent {
         </Helmet>
         <main block="HomePage">
           {this.renderMySignInPopup()}
-          <SignInSignUpMobileNudge />
+          {!isExpressDelivery && <SignInSignUpMobileNudge />}
           {this.renderContent()}
         </main>
       </>

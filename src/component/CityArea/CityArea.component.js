@@ -91,9 +91,6 @@ export const CityArea = (props) => {
     cartItems,
   } = props;
 
-  const [showPopUp, setShowPopUp] = useState(
-    showSignInPopUpForGuest && !isSignedIn ? showSignInPopUpForGuest : false
-  );
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
   const [showCityAreaSelectionPopUp, setShowCityAreaSelectionPopUp] =
@@ -109,6 +106,22 @@ export const CityArea = (props) => {
       : defaultShippingAddress?.area
       ? defaultShippingAddress?.area
       : __("Select Area")
+  );
+
+  const [showPopUp, setShowPopUp] = useState(
+    showSignInPopUpForGuest &&
+      !isSignedIn &&
+      !JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area &&
+      [
+        "/",
+        "/men.html",
+        "/women.html",
+        "/kids.html",
+        "/home.html",
+        "/influencer.html",
+      ].includes(location.pathname)
+      ? showSignInPopUpForGuest
+      : false
   );
 
   useEffect(() => {
@@ -488,12 +501,15 @@ export const CityArea = (props) => {
   };
 
   const renderAddressPopUp = () => {
-    if (addresses && addresses?.length > 0) {
+    let countryWiseAddresses = addresses?.filter(
+      (obj) => obj?.country_code === getCountryFromUrl()
+    );
+    if (countryWiseAddresses && countryWiseAddresses?.length > 0) {
       return (
         <DeliveryAddressPopUp
           showHidePOPUP={showHidePOPUP}
           showPopUp={showPopUp}
-          addresses={addresses}
+          addresses={countryWiseAddresses}
           editSelectedAddress={editSelectedAddress}
           addNewAddress={addNewAddress}
           defaultShippingAddress={defaultShippingAddress}

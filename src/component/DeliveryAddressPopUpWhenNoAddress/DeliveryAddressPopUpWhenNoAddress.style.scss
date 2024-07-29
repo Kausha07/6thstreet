@@ -121,8 +121,7 @@
   .deliveryAddressPopUpWhenNoAddressOuterBlock {
     @include desktop {
       position: absolute;
-      top: 15px;
-      right: 0;
+      top: 6px;
       z-index: 100;
     }
 
