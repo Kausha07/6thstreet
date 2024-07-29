@@ -654,6 +654,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 __("International Shipping Fee")
               )}
             {this.renderPriceLine(
+                getDiscountFromTotals(totals, "express_delivery_charges"),
+                __("Express Delivery Fee")
+              )}
+            {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
               __("My Cash"),
               { couponSavings: true }
