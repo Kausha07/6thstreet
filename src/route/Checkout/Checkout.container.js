@@ -956,6 +956,25 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     /*await*/ this.savePaymentMethodAndPlaceOrder(paymentInformation);
   }
 
+  formatExpressDate(dayType) {
+    const today = new Date();
+    let targetDate;
+  
+    if (dayType.toLowerCase() === 'tomorrow delivery') {
+      targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + 1);
+    } else if (dayType.toLowerCase() === 'today delivery') {
+      targetDate = today;
+    } else {
+      return "";
+    }
+  
+    const year = targetDate.getFullYear();
+    const month = String(targetDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(targetDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
     // console.table(paymentInformation);
     const {
@@ -1052,9 +1071,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: express_delivery,
-            edd_message_en: express_delivery,
-            edd_message_ar: express_delivery,
+            edd_date: this.formatExpressDate(express_delivery),
+            edd_message_en: "",
+            edd_message_ar: "",
             intl_vendors: null,
           });
         } else {
@@ -1166,9 +1185,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: express_delivery,
-            edd_message_en: express_delivery,
-            edd_message_ar: express_delivery,
+            edd_date: this.formatExpressDate(express_delivery),
+            edd_message_en: "",
+            edd_message_ar: "",
             intl_vendors: null,
           });
         } else {
