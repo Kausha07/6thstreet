@@ -427,7 +427,7 @@ export class CartItem extends PureComponent {
             <span> {__("Size:")} </span>
             {optionValue}
           </div>
-          {!isCheckoutPage && !isExpressDelivery && this.renderQuantitySelection()}
+          {!isCheckoutPage && this.renderQuantitySelection()}
         </div>
       );
     }
@@ -447,7 +447,7 @@ export class CartItem extends PureComponent {
             {qty}
           </div>
         )}
-        {!isCheckoutPage && !isExpressDelivery && this.renderQuantitySelection()}
+        {!isCheckoutPage && this.renderQuantitySelection()}
       </div>
     );
   }
