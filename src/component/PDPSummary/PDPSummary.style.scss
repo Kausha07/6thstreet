@@ -389,18 +389,11 @@
       font-size: 13px;
       margin: 5px;
 
-      @include mobile {
-        margin: 10px;
-      }
-
       &_isArabic {
         direction: rtl;
       }
     }
 
-    .cityAreaText {
-      color: #000000;
-    }
 
     .cityAreaAddressSelection {
       margin: 0;

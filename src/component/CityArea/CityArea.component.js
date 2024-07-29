@@ -566,6 +566,10 @@ export const CityArea = (props) => {
             <div
               block={`cityAreaText  ${
                 showEllipsisArea ? "showEllipsisArea" : ""
+              }  ${
+                JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area
+                  ? "colorBlack"
+                  : "colorBlue"
               }`}
             >
               {finalAreaText}
