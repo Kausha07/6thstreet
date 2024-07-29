@@ -21,6 +21,7 @@ export const mapStateToProps = (state) => ({
   isLoading: state.MyAccountReducer.isAddressLoading,
   addressCityData: state.MyAccountReducer.addressCityData,
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export default connect(

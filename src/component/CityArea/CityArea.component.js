@@ -112,30 +112,50 @@ export const CityArea = (props) => {
   );
 
   useEffect(() => {
-    expressCutOffTime();
+    if (!isPDP && isExpressDelivery) {
+      expressCutOffTime();
+    }
   }, []);
 
   // Effect to update finalAreaText based on localStorage changes
   useEffect(() => {
-    if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
-      setFinalAreaText(
-        JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
-      );
-    } else if (!isSignedIn) {
-      setFinalAreaText(__("Select Area"));
+    if (isExpressDelivery) {
+      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      if (reqOBJ?.area) {
+        setFinalAreaText(reqOBJ?.area);
+        if (!isPDP && window.pageType === "PRODUCT") {
+          getEddForPDP(reqOBJ?.area, reqOBJ?.city);
+        }
+      } else if (!isSignedIn) {
+        setFinalAreaText(__("Select Area"));
+      }
     }
-  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
 
   useEffect(() => {
     if (
       defaultShippingAddress?.area &&
-      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area &&
+      isExpressDelivery
     ) {
       setFinalAreaText(defaultShippingAddress?.area);
       localStorage.setItem(
         "currentSelectedAddress",
         JSON.stringify(defaultShippingAddress)
       );
+      const {
+        country_code = "",
+        city = "",
+        area = "",
+      } = defaultShippingAddress;
+      let requestObj = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     }
   }, [defaultShippingAddress?.area]);
 

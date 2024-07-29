@@ -27,6 +27,7 @@ import { fetchMutation } from "Util/Request";
 import MyAccountAddressPopup from "./MyAccountAddressPopup.component";
 import { ADDRESS_POPUP_ID, ADD_ADDRESS } from "./MyAccountAddressPopup.config";
 import { showPopup } from "Store/Popup/Popup.action";
+import { setNewAddressSaved } from "Store/MyAccount/MyAccount.action";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -36,6 +37,7 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload[ADDRESS_POPUP_ID] || {},
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,6 +66,7 @@ export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   showNotification: (error) =>
     dispatch(showNotification("error", error)),
+  setNewAddressSaved: (val) => dispatch(setNewAddressSaved(val)),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -193,6 +196,26 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     });
   }
 
+  setLocalStorageAddress = (newAddress) => {
+    const { isExpressDelivery, setNewAddressSaved } = this.props;
+    if (isExpressDelivery) {
+      const { country_code = "", city = "", area = "" } = newAddress;
+      let requestObj = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(newAddress)
+      );
+      setNewAddressSaved(false);
+    }
+  };
+
   handleEditAddress(address) {
     const {
       showCards,
@@ -236,7 +259,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     }
 
     if (apiResult) {
-      apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
+      apiResult.then(this.handleAfterAction, this.handleError, this.setLocalStorageAddress(newAddress)).then(showCards);
     }
   }
 
@@ -259,6 +282,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     if (default_shipping || default_billing) {
       this.setState({ isLoading: true });
       const deleteApiResult = removeAddress(id);
+      this.props.setNewAddressSaved(false);
       deleteApiResult
         .then(this.handleAfterAction, this.handleError)
         .then(showCards);
