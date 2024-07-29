@@ -881,7 +881,7 @@ export class CheckoutSuccess extends PureComponent {
           )}
         {this.renderPriceLine(
             getDiscountFromTotals(total_segments, "express_delivery_charges"),
-            __("Express Delivery Fee")
+            __("Express Service")
           )}
         {cashOnDeliveryFee
           ? this.renderPriceLine(
@@ -1604,7 +1604,7 @@ export class CheckoutSuccess extends PureComponent {
               )}
             {this.renderSitewidePriceLine(
               express_delivery_charges,
-              __("Express Delivery Fee")
+              __("Express Service")
             )}
             {store_credit_amount !== 0
               ? this.renderSitewidePriceLine(
@@ -1683,7 +1683,7 @@ export class CheckoutSuccess extends PureComponent {
             )}
             {this.renderPriceLineQPAY(
               express_delivery_charges,
-              __("Express Delivery Fee")
+              __("Express Service")
             )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(

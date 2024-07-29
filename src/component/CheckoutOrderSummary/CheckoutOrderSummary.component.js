@@ -655,7 +655,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               )}
             {this.renderPriceLine(
                 getDiscountFromTotals(totals, "express_delivery_charges"),
-                __("Express Delivery Fee")
+                __("Express Service")
               )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),

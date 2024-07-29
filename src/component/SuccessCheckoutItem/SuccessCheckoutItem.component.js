@@ -338,6 +338,7 @@ export class SuccessCheckoutItem extends PureComponent {
             store_quantity={store_quantity}
             mp_quantity={mp_quantity}
             showTimer={false}
+            showStandardText={false}
           />
         </Suspense>
       </div>
@@ -393,7 +394,7 @@ export class SuccessCheckoutItem extends PureComponent {
         !isFailed &&
         this.renderEddWhenExpressEnabled(cross_border === 1)}
 
-        {((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
+        {!isExpressDelivery && ((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
       </figcaption>
     );
   }

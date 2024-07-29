@@ -173,7 +173,7 @@ function CartTotal(props) {
             )}
           {renderPriceLine(
             getValueFromTotals(totals, "express_delivery_charges"),
-            __("Express Delivery Fee"),
+            __("Express Service"),
           )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
