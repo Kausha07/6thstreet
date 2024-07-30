@@ -20,7 +20,7 @@
         height: 18px;
         position: relative;
         width: 18px;
-        box-shadow: rgb(209, 211, 212) 0px 0px 0px 0.5px;
+        box-shadow: 0 0 0 1px #484b4d;;
         border: none;
 
         @include after-mobile() {

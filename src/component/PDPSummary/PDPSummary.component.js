@@ -1002,42 +1002,46 @@ class PDPSummary extends PureComponent {
     }
 
     return (
-      <div block="EddParentExpressWrapper">
-        {isExpressDelivery &&
-          ((!crossBorder && !edd_info.has_item_level) ||
-            (edd_info.has_item_level && !crossBorder) ||
-            (edd_info.has_item_level &&
-              crossBorder &&
-              edd_info.international_vendors &&
-              edd_info.international_vendors.indexOf(international_vendor) ===
-                -1)) && (
-            <>
-              <CityArea
-                showBackgroundColor={false}
-                showEllipsisArea={true}
-                isToMakeEDDCallPage={false}
+      <>
+        <div block="SeperatorExpress"></div>
+        <div block="EddParentExpressWrapper">
+          {isExpressDelivery &&
+            ((!crossBorder && !edd_info.has_item_level) ||
+              (edd_info.has_item_level && !crossBorder) ||
+              (edd_info.has_item_level &&
+                crossBorder &&
+                edd_info.international_vendors &&
+                edd_info.international_vendors.indexOf(international_vendor) ===
+                  -1)) && (
+              <>
+                <CityArea
+                  showBackgroundColor={false}
+                  showEllipsisArea={true}
+                  isToMakeEDDCallPage={false}
+                  isPDP={true}
+                />
+                {this.renderExpressMsg()}
+              </>
+            )}
+          <div block="EddExpressWrapper">
+            <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+              <ExpressAndStandardEDD
+                express_delivery_home={express_delivery_home}
+                express_delivery_work={express_delivery_work}
+                express_delivery_other={express_delivery_other}
+                actualEddMess={actualEddMess}
+                simple_products={simple_products}
+                selectedSizeCode={selectedSizeCode}
+                splitKey={splitKey}
+                sku={sku}
                 isPDP={true}
+                international_vendor={international_vendor}
               />
-              {this.renderExpressMsg()}
-            </>
-          )}
-        <div block="EddExpressWrapper">
-          <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
-            <ExpressAndStandardEDD
-              express_delivery_home={express_delivery_home}
-              express_delivery_work={express_delivery_work}
-              express_delivery_other={express_delivery_other}
-              actualEddMess={actualEddMess}
-              simple_products={simple_products}
-              selectedSizeCode={selectedSizeCode}
-              splitKey={splitKey}
-              sku={sku}
-              isPDP={true}
-              international_vendor={international_vendor}
-            />
-          </Suspense>
+            </Suspense>
+          </div>
         </div>
-      </div>
+        <div block="SeperatorExpress"></div>
+      </>
     );
   }
 
