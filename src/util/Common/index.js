@@ -749,14 +749,14 @@ export const checkProductOfficeServicable = ({
   addressType = "37303",
   isOfficeSameDayExpressServicable = true,
   isOfficeNextDayExpressServicable = true,
-  isTimeExpired = false,
+  isExpressTimeExpired = false,
   express_delivery_key = "",
 }) => {
   if (addressType === "37304") {
     if (
       isOfficeSameDayExpressServicable &&
       !isOfficeNextDayExpressServicable &&
-      isTimeExpired
+      isExpressTimeExpired
     ) {
       return false;
     } else if (
@@ -767,7 +767,7 @@ export const checkProductOfficeServicable = ({
     } else if (
       !isOfficeSameDayExpressServicable &&
       isOfficeNextDayExpressServicable &&
-      isTimeExpired
+      isExpressTimeExpired
     ) {
       return true;
     } else if (
@@ -889,7 +889,7 @@ export const getFinalExpressDeliveryKey = ({
 export const productOfficeServicable = ({
   cutOffTime = {},
   express_delivery_key = "",
-  isTimeExpired = false,
+  isExpressTimeExpired = false,
 }) => {
   const addressType = getNumericAddressType();
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
@@ -920,7 +920,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
@@ -932,7 +932,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
@@ -944,7 +944,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
