@@ -456,7 +456,7 @@ export const CityArea = (props) => {
     };
 
     selectedCityArea(selectedAddress);
-    if(isNewCheckoutPage) {
+    if (isNewCheckoutPage) {
       onAddressSelectPopup(selectedAddress);
     }
 
@@ -592,13 +592,14 @@ export const CityArea = (props) => {
             <img src={address} alt="" block="locationImage" />
             {finalAreaText && (
               <div
-              block={`cityAreaText  ${
-                showEllipsisArea ? "showEllipsisArea" : ""
-              }  ${
-                JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area
-                  ? "colorBlack"
-                  : "colorBlue"
-              }`}
+                block={`cityAreaText  ${
+                  showEllipsisArea ? "showEllipsisArea" : ""
+                }  ${
+                  JSON.parse(localStorage.getItem("currentSelectedAddress"))
+                    ?.area
+                    ? "colorBlack"
+                    : "colorBlue"
+                }`}
               >
                 {finalAreaText}
               </div>
