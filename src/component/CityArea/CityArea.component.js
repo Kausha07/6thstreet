@@ -94,9 +94,6 @@ export const CityArea = (props) => {
     renderSelectedAddressMsite = () => {},
   } = props;
 
-  const [showPopUp, setShowPopUp] = useState(
-    showSignInPopUpForGuest && !isSignedIn ? showSignInPopUpForGuest : false
-  );
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
   const [showCityAreaSelectionPopUp, setShowCityAreaSelectionPopUp] =
@@ -114,31 +111,67 @@ export const CityArea = (props) => {
       : __("Select Area")
   );
 
+  const [showPopUp, setShowPopUp] = useState(
+    showSignInPopUpForGuest &&
+      !isSignedIn &&
+      !JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area &&
+      [
+        "/",
+        "/men.html",
+        "/women.html",
+        "/kids.html",
+        "/home.html",
+        "/influencer.html",
+      ].includes(location.pathname)
+      ? showSignInPopUpForGuest
+      : false
+  );
+
   useEffect(() => {
-    expressCutOffTime();
+    if (!isPDP && isExpressDelivery) {
+      expressCutOffTime();
+    }
   }, []);
 
   // Effect to update finalAreaText based on localStorage changes
   useEffect(() => {
-    if (JSON.parse(localStorage?.getItem("EddAddressReq"))?.area) {
-      setFinalAreaText(
-        JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
-      );
-    } else if (!isSignedIn) {
-      setFinalAreaText(__("Select Area"));
+    if (isExpressDelivery) {
+      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      if (reqOBJ?.area) {
+        setFinalAreaText(reqOBJ?.area);
+        if (!isPDP && window.pageType === "PRODUCT") {
+          getEddForPDP(reqOBJ?.area, reqOBJ?.city);
+        }
+      } else if (!isSignedIn) {
+        setFinalAreaText(__("Select Area"));
+      }
     }
-  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
 
   useEffect(() => {
     if (
       defaultShippingAddress?.area &&
-      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area &&
+      isExpressDelivery
     ) {
       setFinalAreaText(defaultShippingAddress?.area);
       localStorage.setItem(
         "currentSelectedAddress",
         JSON.stringify(defaultShippingAddress)
       );
+      const {
+        country_code = "",
+        city = "",
+        area = "",
+      } = defaultShippingAddress;
+      let requestObj = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     }
   }, [defaultShippingAddress?.area]);
 
@@ -474,12 +507,15 @@ export const CityArea = (props) => {
   };
 
   const renderAddressPopUp = () => {
-    if (addresses && addresses?.length > 0) {
+    let countryWiseAddresses = addresses?.filter(
+      (obj) => obj?.country_code === getCountryFromUrl()
+    );
+    if (countryWiseAddresses && countryWiseAddresses?.length > 0) {
       return (
         <DeliveryAddressPopUp
           showHidePOPUP={showHidePOPUP}
           showPopUp={showPopUp}
-          addresses={addresses}
+          addresses={countryWiseAddresses}
           editSelectedAddress={editSelectedAddress}
           addNewAddress={addNewAddress}
           defaultShippingAddress={defaultShippingAddress}
@@ -556,9 +592,13 @@ export const CityArea = (props) => {
             <img src={address} alt="" block="locationImage" />
             {finalAreaText && (
               <div
-                block={`cityAreaText  ${
-                  showEllipsisArea ? "showEllipsisArea" : ""
-                }`}
+              block={`cityAreaText  ${
+                showEllipsisArea ? "showEllipsisArea" : ""
+              }  ${
+                JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area
+                  ? "colorBlack"
+                  : "colorBlue"
+              }`}
               >
                 {finalAreaText}
               </div>

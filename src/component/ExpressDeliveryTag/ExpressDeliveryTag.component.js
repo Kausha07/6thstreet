@@ -14,7 +14,7 @@ export const ExpressDeliveryTag = (props) => {
     productInfo: {
       express_delivery_home = "",
       express_delivery_work = "",
-      express_delivery_others = "",
+      express_delivery_other = "",
       simple_products = {},
       international_vendor = "",
       cross_border = 0,
@@ -31,21 +31,12 @@ export const ExpressDeliveryTag = (props) => {
   );
 
   const getFinalExpressDeliveryKey = () => {
-    if (
-      currentSelectedAddress?.mailing_address_type === "37303" &&
-      express_delivery_home
-    ) {
+    if (currentSelectedAddress?.mailing_address_type === "37303") {
       return express_delivery_home;
-    } else if (
-      currentSelectedAddress?.mailing_address_type === "37304" &&
-      express_delivery_work
-    ) {
+    } else if (currentSelectedAddress?.mailing_address_type === "37304") {
       return express_delivery_work;
-    } else if (
-      currentSelectedAddress?.mailing_address_type === "37305" &&
-      express_delivery_others
-    ) {
-      return express_delivery_others;
+    } else if (currentSelectedAddress?.mailing_address_type === "37305") {
+      return express_delivery_other;
     } else return express_delivery_home;
   };
 
@@ -53,7 +44,7 @@ export const ExpressDeliveryTag = (props) => {
 
   const renderExpressDeliveryTag = () => {
     const isInternationalProduct =
-      edd_info?.international_vendors?.includes(international_vendor)
+      edd_info?.international_vendors?.includes(international_vendor);
 
     if (
       in_stock === 0 ||

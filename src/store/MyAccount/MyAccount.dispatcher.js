@@ -277,7 +277,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   async requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     const {
-      MyAccountReducer: { addressCityData = [] },
+      MyAccountReducer: { addressCityData = [], newAddressSaved = false },
       AppConfig: { isExpressDelivery = false },
     } = getStore().getState();
 
@@ -311,6 +311,25 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     getShippingAddresses().then(async (response) => {
       if (response.data) {
+        if (newAddressSaved && isExpressDelivery) {
+          let countryWiseAddresses = response?.data?.filter(
+            (obj) => obj?.country_code === getCountryFromUrl()
+          );
+          let newlyAddedAddress = countryWiseAddresses?.[countryWiseAddresses.length-1];
+          const {country_code = "", city = "", area = "" } = newlyAddedAddress;
+          let requestObj = {
+            country: country_code,
+            city: city,
+            area: area,
+            courier: null,
+            source: null,
+          };
+          localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+            localStorage.setItem(
+              "currentSelectedAddress",
+              JSON.stringify(newlyAddedAddress)
+            );
+        }
         if (addressCityData.length === 0) {
           AppConfigDispatcher.getCities().then((resp) => {
             this.setEDDresultData(response, resp.data, dispatch, login);

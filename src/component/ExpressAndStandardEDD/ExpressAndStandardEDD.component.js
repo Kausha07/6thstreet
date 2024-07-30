@@ -34,7 +34,7 @@ export const ExpressAndStandardEDD = ({
   express_delivery = "",
   express_delivery_home = "",
   express_delivery_work = "",
-  express_delivery_others = "",
+  express_delivery_other = "",
   actualEddMess = "",
   simple_products = {},
   selectedSizeCode = "",
@@ -83,7 +83,7 @@ export const ExpressAndStandardEDD = ({
     isPDP,
     express_delivery_home,
     express_delivery_work,
-    express_delivery_others,
+    express_delivery_other,
     express_delivery,
   });
 

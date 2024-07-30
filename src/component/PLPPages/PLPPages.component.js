@@ -230,9 +230,13 @@ class PLPPages extends PureComponent {
       age: __("Age"),
     };
     keyLabel[expressDeliveryKeyLabel] = __("Delivery Time");
-  
-    if (this.props.isExpressDelivery && inlineFilterList?.[expressDeliveryKeyLabel]) {
-      const expressDeliveryFilterOBJ = inlineFilterList[expressDeliveryKeyLabel];
+    if (
+      this.props.isExpressDelivery &&
+      inlineFilterList?.[expressDeliveryKeyLabel] &&
+      JSON.stringify(inlineFilterList?.[expressDeliveryKeyLabel]?.data) !== "{}"
+    ) {
+      const expressDeliveryFilterOBJ =
+        inlineFilterList[expressDeliveryKeyLabel];
       delete inlineFilterList[expressDeliveryKeyLabel];
   
       // Prepare a new object to reorder keys
@@ -266,7 +270,7 @@ class PLPPages extends PureComponent {
       filterKey && filterKey.includes("price")
         ? __("Price Range")
         : keyLabel[filterKey];
-    
+
     return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
   };
 

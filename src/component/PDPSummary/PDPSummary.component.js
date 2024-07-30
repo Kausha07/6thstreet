@@ -983,7 +983,7 @@ class PDPSummary extends PureComponent {
         simple_products = {},
         express_delivery_home = "",
         express_delivery_work = "",
-        express_delivery_others = "",
+        express_delivery_other = "",
       },
       isExpressDelivery,
       isExpressServiceAvailable,
@@ -1026,7 +1026,7 @@ class PDPSummary extends PureComponent {
             <ExpressAndStandardEDD
               express_delivery_home={express_delivery_home}
               express_delivery_work={express_delivery_work}
-              express_delivery_others={express_delivery_others}
+              express_delivery_other={express_delivery_other}
               actualEddMess={actualEddMess}
               simple_products={simple_products}
               selectedSizeCode={selectedSizeCode}

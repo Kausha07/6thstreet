@@ -984,8 +984,27 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     /*await*/ this.savePaymentMethodAndPlaceOrder(paymentInformation);
   }
 
+  formatExpressDate(dayType) {
+    const today = new Date();
+    let targetDate;
+  
+    if (dayType.toLowerCase() === 'tomorrow delivery') {
+      targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + 1);
+    } else if (dayType.toLowerCase() === 'today delivery') {
+      targetDate = today;
+    } else {
+      return "";
+    }
+  
+    const year = targetDate.getFullYear();
+    const month = String(targetDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(targetDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
-    console.table(paymentInformation);
+    // console.table(paymentInformation);
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
@@ -1052,6 +1071,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           international_vendor,
           sku,
           extension_attributes,
+          express_delivery = null
         } = full_item_info;
         const defaultDay = extension_attributes?.click_to_collect_store
           ? edd_info.ctc_message
@@ -1075,48 +1095,59 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           ({ vendor }) =>
             vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
         );
-        eddItems.push({
-          sku: sku,
-          edd_date:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_date"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_date"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : extension_attributes?.click_to_collect_store
-              ? defaultEddDateString
-              : finalEdd,
-          cross_border: cross_border,
-          edd_message_en:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_message_en"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_message_en"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : actualEddMess,
-          edd_message_ar:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_message_ar"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_message_ar"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : actualEddMess,
-          intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
-            ? international_vendor : null)
-            : null,
-        });
+        if(express_delivery) {
+          eddItems.push({
+            sku: sku,
+            cross_border: cross_border,
+            edd_date: this.formatExpressDate(express_delivery),
+            edd_message_en: "",
+            edd_message_ar: "",
+            intl_vendors: null,
+          });
+        } else {
+          eddItems.push({
+            sku: sku,
+            edd_date:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_date"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_date"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : extension_attributes?.click_to_collect_store
+                ? defaultEddDateString
+                : finalEdd,
+            cross_border: cross_border,
+            edd_message_en:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_message_en"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_message_en"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : actualEddMess,
+            edd_message_ar:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_message_ar"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_message_ar"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : actualEddMess,
+            intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
+              ? international_vendor : null)
+              : null,
+          });
+        }
       });
     }
     if (edd_info?.is_enable && edd_info.has_item_level && cartItems) {
@@ -1125,7 +1156,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           cross_border = 0,
           sku,
           extension_attributes,
-          international_vendor = null
+          international_vendor = null,
+          express_delivery = null
         } = full_item_info;
         const defaultDay = extension_attributes?.click_to_collect_store
           ? edd_info.ctc_message
@@ -1177,24 +1209,34 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             finalEddForLineItem = defaultEddDateString;
           }
         }
-        
-        eddItems.push({
-          sku: sku,
-          edd_date:
-            cross_border && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : edd_info && extension_attributes?.click_to_collect_store
-              ? defaultEddDateString
-              : finalEddForLineItem,
-          cross_border: cross_border,
-          edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
-          ? null
-          : actualEddMess,
-          edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
-          ? null
-          : actualEddMess,
-          intl_vendors: cross_border && international_vendor ? international_vendor : null
-        });
+        if(express_delivery) {
+          eddItems.push({
+            sku: sku,
+            cross_border: cross_border,
+            edd_date: this.formatExpressDate(express_delivery),
+            edd_message_en: "",
+            edd_message_ar: "",
+            intl_vendors: null,
+          });
+        } else {
+          eddItems.push({
+            sku: sku,
+            edd_date:
+              cross_border && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : edd_info && extension_attributes?.click_to_collect_store
+                ? defaultEddDateString
+                : finalEddForLineItem,
+            cross_border: cross_border,
+            edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
+            ? null
+            : actualEddMess,
+            edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
+            ? null
+            : actualEddMess,
+            intl_vendors: cross_border && international_vendor ? international_vendor : null
+          });
+        }
       });
     }
     if (code === CARD) {
