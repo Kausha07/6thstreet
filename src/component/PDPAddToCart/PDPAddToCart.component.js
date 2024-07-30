@@ -31,6 +31,10 @@ import PDPTags from "Component/PDPTags";
 import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
 import { getCountryFromUrl } from "Util/Url";
 import CDN from "Util/API/provider/CDN";
+import {
+  getFinalExpressDeliveryKey,
+  checkProductExpressEligible,
+} from "Util/Common";
 
 class PDPAddToCart extends PureComponent {
 
@@ -357,18 +361,34 @@ class PDPAddToCart extends PureComponent {
       edd_info,
       product: { international_vendor },
       cross_border = 0,
+      product: {
+        express_delivery_home = "",
+        express_delivery_work = "",
+        express_delivery_other = "",
+      },
     } = this.props;
 
     const product = productStock[code];
     const whs_quantity = +product?.whs_quantity || 0;
     const store_quantity = +product?.store_quantity || 0;
     const mp_quantity = +product?.mp_quantity || 0;
+    const express_delivery_key = getFinalExpressDeliveryKey({
+      isPDP: true,
+      express_delivery_home,
+      express_delivery_work,
+      express_delivery_other,
+    });
+
+    // check product is express eligible  or not
+    const isProductExpressEligible =
+      checkProductExpressEligible(express_delivery_key);
+
     const isInternationalProduct =
       edd_info?.international_vendors?.includes(international_vendor) ||
       cross_border;
 
     const isExpressEligibleSKU =
-      popUpType !== "wishListPopUp" &&
+      isProductExpressEligible &&
       this.state.selectedCityArea &&
       !isInternationalProduct &&
       isExpressServiceAvailable?.express_eligible &&

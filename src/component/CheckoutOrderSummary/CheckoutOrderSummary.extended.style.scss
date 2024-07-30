@@ -178,7 +178,7 @@
         &_couponSavings {
             .CheckoutOrderSummary {
                 &-Price {
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: var(--fw-demi);
                     color: #13CA75;
                 }
@@ -187,7 +187,7 @@
         &_cashBack {
             .CheckoutOrderSummary {
                 &-Price {
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: var(--fw-demi);
                     color: #13CA75;
                 }
@@ -199,11 +199,11 @@
             margin-top: 10px;
             .CheckoutOrderSummary {
                 &-Text {
-                    font-size: 15px;
+                    font-size: 14px;
                     font-weight: var(--fw-regular);
                 }
                 &-Price {
-                    font-size: 15px;
+                    font-size: 14px;
                     font-weight: var(--fw-bold);
                 }
             }
@@ -214,18 +214,18 @@
         li {
             .CheckoutOrderSummary {
                 &-Text {
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: var(--fw-regular);
                     &_isArabic {
                         display: flex;
                     }
                 }
                 &-Price {
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: var(--fw-medium);
                 }
                 &-PriceCouponCode {
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: var(--fw-medium);
                     color: #28D9AA;
                 }
@@ -241,7 +241,7 @@
                 &-Text {
                     margin-block-start: 3px;
                     font-weight: var(--fw-regular);
-                    font-size: 15px;
+                    font-size: 14px;
                 }
             }
         }
@@ -261,7 +261,7 @@
                 &-Text {
                     margin-top: 3px;
                     font-weight: var(--fw-regular);
-                    font-size: 15px;
+                    font-size: 14px;
                 }
                 &-Price {
                     font-size: 18px;
@@ -565,7 +565,7 @@
 
 .CheckoutOrderSummary-SummaryItem_cashBack{
     .CheckoutOrderSummary-Price{
-        font-size: 15px;
+        font-size: 14px;
         font-weight: var(--fw-bold);
         color: #13CA75;
     }

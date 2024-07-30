@@ -476,6 +476,31 @@
   }
 
   .EddExpressWrapper {
+    @include mobile {
+      .internationalShipmentTag {
+        margin: 0 28px;
+      }
+      .EddStandardDeliveryTextBlock {
+        svg {
+          margin: 0 4px;
+        }
+        .EddStandardDeliveryText,
+        .EddStandardDeliveryTextBold {
+          font-size: 12px;
+        }
+      }
+      .eddExpressDelivery {
+        svg {
+          margin: 0 4px;
+        }
+        .EddExpressDeliveryTextNormal,
+        .EddExpressDeliveryTextBold,
+        .EddExpressDeliveryTextRed {
+          font-size: 12px;
+        }
+      }
+    }
+
     @include desktop {
       width: 290px;
     }

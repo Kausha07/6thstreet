@@ -2,7 +2,7 @@
   &-CartItemList {
     .NewShippmentItem {
       border: 1px solid #d1d3d4;
-      padding: 20px 15px;
+      padding: 20px 0px;
       margin-bottom: 0;
       border-bottom: none;
 
@@ -13,6 +13,7 @@
       @include mobile {
         border: none;
         border-bottom: 1px solid #d1d3d4;
+        padding: 20px 0px 8px 0px;
       }
 
       .CartItemHeading {
@@ -44,7 +45,7 @@
           background: #fff2f0;
           align-items: center;
           height: 52px;
-          padding: 0 10px 0px 30px;
+          padding: 0 10px 0px 20px;
           &::before,
           &::after {
             content: "";
@@ -100,10 +101,6 @@
               display: flex;
               align-items: center;
 
-              @include mobile {
-                font-size: 11px;
-              }
-
               .EddExpressDeliveryTextRed {
                 color: #f96446;
                 font-weight: 600;
@@ -113,7 +110,7 @@
 
               .EddExpressDeliveryTextNormal {
                 font-weight: 400;
-                font-size: 12px;
+                font-size: 13px;
               }
 
               .EddExpressDeliveryTextBold {
@@ -125,16 +122,16 @@
           }
 
           .EddExpressDeliveryCutOffTime {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 400;
             color: #606060;
             margin-top: 2px;
-            margin: 2px 12px;
+            margin: 2px 40px;
           }
 
           .ExpressPrice {
             font-family: Avenir Next;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
           }
         }
@@ -146,7 +143,7 @@
           border: 0.2px solid #d1d3d4;
           border-top: none;
 
-          padding: 0 10px 0 40px;
+          padding: 0 10px 0 32px;
           height: 52px;
           &::before,
           &::after {
@@ -198,10 +195,6 @@
               display: flex;
               align-items: center;
 
-              @include mobile {
-                font-size: 11px;
-              }
-
               svg {
                 width: 15px;
                 height: 15px;
@@ -210,20 +203,20 @@
 
               .EddStandardDeliveryText {
                 font-weight: 400;
-                font-size: 11px;
+                font-size: 13px;
               }
 
               .EddStandardDeliveryTextBold {
                 font-weight: 600;
                 margin: 0 5px;
-                font-size: 12px;
+                font-size: 13px;
               }
             }
 
             .internationalShipmentTag {
               .AdditionShippingInformation {
                 margin: 0 25px;
-                font-size: 10px;
+                font-size: 11px;
                 color: #606060;
               }
             }
@@ -231,7 +224,7 @@
 
           .StandardPrice {
             font-family: Avenir Next;
-            font-size: 10px;
+            font-size: 13px;
             font-weight: 500;
           }
         }
