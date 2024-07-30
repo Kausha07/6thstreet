@@ -367,7 +367,8 @@ class PDPAddToCart extends PureComponent {
       edd_info?.international_vendors?.includes(international_vendor) ||
       cross_border;
 
-      const isExpressEligibleSKU =
+    const isExpressEligibleSKU =
+      popUpType !== "wishListPopUp" &&
       this.state.selectedCityArea &&
       !isInternationalProduct &&
       isExpressServiceAvailable?.express_eligible &&
