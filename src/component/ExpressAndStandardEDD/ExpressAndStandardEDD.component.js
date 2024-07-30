@@ -92,16 +92,16 @@ export const ExpressAndStandardEDD = ({
   const checkSKUExpressEligible = () => {
     if (isPDP) {
       if (
-        +simple_products?.[sku]?.cross_border_qty &&
-        +simple_products?.[sku]?.quantity <=
-          +simple_products?.[sku]?.cross_border_qty
+        +simple_products?.[selectedSizeCode]?.cross_border_qty &&
+        +simple_products?.[selectedSizeCode]?.quantity <=
+          +simple_products?.[selectedSizeCode]?.cross_border_qty
       ) {
         return false;
       } else if (
-        +simple_products?.[sku]?.quantity !== 0 &&
-        +simple_products?.[sku]?.whs_quantity === 0 &&
-        +simple_products?.[sku]?.store_quantity === 0 &&
-        +simple_products?.[sku]?.mp_quantity === 0
+        +simple_products?.[selectedSizeCode]?.quantity !== 0 &&
+        +simple_products?.[selectedSizeCode]?.whs_quantity === 0 &&
+        +simple_products?.[selectedSizeCode]?.store_quantity === 0 &&
+        +simple_products?.[selectedSizeCode]?.mp_quantity === 0
       ) {
         return false;
       } else {
@@ -146,7 +146,7 @@ export const ExpressAndStandardEDD = ({
       cutOffTime,
       isPDP,
       simple_products,
-      sku,
+      selectedSizeCode,
       express_delivery_key,
       whs_quantity,
       store_quantity,
