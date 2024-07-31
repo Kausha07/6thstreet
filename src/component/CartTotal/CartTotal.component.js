@@ -20,6 +20,8 @@ export const mapStateToProps = (state) => {
     isSignedIn: state.MyAccountReducer.isSignedIn,
     language: state.AppState.language,
     international_shipping_fee: state.AppConfig.international_shipping_fee,
+    isExpressDelivery: state.AppConfig.isExpressDelivery,
+    shipment: state.CheckoutReducer.shipment,
   };
 };
 
@@ -37,6 +39,10 @@ function CartTotal(props) {
     pageType,
     cashOnDeliveryFee,
     international_shipping_fee,
+    shipment: {
+      total_segments: shipmentTotal = [],
+    },
+    isExpressDelivery,
   } = props;
   const isArabic = checkIsArabic();
   const currency_code = getCurrency();
@@ -172,7 +178,7 @@ function CartTotal(props) {
               __("International Shipping Fee")
             )}
           {renderPriceLine(
-            getValueFromTotals(totals, "express_delivery_charges"),
+            getValueFromTotals(isExpressDelivery ? shipmentTotal : totals, "express_delivery_charges"),
             __("Express Service"),
           )}
           {renderPriceLine(
@@ -199,9 +205,10 @@ function CartTotal(props) {
             : null}
           {renderPriceLine(getValueFromTotals(totals, "tax"), __("Tax"))}
           {renderPriceLine(
-            pageType === "CartPage" || !cashOnDeliveryFee
+            pageType === "CartPage"
               ? grandTotal
-              : getValueFromTotals(totals, "grand_total"),
+              : (getValueFromTotals(isExpressDelivery ? shipmentTotal : totals, "grand_total") ??
+              getValueFromTotals(totals, "grand_total")),
             __("Total"),
             {
               divider: true,
