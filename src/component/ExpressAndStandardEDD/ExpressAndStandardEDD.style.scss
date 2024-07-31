@@ -37,10 +37,6 @@
       line-height: 0;
     }
 
-    @include mobile {
-      font-size: 11px;
-    }
-
     .EddExpressDeliveryText {
       display: flex;
       align-items: center;
@@ -64,7 +60,7 @@
 
     .EddExpressDeliveryTextNormal {
       font-weight: 400;
-      font-size: 12px;
+      font-size: 13px;
       margin: 0 3px;
     }
 
@@ -92,14 +88,12 @@
   flex-direction: column;
   border-radius: 8px;
   text-transform: initial;
+  margin-top: 10px;
 
   .EddStandardDeliveryTextBlock {
     display: flex;
     align-items: center;
 
-    @include mobile {
-      font-size: 11px;
-    }
 
     svg {
       width: 18px;
@@ -109,7 +103,7 @@
 
     .EddStandardDeliveryText {
       font-weight: 400;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .EddStandardDeliveryTextBold {
@@ -121,7 +115,7 @@
   .internationalShipmentTag {
     margin: 0;
     margin: 0 35px;
-    font-size: 10px;
+    font-size: 11px;
     color: #606060;
 
     .AdditionShippingInformationInternationalTag {

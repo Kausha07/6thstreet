@@ -749,14 +749,14 @@ export const checkProductOfficeServicable = ({
   addressType = "37303",
   isOfficeSameDayExpressServicable = true,
   isOfficeNextDayExpressServicable = true,
-  isTimeExpired = false,
+  isExpressTimeExpired = false,
   express_delivery_key = "",
 }) => {
   if (addressType === "37304") {
     if (
       isOfficeSameDayExpressServicable &&
       !isOfficeNextDayExpressServicable &&
-      isTimeExpired
+      isExpressTimeExpired
     ) {
       return false;
     } else if (
@@ -767,7 +767,7 @@ export const checkProductOfficeServicable = ({
     } else if (
       !isOfficeSameDayExpressServicable &&
       isOfficeNextDayExpressServicable &&
-      isTimeExpired
+      isExpressTimeExpired
     ) {
       return true;
     } else if (
@@ -795,7 +795,7 @@ export const getTodaysCutOffTime = ({
   cutOffTime = {},
   isPDP = false,
   simple_products = {},
-  sku = "",
+  selectedSizeCode = "",
   express_delivery_key = "",
   whs_quantity = 0,
   store_quantity = 0,
@@ -819,32 +819,50 @@ export const getTodaysCutOffTime = ({
     mp_cutoff_time = "00:00",
   } = data;
 
-  tempTodaysCutOffTime = isPDP
-    ? (+simple_products?.[sku]?.whs_quantity != 0 &&
-        inventoryCheck(
-          simple_products?.[sku]?.whs_quantity,
-          warehouse_cutoff_time
-        )) ||
-      (+simple_products?.[sku]?.store_quantity != 0 &&
-        inventoryCheck(
-          simple_products?.[sku]?.store_quantity,
-          store_cutoff_time
-        )) ||
-      (+simple_products?.[sku]?.mp_quantity != 0 &&
-        inventoryCheck(simple_products?.[sku]?.mp_quantity, mp_cutoff_time))
-    : (+whs_quantity != 0 &&
-        inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
-      (+store_quantity != 0 &&
-        inventoryCheck(store_quantity, store_cutoff_time)) ||
-      (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
+  tempTodaysCutOffTime =
+    isPDP && selectedSizeCode
+      ? (+simple_products?.[selectedSizeCode]?.whs_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.whs_quantity,
+            warehouse_cutoff_time
+          )) ||
+        (+simple_products?.[selectedSizeCode]?.store_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.store_quantity,
+            store_cutoff_time
+          )) ||
+        (+simple_products?.[selectedSizeCode]?.mp_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.mp_quantity,
+            mp_cutoff_time
+          ))
+      : (+whs_quantity != 0 &&
+          inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
+        (+store_quantity != 0 &&
+          inventoryCheck(store_quantity, store_cutoff_time)) ||
+        (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
 
   if (
     !tempTodaysCutOffTime &&
+    !selectedSizeCode &&
     express_delivery_key?.toLowerCase()?.includes("today")
   ) {
-    tempTodaysCutOffTime = warehouse_cutoff_time;
+    let {
+      whs = false,
+      store = false,
+      mp = false,
+    } = knowInventoryOnPageLoad(simple_products);
+
+    tempTodaysCutOffTime = whs
+      ? warehouse_cutoff_time
+      : store
+      ? store_cutoff_time
+      : mp
+      ? mp_cutoff_time
+      : "00:00";
   }
-  return tempTodaysCutOffTime;
+
+  return tempTodaysCutOffTime || "00:00";
 };
 
 export const getFinalExpressDeliveryKey = ({
@@ -871,7 +889,7 @@ export const getFinalExpressDeliveryKey = ({
 export const productOfficeServicable = ({
   cutOffTime = {},
   express_delivery_key = "",
-  isTimeExpired = false,
+  isExpressTimeExpired = false,
 }) => {
   const addressType = getNumericAddressType();
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
@@ -902,7 +920,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
@@ -914,7 +932,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
@@ -926,7 +944,7 @@ export const productOfficeServicable = ({
             addressType,
             isOfficeSameDayExpressServicable,
             isOfficeNextDayExpressServicable,
-            isTimeExpired,
+            isExpressTimeExpired,
             express_delivery_key,
           });
           break;
@@ -944,4 +962,30 @@ export const productOfficeServicable = ({
   }
 
   return isProductOfficeServicable;
+};
+
+export const knowInventoryOnPageLoad = (simple_products) => {
+  let whs = false;
+  let store = false;
+  let mp = false;
+
+  for (const key in simple_products) {
+    if (simple_products.hasOwnProperty(key)) {
+      const item = simple_products?.[key];
+      if (+item?.whs_quantity > 0) {
+        whs = true;
+        break;
+      }
+      if (+item?.store_quantity > 0) {
+        store = true;
+        break;
+      }
+      if (+item?.mp_quantity > 0) {
+        mp = true;
+        break;
+      }
+    }
+  }
+
+  return { whs, store, mp };
 };

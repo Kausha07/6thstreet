@@ -199,7 +199,7 @@ class HomePage extends PureComponent {
         <Helmet>
           <script type="application/ld+json">{this.appendSchemaData()}</script>
         </Helmet>
-        <main block="HomePage">
+        <main block={`HomePage ${isExpressDelivery ? "expressPageCSS" : null}`}>
           {this.renderMySignInPopup()}
           {!isExpressDelivery && <SignInSignUpMobileNudge />}
           {this.renderContent()}

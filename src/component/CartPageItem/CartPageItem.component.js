@@ -85,6 +85,7 @@ export class CartItem extends PureComponent {
     intlEddResponseState:{},
     isSignedIn: this.props.isSignedIn,
     setDraggable: true,
+    isExpressTimeExpired: false,
   };
 
   static defaultProps = {
@@ -908,6 +909,10 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
+  setTimerStateThroughProps = (val) => {
+    this.setState({ isExpressTimeExpired: val });
+  };
+
   renderEddWhenExpressEnabled = (crossBorder) => {
     const {
       edd_info,
@@ -960,6 +965,8 @@ export class CartItem extends PureComponent {
             whs_quantity={whs_quantity}
             store_quantity={store_quantity}
             mp_quantity={mp_quantity}
+            isExpressTimeExpired={this.state.isExpressTimeExpired}
+            setTimerStateThroughProps={this.setTimerStateThroughProps}
           />
         </Suspense>
       </div>

@@ -87,6 +87,7 @@ class PDPSummary extends PureComponent {
     intlEddResponseState: {},
     isMobile: isMobile.any() || isMobile.tablet(),
     tagsFromAddToCart: [],
+    isExpressTimeExpired: false,
   };
 
   getIdFromCityArea = (addressCityData, city, area) => {
@@ -973,6 +974,10 @@ class PDPSummary extends PureComponent {
     }
   };
 
+  setTimerStateThroughProps = (val) => {
+    this.setState({ isExpressTimeExpired: val });
+  };
+
   renderSelectCityForExpress(crossBorder) {
     const { isMobile, isArabic, selectedSizeCode } = this.state;
 
@@ -1002,42 +1007,48 @@ class PDPSummary extends PureComponent {
     }
 
     return (
-      <div block="EddParentExpressWrapper">
-        {isExpressDelivery &&
-          ((!crossBorder && !edd_info.has_item_level) ||
-            (edd_info.has_item_level && !crossBorder) ||
-            (edd_info.has_item_level &&
-              crossBorder &&
-              edd_info.international_vendors &&
-              edd_info.international_vendors.indexOf(international_vendor) ===
-                -1)) && (
-            <>
-              <CityArea
-                showBackgroundColor={false}
-                showEllipsisArea={true}
-                isToMakeEDDCallPage={false}
+      <>
+        <div block="SeperatorExpress"></div>
+        <div block="EddParentExpressWrapper">
+          {isExpressDelivery &&
+            ((!crossBorder && !edd_info.has_item_level) ||
+              (edd_info.has_item_level && !crossBorder) ||
+              (edd_info.has_item_level &&
+                crossBorder &&
+                edd_info.international_vendors &&
+                edd_info.international_vendors.indexOf(international_vendor) ===
+                  -1)) && (
+              <>
+                <CityArea
+                  showBackgroundColor={false}
+                  showEllipsisArea={true}
+                  isToMakeEDDCallPage={false}
+                  isPDP={true}
+                />
+                {this.renderExpressMsg()}
+              </>
+            )}
+          <div block="EddExpressWrapper">
+            <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+              <ExpressAndStandardEDD
+                express_delivery_home={express_delivery_home}
+                express_delivery_work={express_delivery_work}
+                express_delivery_other={express_delivery_other}
+                actualEddMess={actualEddMess}
+                simple_products={simple_products}
+                selectedSizeCode={selectedSizeCode}
+                splitKey={splitKey}
+                sku={sku}
                 isPDP={true}
+                international_vendor={international_vendor}
+                isExpressTimeExpired={this.state.isExpressTimeExpired}
+                setTimerStateThroughProps={this.setTimerStateThroughProps}
               />
-              {this.renderExpressMsg()}
-            </>
-          )}
-        <div block="EddExpressWrapper">
-          <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
-            <ExpressAndStandardEDD
-              express_delivery_home={express_delivery_home}
-              express_delivery_work={express_delivery_work}
-              express_delivery_other={express_delivery_other}
-              actualEddMess={actualEddMess}
-              simple_products={simple_products}
-              selectedSizeCode={selectedSizeCode}
-              splitKey={splitKey}
-              sku={sku}
-              isPDP={true}
-              international_vendor={international_vendor}
-            />
-          </Suspense>
+            </Suspense>
+          </div>
         </div>
-      </div>
+        <div block="SeperatorExpress"></div>
+      </>
     );
   }
 
@@ -1480,6 +1491,7 @@ class PDPSummary extends PureComponent {
           setStockAvailability={this.setStockAvailability}
           setSize={this.setSize}
           addTag={this.addTag}
+          isExpressTimeExpired={this.state.isExpressTimeExpired}
         />
       </>
     );
