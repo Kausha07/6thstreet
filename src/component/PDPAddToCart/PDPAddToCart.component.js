@@ -34,6 +34,7 @@ import CDN from "Util/API/provider/CDN";
 import {
   getFinalExpressDeliveryKey,
   checkProductExpressEligible,
+  productOfficeServicable,
 } from "Util/Common";
 
 class PDPAddToCart extends PureComponent {
@@ -285,6 +286,64 @@ class PDPAddToCart extends PureComponent {
     return null;
   }
 
+  checkSKUExpressEligible = (productStock, code, label) => {
+    const {
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      isExpressTimeExpired,
+      cutOffTime,
+    } = this.props;
+    const quantity = productStock[code].quantity;
+
+    const {
+      edd_info,
+      product: { international_vendor },
+      cross_border = 0,
+      product: {
+        express_delivery_home = "",
+        express_delivery_work = "",
+        express_delivery_other = "",
+      },
+    } = this.props;
+
+    const product = productStock[code];
+    const whs_quantity = +product?.whs_quantity || 0;
+    const store_quantity = +product?.store_quantity || 0;
+    const mp_quantity = +product?.mp_quantity || 0;
+    const express_delivery_key = getFinalExpressDeliveryKey({
+      isPDP: true,
+      express_delivery_home,
+      express_delivery_work,
+      express_delivery_other,
+    });
+
+    const isProductExpressEligible =
+      checkProductExpressEligible(express_delivery_key);
+
+    const isInternationalProduct =
+      edd_info?.international_vendors?.includes(international_vendor) ||
+      cross_border;
+
+    const isProductOfficeServicable = productOfficeServicable({
+      cutOffTime,
+      express_delivery_key,
+      isExpressTimeExpired,
+    });
+
+    const isExpressEligibleSKU =
+      isProductExpressEligible &&
+      this.state.selectedCityArea &&
+      !isInternationalProduct &&
+      isExpressServiceAvailable?.express_eligible &&
+      isExpressDelivery &&
+      isProductOfficeServicable &&
+      quantity !== 0 &&
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
+      !(+product?.quantity <= +product?.cross_border_qty);
+
+    return isExpressEligibleSKU;
+  };
+
   getSizeTypeSelect() {
     const {
       sizeObject = {},
@@ -333,8 +392,6 @@ class PDPAddToCart extends PureComponent {
       notifyMeLoading,
       notifyMeSuccess,
       popUpType = "",
-      isExpressDelivery,
-      isExpressServiceAvailable,
     } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const quantity = productStock[code].quantity;
@@ -357,45 +414,12 @@ class PDPAddToCart extends PureComponent {
     };
 
     const isCurrentSizeSelected = selectedSizeCode === code;
-    const {
-      edd_info,
-      product: { international_vendor },
-      cross_border = 0,
-      product: {
-        express_delivery_home = "",
-        express_delivery_work = "",
-        express_delivery_other = "",
-      },
-    } = this.props;
 
-    const product = productStock[code];
-    const whs_quantity = +product?.whs_quantity || 0;
-    const store_quantity = +product?.store_quantity || 0;
-    const mp_quantity = +product?.mp_quantity || 0;
-    const express_delivery_key = getFinalExpressDeliveryKey({
-      isPDP: true,
-      express_delivery_home,
-      express_delivery_work,
-      express_delivery_other,
-    });
-
-    // check product is express eligible  or not
-    const isProductExpressEligible =
-      checkProductExpressEligible(express_delivery_key);
-
-    const isInternationalProduct =
-      edd_info?.international_vendors?.includes(international_vendor) ||
-      cross_border;
-
-    const isExpressEligibleSKU =
-      isProductExpressEligible &&
-      this.state.selectedCityArea &&
-      !isInternationalProduct &&
-      isExpressServiceAvailable?.express_eligible &&
-      isExpressDelivery &&
-      quantity !== 0 &&
-      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
-      !(+product?.quantity <= +product?.cross_border_qty);
+    const isExpressEligibleSKU = this.checkSKUExpressEligible(
+      productStock,
+      code,
+      label
+    );
     return (
       <div
         block="PDPAddToCart-SizeSelector"

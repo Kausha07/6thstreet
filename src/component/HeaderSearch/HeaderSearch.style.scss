@@ -34,6 +34,34 @@
   }
 }
 
+.HeaderSearchSection {
+  .expressPOsitionCSS{
+    @include mobile {
+      position: fixed;
+      // display: flex;
+      padding-top: 12px !important;
+      height: 85px !important;
+      background: #F8F8F8 !important;
+
+      #header-search .Field {
+        margin: 0;
+        width: 100%;
+    
+        input {
+          background-color: #ffffff;
+          
+          &::placeholder{
+            color: #979797 !important;
+          }
+          @include mobile {
+            border: 0.5px solid #A9A9A9;
+          }
+        }
+      }
+    }
+  }
+}
+
 .HeaderSearch {
   position: absolute;
   z-index: 100;

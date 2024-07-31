@@ -87,6 +87,7 @@ class PDPSummary extends PureComponent {
     intlEddResponseState: {},
     isMobile: isMobile.any() || isMobile.tablet(),
     tagsFromAddToCart: [],
+    isExpressTimeExpired: false,
   };
 
   getIdFromCityArea = (addressCityData, city, area) => {
@@ -973,6 +974,10 @@ class PDPSummary extends PureComponent {
     }
   };
 
+  setTimerStateThroughProps = (val) => {
+    this.setState({ isExpressTimeExpired: val });
+  };
+
   renderSelectCityForExpress(crossBorder) {
     const { isMobile, isArabic, selectedSizeCode } = this.state;
 
@@ -1036,6 +1041,8 @@ class PDPSummary extends PureComponent {
                 sku={sku}
                 isPDP={true}
                 international_vendor={international_vendor}
+                isExpressTimeExpired={this.state.isExpressTimeExpired}
+                setTimerStateThroughProps={this.setTimerStateThroughProps}
               />
             </Suspense>
           </div>
@@ -1484,6 +1491,7 @@ class PDPSummary extends PureComponent {
           setStockAvailability={this.setStockAvailability}
           setSize={this.setSize}
           addTag={this.addTag}
+          isExpressTimeExpired={this.state.isExpressTimeExpired}
         />
       </>
     );

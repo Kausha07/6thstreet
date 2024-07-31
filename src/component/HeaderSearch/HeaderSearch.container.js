@@ -22,6 +22,7 @@ import { isMsiteMegaMenuBrandsRoute, saveBrandRecentSearch } from "Component/Sea
 export const mapStateToProps = (state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
@@ -221,6 +222,7 @@ export class HeaderSearchContainer extends PureComponent {
       handleHomeSearchClick,
       showMegaMenuHeaderSearchStyle,
       PlaceholderText,
+      isExpressDelivery,
     } = this.props;
     const { search } = this.state;
 
@@ -234,6 +236,7 @@ export class HeaderSearchContainer extends PureComponent {
       handleHomeSearchClick,
       showMegaMenuHeaderSearchStyle,
       PlaceholderText,
+      isExpressDelivery,
     };
   };
 
