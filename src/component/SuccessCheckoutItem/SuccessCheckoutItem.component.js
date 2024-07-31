@@ -298,9 +298,11 @@ export class SuccessCheckoutItem extends PureComponent {
           store_quantity = 0,
           whs_quantity = 0,
         },
+        sku,
         extension_attributes,
       },
       isExpressDelivery,
+      shipmentDetails
     } = this.props;
 
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -327,7 +329,7 @@ export class SuccessCheckoutItem extends PureComponent {
       <div block="EddExpressWrapper">
         <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
           <ExpressAndStandardEDD
-            express_delivery={express_delivery}
+            express_delivery={shipmentDetails[sku] !=0 ? express_delivery: null }
             actualEddMess={actualEddMess}
             splitKey={splitKey}
             isPDP={false}

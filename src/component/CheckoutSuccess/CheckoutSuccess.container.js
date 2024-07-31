@@ -291,6 +291,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
     const countryCode = getCountryFromUrl();
     const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+    const shipmentDetails = BrowserDatabase.getItem("SHIPMENT_DETAILS");
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -305,6 +306,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         : orderDetailsCartTotal,
       initialTotals: isRedirectPayment ? newInitialTotal : initialTotals,
       payMethodCode: { code: redirectPaymentMethod },
+      shipmentDetails
     };
   };
 

@@ -49,6 +49,7 @@ export const mapStateToProps = (state) => ({
   isCouponRequest: state.CartReducer.isCouponRequest,
   vwoData: state.AppConfig.vwoData,
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  shipment: state.CheckoutReducer.shipment,
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
