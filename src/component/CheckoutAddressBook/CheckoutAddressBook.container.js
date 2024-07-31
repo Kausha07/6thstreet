@@ -1,14 +1,11 @@
 import PropTypes from "prop-types";
+import { PureComponent } from 'react';
 import { connect } from "react-redux";
 
 import {
   ADD_ADDRESS,
   ADDRESS_POPUP_ID,
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
-import {
-  CheckoutAddressBookContainer as SourceCheckoutAddressBookContainer,
-  mapStateToProps,
-} from "SourceComponent/CheckoutAddressBook/CheckoutAddressBook.container";
 import { showPopup } from "Store/Popup/Popup.action";
 import { customerType } from "Type/Account";
 import CheckoutAddressBook from "./CheckoutAddressBook.component";
@@ -16,11 +13,20 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import { setSelectedAddressID } from "Store/MyAccount/MyAccount.action";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
 );
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+
+export const mapStateToProps = (state) => ({
+  customer: state.MyAccountReducer.customer,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  addresses: state.MyAccountReducer.addresses,
+});
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -32,10 +38,14 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.estimateEddResponse(dispatch, request, type)
     ),
-    setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
+  setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
+  selectIsAddressSet: (isAddress) =>
+    CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
 
-export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookContainer {
+export class CheckoutAddressBookContainer extends PureComponent {
   static propTypes = {
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
@@ -48,29 +58,94 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     isClickAndCollect: PropTypes.string.isRequired,
   };
 
+  static defaultProps = {
+    isBilling: false,
+    onAddressSelect: () => {},
+    onShippingEstimationFieldsChange: () => {}
+  };
+
   containerFunctions = {
     onAddressSelect: this.onAddressSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
   };
 
-  static _getDefaultAddressId(props) {
-    const { customer, isBilling, shippingAddress } = props;
-    const defaultKey = isBilling ? "default_billing" : "default_shipping";
-    const { [defaultKey]: defaultAddressId, addresses } = customer;
+  constructor(props) {
+    super(props);
+
+    const {
+        requestCustomerData,
+        customer,
+        onAddressSelect,
+        isSignedIn,
+        setCheckoutLoader,
+    } = props;
+
+    if (isSignedIn && !Object.keys(customer).length) {
+        requestCustomerData();
+    }
+
+    const defaultAddressId = CheckoutAddressBookContainer._getDefaultAddressId(props);
 
     if (defaultAddressId) {
-      return +defaultAddressId;
+        setCheckoutLoader(true);
+        onAddressSelect(defaultAddressId);
+        // this.estimateShipping(defaultAddressId);
     }
-    if (addresses && addresses.length) {
-      if(isBilling && shippingAddress && shippingAddress.address_id) {
+
+    this.state = {
+        prevDefaultAddressId: defaultAddressId,
+        selectedAddressId: defaultAddressId
+    };
+}
+
+  static _getDefaultAddressId(props) {
+    const { customer, isBilling, shippingAddress, addresses } = props;
+    const defaultKey = isBilling ? "default_billing" : "default_shipping";
+    const { [defaultKey]: defaultAddressId } = customer;
+    const reqObj = JSON.parse(localStorage.getItem("currentSelectedAddress"));
+
+    // if user selected address - from current country
+    if(reqObj && (reqObj?.country_code === getCountryFromUrl()) && reqObj.id) {
+      return +reqObj.id;
+    }
+
+    // if the user has default address selected
+    if (defaultAddressId) {
+      // check is default address belongs to current store
+      const defaultAddress = addresses.find(
+        ({ id }) => id === +defaultAddressId
+      );
+      if (
+        defaultAddress &&
+        defaultAddress?.country_code === getCountryFromUrl()
+      ) {
+        return +defaultAddressId;
+      }
+    }
+
+    // if user added address for current store
+    const countryWiseAddresses = addresses
+    ?.filter((obj) => obj?.country_code === getCountryFromUrl())
+    .sort((a, b) => {
+      if (a.default_shipping === true && b.default_shipping !== true) {
+        return -1;
+      }
+      if (a.default_shipping !== true && b.default_shipping === true) {
+        return 1;
+      }
+      return 0;
+    });
+
+    if(countryWiseAddresses && countryWiseAddresses.length) {
+      if(shippingAddress && shippingAddress.address_id){
         const { address_id } = shippingAddress;
         if(address_id){
           return address_id;
         }else {
-          return addresses[0].id;
+          return countryWiseAddresses[0].id;
         }
       }
-      return addresses[0].id;
+      return countryWiseAddresses[0].id;
     }
 
     return 0;
@@ -96,7 +171,6 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       : "";
     onTypeOfIdentityChange(typeOfIdentity);
     onIdentityNumberChange(identityNumber);
-    onAddressSelect(selectedAddressId);
     setSelectedAddressID(selectedAddressId);
   }
   componentDidUpdate(prevProps, prevState) {

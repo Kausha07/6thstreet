@@ -63,10 +63,6 @@
           }
 
           &-ContentWrapper {
-            @include before-desktop {
-              top: -90px;
-            }
-
             &_formContent {
               .MyAccountAddressBook {
                 &-backButton {
@@ -103,6 +99,9 @@
                   }
                 }
               }
+            }
+            @include mobile {
+              display: none;
             }
           }
 
@@ -236,6 +235,9 @@
   .CheckoutAddressBook {
     &-Wrapper {
       padding: 30px 20px;
+      @include mobile {
+        padding: 0;
+      }
     }
 
     .Checkout {

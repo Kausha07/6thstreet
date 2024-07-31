@@ -101,6 +101,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export class CartItemContainer extends PureComponent {
@@ -184,6 +185,7 @@ export class CartItemContainer extends PureComponent {
     international_shipping_fee: this.props.international_shipping_fee,
     config: this.props.config,
     vwoData: this.props.vwoData,
+    isExpressDelivery: this.props.isExpressDelivery,
   });
 
   /**
@@ -267,7 +269,7 @@ export class CartItemContainer extends PureComponent {
 
   removeEddData(sku) {
     const { edd_info, eddResponse } = this.props;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(edd_info && edd_info.is_enable && edd_info.has_item_level && eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length) {
       let obj = {};
       Object.keys(eddResponse).map(page => {
@@ -286,7 +288,7 @@ export class CartItemContainer extends PureComponent {
       if(obj && Object.keys(obj).length==0){
         this.props.setEddResponse(null, eddRequest);
       } else {
-        sessionStorage.setItem("EddAddressRes", obj);
+        localStorage.setItem("EddAddressRes", obj);
         this.props.setEddResponse(obj, JSON.parse(eddRequest));
       }
     }

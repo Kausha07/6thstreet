@@ -46,6 +46,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       countries,
       default_country,
       address: { city = null, country_code, area, type_of_identity, identity_number },
+      mailing_address_type,
     } = props;
     const countryId = country_code || default_country;
     const country = countries.find(({ id }) => id === countryId);
@@ -66,6 +67,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       identity_number: identity_number || "",
       validationError: false,
       isNationalityClick: null,
+      mailing_address_type: ""
     };
   }
 
@@ -125,8 +127,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
   };
 
+  onMailingAddressTypeChange = (val) => {
+    this.setState({ mailing_address_type: val });
+  };
+
   onFormSuccess = (fields) => {
-    const { onSave,setNewAddressSaved } = this.props;
+    const { onSave, setNewAddressSaved, address } = this.props;
     const {
       region_id,
       region_string: region,
@@ -137,6 +143,11 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     newAddress.telephone = this.addPhoneCode() + telephone;
     newAddress.type_of_identity = this.state.type_of_identity;
     newAddress.identity_number = this.state.identity_number;
+    newAddress.mailing_address_type = this.state.mailing_address_type
+      ? this.state.mailing_address_type
+      : address?.mailing_address_type
+      ? address?.mailing_address_type
+      : "37303";
     setNewAddressSaved(true);
     onSave(newAddress);
   };
@@ -358,6 +369,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       identity_number: identityNumber,
       isNationalityClick,
       validationError,
+      mailing_address_type,
     } = this.state;
 
     const clearValue = newForm ? { value: "" } : null;
@@ -433,6 +445,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         onIdentityNumberChange: this.onIdentityNumberChange,
         validationError: validationError,
       },
+      mailing_address_type: {
+        value: mailing_address_type,
+        onMailingAddressTypeChange: this.onMailingAddressTypeChange,
+      },
       default_common: {
         type: "toggle",
         label: __("Make default"),
@@ -455,7 +471,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   renderActions() {
-    const { isLoading } = this.props;
+    const { isLoading, isExpressDelivery } = this.props;
     const disabled = isLoading;
     return (
       <button
@@ -465,12 +481,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         disabled={disabled}
         mix={{ block: "button primary" }}
       >
-        {__("Save address")}
+        {isExpressDelivery ? __("Delivery Here") : __("Save address")}
       </button>
     );
   }
 
   renderDiscart() {
+    const { displayType = "" } = this.props;
+
+    if (displayType === "desktopPopUp") {
+      return null;
+    }
+    
     return (
       <button block="MyAccountBtn" elem="Discart" onClick={this.closeField}>
         {__("Cancel")}

@@ -144,6 +144,11 @@
       }
     }
 
+    margin-left: 6px;
+    &_isArabic {
+      margin-left: 0px;
+    }
+
     @include desktop() {
       height: 130px;
       width: 100%;
@@ -233,8 +238,14 @@
     font-family: "Avenir Next";
     font-size: 13px;
     letter-spacing: 0;
-    line-height: 30px;
+    line-height: 14px;
+    margin-top: 5px;
+    font-weight: 400;
 
+    &_brandName {
+      font-weight: 600;
+      text-transform: uppercase;
+    }
     &_isArabic {
       text-align: right;
     }
@@ -353,6 +364,7 @@
     font-size: 13px;
     letter-spacing: 0;
     line-height: 18px;
+    margin-top: 5px;
 
     span {
       font-family: "Avenir Next";
@@ -498,6 +510,20 @@
 
     &_isArabic {
       text-align: right;
+    }
+  }
+
+  .eddAndActionsBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .EddExpressWrapper {
+    min-width: 260px;
+    max-width: 260px;
+    .eddExpressDelivery{
+      margin-top: 0;
     }
   }
 }

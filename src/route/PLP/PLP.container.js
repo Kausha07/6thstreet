@@ -68,6 +68,7 @@ import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMulti
 import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { getAddressType } from "Util/Common/index";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -91,6 +92,7 @@ export const mapStateToProps = (state) => ({
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -825,9 +827,11 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
+    let isScrollBehaviour = category === `express_delivery_${getAddressType()}` ? true : false;
+
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1" && key !== "categories_without_path") {
-        WebUrlParser.setParam(key, activeFilters[key]);
+        WebUrlParser.setParam(key, activeFilters[key], [], isScrollBehaviour);
       }
     });
 
@@ -835,16 +839,14 @@ export class PLPContainer extends PureComponent {
     const key = "categories_without_path";
       //Below code is for Msite - here I am not sending category Ids to Algolia
     if(isMobile.any()) {
-      WebUrlParser.setParam(
-        key,
-        selectedFacetValues,
-      );
+      WebUrlParser.setParam(key, selectedFacetValues, [], isScrollBehaviour);
     }else {
       const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
       WebUrlParser.setParam(
         key,
         selectedFacetValues,
         selectedFacetCategoryIds,
+        isScrollBehaviour
       );
     }
   }
@@ -1074,6 +1076,16 @@ export class PLPContainer extends PureComponent {
         moreActiveFilters: newMoreActiveFilters,
       });
     }
+
+    if (
+      this.props.currentSelectedCityArea.mailing_address_type !=
+      prevProps.currentSelectedCityArea.mailing_address_type
+    ) {
+      const addressType = getAddressType(prevProps.currentSelectedCityArea);
+      this.onUnselectAllPress(`express_delivery_${addressType}`);
+      PLPContainer.requestProductList(this.props);
+    }
+    
     let element = document.getElementById(lastHomeItem);
     if (element) {
       // window.focus();

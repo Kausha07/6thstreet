@@ -26,7 +26,7 @@ import {
 } from "../../util/Common/index";
 
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { withRouter } from "react-router";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
@@ -40,8 +40,11 @@ import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getCurrency } from "Util/App";
 
-import { Shipping } from "Component/Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 import isMobile from "Util/Mobile";
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 /**
  * Cart and CartOverlay item
  * @class CartItem
@@ -905,6 +908,64 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
+  renderEddWhenExpressEnabled = (crossBorder) => {
+    const {
+      edd_info,
+      item: {
+        full_item_info: {
+          cross_border = 0,
+          express_delivery = "",
+          mp_quantity = 0,
+          store_quantity = 0,
+          whs_quantity = 0,
+        },
+        extension_attributes,
+      },
+      international_shipping_fee,
+      isExpressDelivery,
+    } = this.props;
+
+    let actualEddMess = this.formatEddMessage(crossBorder);
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    if (!actualEddMess) {
+      return null;
+    }
+
+    const isExpressProduct = false;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="AreaText" mods={{ isArabic }}>
+          <Shipping />
+          <span>{splitReadyByKey}</span>
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div block="EddExpressWrapper">
+        <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+          <ExpressAndStandardEDD
+            express_delivery={express_delivery}
+            actualEddMess={actualEddMess}
+            splitKey={splitKey}
+            isPDP={false}
+            isIntlBrand={isIntlBrand}
+            cross_border={cross_border}
+            isCart={true}
+            whs_quantity={whs_quantity}
+            store_quantity={store_quantity}
+            mp_quantity={mp_quantity}
+          />
+        </Suspense>
+      </div>
+    );
+  };
+
   renderEdd = (crossBorder) => {
     const { item: { extension_attributes } } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -965,6 +1026,7 @@ export class CartItem extends PureComponent {
       },
       intlEddResponse,
       international_shipping_fee,
+      isExpressDelivery,
     } = this.props;
     const { isNotAvailble } = this.state;
     const isIntlBrand =
@@ -984,13 +1046,19 @@ export class CartItem extends PureComponent {
         {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
-        {edd_info &&
+        {!isExpressDelivery && edd_info &&
           edd_info.is_enable &&
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)))) ?  this.renderIntlTag() : null}
+          {isExpressDelivery && edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_cart &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
+          !isNotAvailble &&
+          this.renderEddWhenExpressEnabled(cross_border === 1)}
+        {!isExpressDelivery && (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)))) ?  this.renderIntlTag() : null}
       </figcaption>
     );
   }

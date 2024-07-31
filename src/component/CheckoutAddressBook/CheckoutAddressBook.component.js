@@ -12,6 +12,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import MyAccountAddressNationalityFieldForm from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
 import { getStore } from "Store";
+import DeliveryAddress from "Component/DeliveryAddress";
 
 import "./CheckoutAddressBook.style.scss";
 
@@ -39,8 +40,12 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderHeading() {
-    const { isBilling, isSignedIn,isExchange } = this.props;
+    const { isBilling, isSignedIn, isExchange, isAddressSelected } = this.props;
     const { isArabic } = this.state;
+
+    if(isAddressSelected) {
+      return null;
+    }
 
     const addressName = isBilling ? null : isExchange ? ("Select a pick up address"): __("Delivery country");
 
@@ -55,6 +60,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     );
   }
 
+  editCheckoutAddress = () => {
+    const { selectIsAddressSet } = this.props;
+    selectIsAddressSet(false);
+  }
+
   renderCustomAddress() {
     const {
       isBilling,
@@ -63,9 +73,25 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       shippingAddress,
       isClickAndCollect,
       clickAndCollectStatus,
-      customer
+      customer,
+      selectedAddressId,
+      onAddressSelect,
+      isAddressSelected,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
+
+    if (isAddressSelected) {
+      return (
+        <div>
+          <DeliveryAddress
+            selectedAddressId={selectedAddressId}
+            onAddressSelect={onAddressSelect}
+            shippingAddress={shippingAddress}
+            editCheckoutAddress={this.editCheckoutAddress}
+          />
+        </div>
+      );
+    }
 
     return (
       <CheckoutAddressForm
@@ -139,7 +165,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderAddressList() {
-    const { addresses } = this.props;
+    const { addresses, selectedAddressId, onAddressSelect, shippingAddress } = this.props;
     const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
     if (!addresses) {
       return this.renderLoading();
@@ -147,6 +173,16 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     if (!addresses.length || isCountryNotAddressAvailable) {
       return this.renderNoAddresses();
     }
+
+    return (
+      <DeliveryAddress
+        selectedAddressId={selectedAddressId}
+        onAddressSelect={onAddressSelect}
+        shippingAddress={shippingAddress}
+        editCheckoutAddress={this.editCheckoutAddress}
+      />
+    );
+
     
     for(let i=1; i<addresses.length; i++){
       if(addresses[i].default_shipping){
@@ -161,28 +197,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
 
   renderSignedInContent() {
     const { currentPage, isArabic, isMobile } = this.state;
-
-    if (isMobile) {
-      return (
-        <div
-          block="CheckoutAddressBookSlider"
-          elem="Wrapper"
-          mods={{ isArabic }}
-        >
-          <Slider
-            mix={{
-              block: "CheckoutAddressBookSlider",
-              elem: "MobileSlider",
-              mods: { isArabic },
-            }}
-            activeImage={currentPage}
-            onActiveImageChange={this.mobileSliderCallback}
-          >
-            {this.renderAddressList()}
-          </Slider>
-        </div>
-      );
-    }
 
     return (
       <div block="CheckoutAddressBook" elem="Wrapper">

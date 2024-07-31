@@ -231,6 +231,47 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
   return false;
 };
 
+const getAddressType = () => {
+  const currentSelectedAddress =
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+
+  if (currentSelectedAddress) {
+    switch (currentSelectedAddress?.mailing_address_type) {
+      case "37303":
+        return "home";
+      case "37304":
+        return "work";
+      case "37305":
+        return "other";
+      default:
+        return "home";
+    }
+  }
+  return "";
+};
+
+const expressDataOBJ = ({ allFacets }) => {
+  const addressType = getAddressType();
+  let facetKey = `express_delivery_${addressType}`;
+  const data = allFacets?.[facetKey];
+  if (data) {
+    const result = Object?.keys?.(data)?.reduce((acc, facetValue) => {
+      acc[facetValue] = {
+        facet_value: facetValue,
+        facet_key: facetKey,
+        label: getFacetLabel(facetValue),
+        is_selected: false,
+        product_count: data[facetValue],
+      };
+
+      return acc;
+    }, {});
+
+    return result;
+  }
+  return {};
+};
+
 function getFilters({
   locale,
   facets,
@@ -353,6 +394,16 @@ function getFilters({
     data: getPriceRangeData({ currency, lang }),
     newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
     isPriceFilterAvailable: getIsPriceFilterAvaialbe(facets_stats, currency),
+  };
+
+  // ExpressDelivery
+  let expressFacetKey = `express_delivery_${getAddressType()}`;
+  filtersObject[expressFacetKey] = {
+    label: translate(expressFacetKey, lang),
+    category: expressFacetKey,
+    is_radio: false,
+    selected_filters_count: 0,
+    data: expressDataOBJ({ allFacets: facets }),
   };
 
   // Discount

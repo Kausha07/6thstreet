@@ -1,0 +1,280 @@
+.NewCheckoutOrderShippment {
+  cursor: pointer;
+  &-CartItemList {
+    .NewShippmentItem {
+      border: 1px solid #d1d3d4;
+      padding: 20px 15px;
+      margin-bottom: 0;
+      border-bottom: none;
+
+      &:last-child {
+        border-bottom: 1px solid #d1d3d4;
+      }
+
+      @include mobile {
+        border: none;
+        border-bottom: 1px solid #d1d3d4;
+      }
+
+      .CartItemHeading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .NumOfShipments {
+          font-family: Avenir Next;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        .ShippedBy {
+          font-family: Avenir Next;
+          font-size: 10px;
+          font-weight: 400;
+        }
+      }
+
+      .ExpressOrStandadrdDeliverySelection {
+        margin: 15px 0;
+        .ExpressDeliveryBlock {
+          border: 0.2px solid #d1d3d4;
+          display: flex;
+          justify-content: space-between;
+          background: #fff2f0;
+          align-items: center;
+          height: 52px;
+          padding: 0 10px 0px 30px;
+          cursor: pointer;
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+          }
+
+          &::before {
+            top: 20px;
+            left: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+
+          &::after {
+            opacity: 0;
+          }
+
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 20px;
+              left: 9px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+
+          .EddExpressDelivery {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-transform: initial;
+
+            svg {
+              width: 24px;
+              height: 24px;
+              margin: 0 7px;
+            }
+
+            .EddExpressDeliveryTextBlock {
+              display: flex;
+              align-items: center;
+
+              @include mobile {
+                font-size: 11px;
+              }
+
+              .EddExpressDeliveryTextRed {
+                color: #f96446;
+                font-weight: 600;
+                font-style: italic;
+                font-size: 13px;
+              }
+
+              .EddExpressDeliveryTextNormal {
+                font-weight: 400;
+                font-size: 12px;
+              }
+
+              .EddExpressDeliveryTextBold {
+                font-weight: 600;
+                margin: 0 5px;
+                font-size: 13px;
+              }
+
+              .expressVipImage {
+                background-size: 26px;
+                width: 27px;
+                height: 12px;
+                display: flex;
+                font-size: 0;
+                margin: 0 3px;
+              }
+
+              .EddExpressDeliveryText {
+                display: flex;
+              }
+            }
+          }
+
+          .EddExpressDeliveryCutOffTime {
+            font-size: 10px;
+            font-weight: 400;
+            color: #606060;
+            margin-top: 2px;
+            margin: 2px 12px;
+          }
+
+          .ExpressPrice {
+            font-family: Avenir Next;
+            font-size: 10px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+
+            &-freeExpressText {
+              color: #28D9AA;
+              padding-bottom: 5px;
+            }
+            &-freeExpressPrice {
+              text-decoration: line-through;
+            }
+          }
+        }
+
+        .StandardDeliveryBlock {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 0.2px solid #d1d3d4;
+          border-top: none;
+          cursor: pointer;
+
+          padding: 0 10px 0 40px;
+          height: 52px;
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+          }
+
+          &::before {
+            top: 20px;
+            left: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+
+          &::after {
+            opacity: 0;
+          }
+
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 20px;
+              left: 9px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+
+          .EddStandardDelivery {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-transform: initial;
+            height: 40px;
+
+            .EddStandardDeliveryTextBlock {
+              display: flex;
+              align-items: center;
+
+              @include mobile {
+                font-size: 11px;
+              }
+
+              svg {
+                width: 15px;
+                height: 15px;
+                margin: 0 4px;
+              }
+
+              .EddStandardDeliveryText {
+                font-weight: 400;
+                font-size: 11px;
+              }
+
+              .EddStandardDeliveryTextBold {
+                font-weight: 600;
+                margin: 0 5px;
+                font-size: 12px;
+              }
+            }
+
+            .internationalShipmentTag {
+              .AdditionShippingInformation {
+                margin: 0 25px;
+                font-size: 10px;
+                color: #606060;
+              }
+            }
+          }
+
+          .StandardPrice {
+            font-family: Avenir Next;
+            font-size: 10px;
+            font-weight: 500;
+          }
+        }
+        .topBorder {
+          border-top: 0.2px solid #d1d3d4;
+        }
+      }
+
+      .ProductInfo {
+        .CartItem {
+          margin: 0;
+        }
+      }
+    }
+    .NewShippmentItem::before {
+      content: "";
+    }
+  }
+}

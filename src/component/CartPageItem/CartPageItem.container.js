@@ -63,6 +63,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -166,7 +167,7 @@ export class CartItemContainer extends PureComponent {
   };
 
   getCityAreaFromStorage = (addressCityData, countryCode) => {
-    const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+    const sessionData = JSON.parse(localStorage.getItem("EddAddressReq"));
     const { city, area } = sessionData;
     const { cityEntry, areaEntry } = this.getIdFromCityArea(
       addressCityData,
@@ -230,10 +231,10 @@ export class CartItemContainer extends PureComponent {
     } else if (
       isSignedIn() &&
       !defaultShippingAddress &&
-      sessionStorage.getItem("EddAddressReq")
+      localStorage.getItem("EddAddressReq")
     ) {
       this.getCityAreaFromStorage(addressCityData, countryCode);
-    } else if (!isSignedIn() && sessionStorage.getItem("EddAddressReq")) {
+    } else if (!isSignedIn() && localStorage.getItem("EddAddressReq")) {
       this.getCityAreaFromStorage(addressCityData, countryCode);
     } else {
       setEddResponse(null, null);
@@ -379,7 +380,7 @@ export class CartItemContainer extends PureComponent {
 
   removeEddData(sku) {
     const { edd_info, eddResponse } = this.props;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(edd_info && edd_info.is_enable && edd_info.has_item_level && eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length) {
       let obj = {};
       Object.keys(eddResponse).map(page => {
@@ -398,7 +399,7 @@ export class CartItemContainer extends PureComponent {
       if(obj && Object.keys(obj).length==0){
         this.props.setEddResponse(null, eddRequest);
       } else {
-        sessionStorage.setItem("EddAddressRes", obj);
+        localStorage.setItem("EddAddressRes", obj);
         this.props.setEddResponse(obj, JSON.parse(eddRequest));
       }
     }

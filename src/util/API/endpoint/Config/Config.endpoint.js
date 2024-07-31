@@ -31,7 +31,7 @@ export const getBottomNavigationConfig = () => {
 export const getABTestingConfig = () => {
   try {
     const configFile = "abtestConfig.json";
-    const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
+    const directory = process.env.REACT_APP_REMOTE_ABCONFIG_DIR;
     const abTestConfigResponse = CDN.get(`${directory}/${configFile}`);
     return abTestConfigResponse;
   } catch (error) {

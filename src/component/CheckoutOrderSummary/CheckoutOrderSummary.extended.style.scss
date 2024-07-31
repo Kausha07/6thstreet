@@ -10,7 +10,7 @@
     &-HeaderWrapper {
         display: flex;
         // margin-top: 20px;
-        padding: 25px 18px 0;
+        padding: 25px 18px 20px;
         @include tablet {
             padding-left: 0;
             padding-right: 0;
@@ -22,7 +22,7 @@
     }
     &-ItemCount {
         flex: 50%;
-        font-weight: var(--fw-demi);
+        font-weight: 500;
         font-size: 18px;
         line-height: 25px;
     }
@@ -568,5 +568,15 @@
         font-size: 15px;
         font-weight: var(--fw-bold);
         color: #13CA75;
+    }
+}
+
+.summaryWrapper {
+    border: 1px solid #d1d3d4;
+    margin-bottom: 10px;
+
+    @include mobile {
+        border: none;
+        margin-bottom: 0;
     }
 }

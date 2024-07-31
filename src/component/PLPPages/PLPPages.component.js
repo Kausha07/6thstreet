@@ -23,9 +23,11 @@ import { getIsShowMoreFilters } from "./utils/PLPPages.helper";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
 import { getSelectedFiltersFacetValues, getCategoryIds } from "Route/PLP/utils/PLP.helper";
 import { Helmet } from 'react-helmet';
+import { getAddressType } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 class PLPPages extends PureComponent {
@@ -217,7 +219,8 @@ class PLPPages extends PureComponent {
 
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
-    const inlineFilterList = this.getInlineFilterList(filters);
+    let inlineFilterList = this.getInlineFilterList(filters);
+    let expressDeliveryKeyLabel = `express_delivery_${getAddressType()}`;
 
     const keyLabel = {
       discount: __("Discount"),
@@ -226,7 +229,34 @@ class PLPPages extends PureComponent {
       sort: __("Sort by"),
       age: __("Age"),
     };
-
+    keyLabel[expressDeliveryKeyLabel] = __("Delivery Time");
+    if (
+      this.props.isExpressDelivery &&
+      inlineFilterList?.[expressDeliveryKeyLabel] &&
+      JSON.stringify(inlineFilterList?.[expressDeliveryKeyLabel]?.data) !== "{}"
+    ) {
+      const expressDeliveryFilterOBJ =
+        inlineFilterList[expressDeliveryKeyLabel];
+      delete inlineFilterList[expressDeliveryKeyLabel];
+  
+      // Prepare a new object to reorder keys
+      let reOrderedResponse = {};
+  
+      // Insert express delivery key as the second key
+      let count = 0;
+      Object.keys(inlineFilterList).forEach((key) => {
+        count++;
+        if (count === 1) {
+          reOrderedResponse[key] = inlineFilterList[key]; // keep the first key
+          reOrderedResponse[expressDeliveryKeyLabel] = expressDeliveryFilterOBJ; // insert after the first key
+        } else {
+          reOrderedResponse[key] = inlineFilterList[key];
+        }
+      });
+  
+      inlineFilterList = { ...reOrderedResponse };
+    }
+   
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;
     const filterIndex = index === 0 || !requiredPages ? null : index;
@@ -240,6 +270,7 @@ class PLPPages extends PureComponent {
       filterKey && filterKey.includes("price")
         ? __("Price Range")
         : keyLabel[filterKey];
+
     return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
   };
 
@@ -366,7 +397,7 @@ class PLPPages extends PureComponent {
     } =
       this.props;
     const { activeFilters } = this.state;
-    const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
+    let { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
       this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
       return (

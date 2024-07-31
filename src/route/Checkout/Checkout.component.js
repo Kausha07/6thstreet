@@ -101,11 +101,12 @@ export class Checkout extends SourceCheckout {
     processingLoader: false,
     careemPayInfo:{},
     careemPayStatus: "",
-    type_of_identity: 0,
+    type_of_identity: "0",
     identity_number : "",
     validationError: false,
     isNationalityClick: true,
     isIdentityNumberModified: false,
+    mailing_address_type: "37303",
   };
 
   onIdentityNumberChange = (value) => {
@@ -122,6 +123,10 @@ export class Checkout extends SourceCheckout {
     }else {
       this.setState({ type_of_identity : typeOfIdentityValue, isNationalityClick : false });
     }
+  };
+
+  onMailingAddressTypeChange = (val) => {
+    this.setState({ mailing_address_type: val });
   };
 
   getArabicCityArea = (city, area) => {
@@ -219,22 +224,21 @@ export class Checkout extends SourceCheckout {
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
     }
-    if (checkoutStep === SHIPPING_STEP && cashOnDeliveryFee) {
-      this.setState({ cashOnDeliveryFee: null });
-      const countryCode = ["AE", "SA"].includes(getCountryFromUrl());
-      selectPaymentMethod(
-        countryCode && !!!window.ApplePaySession ? CHECKOUT_APPLE_PAY : CARD
-      )
-        .then(() => {
-          updateTotals(cartId);
-          finishPaymentRequest();
-        })
-        .catch(() => {
-          const { showError } = this.props;
-
-          showError(__("Something went wrong"));
-        });
-    }
+    // if (checkoutStep === SHIPPING_STEP && cashOnDeliveryFee) {
+    //   this.setState({ cashOnDeliveryFee: null });
+    //   const countryCode = ["AE", "SA"].includes(getCountryFromUrl());
+    //   selectPaymentMethod(
+    //     countryCode && !!!window.ApplePaySession ? CHECKOUT_APPLE_PAY : CARD
+    //   )
+    //     .then(() => {
+    //       updateTotals(cartId);
+    //       finishPaymentRequest();
+    //     })
+    //     .catch(() => {
+    //       const { showError } = this.props;
+    //       showError(__("Something went wrong"));
+    //     });
+    // }
     if (
      ( prevState?.identity_number !== this.state?.identity_number ||
       prevState?.type_of_identity !== this.state?.type_of_identity) && !this.state.isIdentityNumberModified
@@ -497,7 +501,14 @@ export class Checkout extends SourceCheckout {
       addresses,
       isClubApparelEnabled
     } = this.props;
-    const { isArabic, cashOnDeliveryFee, type_of_identity = 0, identity_number = "", validationError } = this.state;
+    const {
+      isArabic,
+      cashOnDeliveryFee,
+      type_of_identity = 0,
+      identity_number = "",
+      validationError,
+      mailing_address_type = "",
+    } = this.state;
 
     const { 
       couponsItems=[],
@@ -550,6 +561,8 @@ export class Checkout extends SourceCheckout {
           validationError={validationError}
           onIdentityNumberChange={this.onIdentityNumberChange}
           onTypeOfIdentityChange={this.onTypeOfIdentityChange}
+          onMailingAddressTypeChange={this.onMailingAddressTypeChange}
+          mailing_address_type={mailing_address_type}
         />
       </>
     );
@@ -742,6 +755,20 @@ export class Checkout extends SourceCheckout {
       config: { countries },
       config,
       is_nationality_mandatory = false,
+      addresses,
+      paymentMethods = [],
+      getBinPromotion,
+      updateTotals,
+      processApplePay,
+      placeOrder,
+      couponsItems=[],
+      removeCouponFromCart,
+      couponLists,
+      applyCouponToCart,
+      isClubApparelEnabled,
+      isAddressAdded,
+      setIsAddressAdded,
+      selectedPaymentMethod,
     } = this.props;
 
     let platform = "";
@@ -752,7 +779,16 @@ export class Checkout extends SourceCheckout {
     }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
-    const { continueAsGuest, isArabic, type_of_identity = 0, identity_number = "", validationError = false, isIdentityNumberModified = false } = this.state;
+    const {
+      continueAsGuest,
+      isArabic,
+      type_of_identity = 0,
+      identity_number = "",
+      validationError = false,
+      isIdentityNumberModified = false,
+      mailing_address_type = "",
+      cashOnDeliveryFee,
+    } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
@@ -780,6 +816,32 @@ export class Checkout extends SourceCheckout {
           onIdentityNumberChange={this.onIdentityNumberChange}
           onTypeOfIdentityChange={this.onTypeOfIdentityChange}
           isIdentityNumberModified={isIdentityNumberModified}
+          onMailingAddressTypeChange={this.onMailingAddressTypeChange}
+          mailing_address_type={mailing_address_type}
+          savePaymentInformationApplePay={this.savePaymentInformationApplePay}
+          setCashOnDeliveryFee={this.setCashOnDeliveryFee}
+          addresses={addresses}
+          paymentMethods={paymentMethods}
+          setDetailsStep={setDetailsStep}
+          savePaymentInformation={this.savePaymentInformation}
+          getBinPromotion={getBinPromotion}
+          updateTotals={updateTotals}
+          setTabbyWebUrl={this.setTabbyWebUrl}
+          setPaymentCode={this.setPaymentCode}
+          binModal={this.showModal}
+          setCheckoutCreditCardData={this.setCheckoutCreditCardData}
+          processApplePay={processApplePay}
+          placeOrder={placeOrder}
+          couponsItems={couponsItems}
+          removeCouponFromCart={removeCouponFromCart}
+          couponLists={couponLists}
+          applyCouponToCart={applyCouponToCart}
+          isClubApparelEnabled={isClubApparelEnabled}
+          cashOnDeliveryFee={cashOnDeliveryFee}
+          isAddressAdded={isAddressAdded}
+          setIsAddressAdded={setIsAddressAdded}
+          setShippingAddress={setShippingAddressCareem}
+          selectedPaymentMethod={selectedPaymentMethod}
         />
       </div>
     );
@@ -790,13 +852,6 @@ export class Checkout extends SourceCheckout {
           ? null
           : this.renderHeading(__("Login / Sign Up"), false)}
         <div block="Checkout" elem="GuestCheckout" mods={{ continueAsGuest }}>
-          {continueAsGuest ? (
-            <h3 block="Checkout" elem="DeliveryMessageGuest">
-              {isClickAndCollect
-                ? __("Please Confirm your contact details")
-                : __("Where can we send your order?")}
-            </h3>
-          ) : null}
           {this.renderGuestForm()}
           <div
             block="Checkout"
@@ -1031,7 +1086,6 @@ export class Checkout extends SourceCheckout {
             label={__("Checkout page")}
           >
             <div block="Checkout" elem="Step">
-              {isSuccess ? null : this.renderTitle()}
               {this.renderStep()}
               {this.renderLoader()}
             </div>

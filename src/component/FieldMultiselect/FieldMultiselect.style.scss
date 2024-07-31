@@ -158,6 +158,16 @@ $select-arrow-width: 6px !default;
       }
     }
   }
+  .cityAreaAddressSelection {
+    .cityAreaDropdown {
+      max-width: 90%;
+      padding: 10px;
+      @include mobile{
+        margin: 0 auto;
+      }
+      
+    }
+  }
 
   //   &-sizesOption:nth-child(1){
   //   }
@@ -466,6 +476,15 @@ $select-arrow-width: 6px !default;
       flex-direction: column;
       margin: -20px;
       width: 10%;
+    }
+  }
+
+  .expressNotificationPara {
+    font-size: 13px;
+    margin: 5px;
+    
+    &_isArabic {
+      direction: rtl;
     }
   }
 }

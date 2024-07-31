@@ -30,6 +30,8 @@ import Event,{
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { ExpressDeliveryTruck } from "Component/Icons";
+import { getAddressType } from "Util/Common/index";
 
 class PLPFilterOption extends PureComponent {
   static propTypes = {
@@ -336,6 +338,31 @@ class PLPFilterOption extends PureComponent {
           {!isArabic()
               ? label
             : null}
+          {product_count && this.renderCount()}
+        </label>
+      );
+    }
+
+    if (facet_key === `express_delivery_${getAddressType()}`) {
+      let finalLabel = label;
+      const words = label?.split(" ");
+      if (words.length > 1) {
+        finalLabel = `${words[0]}`;
+      }
+
+      return (
+        <label block="PLPFilterOption" htmlFor={facet_value}>
+          <ExpressDeliveryTruck style={{ height: "24px", width: "24px" }} />
+          <span
+            style={{
+              color: "#f96446",
+              "font-weight": "600",
+              "font-style": "italic",
+            }}
+          >
+            {__("Express")}
+          </span>
+          <span>{finalLabel}</span>
           {product_count && this.renderCount()}
         </label>
       );

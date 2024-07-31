@@ -28,6 +28,9 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
+  "express_delivery_home",
+  "express_delivery_work",
+  "express_delivery_other",
 ];
 
 const MORE_FILTERS = [
@@ -302,6 +305,11 @@ const config = {
       "color_hex",
       "rating_brand",
       "rating_sku",
+      "express_delivery_home",
+      "express_delivery_work",
+      "express_delivery_other",
+      "international_vendor",
+      "cross_border",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

@@ -33,6 +33,7 @@ import { Coupon } from "Component/Icons/index";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CartTotal from "Component/CartTotal";
 import { handleSwcToPromoCall } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
+import NewCheckoutShippment from "Component/NewCheckoutShippment";
 
 import "./CheckoutOrderSummary.extended.style";
 
@@ -112,37 +113,24 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="HeaderWrapper">
         <span block="CheckoutOrderSummary" elem="ItemCount">
-          {totalQuantity}
-          {totalQuantity === 1 ? __(" Item") : __(" Items")}
+          {__(" Coupon & offer ")}
         </span>
-        <Link
-          block="CheckoutOrderSummary"
-          elem="Edit"
-          mods={{ isArabic }}
-          to="/cart"
-        >
-          <span>{__(" Edit")}</span>
-        </Link>
       </div>
     );
   }
 
   renderItems() {
     const {
-      totals: { items = [] },
+      totals: { items = [], quote_currency_code },
+      isSignedIn,
     } = this.props;
 
     return (
-      <div block="CheckoutOrderSummary" elem="OrderItems">
-        <ul block="CheckoutOrderSummary" elem="CartItemList">
-          {
-            items.map((item) => (
-              React.cloneElement(this.renderItem(item), {
-                readOnly: true
-              })
-            ))}
-        </ul>
-      </div>
+      <NewCheckoutShippment
+        items={items}
+        quote_currency_code={quote_currency_code}
+        isSignedIn={this.props.isSignedIn}
+      />
     );
   }
 
@@ -597,8 +585,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         eligible_amount,
       },
     } = this.props;
+    const { isMobile } = this.state;
 
-    if (!isSignedIn()) {
+    if (!isSignedIn() || isMobile) {
       return null;
     }
 
@@ -718,6 +707,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 __("International Shipping Fee")
               )}
             {this.renderPriceLine(
+                getDiscountFromTotals(totals, "express_delivery_charges"),
+                __("Express Service")
+              )}
+            {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
               __("My Cash"),
               { couponSavings: true }
@@ -765,13 +758,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
         <Loader isLoading={isCouponRequest} />
-        {this.renderHeading()}
-        {this.renderItems()}
-        {this.renderToggleableDiscountOptions()}
-        {/* {this.renderCartCoupon()} */}
-        {isMobile ? "" : this.renderDiscountCode()}
-        {this.renderPromo()}
-        {this.renderTotals()}
+        <div className="summaryWrapper">
+          {this.renderHeading()}
+          {isMobile ? "" : this.renderDiscountCode()}
+          {this.renderPromo()}
+          {this.renderToggleableDiscountOptions()}
+          {this.renderTotals()}
+        </div>
+        {isMobile ? null : this.renderItems()}
       </article>
     );
   }

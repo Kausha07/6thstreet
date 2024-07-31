@@ -24,6 +24,7 @@ export class AppConfigDispatcher {
     const siteWideCampaignName = abTestingConfig?.SiteWideCoupon?.campaignName || "swc";
     const HPPCampaignName = abTestingConfig?.HPP?.campaignName || "hpp";
     const newPDPCompaignName = abTestingConfig?.NewPDP?.campaignName || "new-PDP";
+    const expressCampaignName = abTestingConfig?.Express?.campaignName || "ExpressDeliveryUAE";
     const countryCode = getCountryFromUrl()?.toLowerCase();
     const userAgent = window?.navigator?.userAgent;
     // const ipResponse = await fetch('https://api.ipify.org/?format=json'');
@@ -84,6 +85,52 @@ export class AppConfigDispatcher {
         }
         return result;
     }
+
+    const getVwoDataExpressDelivery = () => {
+        const isEnable = config?.countries?.[country]?.isExpressDelivery || false;
+        const callVwo = abTestingConfig?.Express?.getConfigVwo || false;
+        let defaultVariationName =
+          abTestingConfig?.Express?.defaultVariant || "c";
+        let campaignName =
+          abTestingConfig?.Express?.campaignName || "ExpressDeliveryUAE";
+        let isExpressDeliveryEnable = defaultVariationName !== "c" ? true : false;
+  
+        let result = {
+          variationName: defaultVariationName,
+          vwo: "0",
+          campaignName,
+          isFeatureEnabled:
+            defaultVariationName === "c"
+              ? false
+              : abTestingConfig?.Express?.variable?.[0]?.defaultValue,
+        };
+  
+        if (isEnable && callVwo) {
+          const isFeatureEnabled = vwoClientInstance.isFeatureEnabled(
+            campaignName,
+            `${userId}`,
+            options
+          );
+  
+          const variationName = vwoClientInstance.getVariationName(
+            campaignName,
+            `${userId}`,
+            options
+          );
+  
+          result = {
+            variationName: variationName ? variationName : defaultVariationName,
+            vwo: variationName ? "1" : "0",
+            campaignName,
+            isFeatureEnabled: variationName
+              ? variationName === "c"
+                ? false
+                : true
+              : isFeatureEnabled,
+          };
+        }
+        return result;
+      };
     // Get Logged in User Variations from VWO tool
     try {
         if (userId && window.vwoClientInstance) {
@@ -134,6 +181,8 @@ export class AppConfigDispatcher {
                 campaignName: HPPCampaignName,
             }
             let NewPDP = getVwoDataNewPDP();
+            let Express = getVwoDataExpressDelivery();
+
             const pushData = {
                 [siteWideCampaignName]: {
                     "vwo":  SiteWideCoupon.vwo,
@@ -146,12 +195,15 @@ export class AppConfigDispatcher {
                 [NewPDP.campaignName] : {
                     "vwo": NewPDP.vwo,
                     "val": NewPDP.variationName
+                },
+                [Express.campaignName] : {
+                    "vwo": Express.vwo,
+                    "val": Express.variationName,
                 }
             }
             console.log("vwo event",{ ...pushData, ...options.customVariables, userAgent });
             window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
-            
-            return { SiteWideCoupon, HPP, NewPDP };
+            return { SiteWideCoupon, HPP, NewPDP, Express };
         } else {
             return {
                 SiteWideCoupon : {
@@ -170,6 +222,12 @@ export class AppConfigDispatcher {
                     variationName: abTestingConfig?.NewPDP?.variationName,
                     vwo: '0',
                     campaignName: newPDPCompaignName
+                },
+                Express : {
+                    variationName: abTestingConfig?.Express?.variationName,
+                    vwo: '0',
+                    campaignName: expressCampaignName,
+                    isFeatureEnabled: false,
                 } 
             }
         }
@@ -180,15 +238,17 @@ export class AppConfigDispatcher {
 
     async getAppConfig(dispatch) {
         try {
+            const countryCode = getCountryFromUrl().toLowerCase();
             const customer = BrowserDatabase.getItem("customer") || {};
             const bottomNavigationConfig = await getBottomNavigationConfig();
             const config = await getConfig();
             const gtmConfig = this.getGtmConfig();
             const abTestingConfigData = await getABTestingConfig();
+            const abTestingConfigDataCountrySpecific = abTestingConfigData?.[countryCode] || abTestingConfigData;
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
-            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
+            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigDataCountrySpecific, config ) || null;
             dispatch(setAppConfig(appConfig));
-            dispatch(setABTestingConfig(abTestingConfigData));
+            dispatch(setABTestingConfig(abTestingConfigDataCountrySpecific));
             vwoData ? dispatch(setVWOConfig(vwoData)) : null;
         } catch (e) {
             Logger.log(e);
@@ -198,10 +258,12 @@ export class AppConfigDispatcher {
     // this function run at the time of user sign in or sign out
     async updateVWOData(dispatch, config={}) {
         try {
+            const countryCode = getCountryFromUrl().toLowerCase();
             const customer = BrowserDatabase.getItem("customer") || {};
             const abTestingConfigData = await getABTestingConfig();
-            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
-            dispatch(setABTestingConfig(abTestingConfigData));
+            const abTestingConfigDataCountrySpecific = abTestingConfigData?.[countryCode] || abTestingConfigData;
+            const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigDataCountrySpecific, config ) || null;
+            dispatch(setABTestingConfig(abTestingConfigDataCountrySpecific));
             vwoData ? dispatch(setVWOConfig(vwoData)) : null;
         } catch (e) {
             Logger.log(e);

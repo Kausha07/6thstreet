@@ -17,6 +17,7 @@ import Event, {
 } from "Util/Event";
 import { parseURL } from "Util/Url";
 import { setPDPData } from "Store/PDP/PDP.action";
+import ExpressDeliveryTag from "Component/ExpressDeliveryTag";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -129,6 +130,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     );
   }
 
+  renderExpressDeliveryTag = (data) => {
+    return <ExpressDeliveryTag productInfo={data} />;
+  };
+
   render() {
     const {
       data: {
@@ -193,6 +198,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           data={data}
           pageType={pageType}
         />
+        {this.renderExpressDeliveryTag(data)}
       </div>
     );
   }

@@ -1,0 +1,152 @@
+.address-card {
+  padding: 20px;
+  // max-width: 600px;
+  max-height: 215px;
+  margin: 0px auto;
+
+  @include desktop {
+    padding-top: 0;
+  }
+
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      text-transform: none;
+      font-weight: 600;
+    }
+
+    .editAddressBtn {
+      color: #9b9b9b;
+    }
+  }
+
+  &-change-address {
+    font-size: 14px;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  &-content {
+    max-width: 80%;
+    padding-top: 10px;
+
+    .addressCardName {
+      margin: 10px 0;
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 600;
+      padding: 5px 0 0 0;
+      display: contents;
+    }
+
+    p {
+      margin: 5px 0;
+      font-size: 14px;
+      line-height: 18px;
+      margin: 0;
+    }
+
+    .cityAreaName {
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .contactNumber {
+      margin-top: 10px;
+    }
+
+    @include mobile {
+
+      max-width: 90%;
+      padding-top: 0;
+
+      h3 {
+        display: inline;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+
+  &_isGuestUser {
+    margin-top: 100px;
+    margin-bottom: 10px;
+    border: 1px solid #d1d3d4;
+  }
+
+  @include mobile {
+    padding: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 0;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: none;
+  }
+}
+
+.address-card-Msite {
+  background-color: #F8F8F8;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 0 auto;
+  max-width: 95vw;
+
+  &-icon-container {
+    height: 27px;
+    width: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3px;
+  }
+
+  &-text-container {
+    margin-left: 5px;
+    max-width: 70%;
+  }
+
+  &-title {
+    padding: 0;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  &-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.address-card-Msite::after {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  border: solid var(--black-color);
+  border-width: 0 1.5px 1.5px 0;
+  display: inline-block;
+  padding: 3px 6px 6px 3px;
+  margin: 0 auto;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  right: 20px;
+  top: 40%;
+  background: transparent;
+}

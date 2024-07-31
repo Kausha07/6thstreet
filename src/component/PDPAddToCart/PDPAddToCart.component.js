@@ -70,7 +70,8 @@ class PDPAddToCart extends PureComponent {
     OOSrendered: false,
     OOS_mailSent: false,
     sizePredictorMessage:'',
-    recommendedSizeSku:''
+    recommendedSizeSku:'',
+    selectedCityArea: {},
   };
 
   componentDidMount() {
@@ -129,6 +130,20 @@ class PDPAddToCart extends PureComponent {
     const { selectedSizeCode } = this.props;
     if(prevProps.selectedSizeCode !== selectedSizeCode) {
       this.getRecommendedSize("size_bar");
+    }
+
+    if (prevProps.isSignedIn != this.props.isSignedIn) {
+      if (this.props.isSignedIn) {
+        this.setState({
+          selectedCityArea: this.props.currentSelectedCityArea
+            ? this.props.currentSelectedCityArea
+            : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            : {},
+        });
+      } else if (!this.props.isSignedIn) {
+        this.setState({ selectedCityArea: null });
+      }
     }
   }
 
@@ -314,6 +329,8 @@ class PDPAddToCart extends PureComponent {
       notifyMeLoading,
       notifyMeSuccess,
       popUpType = "",
+      isExpressDelivery,
+      isExpressServiceAvailable,
     } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const quantity = productStock[code].quantity;
@@ -336,8 +353,29 @@ class PDPAddToCart extends PureComponent {
     };
 
     const isCurrentSizeSelected = selectedSizeCode === code;
-    const { edd_info } = this.props;
+    const {
+      edd_info,
+      product: { international_vendor },
+      cross_border = 0,
+    } = this.props;
 
+    const product = productStock[code];
+    const whs_quantity = +product?.whs_quantity || 0;
+    const store_quantity = +product?.store_quantity || 0;
+    const mp_quantity = +product?.mp_quantity || 0;
+    const isInternationalProduct =
+      edd_info?.international_vendors?.includes(international_vendor) ||
+      cross_border;
+
+    const isExpressEligibleSKU =
+      popUpType !== "wishListPopUp" &&
+      this.state.selectedCityArea &&
+      !isInternationalProduct &&
+      isExpressServiceAvailable?.express_eligible &&
+      isExpressDelivery &&
+      quantity !== 0 &&
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
+      !(+product?.quantity <= +product?.cross_border_qty);
     return (
       <div
         block="PDPAddToCart-SizeSelector"
@@ -362,6 +400,11 @@ class PDPAddToCart extends PureComponent {
           <label
             for={code}
             style={isCurrentSizeSelected ? selectedLabelStyle : this.state.recommendedSizeSku==code ? recommendedLabelStyle : {}}
+            block="sizeOptionLabel"
+            mods={{
+              isExpressEligibleSKU: isExpressEligibleSKU,
+              isArabic: isArabic() && isExpressEligibleSKU,
+            }}
           >
             {label}
           </label>

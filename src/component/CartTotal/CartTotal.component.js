@@ -172,6 +172,10 @@ function CartTotal(props) {
               __("International Shipping Fee")
             )}
           {renderPriceLine(
+            getValueFromTotals(totals, "express_delivery_charges"),
+            __("Express Service"),
+          )}
+          {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
             __("My Cash"),
             { couponSavings: true }

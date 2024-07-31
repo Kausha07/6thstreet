@@ -474,6 +474,16 @@
       }
     }
   }
+
+  .EddExpressWrapper {
+    @include desktop {
+      width: 290px;
+    }
+
+    @include mobile {
+      width: 100%;
+    }
+  }
 }
 
 .pipe {

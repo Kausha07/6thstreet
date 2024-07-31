@@ -56,6 +56,10 @@ main {
       left : 10%;  
     }
   }
+
+  .cityAreaAddressSelection{
+    max-width: 40%;
+  }
 }
 
 .HeaderSearchMegaMenuSection {
@@ -83,7 +87,7 @@ main {
       height: 54px;
       top: 49px;
     }
-    .Form {
+    #header-search  {
       border-radius: 10px;
       width: 300px;
       background-color: var(--gray);
@@ -119,7 +123,7 @@ main {
       height: 54px;
       top: 49px;
     }
-    .Form {
+    #header-search {
       border-radius: 10px;
       width: 300px;
       background-color: var(--gray);
@@ -718,7 +722,7 @@ main {
       }
     }
 
-    z-index: 95;
+    z-index: 96;
   }
 }
 

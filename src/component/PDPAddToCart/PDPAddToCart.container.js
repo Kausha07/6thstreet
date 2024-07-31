@@ -56,7 +56,11 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   eddResponse: state.MyAccountReducer.eddResponse,
   eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
-  addtoCartInfo:state.PDP.addtoCartInfo
+  addtoCartInfo:state.PDP.addtoCartInfo,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -453,7 +457,11 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag=()=>null
+      addTag=()=>null,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      currentSelectedCityArea, 
+      isSignedIn,
     } = this.props;
     const {
       mappedSizeObject,
@@ -478,7 +486,11 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag
+      addTag,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      currentSelectedCityArea,
+      isSignedIn,
     };
   };
 
@@ -528,7 +540,7 @@ export class PDPAddToCartContainer extends PureComponent {
     let {eddResponse, eddResponseForPDP } = this.props;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(this.state.productStock)[0];
     let new_item = true;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
       eddResponse["pdp"].map(eddVal => {
         if(eddVal.sku == sku) {
@@ -549,7 +561,7 @@ export class PDPAddToCartContainer extends PureComponent {
           }
         })
       })
-      sessionStorage.setItem(
+      localStorage.setItem(
         "EddAddressRes",
         JSON.stringify(obj),
       );

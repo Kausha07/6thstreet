@@ -121,6 +121,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     handleApplePayButtonClick: this.handleApplePayButtonClick.bind(this),
     onIdentityNumberChange: this.props?.onIdentityNumberChange,
     onTypeOfIdentityChange: this.props?.onTypeOfIdentityChange,
+    onMailingAddressTypeChange: this.props?.onMailingAddressTypeChange,
   };
 
   /**

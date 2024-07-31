@@ -24,7 +24,7 @@ import RatingStar from "./icons/rating_star.png";
 import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { ThreeDots } from "react-loader-spinner";
-
+import { ExpressDeliveryTruck } from "Component/Icons";
 
 
 export class MyAccountOrderViewItem extends SourceComponent {
@@ -57,6 +57,45 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
 
+  getReturnExchangeMessage = (dateStr, is_returnable, is_exchangeable) => {
+    if(!dateStr){
+      return "";
+    }
+    if(!is_returnable && !is_exchangeable) {
+      return __("This item is not returnable or exchangeable.");
+    } else {
+      const expiredDate = this.expiredDateIfAny(dateStr);
+      if(!is_returnable) {
+        return expiredDate ? __("Exchange window closed on %s", expiredDate) :   __("This item is not returnable. Exchange only.");
+      } else if(!is_exchangeable) {
+        return expiredDate ? __("Return window closed on %s", expiredDate) : __("This item is not exchangeable. Return only.");
+      } else {
+        return expiredDate ? __("Both return and exchange windows closed on %s", expiredDate) : "";
+      }
+    }
+  }
+    
+  expiredDateIfAny = (dateStr) =>{
+    // Convert the date string to a Date object
+    const givenDate = new Date(dateStr);
+    // Get today's date (without time)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    // Convert both dates to ISO strings for comparison (YYYY-MM-DD)
+    const givenDateISO = givenDate.toISOString().split('T')[0];
+    const todayISO = today.toISOString().split('T')[0];
+  
+    // Define options for formatting the date
+    const options = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    };
+    const countryCode = getCountryFromUrl();
+    const dateToReturn = givenDate.toLocaleDateString('en-'+countryCode.toUpperCase(), options).replace(',', '');
+    return givenDateISO > todayISO ? "" : dateToReturn;
+  }
+
   renderDetails() {
     let {
       currency,
@@ -77,11 +116,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
         international_vendor = null,
         original_price,
         unit_final_price,
+        is_returnable = null,
+        is_exchangeable = null,
+        return_exchange_date = null
       } = {},
       status,
       paymentMethod,
       international_shipping_fee,
       item,
+      itemStatus="",
       orderDetailsCartTotal: {
         site_wide_applied = 0,
         discount_code = "",
@@ -97,6 +140,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments";
     const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
+    const return_exchange_message = itemStatus.toLowerCase() === 'delivery_successful' ? this.getReturnExchangeMessage(return_exchange_date, is_returnable, is_exchangeable) : "";
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -131,6 +175,13 @@ export class MyAccountOrderViewItem extends SourceComponent {
               : `${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {
+          return_exchange_message && (
+            <div>
+              <p>{return_exchange_message}</p>
+            </div>
+          )
+        }
         {!!ctc_store_name && (
           <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
             <Store />
@@ -183,8 +234,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null },
+      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null, is_express_delivery = false },
       intlEddResponse,
+      itemStatus= this.props
     } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
@@ -267,7 +319,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
 
     return (
-      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }} className={ is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? "EddExpressDeliveryTextBlock":"" }>
+        {is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? 
+          <>
+            <ExpressDeliveryTruck />  
+            &nbsp;{__("Express")}
+          </>
+          :null
+        }
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >

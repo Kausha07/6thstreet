@@ -47,6 +47,8 @@ const MsiteAddToCartPopUp = lazy(() =>
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component";
 import Ratings from 'Component/Ratings/Ratings';
+import ExpressDeliveryTag from "Component/ExpressDeliveryTag";
+
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
 var influencerPDPURL;
@@ -56,7 +58,9 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
-  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1003,16 +1007,23 @@ class ProductItem extends PureComponent {
     }
   };
 
+  renderExpressDeliveryTag = () => {
+    const { product } = this.props;
+
+    return <ExpressDeliveryTag productInfo={product} />;
+  };
 
   render() {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
-      pageType
+      pageType,
+      isExpressDelivery,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const showExpressDeliveryTagArr = ["wishlist", "plp", "cartSlider"];
     return (
       <li
         id={sku}
@@ -1039,6 +1050,10 @@ class ProductItem extends PureComponent {
           {this.renderTitle()}
           {this.renderPrice()}
           {!isMobile.any() &&
+            showExpressDeliveryTagArr?.includes(pageType) &&
+            isExpressDelivery &&
+            this.renderExpressDeliveryTag()}
+          {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           pageType !== "cartSlider" &&
@@ -1051,7 +1066,10 @@ class ProductItem extends PureComponent {
             {this.renderExclusiveMobile(true)}
           </div>
         )}
-
+        {isMobile.any() &&
+          showExpressDeliveryTagArr?.includes(pageType) &&
+          isExpressDelivery &&
+          this.renderExpressDeliveryTag()}
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer

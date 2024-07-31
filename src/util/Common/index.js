@@ -676,3 +676,272 @@ export function formatDate(inputDate) {
 
   return `${day} ${month} ${year}`;
 }
+
+export const getTodaysWeekDay = () => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const today = new Date();
+  const currentDayIndex = today.getDay();
+  const currentDayName = daysOfWeek[currentDayIndex];
+
+  return currentDayName?.toLowerCase();
+};
+
+export const getAddressType = (addressType) => {
+  const currentSelectedAddress = addressType
+    ? addressType
+    : JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+  switch (currentSelectedAddress?.mailing_address_type) {
+    case "37303":
+      return "home";
+    case "37304":
+      return "work";
+    case "37305":
+      return "other";
+    default:
+      return "home";
+  }
+};
+
+export const getCurrentTimeForCountry = (countryCode) => {
+  const now = new Date();
+  switch (countryCode) {
+    case "ae":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+    case "sa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for KSA
+      break;
+    case "qa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Qatar
+      break;
+    case "kw":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Kuwait
+      break;
+    case "om":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for Oman
+      break;
+    case "bh":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Bahrain
+      break;
+    default:
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+  }
+  return now;
+};
+
+export const getNumericAddressType = () => {
+  const addressType =
+    JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      ?.mailing_address_type || "37303";
+  return addressType;
+};
+
+export const checkProductOfficeServicable = ({
+  addressType = "37303",
+  isOfficeSameDayExpressServicable = true,
+  isOfficeNextDayExpressServicable = true,
+  isTimeExpired = false,
+  express_delivery_key = "",
+}) => {
+  if (addressType === "37304") {
+    if (
+      isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable &&
+      isTimeExpired
+    ) {
+      return false;
+    } else if (
+      !isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable
+    ) {
+      return false;
+    } else if (
+      !isOfficeSameDayExpressServicable &&
+      isOfficeNextDayExpressServicable &&
+      isTimeExpired
+    ) {
+      return true;
+    } else if (
+      isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable &&
+      express_delivery_key?.toLowerCase()?.includes("tomorrow")
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const inventoryCheck = (quantity, cutoffTime) => {
+  return +quantity !== 0 ? cutoffTime : "00:00";
+};
+
+export const checkProductExpressEligible = (express_delivery_key) => {
+  return ["today delivery", "tomorrow delivery"].includes?.(
+    express_delivery_key?.toLowerCase()
+  );
+};
+
+export const getTodaysCutOffTime = ({
+  cutOffTime = {},
+  isPDP = false,
+  simple_products = {},
+  sku = "",
+  express_delivery_key = "",
+  whs_quantity = 0,
+  store_quantity = 0,
+  mp_quantity = 0,
+}) => {
+  let tempTodaysCutOffTime = "00:00";
+  const todaysWeekDayName = getTodaysWeekDay();
+  const addressType = getNumericAddressType();
+
+  const data =
+    cutOffTime?.data?.find((item) => {
+      return (
+        item.day?.toLowerCase() === todaysWeekDayName &&
+        item?.address_type === addressType
+      );
+    }) || {};
+
+  const {
+    warehouse_cutoff_time = "00:00",
+    store_cutoff_time = "00:00",
+    mp_cutoff_time = "00:00",
+  } = data;
+
+  tempTodaysCutOffTime = isPDP
+    ? (+simple_products?.[sku]?.whs_quantity != 0 &&
+        inventoryCheck(
+          simple_products?.[sku]?.whs_quantity,
+          warehouse_cutoff_time
+        )) ||
+      (+simple_products?.[sku]?.store_quantity != 0 &&
+        inventoryCheck(
+          simple_products?.[sku]?.store_quantity,
+          store_cutoff_time
+        )) ||
+      (+simple_products?.[sku]?.mp_quantity != 0 &&
+        inventoryCheck(simple_products?.[sku]?.mp_quantity, mp_cutoff_time))
+    : (+whs_quantity != 0 &&
+        inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
+      (+store_quantity != 0 &&
+        inventoryCheck(store_quantity, store_cutoff_time)) ||
+      (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
+
+  if (
+    !tempTodaysCutOffTime &&
+    express_delivery_key?.toLowerCase()?.includes("today")
+  ) {
+    tempTodaysCutOffTime = warehouse_cutoff_time;
+  }
+  return tempTodaysCutOffTime;
+};
+
+export const getFinalExpressDeliveryKey = ({
+  isPDP = false,
+  express_delivery_home = "",
+  express_delivery_work = "",
+  express_delivery_other = "",
+  express_delivery = "",
+}) => {
+  const addressType = getNumericAddressType();
+  if (isPDP) {
+    if (addressType === "37303") {
+      return express_delivery_home;
+    } else if (addressType === "37304") {
+      return express_delivery_work;
+    } else if (addressType === "37305") {
+      return express_delivery_other;
+    } else return express_delivery_home;
+  } else {
+    return express_delivery;
+  }
+};
+
+export const productOfficeServicable = ({
+  cutOffTime = {},
+  express_delivery_key = "",
+  isTimeExpired = false,
+}) => {
+  const addressType = getNumericAddressType();
+  const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
+  const isProductExpressEligible =
+    checkProductExpressEligible(express_delivery_key);
+
+  let isOfficeSameDayExpressServicable = true;
+  let isOfficeNextDayExpressServicable = true;
+  let isProductOfficeServicable = true;
+
+  if (
+    cutOffTime?.data &&
+    todaysWeekDayName &&
+    addressType &&
+    isProductExpressEligible
+  ) {
+    if (
+      addressType === "37304" &&
+      ["friday", "saturday", "sunday"].includes?.(
+        todaysWeekDayName?.toLowerCase()
+      )
+    ) {
+      switch (todaysWeekDayName?.toLowerCase()) {
+        case "friday":
+          isOfficeSameDayExpressServicable = true;
+          isOfficeNextDayExpressServicable = false;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isTimeExpired,
+            express_delivery_key,
+          });
+          break;
+
+        case "saturday":
+          isOfficeSameDayExpressServicable = false;
+          isOfficeNextDayExpressServicable = false;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isTimeExpired,
+            express_delivery_key,
+          });
+          break;
+
+        case "sunday":
+          isOfficeSameDayExpressServicable = false;
+          isOfficeNextDayExpressServicable = true;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isTimeExpired,
+            express_delivery_key,
+          });
+          break;
+
+        default:
+          isOfficeSameDayExpressServicable = true;
+          isOfficeNextDayExpressServicable = true;
+          isProductOfficeServicable = true;
+      }
+    } else {
+      isOfficeSameDayExpressServicable = true;
+      isOfficeNextDayExpressServicable = true;
+      isProductOfficeServicable = true;
+    }
+  }
+
+  return isProductOfficeServicable;
+};
