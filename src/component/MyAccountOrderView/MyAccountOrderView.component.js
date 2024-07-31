@@ -1232,7 +1232,7 @@ class MyAccountOrderView extends PureComponent {
             {express_delivery_charges &&
               this.renderPriceLine(
                 express_delivery_charges,
-                __("Express Delivery Charges"),
+                __("Express Service"),
                 {
                   divider: true,
                 }

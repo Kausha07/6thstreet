@@ -29,17 +29,60 @@
     }
   }
   .EddExpressDeliveryTextBlock {
-    padding: 3px;
     display: flex;
     align-items: center;
     background: #f964461a;
     border-radius: 10px;
     margin-top: 10px;
     padding: 5px;
+    width: 343px;
      svg {
         width: 20px;
         height: 20px;
         margin: 0 5px;
+    }
+    .EddExpressDeliveryTextRed {
+      color: #f96446;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 14px;
+    }
+    .EddExpressDeliveryTextNormal {
+      font-weight: 400;
+      font-size: 14px;
+      margin: 0 3px;
+    }
+    .EddExpressDeliveryTextBold {
+      font-weight: 600;
+      font-size: 14px;
+    }
+  }
+  .eddStandardDelivery {
+    display: flex;
+    background: #8686861a;
+    padding: 5px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 8px;
+    text-transform: initial;
+    width: 343px;
+    .EddStandardDeliveryTextBlock {
+      display: flex;
+      align-items: center;
+      svg {
+        width: 18px;
+        height: 18px;
+        margin: 0 5px;
+      }
+      .EddStandardDeliveryText {
+        font-weight: 400;
+        font-size: 14px;
+      }
+      .EddStandardDeliveryTextBold {
+        font-weight: 600;
+        font-size: 14px;
+      }
     }
   }
   &-Name {

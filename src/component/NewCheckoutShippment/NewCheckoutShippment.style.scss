@@ -3,7 +3,7 @@
   &-CartItemList {
     .NewShippmentItem {
       border: 1px solid #d1d3d4;
-      padding: 20px 0px;
+      padding: 20px 15px;
       margin-bottom: 0;
       border-bottom: none;
 
@@ -46,7 +46,7 @@
           background: #fff2f0;
           align-items: center;
           height: 52px;
-          padding: 0 10px 0px 20px;
+          padding: 0 10px 0px 24px;
           cursor: pointer;
           &::before,
           &::after {
@@ -56,7 +56,7 @@
           }
 
           &::before {
-            top: 20px;
+            top: 19px;
             left: 10px;
             width: 15px;
             height: 15px;
@@ -72,7 +72,7 @@
           &_isSelected {
             &::after {
               opacity: 1;
-              top: 20px;
+              top: 17px;
               left: 9px;
               width: 18px;
               height: 18px;
@@ -92,6 +92,7 @@
             justify-content: center;
             flex-direction: column;
             text-transform: initial;
+            line-height: 10px;
 
             svg {
               width: 24px;
@@ -170,7 +171,7 @@
           border-top: none;
           cursor: pointer;
 
-          padding: 0 10px 0 32px;
+          padding: 0 10px 0 35px;
           height: 52px;
           &::before,
           &::after {
@@ -180,7 +181,7 @@
           }
 
           &::before {
-            top: 20px;
+            top: 19px;
             left: 10px;
             width: 15px;
             height: 15px;
@@ -196,7 +197,7 @@
           &_isSelected {
             &::after {
               opacity: 1;
-              top: 20px;
+              top: 17px;
               left: 9px;
               width: 18px;
               height: 18px;
@@ -265,7 +266,12 @@
           margin: 0;
         }
       }
+
+      .CartItem-Wrapper {
+        padding-top: 0;
+      }
     }
+
     .NewShippmentItem::before {
       content: "";
     }

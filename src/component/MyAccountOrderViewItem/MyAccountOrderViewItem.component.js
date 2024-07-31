@@ -24,7 +24,7 @@ import RatingStar from "./icons/rating_star.png";
 import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { ThreeDots } from "react-loader-spinner";
-import { ExpressDeliveryTruck } from "Component/Icons";
+import { ExpressDeliveryTruck, Shipping } from "Component/Icons";
 
 
 export class MyAccountOrderViewItem extends SourceComponent {
@@ -317,16 +317,39 @@ export class MyAccountOrderViewItem extends SourceComponent {
         splitKey = splitKey;
       }
     }
+    if(is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing') {
+      return (
+        <>
+          <div className="EddExpressDeliveryTextBlock">
+            <ExpressDeliveryTruck />  
+            <span class="EddExpressDeliveryTextRed">{__("Express")} </span>
+            <span class="EddExpressDeliveryTextNormal"> {idealFormat ? `${splitBy[0]} ${splitKey}` : null}{" "}</span>
+            <span class="EddExpressDeliveryTextBold">{idealFormat ? `${splitBy[1]}` : actualEddMess}</span>
+          </div>
+        </>
+      )
+    } else {
+      return (
+        <div block="eddStandardDelivery">
+          <div block="EddStandardDeliveryTextBlock">
+            <Shipping />
+            <div block="shipmentText">
+              <span block="EddStandardDeliveryText">
+                {__("Standard")} {}
+                {actualEddMess?.split(splitKey)?.[0]} {}
+                {splitKey} {}
+              </span>
+              <span block="EddStandardDeliveryTextBold">
+                {actualEddMess?.split(splitKey)?.[1]}
+              </span>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     return (
-      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }} className={ is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? "EddExpressDeliveryTextBlock":"" }>
-        {is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing' ? 
-          <>
-            <ExpressDeliveryTruck />  
-            &nbsp;{__("Express")}
-          </>
-          :null
-        }
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }} >
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
