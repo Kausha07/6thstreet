@@ -311,7 +311,13 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic, showSearch } = this.state;
-    const { isPDP, isPDPSearchVisible, isPLP, showMegaMenuHeaderSearchStyle = false } = this.props;
+    const {
+      isPDP,
+      isPDPSearchVisible,
+      isPLP,
+      showMegaMenuHeaderSearchStyle = false,
+      isExpressDelivery,
+    } = this.props;
     const mobileMegaMenuStyle = showMegaMenuHeaderSearchStyle
       ? {
           top: "5px",
@@ -330,11 +336,20 @@ class HeaderSearch extends PureComponent {
             isPDP ? null : this.closeSearch();
           }}
         >
-          <div block="HeaderSearch" mods={{ isArabic, isPLP}} style={mobileMegaMenuStyle}>
+          <div
+            block={`HeaderSearch ${
+              !showSearch && !showMegaMenuHeaderSearchStyle && isExpressDelivery
+                ? "expressPOsitionCSS"
+                : null
+            }`}
+            mods={{ isArabic, isPLP }}
+            style={mobileMegaMenuStyle}
+          >
+            {this.renderField()}
             {!showSearch &&
               !showMegaMenuHeaderSearchStyle &&
+              isExpressDelivery &&
               this.renderCityArea()}
-            {this.renderField()}
           </div>
         </ClickOutside>
         {this.renderSuggestion()}

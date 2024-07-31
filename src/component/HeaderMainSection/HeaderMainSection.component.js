@@ -868,13 +868,18 @@ class HeaderMainSection extends NavigationAbstract {
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
     const { signInPopUp, showPLPSearch } = this.state;
-    const { displaySearch, gender } = this.props;
+    const { displaySearch, gender, isExpressDelivery } = this.props;
+    const showMegaMenuHeaderSearchStyle = isMsiteMegaMenuRoute();
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>
         <div
-          block="HeaderMainSection"
+          block={`HeaderMainSection ${
+            isExpressDelivery && !showMegaMenuHeaderSearchStyle
+              ? "expressHeaderPositionCSS"
+              : null
+          }`}
           mods={{ showPLPSearch }}
           data-visible={this.getHeaderMainSectionVisibility()}
         >
