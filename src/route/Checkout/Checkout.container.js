@@ -179,6 +179,8 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  shipment: state.CheckoutReducer.shipment,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -1022,12 +1024,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       totals,
       isSignedIn,
       international_shipping_fee,
+      shipment,
+      isExpressDelivery
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
     let eddItems = [];
+    let sku_delivery_type = {};
     Event.dispatch(EVENT_GTM_CHECKOUT, {
       totals,
       step: 3,
@@ -1043,7 +1048,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         MOE_AddUniqueID(paymentInformation.billing_address.guest_email?.toLowerCase());
       }
     }
-
+    if(isExpressDelivery && shipment) {
+      shipment.expected_shipments && shipment.expected_shipments.map(group => {
+        group.items && group.items.map(item => sku_delivery_type[item.sku] = group.selected_delivery_type)
+      })
+      BrowserDatabase.setItem(sku_delivery_type,"SHIPMENT_DETAILS")
+    }
     if (
       international_shipping_fee &&
       cartItems &&
@@ -1095,7 +1105,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           ({ vendor }) =>
             vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
         );
-        if(express_delivery) {
+        if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
@@ -1209,7 +1219,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             finalEddForLineItem = defaultEddDateString;
           }
         }
-        if(express_delivery) {
+        if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
