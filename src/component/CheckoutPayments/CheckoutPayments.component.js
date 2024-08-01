@@ -32,6 +32,7 @@ import addNewCardIcon from "./icons/addnewcard.png";
 import CheckoutPaymentMsite from "Component/CheckoutPaymentMsite";
 import StoreCredit from "Component/StoreCredit";
 import UseMyWallet from "Component/MyWallet/UseMyWallet/UseMyWallet";
+import ClubApparel from "Component/ClubApparel";
 
 export class CheckoutPayments extends SourceCheckoutPayments {
   static propTypes = {
@@ -706,6 +707,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   renderDiscountOptions() {
     const {
       totals: { eligible_amount },
+      isClubApparelEnabled = false,
     } = this.props;
 
     if (!isSignedIn()) {
@@ -716,6 +718,11 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       <>
         <StoreCredit canApply hideIfZero />
         <UseMyWallet eligibleAmount={eligible_amount} />
+        {isClubApparelEnabled && 
+          (<div block="clubApparelMsiteWrapper">
+             <ClubApparel hideIfZero />
+          </div>)
+        }
       </>
     );
   }

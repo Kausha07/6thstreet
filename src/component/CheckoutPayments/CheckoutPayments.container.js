@@ -25,6 +25,7 @@ import {
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   cartTotal: state.CheckoutReducer.cartTotal,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
