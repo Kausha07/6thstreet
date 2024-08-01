@@ -616,7 +616,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async componentDidMount() {
-    const { setMeta, cartId, updateTotals, getCouponList, isSignedIn, getShipment } = this.props;
+    const {
+      setMeta,
+      cartId,
+      updateTotals,
+      getCouponList,
+      isSignedIn,
+      getShipment,
+      addresses,
+    } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
@@ -666,8 +674,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.getOrderDetails(paymentData);
     }
 
+    // If a user has no address in the current country
+    const isNoAddressAvailableCountry =
+      !addresses.some((add) => add.country_code == getCountryFromUrl());
+
     // calling get shipment
-    if(!isSignedIn) {
+    if(!isSignedIn || isNoAddressAvailableCountry) {
       getShipment(cartId);
     }
   }
