@@ -12,3 +12,13 @@
         border: none;
     }
 }
+
+.CheckoutBilling {
+    &-Button {
+      &:disabled {
+        opacity: 0.25;
+        background-color: #a9a9a9 !important;
+        border: #a9a9a9 !important;
+      }
+    }
+}
