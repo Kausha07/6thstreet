@@ -105,7 +105,7 @@ export const NewCheckoutShippment = (props) => {
     const isExpressDeliverySelected =
       selected_delivery_type == 1 || selected_delivery_type == 2;
     const EddForShipment =
-      getEddForShipment({ shipmentItem, eddResponse }) || {};
+      getEddForShipment({ shipmentItem, eddResponse, actualEddMess }) || {};
     const { edd_message_en = "", edd_message_ar = "" } = EddForShipment;
     const shipmentItems = getShipmentItems({ shipmentItem, cartItems: items });
     let splitKey = DEFAULT_SPLIT_KEY;

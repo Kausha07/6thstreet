@@ -1,7 +1,11 @@
 import { isObject } from "Util/API/helper/Object";
 import { getTodaysCutOffTime } from "Util/Common";
 
-export const getEddForShipment = ({ shipmentItem = {}, eddResponse = {} }) => {
+export const getEddForShipment = ({
+  shipmentItem = {},
+  eddResponse = {},
+  actualEddMess = "",
+}) => {
   const { items = [] } = shipmentItem;
   const sku = items?.[0]?.sku;
 
@@ -23,6 +27,11 @@ export const getEddForShipment = ({ shipmentItem = {}, eddResponse = {} }) => {
 
     return edd[0];
   }
+  // if city area is not selected
+  return {
+    edd_message_en: actualEddMess,
+    edd_message_ar: actualEddMess,
+  };
 };
 
 export const getShipmentItems = ({ shipmentItem = {}, cartItems = [] }) => {
