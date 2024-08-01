@@ -106,7 +106,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onAddressSelectNewCheckoutFlow = async () => {
     const fields = this.getAddressById(this.state.selectedCustomerAddressId);
-    this.onShippingSuccess(fields);
+    if(fields) {
+      this.onShippingSuccess(fields);
+    }
   }
 
   async handleClickNCollectPayment(fields) {
@@ -166,7 +168,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     );
   }
 
-  validateAddress(address) {
+  validateAddress(address = {}) {
     const {
       country_id = "",
       region_id,

@@ -415,7 +415,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         mods={{ formContent }}
       >
         <button
-          block="MyAccountAddressBook"
+          block={`${formContent ? "" : "isButtonVisbile"} MyAccountAddressBook`}
           elem="backButton"
           mods={{ isArabic }}
           onClick={this.showCards}
