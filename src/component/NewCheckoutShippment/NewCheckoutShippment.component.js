@@ -218,6 +218,7 @@ export const NewCheckoutShippment = (props) => {
                 brand_name={item.brand_name}
                 isCheckoutPage={true}
                 eddMessageForCheckoutPage={eddMessageForCheckoutPage}
+                isRenderQuantitySelection={false}
               />
             );
           })}
@@ -236,6 +237,7 @@ export const NewCheckoutShippment = (props) => {
         brand_name={item.brand_name}
         isCheckoutPage={true}
         eddMessageForCheckoutPage={eddMessageForCheckoutPage}
+        isRenderQuantitySelection={true}
       />
     );
   };

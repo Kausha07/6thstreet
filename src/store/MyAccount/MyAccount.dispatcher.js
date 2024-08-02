@@ -283,7 +283,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     const country_code = getCountryFromUrl();
 
-    if (!localStorage.getItem("EddAddressReq") && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+    if (!localStorage.getItem("EddAddressReq") && isExpressDelivery ) {
       await MobileAPI.get(`order/last?country_specific=true`).then(
         (response) => {
           if (
@@ -311,7 +311,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     getShippingAddresses().then(async (response) => {
       if (response.data) {
-        if (newAddressSaved && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+        if (newAddressSaved) {
           let countryWiseAddresses = response?.data?.filter(
             (obj) => obj?.country_code === getCountryFromUrl()
           );
