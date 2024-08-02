@@ -8,6 +8,8 @@ import {
 import { ExpressDeliveryTruck } from "Component/Icons";
 import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
+import Loader from "Component/Loader";
+import Link from "Component/Link";
 import "./NewCheckoutShippment.style";
 import {
   getEddForShipment,
@@ -16,7 +18,6 @@ import {
 } from "./utils/NewCheckoutShippment.helper";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { getCurrency } from "Util/App";
-import Loader from "Component/Loader";
 import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
@@ -255,12 +256,32 @@ export const NewCheckoutShippment = (props) => {
       );
     }
 
+    const itemQuantityArray = items.map((item) => item.qty);
+    const totalQuantity = itemQuantityArray.reduce(
+      (qty, nextQty) => qty + nextQty,
+      0
+    );
+
     return (
-      <>
+      <div block="cartItemsWrapper">
+        <div block="cartItemsWrapper" elem="Header">
+          <span block="cartItemsWrapper" elem="ItemCount">
+            {totalQuantity}
+            {totalQuantity === 1 ? __(" Item") : __(" Items")}
+          </span>
+          <Link
+            block="cartItemsWrapper"
+            elem="Edit"
+            mods={{ isArabic: isArSite }}
+            to="/cart"
+          >
+            <span>{__(" Edit")}</span>
+          </Link>
+        </div>
         {items.map((item, i) => {
           return renderItem(item, i);
         })}
-      </>
+      </div>
     );
   };
 

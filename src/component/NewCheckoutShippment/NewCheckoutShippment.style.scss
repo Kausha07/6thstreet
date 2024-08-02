@@ -1,5 +1,6 @@
 .NewCheckoutOrderShippment {
   cursor: pointer;
+
   &-CartItemList {
     .NewShippmentItem {
       border: 1px solid #d1d3d4;
@@ -39,6 +40,7 @@
 
       .ExpressOrStandadrdDeliverySelection {
         margin: 15px 0;
+
         .ExpressDeliveryBlock {
           border: 0.2px solid #d1d3d4;
           display: flex;
@@ -48,6 +50,7 @@
           height: 52px;
           padding: 0 10px 0px 24px;
           cursor: pointer;
+
           &::before,
           &::after {
             content: "";
@@ -76,8 +79,7 @@
               left: 9px;
               width: 18px;
               height: 18px;
-              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
-                center / contain;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat center / contain;
               transform: none;
               -webkit-transform: none;
             }
@@ -157,6 +159,7 @@
               color: #28D9AA;
               padding-bottom: 5px;
             }
+
             &-freeExpressPrice {
               text-decoration: line-through;
             }
@@ -173,6 +176,7 @@
 
           padding: 0 10px 0 35px;
           height: 52px;
+
           &::before,
           &::after {
             content: "";
@@ -201,8 +205,7 @@
               left: 9px;
               width: 18px;
               height: 18px;
-              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
-                center / contain;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat center / contain;
               transform: none;
               -webkit-transform: none;
             }
@@ -256,6 +259,7 @@
             font-weight: 500;
           }
         }
+
         .topBorder {
           border-top: 0.2px solid #d1d3d4;
         }
@@ -274,6 +278,31 @@
 
     .NewShippmentItem::before {
       content: "";
+    }
+
+    .cartItemsWrapper {
+      border: 1px solid #d1d3d4;
+
+      &-Header {
+        display: flex;
+        padding: 20px;
+
+      }
+
+      &-ItemCount {
+        flex: 50% 1;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 25px;
+      }
+
+      &-Edit {
+        font-size: 13px;
+        line-height: 18px;
+        text-align: right;
+        text-decoration: underline;
+        padding-top: 3px;
+      }
     }
   }
 }
