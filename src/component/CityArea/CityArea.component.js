@@ -39,6 +39,7 @@ export const mapStateToProps = (state) => ({
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   pdpProduct: state.PDP.product,
   cartId: state.Cart.cartId,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -92,6 +93,7 @@ export const CityArea = (props) => {
     cartId,
     cartItems,
     renderSelectedAddressMsite = () => {},
+    vwoData = {},
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -613,7 +615,10 @@ export const CityArea = (props) => {
     );
   };
 
-  return isExpressDelivery || isNewCheckoutPage ? render() : null;
+  return (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
+    isNewCheckoutPage
+    ? render()
+    : null;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CityArea);

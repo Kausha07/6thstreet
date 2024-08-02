@@ -62,6 +62,7 @@ export const mapStateToProps = (state) => ({
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   cutOffTime: state.MyAccountReducer.cutOffTime,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -464,7 +465,8 @@ export class PDPAddToCartContainer extends PureComponent {
       currentSelectedCityArea, 
       isSignedIn,
       cutOffTime,
-      isExpressTimeExpired
+      isExpressTimeExpired,
+      vwoData,
     } = this.props;
     const {
       mappedSizeObject,
@@ -496,6 +498,7 @@ export class PDPAddToCartContainer extends PureComponent {
       isSignedIn,
       cutOffTime,
       isExpressTimeExpired,
+      vwoData,
     };
   };
 

@@ -136,7 +136,7 @@
         background: #ffffff;
         padding: 10px 20px;
         z-index: 100;
-        border-radius: 12px;
+        border-radius: 12px 12px 0 0;
       }
 
       @include desktop {
@@ -157,6 +157,10 @@
           font-weight: 600;
           line-height: 24px;
           font-size: 18px;
+          overflow: hidden;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
 

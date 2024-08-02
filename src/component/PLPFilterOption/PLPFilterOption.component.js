@@ -267,6 +267,7 @@ class PLPFilterOption extends PureComponent {
   renderLabel() {
     const {
       option: { label = "", facet_value, facet_key, product_count, productCountMsite },
+      isExpressDelivery, vwoData,
     } = this.props;
     const finalProductCount = product_count ? product_count : productCountMsite;
 
@@ -343,7 +344,7 @@ class PLPFilterOption extends PureComponent {
       );
     }
 
-    if (facet_key === `express_delivery_${getAddressType()}`) {
+    if (facet_key === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       let finalLabel = label;
       const words = label?.split(" ");
       if (words.length > 1) {

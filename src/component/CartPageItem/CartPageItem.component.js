@@ -928,6 +928,7 @@ export class CartItem extends PureComponent {
       },
       international_shipping_fee,
       isExpressDelivery,
+      vwoData,
     } = this.props;
 
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -1034,6 +1035,7 @@ export class CartItem extends PureComponent {
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
+      vwoData,
     } = this.props;
     const { isNotAvailble } = this.state;
     const isIntlBrand =
@@ -1053,19 +1055,19 @@ export class CartItem extends PureComponent {
         {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
-        {!isExpressDelivery && edd_info &&
+        {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) &&  edd_info && 
           edd_info.is_enable &&
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-          {isExpressDelivery && edd_info &&
+          {isExpressDelivery && vwoData?.Express?.isFeatureEnabled && edd_info &&
           edd_info.is_enable &&
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           !isNotAvailble &&
           this.renderEddWhenExpressEnabled(cross_border === 1)}
-        {!isExpressDelivery && (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)))) ?  this.renderIntlTag() : null}
+        {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)))) ?  this.renderIntlTag() : null}
       </figcaption>
     );
   }

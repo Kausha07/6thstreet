@@ -162,7 +162,7 @@
       z-index: 900;
       margin-left: auto;
       margin-right: auto;
-      left: 55px;
+      left: 130px;
       right: 0;
       text-align: center;
       //   transform: rotate(45deg);
@@ -178,7 +178,7 @@
     &::before {
       @include after-mobile {
         // right: 327px;
-        left: -50px;
+        left: -130px;
       }
     }
   }
@@ -450,7 +450,7 @@
 }
 
 div.CartOverlay.Overlay {
-  width: 440px;
+  width: 450px;
   //   overflow: unset;
   opacity: 1;
   border-radius: 12px;

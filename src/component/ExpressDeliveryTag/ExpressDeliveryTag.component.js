@@ -7,6 +7,7 @@ export const mapStateToProps = (state) => ({
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   edd_info: state.AppConfig.edd_info,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const ExpressDeliveryTag = (props) => {
@@ -24,6 +25,7 @@ export const ExpressDeliveryTag = (props) => {
     edd_info,
     isExpressServiceAvailable,
     isExpressDelivery,
+    vwoData,
   } = props;
 
   const currentSelectedAddress = JSON.parse(
@@ -50,6 +52,7 @@ export const ExpressDeliveryTag = (props) => {
       in_stock === 0 ||
       (in_stock === 1 && stock_qty === 0) ||
       !isExpressDelivery ||
+      !vwoData?.Express?.isFeatureEnabled ||
       isInternationalProduct ||
       !express_delivery ||
       !currentSelectedAddress ||

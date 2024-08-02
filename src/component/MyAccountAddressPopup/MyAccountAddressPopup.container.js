@@ -38,6 +38,7 @@ export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload[ADDRESS_POPUP_ID] || {},
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -197,8 +198,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
   }
 
   setLocalStorageAddress = (newAddress) => {
-    const { isExpressDelivery, setNewAddressSaved } = this.props;
-    if (isExpressDelivery) {
+    const { isExpressDelivery, setNewAddressSaved, vwoData } = this.props;
+    if (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       const { country_code = "", city = "", area = "" } = newAddress;
       let requestObj = {
         country: country_code,

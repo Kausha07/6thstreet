@@ -28,6 +28,7 @@ import { getAddressType } from "Util/Common/index";
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 class PLPPages extends PureComponent {
