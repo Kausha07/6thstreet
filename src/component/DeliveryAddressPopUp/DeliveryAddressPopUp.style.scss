@@ -86,7 +86,7 @@
       .allAddressAndEditBlock {
         @include mobile {
           height: 250px;
-          padding-bottom: 20px;
+          padding-bottom: 50px;
         }
 
         @include desktop {
