@@ -484,8 +484,7 @@ class MyAccountOrderView extends PureComponent {
             exchangeCount === 0 && <span>{` - ${packageStatus}`}</span>
           )}
         </h3>
-        {is_express_delivery &&
-          (status.toLowerCase() === DELIVERY_SUCCESSFUL || status.toLowerCase() === "processing" || status.toLowerCase() === "delivery_failed") && (
+        {is_express_delivery && (
             <div className="ExpressDeliveryBlock">
               {" "}
               <div className="ExpressDeliveryTextBlock">
@@ -1229,7 +1228,7 @@ class MyAccountOrderView extends PureComponent {
                   divider: true,
                 }
               )}
-            {express_delivery_charges &&
+            {express_delivery_charges && express_delivery_charges != 0 &&
               this.renderPriceLine(
                 express_delivery_charges,
                 __("Express Service"),
@@ -1347,7 +1346,7 @@ class MyAccountOrderView extends PureComponent {
       date = this.formatRefundDate(refund_date);
     } else if(groupStatus == "delivery_failed" && order_currency_code && group.rto_refund_amount && group.rto_date) {
       message = __(
-        "Refund of %s %s initiated to your original payment method. For card payments, it will reflect within 5-7 days.", 
+        "Refund of %s %s has been initiated to your original payment method. For card payments, it should reflect within 5-7 days.", 
         order_currency_code, 
         parseFloat(group.rto_refund_amount)
       );
