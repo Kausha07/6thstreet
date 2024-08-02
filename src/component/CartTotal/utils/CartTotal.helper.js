@@ -3,3 +3,23 @@ export const getValueFromTotals = (totalSegments, totalsCode) => {
 
     return value;
 };
+
+export const checkIsAnyExpressShipment = ({
+  expected_shipments = [],
+  shipmentTotal = [],
+}) => {
+  const expressFee = getValueFromTotals(
+    shipmentTotal,
+    "express_delivery_charges"
+  );
+
+  let checkIsExpressShipment = expected_shipments.some(
+    (shipment) =>
+      shipment.selected_delivery_type == 1 ||
+      shipment.selected_delivery_type == 2
+  );
+
+  if (checkIsExpressShipment && expressFee === 0) {
+    return true;
+  } else return false;
+};

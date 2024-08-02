@@ -1,7 +1,10 @@
 import React from "react";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { connect } from "react-redux";
-import { getValueFromTotals } from "./utils/CartTotal.helper";
+import {
+  getValueFromTotals,
+  checkIsAnyExpressShipment,
+} from "./utils/CartTotal.helper";
 import { getFinalPrice } from "Component/Price/Price.config";
 import { getCurrency, isArabic as checkIsArabic } from "Util/App";
 import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
@@ -41,6 +44,7 @@ function CartTotal(props) {
     international_shipping_fee,
     shipment: {
       total_segments: shipmentTotal = [],
+      expected_shipments = [],
     },
     isExpressDelivery,
   } = props;
@@ -61,6 +65,15 @@ function CartTotal(props) {
   total > CODFee  || !cashOnDeliveryFee
     ? getFinalPrice(total, currency_code) - getFinalPrice(CODFee, currency_code)
     : getFinalPrice(total, currency_code);
+
+  let isFreeExpressDelivery = false;
+  if (isExpressDelivery && expected_shipments) {
+    isFreeExpressDelivery =
+      checkIsAnyExpressShipment({
+        expected_shipments,
+        shipmentTotal,
+      }) || false;
+  }
 
   const renderPriceLine = (price, name, mods, allowZero = false) => {
     if (!price && !allowZero) {
@@ -178,8 +191,11 @@ function CartTotal(props) {
               __("International Shipping Fee")
             )}
           {renderPriceLine(
-            getValueFromTotals(isExpressDelivery ? shipmentTotal : totals, "express_delivery_charges"),
-            __("Express Service"),
+            getValueFromTotals(
+              isExpressDelivery ? shipmentTotal : totals,
+              "express_delivery_charges"
+            ) || (isFreeExpressDelivery ? __("FREE") : 0),
+            __("Express Service")
           )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
