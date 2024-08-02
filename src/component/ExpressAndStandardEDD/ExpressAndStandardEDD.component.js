@@ -26,6 +26,7 @@ export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   edd_info: state.AppConfig.edd_info,
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const ExpressAndStandardEDD = ({
@@ -57,6 +58,7 @@ export const ExpressAndStandardEDD = ({
   isSignedIn,
   isExpressTimeExpired = false,
   setTimerStateThroughProps,
+  vwoData,
 }) => {
   const [isTimeExpired, setIsTimeExpired] = useState(false);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
@@ -191,6 +193,7 @@ export const ExpressAndStandardEDD = ({
         {currentSelectedAddress &&
           isExpressServiceAvailable?.express_eligible &&
           isExpressDelivery &&
+          vwoData?.Express?.isFeatureEnabled &&
           ((isProductExpressEligible && !selectedSizeCode) ||
             isSKUExpressEligible) &&
           !isInternationalProduct &&

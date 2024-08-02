@@ -93,6 +93,8 @@ export const mapStateToProps = (state) => ({
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1076,10 +1078,11 @@ export class PLPContainer extends PureComponent {
         moreActiveFilters: newMoreActiveFilters,
       });
     }
-
     if (
       this.props.currentSelectedCityArea.mailing_address_type !=
-      prevProps.currentSelectedCityArea.mailing_address_type
+        prevProps.currentSelectedCityArea.mailing_address_type &&
+      this.props.isExpressDelivery &&
+      this.props.vwoData?.Express?.isFeatureEnabled
     ) {
       const addressType = getAddressType(prevProps.currentSelectedCityArea);
       this.onUnselectAllPress(`express_delivery_${addressType}`);

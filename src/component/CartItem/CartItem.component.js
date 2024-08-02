@@ -402,6 +402,7 @@ export class CartItem extends PureComponent {
       item: { color, optionValue, qty },
       isCheckoutPage = false,
       isExpressDelivery,
+      vwoData,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -412,7 +413,7 @@ export class CartItem extends PureComponent {
             <span> {__("Color:")}</span>
             {color}
           </div>
-          {isCheckoutPage && isExpressDelivery && (
+          {isCheckoutPage && isExpressDelivery && vwoData?.Express?.isFeatureEnabled && (
             <div block="CartItem" elem="Size" mods={{ isArabic }}>
               <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
                 |
@@ -439,7 +440,7 @@ export class CartItem extends PureComponent {
           <span> {__("Color:")}</span>
           {color}
         </div>
-        {isCheckoutPage && isExpressDelivery && (
+        {isCheckoutPage && isExpressDelivery && vwoData?.Express?.isFeatureEnabled && (
           <div block="CartItem" elem="Size" mods={{ isArabic }}>
             <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
               |
@@ -581,6 +582,7 @@ export class CartItem extends PureComponent {
       isExpressDelivery,
       isCheckoutPage,
       eddMessageForCheckoutPage,
+      vwoData,
     } = this.props;
 
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -592,7 +594,7 @@ export class CartItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    if (isExpressDelivery && isCheckoutPage) {
+    if (isExpressDelivery && isCheckoutPage && vwoData?.Express?.isFeatureEnabled) {
       eddMessageForCheckoutPage(actualEddMess, isIntlBrand);
       return null;
     }
@@ -640,6 +642,7 @@ export class CartItem extends PureComponent {
       international_shipping_fee,
       isExpressDelivery,
       isCheckoutPage,
+      vwoData,
     } = this.props;
 
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -671,7 +674,7 @@ export class CartItem extends PureComponent {
           )}
         </div>
         {!isCheckoutPage &&
-        !isExpressDelivery &&
+        (!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && 
         (isIntlBrand ||
           (international_shipping_fee &&
             (+cross_border ||
@@ -715,7 +718,8 @@ export class CartItem extends PureComponent {
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
-      isCheckoutPage
+      isCheckoutPage,
+      vwoData,
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -739,7 +743,7 @@ export class CartItem extends PureComponent {
         {this.renderClickAndCollectStoreName()}
         <div block="eddAndActionsBlock">
           {isNotAvailble && this.renderOOSMessage()}
-          {!isExpressDelivery &&
+          {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && 
             edd_info &&
             edd_info.is_enable &&
             edd_info.has_cart &&
@@ -748,7 +752,7 @@ export class CartItem extends PureComponent {
               edd_info.has_item_level) &&
             !isNotAvailble &&
             this.renderEdd(cross_border === 1)}
-          {isExpressDelivery &&
+          {isExpressDelivery && vwoData?.Express?.isFeatureEnabled && 
             edd_info &&
             edd_info.is_enable &&
             edd_info.has_cart &&

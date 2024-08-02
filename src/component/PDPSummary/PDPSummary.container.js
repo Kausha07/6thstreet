@@ -31,6 +31,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -73,6 +74,7 @@ export class PDPSummaryContainer extends PureComponent {
       colourVarientsButtonClick,
       isExpressDelivery,
       isExpressServiceAvailable,
+      vwoData,
     } = this.props;
     return {
       product,
@@ -96,6 +98,7 @@ export class PDPSummaryContainer extends PureComponent {
       colourVarientsButtonClick,
       isExpressDelivery,
       isExpressServiceAvailable,
+      vwoData,
     };
   };
 

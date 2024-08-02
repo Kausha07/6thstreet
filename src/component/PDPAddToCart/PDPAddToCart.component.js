@@ -292,6 +292,7 @@ class PDPAddToCart extends PureComponent {
       isExpressServiceAvailable,
       isExpressTimeExpired,
       cutOffTime,
+      vwoData,
     } = this.props;
     const quantity = productStock[code].quantity;
 
@@ -334,7 +335,7 @@ class PDPAddToCart extends PureComponent {
       isProductExpressEligible &&
       this.state.selectedCityArea &&
       !isInternationalProduct &&
-      isExpressServiceAvailable?.express_eligible &&
+      isExpressServiceAvailable?.express_eligible && vwoData?.Express?.isFeatureEnabled && 
       isExpressDelivery &&
       isProductOfficeServicable &&
       quantity !== 0 &&
@@ -392,6 +393,9 @@ class PDPAddToCart extends PureComponent {
       notifyMeLoading,
       notifyMeSuccess,
       popUpType = "",
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      vwoData,
     } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const quantity = productStock[code].quantity;

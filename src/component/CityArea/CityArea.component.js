@@ -39,6 +39,7 @@ export const mapStateToProps = (state) => ({
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   pdpProduct: state.PDP.product,
   cartId: state.Cart.cartId,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -89,6 +90,7 @@ export const CityArea = (props) => {
     getCart,
     cartId,
     cartItems,
+    vwoData = {},
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -583,7 +585,9 @@ export const CityArea = (props) => {
     );
   };
 
-  return isExpressDelivery ? render() : null;
+  return isExpressDelivery && vwoData?.Express?.isFeatureEnabled
+    ? render()
+    : null;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CityArea);

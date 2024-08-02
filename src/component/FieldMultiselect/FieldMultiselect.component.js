@@ -50,6 +50,8 @@ import { getAddressType } from "Util/Common/index";
 export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   isExpressPopUpOpen: state.MyAccountReducer.isExpressPopUpOpen,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 class FieldMultiselect extends PureComponent {
@@ -279,6 +281,8 @@ class FieldMultiselect extends PureComponent {
       parentActiveFilters,
       currentActiveFilter,
       OnLevelTwoCategoryPressMsite,
+      isExpressDelivery,
+      vwoData,
     } = this.props;
 
     const { subcategories = {} } = option;
@@ -306,6 +310,8 @@ class FieldMultiselect extends PureComponent {
         OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
         isLoadingFilter={this.props.isLoadingFilter}
         setLoadingMobileFilter={this.props.setLoadingMobileFilter}
+        isExpressDelivery={isExpressDelivery}
+        vwoData={vwoData}
       />
     );
   };
@@ -676,6 +682,8 @@ class FieldMultiselect extends PureComponent {
       },
       filter,
       initialOptions,
+      isExpressDelivery, 
+      vwoData,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
@@ -785,7 +793,7 @@ class FieldMultiselect extends PureComponent {
       );
     }
 
-    if (category === `express_delivery_${getAddressType()}`) {
+    if (category === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       const selctedAddress = JSON.parse(
         localStorage.getItem("currentSelectedAddress")
       );
@@ -909,11 +917,11 @@ class FieldMultiselect extends PureComponent {
           category.split(category.charAt(0))[1]
         }`
       : "";
-    const { currentActiveFilter } = this.props;
+    const { currentActiveFilter, isExpressDelivery, vwoData } = this.props;
     const { isArabic } = this.state;
     const currency = getCountryCurrencyCode();
 
-    if (category === `express_delivery_${getAddressType()}`) {
+    if (category === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       return <CityArea isSignInTypePopUp={true} showBackgroundColor={true} />;
     }
 
@@ -1251,6 +1259,8 @@ class FieldMultiselect extends PureComponent {
       initialOptions,
       currentActiveFilter,
       isBrandPLP,
+      isExpressDelivery,
+      vwoData,
     } = this.props;
     let conditionalData = data ? data : subcategories;
     let selectedItems = true;
@@ -1329,7 +1339,7 @@ class FieldMultiselect extends PureComponent {
           </button>
         )}
         {(toggleOptionsList ||
-          (category === `express_delivery_${getAddressType()}` && this.props.isExpressPopUpOpen)) &&
+          (category === `express_delivery_${getAddressType()}` && this.props.isExpressPopUpOpen && isExpressDelivery && vwoData?.Express?.isFeatureEnabled)) &&
           !isMobile.any() && (
             <>
               {category !== `express_delivery_${getAddressType()}` ? (
@@ -1349,7 +1359,7 @@ class FieldMultiselect extends PureComponent {
                 </>
               ) : (
                 <>
-                  {(category === `express_delivery_${getAddressType()}`) && (
+                  {(category === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) && (
                     <CityArea
                     isSignInTypePopUp={true}
                       showBackgroundColor={true}
@@ -1371,7 +1381,7 @@ class FieldMultiselect extends PureComponent {
         >
           {isMobile.any() &&
           (Object.keys(conditionalData).length > 10 ||
-          category === `express_delivery_${getAddressType()}`)
+          (category === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled ))
             ? this.renderFilterSearchbox(label, category)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>

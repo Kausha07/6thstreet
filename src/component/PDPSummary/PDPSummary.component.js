@@ -992,6 +992,7 @@ class PDPSummary extends PureComponent {
       },
       isExpressDelivery,
       isExpressServiceAvailable,
+      vwoData,
     } = this.props;
 
     const sku = selectedSizeCode || this.getInStockSKU(simple_products);
@@ -1674,6 +1675,7 @@ class PDPSummary extends PureComponent {
       isExpressDelivery,
       renderSummary,
       isNewDesign,
+      vwoData,
     } = this.props;
 
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
@@ -1760,7 +1762,7 @@ class PDPSummary extends PureComponent {
           if (sectionName === "shippingInfo") {
             return (
               <>
-                {!isExpressDelivery &&
+                {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) &&
                   cityResponse &&
                   edd_info &&
                   edd_info.is_enable &&
@@ -1773,7 +1775,7 @@ class PDPSummary extends PureComponent {
                   !outOfStockStatus &&
                   this.renderSelectCity(cross_border_qty === 1)}
 
-                {isExpressDelivery &&
+                {isExpressDelivery && vwoData?.Express?.isFeatureEnabled &&
                   cityResponse &&
                   edd_info &&
                   edd_info.is_enable &&

@@ -58,6 +58,7 @@ export const mapStateToProps = (state) => ({
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
   is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -321,14 +322,16 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderAccount() {
     const isFooter = false;
-    const { isExpressDelivery } = this.props;
+    const { isExpressDelivery, vwoData } = this.props;
 
     return (
       <HeaderAccount
         key="account"
         isFooter={isFooter}
         isMobile
-        showNudge={isExpressDelivery ? false : true}
+        showNudge={
+          isExpressDelivery && vwoData?.Express?.isFeatureEnabled ? false : true
+        }
       />
     );
   }

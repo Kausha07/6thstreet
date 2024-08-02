@@ -61,6 +61,7 @@ export const mapStateToProps = (state) => ({
   isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1019,6 +1020,7 @@ class ProductItem extends PureComponent {
       product: { sku, timer_start_time, timer_end_time, },
       pageType,
       isExpressDelivery,
+      vwoData,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -1051,7 +1053,7 @@ class ProductItem extends PureComponent {
           {this.renderPrice()}
           {!isMobile.any() &&
             showExpressDeliveryTagArr?.includes(pageType) &&
-            isExpressDelivery &&
+            isExpressDelivery && vwoData?.Express?.isFeatureEnabled &&
             this.renderExpressDeliveryTag()}
           {!isMobile.any() &&
           pageType !== "vuePlp" &&
@@ -1068,7 +1070,7 @@ class ProductItem extends PureComponent {
         )}
         {isMobile.any() &&
           showExpressDeliveryTagArr?.includes(pageType) &&
-          isExpressDelivery &&
+          isExpressDelivery && vwoData?.Express?.isFeatureEnabled &&
           this.renderExpressDeliveryTag()}
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
