@@ -140,7 +140,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY);
           request.intl_vendors = null;
           let items = [];
-          items_in_cart.map((item) => {
+          items_in_cart?.map((item) => {
             if (
               !(
                 item &&

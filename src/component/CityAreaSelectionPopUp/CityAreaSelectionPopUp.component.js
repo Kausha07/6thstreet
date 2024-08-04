@@ -22,12 +22,16 @@ export const CityAreaSelectionPopUp = (props) => {
   const [isAreaButtonActive, setAreaButtonActive] = useState(false);
   const [selectedCity, setSelectedCity] = useState(
     JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.city
-      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.city
+      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.[
+          isArabic() ? "city_ar" : "city"
+        ]
       : ""
   );
   const [selectedArea, setSelectedArea] = useState(
     JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.area
-      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.area
+      ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))?.[
+          isArabic() ? "area_ar" : "area"
+        ]
       : ""
   );
   const [cityAreaSearchedText, setCityAreaSearchedText] = useState("");
@@ -45,22 +49,53 @@ export const CityAreaSelectionPopUp = (props) => {
   };
 
   const changeCity = (val) => {
-    setSelectedCity(val);
+    setSelectedCity(val?.[isArabic() ? "city_ar" : "city"]);
     setCityButtonActive(false);
     setAreaButtonActive(true);
     setCityAreaSearchedText("");
   };
 
   const changeArea = (val) => {
-    setSelectedArea(val);
+    setSelectedArea(val?.[isArabic() ? "area_ar" : "area"]);
     setCityAreaSearchedText("");
     showHideCityAreaSelection(false);
-    let selectedAddress = { area: val, city: selectedCity };
-    autoPopulateCityArea(selectedAddress);
+    autoPopulateCityArea(val);
   };
 
   const handleCityAreaText = (e) => {
     setCityAreaSearchedText(e.target.value);
+  };
+
+  const getCitiesForSearchedText = (addressCityData) => {
+    return addressCityData.filter((val) => {
+      if (
+        val?.["city"]
+          ?.toLowerCase()
+          ?.includes(cityAreaSearchedText?.toLowerCase())
+      ) {
+        return val;
+      }
+    });
+  };
+
+  const getAreasForSearchedText = (areasForSelectedCity) => {
+    let reqOBJ = {
+      city: areasForSelectedCity?.city,
+      city_ar: areasForSelectedCity?.city_ar,
+      areas: areasForSelectedCity?.["areas"]?.filter((val) => {
+        if (val?.toLowerCase()?.includes(cityAreaSearchedText?.toLowerCase())) {
+          return val;
+        }
+      }),
+
+      areas_ar: areasForSelectedCity?.["areas_ar"]?.filter((val) => {
+        if (val?.toLowerCase()?.includes(cityAreaSearchedText?.toLowerCase())) {
+          return val;
+        }
+      }),
+    };
+
+    return reqOBJ;
   };
 
   const render = () => {
@@ -71,39 +106,20 @@ export const CityAreaSelectionPopUp = (props) => {
     const areasForSelectedCity =
       isAreaButtonActive &&
       selectedCity &&
-      Object.values(addressCityData)?.find(
+      addressCityData?.find(
         (data) => data?.[isArabic() ? "city_ar" : "city"] === selectedCity
       );
     const filteredList = isAreaButtonActive
       ? cityAreaSearchedText != ""
-        ? areasForSelectedCity?.[isArabic() ? "areas_ar" : "areas"]?.filter(
-            (val) => {
-              if (
-                val
-                  ?.toLowerCase()
-                  ?.includes(cityAreaSearchedText?.toLowerCase())
-              ) {
-                return val;
-              }
-            }
-          )
-        : Object.values(addressCityData)?.find(
-            (data) => data?.[isArabic() ? "city_ar" : "city"] === selectedCity
-          )?.[isArabic() ? "areas_ar" : "areas"]
+        ? getAreasForSearchedText(areasForSelectedCity)
+        : areasForSelectedCity
       : isCityButtonActive && cityAreaSearchedText != ""
-      ? addressCityData.filter((val) => {
-          if (
-            val?.[isArabic() ? "city_ar" : "city"]
-              ?.toLowerCase()
-              ?.includes(cityAreaSearchedText?.toLowerCase())
-          ) {
-            return val;
-          }
-        })
+      ? getCitiesForSearchedText(addressCityData)
       : addressCityData;
 
     const activeCity = selectedCity ? selectedCity : __("City");
     const activeArea = selectedArea ? selectedArea : __("Area");
+    let valueClick = {};
     return (
       <ModalWithOutsideClick
         show={showCityAreaSelectionPopUp}
@@ -152,35 +168,41 @@ export const CityAreaSelectionPopUp = (props) => {
                 <div block="cityAreaList">
                   {isCityButtonActive ? (
                     <ul block="cityAreaUL">
-                      {Object.entries(filteredList)?.map((val, index) => {
+                      {filteredList?.map((val, index) => {
                         return (
                           <li
-                            onClick={() =>
-                              changeCity(
-                                val?.[1]?.[isArabic() ? "city_ar" : "city"]
-                              )
-                            }
+                            onClick={() => changeCity(val)}
                             key={index}
                             block="cityListLI"
                           >
-                            {val?.[1]?.[isArabic() ? "city_ar" : "city"]}
+                            {val?.[isArabic() ? "city_ar" : "city"]}
                           </li>
                         );
                       })}
                     </ul>
                   ) : (
                     <ul block="cityAreaUL">
-                      {filteredList?.map((val, index) => {
-                        return (
-                          <li
-                            onClick={() => changeArea(val)}
-                            key={index}
-                            block="areaListLI"
-                          >
-                            {val}
-                          </li>
-                        );
-                      })}
+                      {filteredList?.[isArabic() ? "areas_ar" : "areas"]?.map(
+                        (val, index) => {
+                          return (
+                            <li
+                              onClick={() => {
+                                valueClick = {
+                                  city: filteredList?.city,
+                                  city_ar: filteredList?.city_ar,
+                                  area: filteredList?.areas?.[index],
+                                  area_ar: filteredList?.areas_ar?.[index],
+                                };
+                                changeArea(valueClick);
+                              }}
+                              key={index}
+                              block="areaListLI"
+                            >
+                              {val}
+                            </li>
+                          );
+                        }
+                      )}
                     </ul>
                   )}
                 </div>
