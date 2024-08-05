@@ -94,9 +94,25 @@ export class CartItem extends PureComponent {
 
   static getDerivedStateFromProps(props) {
     const {
-      item: { availability, availableQty, qty },
-      intlEddResponse
+      item: {
+        availability = "",
+        availableQty,
+        qty,
+        full_item_info: { reserved_qty },
+      },
+      intlEddResponse,
+      isExpressDelivery,
+      cartTotals: { status = null}
     } = props;
+
+    if (
+      isExpressDelivery &&
+      status != null && 
+      availableQty > 0 &&
+      reserved_qty === 0
+    ) {
+      return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
+    }
 
     return {
       isNotAvailble:
@@ -700,6 +716,14 @@ export class CartItem extends PureComponent {
     )
   }
 
+  renderQTYUnavailableMSG = (qty, reserved_qty, availableQty) => {
+    if (availableQty > 0 && reserved_qty!= 0 && reserved_qty <= qty) {
+      return (
+        <div block="stockQuantityNotReservedText">{__("Only %s qty available. Please update.", reserved_qty)}</div>
+      );
+    } else return null;
+  };
+
   renderContent() {
     const {
       isLikeTable,
@@ -707,15 +731,17 @@ export class CartItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border = 0 },
+        full_item_info: { cross_border = 0, reserved_qty = 0, available_qty },
         international_vendor = null,
         brand_name = "",
         row_total,
+        qty,
       },
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
       isCheckoutPage =false,
+      cartTotals: { status = null },
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -760,6 +786,9 @@ export class CartItem extends PureComponent {
 
           {row_total === 0 ? null : this.renderActions()}
         </div>
+        {!isNotAvailble && status!= null && 
+          isExpressDelivery &&
+          this.renderQTYUnavailableMSG(qty, reserved_qty, available_qty)}
       </figcaption>
     );
   }

@@ -87,6 +87,7 @@ export const mapStateToProps = (state) => {
     isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
     isCouponRequest: state.CartReducer.isCouponRequest,
     vwoData: state.AppConfig.vwoData,
+    isExpressDelivery: state.AppConfig.isExpressDelivery,
   };
 };
 
@@ -176,7 +177,7 @@ export class CartPageContainer extends PureComponent {
     } = props;
 
     if (items.length !== 0) {
-      const mappedItems = checkProducts(items) || [];
+      const mappedItems = checkProducts(items, props?.totals, props?.isExpressDelivery) || [];
 
       return {
         ...MyAccountContainer.navigateToSelectedTab(props, state),

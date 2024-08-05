@@ -15,6 +15,7 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   isMinicartOpen: state.CartReducer.isMinicartOpen,
   isAnimate: state.WishlistReducer.isAnimate,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -57,7 +58,7 @@ export class HeaderCartContainer extends PureComponent {
     const { prevIsMinicartOpen } = state;
 
     if (items.length !== 0 && isMinicartOpen === prevIsMinicartOpen) {
-      const mappedItems = checkProducts(items) || [];
+      const mappedItems = checkProducts(items, props.totals, props.isExpressDelivery) || [];
 
       // commenting this code b/c we need not check calculation of cartAPI in frontend 
       // if (total === 0) {

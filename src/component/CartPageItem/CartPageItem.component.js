@@ -153,9 +153,25 @@ export class CartItem extends PureComponent {
 
   static getDerivedStateFromProps(props) {
     const {
-      item: { availability = "", availableQty, qty },
-      intlEddResponse
+      item: {
+        availability = "",
+        availableQty,
+        qty,
+        full_item_info: { reserved_qty },
+      },
+      intlEddResponse,
+      isExpressDelivery,
+      totals: { status = null}
     } = props;
+
+    if (
+      isExpressDelivery &&
+      status != null && 
+      availableQty > 0 &&
+      reserved_qty === 0
+    ) {
+      return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
+    }
 
     return {
       isNotAvailble:
@@ -1019,6 +1035,14 @@ export class CartItem extends PureComponent {
     )
   }
 
+  renderQTYUnavailableMSG = (qty, reserved_qty, availableQty) => {
+    if (availableQty > 0 && reserved_qty!= 0 && reserved_qty <= qty) {
+      return (
+        <div block="stockQuantityNotReservedText">{__("Only %s qty available. Please update.", reserved_qty)}</div>
+      );
+    } else return null;
+  };
+
   renderContent() {
     const {
       isLikeTable,
@@ -1026,14 +1050,16 @@ export class CartItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border = 0 },
+        full_item_info: { cross_border = 0, reserved_qty = 0, available_qty = 0 },
         international_vendor = null,
         brand_name = "",
-        row_total
+        row_total,
+        qty,
       },
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
+      totals: { status = null},
     } = this.props;
     const { isNotAvailble } = this.state;
     const isIntlBrand =
@@ -1066,6 +1092,9 @@ export class CartItem extends PureComponent {
           !isNotAvailble &&
           this.renderEddWhenExpressEnabled(cross_border === 1)}
         {!isExpressDelivery && (isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)>-1)))) ?  this.renderIntlTag() : null}
+        {!isNotAvailble && status!= null && 
+          isExpressDelivery &&
+          this.renderQTYUnavailableMSG(qty, reserved_qty, available_qty)}
       </figcaption>
     );
   }

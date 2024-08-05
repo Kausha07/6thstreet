@@ -179,6 +179,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -1293,7 +1294,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd, eddItems) {
-    const { createOrder, showErrorNotification, totals } = this.props;
+    const { createOrder, showErrorNotification, totals, isExpressDelivery } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -1305,6 +1306,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.setState({ isLoading: true });
     try {
       const response = await createOrder(code, data, eddItems);
+      if (response?.data?.code === "CHK-33" && isExpressDelivery) {
+        showErrorNotification(__(response?.data?.message));
+        history.push({
+          pathname: "/cart",
+        });
+        return;
+      }
+
       if (response && response.data) {
         if (finalEdd) {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
