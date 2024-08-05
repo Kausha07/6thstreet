@@ -315,6 +315,7 @@ export const CityArea = (props) => {
           onSignIn={onSignIn}
           isPopup
           showRegisterScreen={isRegisterScreen}
+          onCreateAccount={onSignIn}
         />
       </ModalWithOutsideClick>
     );
