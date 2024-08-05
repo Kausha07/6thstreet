@@ -694,6 +694,7 @@ export class CheckoutSuccess extends PureComponent {
         },
         incrementID,
         isFailed,
+        shipmentDetails
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -718,6 +719,7 @@ export class CheckoutSuccess extends PureComponent {
                 isLikeTable
                 checkoutPageSiteWide={site_wide_applied}
                 checkoutPageCouponCode={coupon_code}
+                shipmentDetails={shipmentDetails}
               />
             ))}
           </ul>

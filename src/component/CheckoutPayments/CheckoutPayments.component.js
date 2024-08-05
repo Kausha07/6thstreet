@@ -612,7 +612,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       <div
         onClick={() => {
           this.setIsRenderEmmptyCard(false);
-          selectPaymentMethod(method);
+          isSelected ? null : selectPaymentMethod(method);
         }}
         block="addNewCardContainer"
         mods={{ isSelected: isSelected && !isRenderEmmptyCard }}
