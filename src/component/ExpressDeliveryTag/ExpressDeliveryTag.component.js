@@ -71,8 +71,10 @@ export const ExpressDeliveryTag = (props) => {
           <span block="ExpressDeliveryTextRed">
             {__("Express")} {}
           </span>
-          <span block="ExpressDeliveryTextNormal">{__("Delivery by")}</span>
+          <span block="ExpressDeliveryTextNormal">&nbsp;{__("Delivery")}</span>
+          <span block="ExpressDeliveryTextNormal">&nbsp;{__("by")}</span>
           <span block="ExpressDeliveryTextBold">
+            &nbsp;
             {express_delivery !== 1 &&
             express_delivery !== 0 &&
             express_delivery?.toLowerCase() !== "tomorrow delivery"

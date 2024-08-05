@@ -177,8 +177,8 @@ export const CityArea = (props) => {
 
   useEffect(() => {
     if (!isPDP && isExpressDelivery) {
-      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"))
-        ? JSON.parse(localStorage?.getItem("EddAddressReq"))
+      const reqOBJ = JSON.parse(localStorage?.getItem("currentSelectedAddress"))
+        ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))
         : defaultShippingAddress
         ? defaultShippingAddress
         : {};
@@ -315,6 +315,7 @@ export const CityArea = (props) => {
           onSignIn={onSignIn}
           isPopup
           showRegisterScreen={isRegisterScreen}
+          onCreateAccount={onSignIn}
         />
       </ModalWithOutsideClick>
     );
@@ -445,12 +446,18 @@ export const CityArea = (props) => {
   };
 
   const autoPopulateCityArea = async (selectedAddress) => {
-    const { area = "", city = "", country_code = "" } = selectedAddress;
+    const {
+      area = "",
+      city = "",
+      country_code = "",
+      area_ar = "",
+      city_ar = "",
+    } = selectedAddress;
 
     let requestObj = {
       country: country_code || getCountryFromUrl(),
-      city: city,
-      area: area,
+      city: isArabic() && area_ar ? area_ar : city,
+      area: isArabic() && area_ar ? area_ar : area,
       courier: null,
       source: null,
     };
@@ -475,9 +482,9 @@ export const CityArea = (props) => {
       // checking this condition rather than isPDP bcz if we are on PDP page and
       // select address from the top header section then there's no EDD call for PDP
       await getEddForPDP(selectedAddress?.area, selectedAddress?.city);
-      await getEddResponse(selectedAddress, true);
+      await getEddResponse(requestObj, true);
     } else if (isToMakeEDDCallPage) {
-      await getEddResponse(selectedAddress, true);
+      await getEddResponse(requestObj, true);
     }
 
     const request = JSON.parse(localStorage.getItem("EddAddressReq"));

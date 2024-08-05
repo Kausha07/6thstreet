@@ -220,9 +220,13 @@ export const ExpressAndStandardEDD = ({
                       />
                     ) : null}
                     <span block="EddExpressDeliveryTextNormal">
-                      {__("Delivery by")}
+                      &nbsp;{__("Delivery")}
+                    </span>
+                    <span block="EddExpressDeliveryTextNormal">
+                      &nbsp;{__("by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
+                      &nbsp;
                       {express_delivery_key?.toLowerCase() ===
                         "today delivery" && !isExpressTimeExpired
                         ? __("Today")

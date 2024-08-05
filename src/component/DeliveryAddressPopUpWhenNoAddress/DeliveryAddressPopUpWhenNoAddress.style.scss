@@ -28,12 +28,12 @@
         }
 
         @include desktop {
-          width: 364px;
-          height: 270px;
+          width: 400px;
+          height: 300px;
           background: #ffffff;
-          padding: 10px 20px;
+          padding: 20px 20px;
           z-index: 100;
-          border-radius: 4px;
+          border-radius: 12px;
           border: 1px solid #d1d3d4;
         }
       }
@@ -45,6 +45,9 @@
             font-weight: 600;
             line-height: 24px;
             font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
 
@@ -136,7 +139,7 @@
         background: #ffffff;
         padding: 10px 20px;
         z-index: 100;
-        border-radius: 12px;
+        border-radius: 12px 12px 0 0;
       }
 
       @include desktop {
@@ -157,6 +160,9 @@
           font-weight: 600;
           line-height: 24px;
           font-size: 18px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
 
