@@ -5,7 +5,7 @@ import {
   DEFAULT_SPLIT_KEY,
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
-import { ExpressDeliveryTruck } from "Component/Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 import ExpressTimer from "Component/ExpressTimer";
 import VIPIcon from "Component/HeaderAccount/icons/vip.png";
 import Loader from "Component/Loader";
@@ -127,7 +127,9 @@ export const NewCheckoutShippment = (props) => {
         <div block="ExpressOrStandadrdDeliverySelection">
           {isExpressDeliveryAvailable && (
             <div
-              block="ExpressDeliveryBlock"
+              block={`ExpressDeliveryBlock${
+                isArabic() ? " ExpressisArabic" : ""
+              }`}
               mods={{
                 isSelected: isExpressDeliverySelected,
               }}
@@ -150,7 +152,7 @@ export const NewCheckoutShippment = (props) => {
                       />
                     ) : null}
                     <span block="EddExpressDeliveryTextNormal">
-                      {__("Delivery")}
+                      &nbsp;{__("Delivery")}
                     </span>
                     <span block="EddExpressDeliveryTextNormal">
                       &nbsp;{__("by")}
@@ -185,7 +187,9 @@ export const NewCheckoutShippment = (props) => {
             </div>
           )}
           <div
-            block="StandardDeliveryBlock"
+            block={`StandardDeliveryBlock${
+              isArabic() ? " StandardisArabic" : ""
+            }`}
             className={isExpressDeliveryAvailable ? "" : "topBorder"}
             mods={{
               isSelected: !isExpressDeliverySelected,
@@ -196,6 +200,7 @@ export const NewCheckoutShippment = (props) => {
           >
             <div block="EddStandardDelivery">
               <div block="EddStandardDeliveryTextBlock">
+                <Shipping />
                 <div block="shipmentText">
                   <span block="EddStandardDeliveryText">
                     {__("Standard")} {}
