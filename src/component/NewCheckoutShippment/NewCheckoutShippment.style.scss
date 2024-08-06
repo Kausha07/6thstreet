@@ -301,6 +301,11 @@
         text-decoration: underline;
         padding-top: 3px;
       }
+
+      @include mobile {
+        padding: 5px;
+        border-radius: 5px;
+      }
     }
   }
 }
