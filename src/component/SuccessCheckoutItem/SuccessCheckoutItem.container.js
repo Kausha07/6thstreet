@@ -12,6 +12,7 @@ export const CartDispatcher = import(
 
 export const mapStateToProps = (state) => ({
     isExpressDelivery: state.AppConfig.isExpressDelivery,
+    vwoData: state.AppConfig.vwoData,
   });
 
 export const mapDispatchToProps = (dispatch) => ({

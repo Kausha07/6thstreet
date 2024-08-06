@@ -363,6 +363,7 @@ export class SuccessCheckoutItem extends PureComponent {
       intlEddResponse,
       international_shipping_fee,
       isExpressDelivery,
+      vwoData,
     } = this.props;
     const isIntlBrand =
     cross_border === 1 && edd_info && edd_info.has_cross_border_enabled ;
@@ -382,14 +383,14 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductPrice()}
         {this.renderClickAndCollectStoreName()}
 
-        {!isExpressDelivery && edd_info &&
+        {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
 
-        {isExpressDelivery && edd_info &&
+        {(isExpressDelivery && vwoData?.Express?.isFeatureEnabled) && edd_info &&
         edd_info.is_enable &&
         edd_info.has_thank_you &&
         ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&

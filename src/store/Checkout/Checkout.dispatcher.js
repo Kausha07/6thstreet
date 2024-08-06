@@ -291,6 +291,15 @@ export class CheckoutDispatcher {
   }
 
   async getShipment(dispatch, cartId) {
+    const {
+      AppConfig: { isExpressDelivery = false, vwoData = {} },
+    } = getStore().getState();
+
+    if(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled ) {
+      dispatch(setShipment({}));
+      return {};
+    }
+
     const reqObj = await JSON.parse(
       localStorage.getItem("currentSelectedAddress")
     );

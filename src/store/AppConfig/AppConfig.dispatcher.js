@@ -126,7 +126,7 @@ export class AppConfigDispatcher {
               ? variationName === "c"
                 ? false
                 : true
-              : isFeatureEnabled,
+              : abTestingConfig?.Express?.variable?.[0]?.defaultValue,
           };
         }
         return result;

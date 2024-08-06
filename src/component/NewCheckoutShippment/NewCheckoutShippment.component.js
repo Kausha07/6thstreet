@@ -248,9 +248,7 @@ export const NewCheckoutShippment = (props) => {
   };
 
   const renderContent = () => {
-    const isShipmentAvailable =
-      expected_shipments && expected_shipments.length ? true : false;
-    if (isExpressDelivery && isShipmentAvailable) {
+    if (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       return (
         <>
           {expected_shipments.map((shipmentItem, i) =>
