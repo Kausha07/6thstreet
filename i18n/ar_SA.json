@@ -1429,5 +1429,11 @@
     "Add New": "أضف الآن",
     "Delivery Here": "التوصيل هنا",
     "Express delivery may available. Please select your location.": "توصيل إكسبريس قد يكون متاحًا. يرجى اختيار موقعك",
-    "Express Delivery is not currently available for this location.": "توصيل إكسبريس غير متاح حاليًا لهذا الموقع."
+    "Express Delivery is not currently available for this location.": "توصيل إكسبريس غير متاح حاليًا لهذا الموقع.",
+    "This item is not returnable or exchangeable.": "هذا المنتج غير قابل للإرجاع أو الاستبدال.",
+    "This item is not returnable. Exchange only.": "هذا المنتج غير قابل للإرجاع. للاستبدال فقط.",
+    "This item is not exchangeable. Return only.": "هذا المنتج غير قابل للاستبدال. للإرجاع فقط.",
+    "Exchange window closed on %s.": "انتهت فترة الاستبدال في %s",
+    "Return window closed on %s": "انتهت فترة الارجاع في %s",
+    "Returned/exchange window closed on %s": "انتهت فترة الارجاع/الاستبدال في %s"
 }

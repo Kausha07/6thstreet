@@ -69,7 +69,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       } else if(!exchangeable_date_expired) {
         return returnable_date_expired ? __("Return window closed on %s", returnable_date_expired) : __("This item is not exchangeable. Return only.");
       } else {
-        return returnable_date_expired ? __("Both return and exchange windows closed on %s", returnable_date_expired) : "";
+        return returnable_date_expired ? __("Returned/exchange window closed on %s", returnable_date_expired) : "";
       }
     }
   }
