@@ -49,6 +49,7 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
