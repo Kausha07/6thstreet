@@ -795,8 +795,10 @@ export class CartItem extends PureComponent {
 
           {row_total === 0 ? null : this.renderActions()}
         </div>
-        {!isNotAvailble && status!= null && 
+        {!isNotAvailble &&
+          status != null &&
           isExpressDelivery &&
+          !isCheckoutPage &&
           this.renderQTYUnavailableMSG(qty, reserved_qty, available_qty)}
       </figcaption>
     );
