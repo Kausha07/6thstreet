@@ -65,6 +65,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 is_nationality_visible: config.countries[getCountryCode]?.is_nationality_visible || false,
                 is_nationality_mandatory: config.countries[getCountryCode]?.is_nationality_mandatory || false,
                 mailing_address_type: config.mailing_address_type || [],
+                isNewCheckoutPageEnable: config?.isNewCheckoutPageEnable || true,
             };
 
             // this will invalidate config after one year
