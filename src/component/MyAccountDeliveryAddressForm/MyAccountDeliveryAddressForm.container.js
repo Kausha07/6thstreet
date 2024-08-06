@@ -23,6 +23,7 @@ export const mapStateToProps = (state) => ({
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   vwoData: state.AppConfig.vwoData,
+  isNewCheckoutPageEnable: state.AppConfig.isNewCheckoutPageEnable,
 });
 
 export default connect(

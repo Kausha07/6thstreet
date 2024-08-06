@@ -57,25 +57,25 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
 
-  getReturnExchangeMessage = (dateStr, is_returnable, is_exchangeable) => {
-    if(!dateStr){
-      return "";
-    }
-    if(!is_returnable && !is_exchangeable) {
+  getReturnExchangeMessage = (returnable_date, exchangeable_date) => {
+    
+    if(!returnable_date && !exchangeable_date) {
       return __("This item is not returnable or exchangeable.");
     } else {
-      const expiredDate = this.expiredDateIfAny(dateStr);
-      if(!is_returnable) {
-        return expiredDate ? __("Exchange window closed on %s", expiredDate) :   __("This item is not returnable. Exchange only.");
-      } else if(!is_exchangeable) {
-        return expiredDate ? __("Return window closed on %s", expiredDate) : __("This item is not exchangeable. Return only.");
+      const returnable_date_expired = this.expiredDateIfAny(returnable_date);
+      const exchangeable_date_expired = this.expiredDateIfAny(exchangeable_date);
+      if(!returnable_date_expired) {
+        return exchangeable_date_expired ? __("Exchange window closed on %s", exchangeable_date_expired) :   __("This item is not returnable. Exchange only.");
+      } else if(!exchangeable_date_expired) {
+        return returnable_date_expired ? __("Return window closed on %s", returnable_date_expired) : __("This item is not exchangeable. Return only.");
       } else {
-        return expiredDate ? __("Both return and exchange windows closed on %s", expiredDate) : "";
+        return returnable_date_expired ? __("Both return and exchange windows closed on %s", returnable_date_expired) : "";
       }
     }
   }
     
   expiredDateIfAny = (dateStr) =>{
+    if(!dateStr) return "";
     // Convert the date string to a Date object
     const givenDate = new Date(dateStr);
     // Get today's date (without time)
@@ -116,9 +116,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
         international_vendor = null,
         original_price,
         unit_final_price,
-        is_returnable = null,
-        is_exchangeable = null,
-        return_exchange_date = null
+        returnable_date=null,
+        exchangeable_date=null
       } = {},
       status,
       paymentMethod,
@@ -140,7 +139,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments";
     const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
-    const return_exchange_message = itemStatus.toLowerCase() === 'delivery_successful' ? this.getReturnExchangeMessage(return_exchange_date, is_returnable, is_exchangeable) : "";
+    const return_exchange_message = itemStatus.toLowerCase() === 'delivery_successful' ? this.getReturnExchangeMessage(returnable_date, exchangeable_date) : "";
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -317,7 +316,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         splitKey = splitKey;
       }
     }
-    if(is_express_delivery && itemStatus && itemStatus.toLowerCase() == 'processing') {
+    if(is_express_delivery) {
       return (
         <>
           <div className="EddExpressDeliveryTextBlock">

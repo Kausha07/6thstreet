@@ -150,9 +150,13 @@ export const NewCheckoutShippment = (props) => {
                       />
                     ) : null}
                     <span block="EddExpressDeliveryTextNormal">
-                      &nbsp;{__("Delivery by")}
+                      {__("Delivery")}
+                    </span>
+                    <span block="EddExpressDeliveryTextNormal">
+                      &nbsp;{__("by")}
                     </span>
                     <span block="EddExpressDeliveryTextBold">
+                      &nbsp;
                       {expressDeliveryToday ? __("Today") : __("Tomorrow")}
                     </span>
                   </div>

@@ -12,6 +12,7 @@ import {
 } from 'Util/API/endpoint/StoreCredit/StoreCredit.enpoint';
 import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 export const STORE_CREDIT = 'store_credit';
 
@@ -49,6 +50,7 @@ export class StoreCreditDispatcher {
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
+            await CheckoutDispatcher.getShipment(dispatch, cartId);
             await this.getStoreCredit(dispatch);
 
             return true;

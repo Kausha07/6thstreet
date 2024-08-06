@@ -131,6 +131,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     hideActiveOverlay: PropTypes.func.isRequired,
     language: PropTypes.string.isRequired,
     closePopup: PropTypes.func,
+    onCreateAccount: PropTypes.func,
   };
 
   static defaultProps = {
@@ -138,6 +139,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     onSignIn: () => {},
     goToPreviousHeaderState: () => {},
     closePopup: () => {},
+    onCreateAccount: () => {},
   };
 
   containerFunctions = {
@@ -447,7 +449,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     this.setState({ otpError: "" });
     const inputValue = field.target.value;
     try {
-      const { createAccountNew, loginAccount } = this.props;
+      const { createAccountNew, loginAccount, onCreateAccount } = this.props;
       const { customerLoginData, customerRegisterData, otpAttempt } =
         this.state;
       if (
@@ -508,6 +510,7 @@ export class MyAccountOverlayContainer extends PureComponent {
           try {
             await signInOTP(response);
             this.checkForOrder();
+            onCreateAccount();
           } catch (e) {
             this.setState({ isLoading: false });
             showNotification("error", e.message);

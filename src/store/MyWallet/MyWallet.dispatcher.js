@@ -16,6 +16,7 @@ import Logger from 'Util/Logger';
 export const MY_WALLET = 'my_wallet';
 
 export const ONE_MONTH_IN_SECONDS = 2628000;
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 export class MyWalletDispatcher {
     async getReward(dispatch) {
@@ -51,6 +52,7 @@ export class MyWalletDispatcher {
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
+            await CheckoutDispatcher.getShipment(dispatch, cartId);
             await this.getReward(dispatch);
 
             return true;

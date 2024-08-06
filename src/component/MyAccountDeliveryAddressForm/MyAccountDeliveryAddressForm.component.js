@@ -471,7 +471,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   renderActions() {
-    const { isLoading, isExpressDelivery, vwoData } = this.props;
+    const { isLoading, isExpressDelivery, vwoData, isNewCheckoutPageEnable } = this.props;
     const disabled = isLoading;
     return (
       <button
@@ -481,7 +481,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         disabled={disabled}
         mix={{ block: "button primary" }}
       >
-        {isExpressDelivery && vwoData?.Express?.isFeatureEnabled ? __("Delivery Here") : __("Save address")}
+        {(isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
+        isNewCheckoutPageEnable
+          ? __("Delivery Here")
+          : __("Save address")}
       </button>
     );
   }
