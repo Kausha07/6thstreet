@@ -120,7 +120,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   setEDDresultData = (response, finalRes, dispatch, login) => {
     if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
       const {
-        AppConfig: { edd_info = {}, isExpressDelivery = false },
+        AppConfig: { edd_info = {}, isExpressDelivery = false, isNewCheckoutPageEnable = false },
       } = getStore().getState();
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
@@ -129,7 +129,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       );
       const countryCode = getCountryFromUrl();
 
-      if (localStorage.getItem("EddAddressReq") && isExpressDelivery) {
+      if (localStorage.getItem("EddAddressReq") && (isExpressDelivery || isNewCheckoutPageEnable)) {
         const request = JSON.parse(localStorage.getItem("EddAddressReq"));
         dispatch(
           setCustomerDefaultShippingAddress(defaultShippingAddress?.[0])
@@ -278,12 +278,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const query = MyAccountQuery.getCustomerQuery();
     const {
       MyAccountReducer: { addressCityData = [], newAddressSaved = false },
-      AppConfig: { isExpressDelivery = false },
+      AppConfig: { isExpressDelivery = false, isNewCheckoutPageEnable = false },
     } = getStore().getState();
 
     const country_code = getCountryFromUrl();
 
-    if (!localStorage.getItem("EddAddressReq") && isExpressDelivery) {
+    if (!localStorage.getItem("EddAddressReq") && (isExpressDelivery || isNewCheckoutPageEnable)) {
       await MobileAPI.get(`order/last?country_specific=true`).then(
         (response) => {
           if (
@@ -311,7 +311,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     getShippingAddresses().then(async (response) => {
       if (response.data) {
-        if (newAddressSaved && isExpressDelivery) {
+        if (newAddressSaved && (isExpressDelivery || isNewCheckoutPageEnable)) {
           let countryWiseAddresses = response?.data?.filter(
             (obj) => obj?.country_code === getCountryFromUrl()
           );
@@ -785,10 +785,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 // type --> false for call from checkout because we don't need to save this data for other pages it should be true 
   async estimateEddResponse(dispatch, request, type) {
     const {
-      AppConfig: { isExpressDelivery = false },
+      AppConfig: { isExpressDelivery = false, isNewCheckoutPageEnable = false },
     } = getStore().getState();
     
-    if (isExpressDelivery) {
+    if (isExpressDelivery || isNewCheckoutPageEnable) {
       let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
 
       request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
@@ -822,7 +822,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse({}));
             localStorage.removeItem("IntlEddAddressRes");
-          } else if (!isExpressDelivery) {
+          } else if (!isExpressDelivery || !isNewCheckoutPageEnable) {
             //adding express condition bcz if edd api throws error then this block can't remove EddAddressReq
             dispatch(setEddResponse({}, request));
             localStorage.removeItem("EddAddressReq");
