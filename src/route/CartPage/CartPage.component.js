@@ -486,13 +486,14 @@ export class CartPage extends PureComponent {
   };
 
   renderRemoveOOS() {
-    const { totals, updateTotals } = this.props;
+    const { totals, updateTotals, isExpressDelivery } = this.props;
     const { isArabic } = this.state;
     return (
       <RemoveOOS
         closeremoveOosOverlay={this.closeremoveOosOverlay}
         totals={totals}
         isArabic={isArabic}
+        isExpressDelivery={isExpressDelivery}
       />
     );
   }
