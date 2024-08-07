@@ -303,6 +303,11 @@ export const CityArea = (props) => {
     closePopup();
   };
 
+  const onCreateAccount = () => {
+    setShowSignInRegisterPopup(false);
+    addNewAddress();
+  };
+
   const renderMyAccountOverlay = () => {
     if (!showSignInRegisterPopup) {
       return null;
@@ -312,13 +317,15 @@ export const CityArea = (props) => {
         show={showSignInRegisterPopup}
         onClose={() => closePopup}
       >
-        <MyAccountOverlay
-          closePopup={closePopup}
-          onSignIn={onSignIn}
-          isPopup
-          showRegisterScreen={isRegisterScreen}
-          onCreateAccount={onSignIn}
-        />
+        <div block="PageWrapper" mods={{ isArabic: isArabic() }}>
+          <MyAccountOverlay
+            closePopup={closePopup}
+            onSignIn={onSignIn}
+            isPopup
+            showRegisterScreen={isRegisterScreen}
+            onCreateAccount={onCreateAccount}
+          />
+        </div>
       </ModalWithOutsideClick>
     );
   };
