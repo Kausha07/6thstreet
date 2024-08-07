@@ -283,32 +283,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     const country_code = getCountryFromUrl();
 
-    if (!localStorage.getItem("EddAddressReq") && (isExpressDelivery || isNewCheckoutPageEnable)) {
-      await MobileAPI.get(`order/last?country_specific=true`).then(
-        (response) => {
-          if (
-            response?.data?.city &&
-            response?.data?.area &&
-            response?.data?.country?.toLowerCase() ===
-              country_code?.toLowerCase()
-          ) {
-            let requestObj = {
-              country: country_code,
-              city: response?.data?.city,
-              area: response?.data?.area,
-              courier: null,
-              source: null,
-            };
-            localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
-            localStorage.setItem(
-              "currentSelectedAddress",
-              JSON.stringify(response?.data)
-            );
-          }
-        }
-      );
-    }
-
     getShippingAddresses().then(async (response) => {
       if (response.data) {
         if (newAddressSaved && (isExpressDelivery || isNewCheckoutPageEnable)) {

@@ -30,6 +30,8 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { resetCart } from "Store/Cart/Cart.action";
 import { setCartTotal } from "Store/Checkout/Checkout.action";
+import { getCountryFromUrl } from "Util/Url";
+import MobileAPI from "Util/API/provider/MobileAPI";
 export class CartDispatcher {
   async setCheckoutStep(dispatch, checkoutDetails = false) {
     dispatch(setCheckoutDetails(checkoutDetails));
@@ -38,7 +40,43 @@ export class CartDispatcher {
   async getCart(dispatch, isNewCart = false, createNewCart = true) {
     const {
       Cart: { cartId },
+      AppConfig: {
+        isExpressDelivery = false,
+        vwoData = {},
+        isNewCheckoutPageEnable = false,
+      },
     } = getStore().getState();
+
+    const country_code = getCountryFromUrl();
+    if (
+      !localStorage.getItem("EddAddressReq") &&
+      (isExpressDelivery || isNewCheckoutPageEnable)
+    ) {
+      await MobileAPI.get(`order/last?country_specific=true`).then(
+        (response) => {
+          if (
+            response?.data?.city &&
+            response?.data?.area &&
+            response?.data?.country?.toLowerCase() ===
+              country_code?.toLowerCase()
+          ) {
+            let requestObj = {
+              country: country_code,
+              city: response?.data?.city,
+              area: response?.data?.area,
+              courier: null,
+              source: null,
+            };
+            localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+            localStorage.setItem(
+              "currentSelectedAddress",
+              JSON.stringify(response?.data)
+            );
+          }
+        }
+      );
+    }
+
     const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
     if ((!cartId || isNewCart) && createNewCart) {
       try {
