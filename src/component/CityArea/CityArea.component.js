@@ -258,7 +258,13 @@ export const CityArea = (props) => {
             elem="ContentWrapper"
             mods={{ formContent }}
           >
-            <span onClick={() => showCards()} block="popUpBackArrow">
+            <span
+              onClick={() => {
+                showCards();
+                setExpressPLPAddressForm(false);
+              }}
+              block="popUpBackArrow"
+            >
               {" "}
               <ChevronLeft
                 style={{
@@ -303,9 +309,21 @@ export const CityArea = (props) => {
     closePopup();
   };
 
+  const addNewAddressOnCreateAccount = () => {
+    // showHidePOPUP(false);
+    setAddAndEditAddressButtonClicked(true);
+    openForm();
+    showAddEditAddressPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+      displayType: !isMobile.any() ? "desktopPopUp" : "",
+    });
+  };
+
   const onCreateAccount = () => {
     setShowSignInRegisterPopup(false);
-    addNewAddress();
+    addNewAddressOnCreateAccount();
   };
 
   const renderMyAccountOverlay = () => {
