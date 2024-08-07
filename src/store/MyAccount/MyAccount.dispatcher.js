@@ -329,6 +329,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               "currentSelectedAddress",
               JSON.stringify(newlyAddedAddress)
             );
+            this.selectedCityArea(dispatch, newlyAddedAddress);
+            this.expressPopUpOpen(dispatch, false);
         }
         if (addressCityData.length === 0) {
           AppConfigDispatcher.getCities().then((resp) => {

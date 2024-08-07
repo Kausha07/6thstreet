@@ -69,6 +69,14 @@ export const mapDispatchToProps = (dispatch) => ({
   showNotification: (error) =>
     dispatch(showNotification("error", error)),
   setNewAddressSaved: (val) => dispatch(setNewAddressSaved(val)),
+  selectedCityArea: (data) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.selectedCityArea(dispatch, data)
+    ),
+  expressPopUpOpen: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.expressPopUpOpen(dispatch, val)
+    ),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -199,7 +207,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
   }
 
   setLocalStorageAddress = (newAddress) => {
-    const { isExpressDelivery, setNewAddressSaved, vwoData, isNewCheckoutPageEnable } = this.props;
+    const { isExpressDelivery, setNewAddressSaved, vwoData, isNewCheckoutPageEnable, selectedCityArea, expressPopUpOpen } = this.props;
     if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
       const { country_code = "", city = "", area = "" } = newAddress;
       let requestObj = {
@@ -215,6 +223,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         JSON.stringify(newAddress)
       );
       setNewAddressSaved(false);
+      selectedCityArea(newAddress);
+      expressPopUpOpen(false);
     }
   };
 
