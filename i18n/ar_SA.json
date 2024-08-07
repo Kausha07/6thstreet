@@ -1429,5 +1429,7 @@
     "Add New": "أضف الآن",
     "Delivery Here": "التوصيل هنا",
     "Express delivery may available. Please select your location.": "توصيل إكسبريس قد يكون متاحًا. يرجى اختيار موقعك",
-    "Express Delivery is not currently available for this location.": "توصيل إكسبريس غير متاح حاليًا لهذا الموقع."
+    "Express Delivery is not currently available for this location.": "توصيل إكسبريس غير متاح حاليًا لهذا الموقع.",
+    "Only %s qty available. Please update.":"الكمية المتوفرة  %s فقط. يُرجى التحديث.",
+    "Express Service": "خدمة سريعة"
 }
