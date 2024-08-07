@@ -391,7 +391,7 @@ class PLPPages extends PureComponent {
         {shouldRender &&
           this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
         <PLPPage
-          key={v4()}
+          key={key}
           products={products}
           handleCallback={this.handleCallback}
           impressions={impressions}
@@ -549,8 +549,8 @@ class PLPPages extends PureComponent {
     if (selectedFilters) {
       return (
         <ul>
-          <li key={v4()}>
-            {customSelectedFilter?.map((values) => {
+          <li>
+            {customSelectedFilter?.map((values, idx) => {
               if (values?.type && values?.type === "MoreFilter") {
                 const thisRef = this;
                 const {
@@ -570,7 +570,7 @@ class PLPPages extends PureComponent {
                   is_selected,
                 };
                 return values?.label && (
-                  <li key={v4()}>
+                  <li key={idx}>
                     {thisRef.renderButtonView(label, () =>
                       thisRef.onClickRemoveMoreFilter(modifedValue)
                     )}
