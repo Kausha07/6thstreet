@@ -109,7 +109,7 @@ const InfluencerCollection = (props) => {
     try {
       getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
         if (resp) {
-          setInfluencerNameOnPage(resp?.influencer_name.trim());
+          setInfluencerNameOnPage(resp?.influencer_name?.trim());
           setInfluencerData(resp);
           setInfluencerName(resp?.influencer_name);
           isCollectionPage(true);

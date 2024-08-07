@@ -1,4 +1,5 @@
 // import PropTypes from 'prop-types';
+import { lazy, Suspense } from 'react';
 import Accordion from "Component/Accordion";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
@@ -18,7 +19,8 @@ import Event, {
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+// import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+const DynamicContentVueProductSliderContainer = lazy(() => import(/* webpackChunkName: 'DynamicContentVueProductSlider' */ "../DynamicContentVueProductSlider"));
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
 import { 
@@ -46,6 +48,7 @@ class PDPDetailsSection extends PureComponent {
     isArabic: isArabic(),
     showMore: isMobile.any() || isMobile.tablet() ? false : true,
     isMobile: isMobile.any() || isMobile.tablet(),
+    isLoaded: false,
   };
 
   componentDidMount() {
@@ -57,12 +60,21 @@ class PDPDetailsSection extends PureComponent {
       "PRODUCT_CATEGORY",
       JSON.stringify(categories_without_path[0])
     );
+    window.addEventListener('scroll', () => { this.loadComponentOnScroll()}, { once: true })
   }
 
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
     document.body.style.overflowX = "visible";
+  }
+
+  loadComponentOnScroll() {
+    if(!this.state.isLoaded) {
+        this.setState({
+          isLoaded: true
+        })
+    }
   }
 
   renderSizeAndFit() {
@@ -670,11 +682,12 @@ class PDPDetailsSection extends PureComponent {
     } = this.props;
     const { innerWidth: width } = window;
     document.body.style.overflowX = "clip";
-    if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
+    if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0 && this.state.isLoaded) {
       return (
         <>
           {this.props?.product?.returnable ? <div block="Seperator2" /> : null}
           <React.Fragment>
+          <Suspense fallback={<div></div>}>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
@@ -710,6 +723,7 @@ class PDPDetailsSection extends PureComponent {
               }
               return null;
             })}
+          </Suspense>
           </React.Fragment>
         </>
       );

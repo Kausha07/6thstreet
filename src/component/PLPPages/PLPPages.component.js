@@ -113,12 +113,12 @@ class PLPPages extends PureComponent {
       this.props.pages.length > prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-      if (!isMobile.any() && !this.state.firstPageLoad) {
-        const last =
-          document.getElementById("Products-Lists")?.lastElementChild;
-        last.style.scrollMarginTop = "180px";
-        last.scrollIntoView({ behavior: "smooth" });
-      }
+      // if (!isMobile.any() && !this.state.firstPageLoad) {
+      //   const last =
+      //     document.getElementById("Products-Lists")?.lastElementChild;
+      //   last.style.scrollMarginTop = "180px";
+      //   last.scrollIntoView({ behavior: "smooth" });
+      // }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
       }
@@ -1000,7 +1000,7 @@ class PLPPages extends PureComponent {
           )}
 
           {this.renderPages()}
-          {productLoading && !isMobile.any() && this.renderPlaceHolder()}
+          {/* {productLoading && !isMobile.any() && this.renderPlaceHolder()} */}
         </div>
         {this.inSearch() && (
           <Helmet>
