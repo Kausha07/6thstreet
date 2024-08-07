@@ -271,13 +271,14 @@ export const CityArea = (props) => {
                 }}
               />
             </span>
+            <div block="PageWrapper" mods={{ isArabic: isArabic() }}>
             <MyAccountAddressPopup
               formContent={formContent}
               closeForm={closeForm}
               openForm={openForm}
               showCards={showCards}
               customer={customer}
-            />{" "}
+            /></div>{" "}
           </div>
         </ModalWithOutsideClick>
       );

@@ -311,6 +311,7 @@ export class CheckoutDispatcher {
 
     try {
       const response = await getShipment({ cartId, params });
+      await CartDispatcher.getCartTotals(dispatch, cartId);
       if(response) {
         dispatch(setShipment(response));
       }

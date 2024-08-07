@@ -43,7 +43,6 @@ function CartTotal(props) {
     cashOnDeliveryFee,
     international_shipping_fee,
     shipment: {
-      total_segments: shipmentTotal = [],
       expected_shipments = [],
     },
     isExpressDelivery,
@@ -71,7 +70,7 @@ function CartTotal(props) {
     isFreeExpressDelivery =
       checkIsAnyExpressShipment({
         expected_shipments,
-        shipmentTotal,
+        totals,
       }) || false;
   }
 
@@ -192,9 +191,9 @@ function CartTotal(props) {
             )}
           {renderPriceLine(
             getValueFromTotals(
-              isExpressDelivery ? shipmentTotal : totals,
+              totals,
               "express_delivery_charges"
-            ) || (isFreeExpressDelivery ? __("FREE") : 0),
+            ) || ((isFreeExpressDelivery && pageType === "CheckoutPage") ? __("FREE") : 0),
             __("Express Service")
           )}
           {renderPriceLine(
@@ -223,8 +222,7 @@ function CartTotal(props) {
           {renderPriceLine(
             pageType === "CartPage"
               ? grandTotal
-              : (getValueFromTotals(isExpressDelivery ? shipmentTotal : totals, "grand_total") ??
-              getValueFromTotals(totals, "grand_total")),
+              : (getValueFromTotals(totals, "grand_total")),
             __("Total"),
             {
               divider: true,

@@ -1,17 +1,16 @@
 export const getValueFromTotals = (totalSegments, totalsCode) => {
-    const { value } = totalSegments.find(({ code }) => code === totalsCode) || { value: 0 };
+  const { value } = totalSegments.find(({ code }) => code === totalsCode) || {
+    value: 0,
+  };
 
-    return value;
+  return value;
 };
 
 export const checkIsAnyExpressShipment = ({
   expected_shipments = [],
-  shipmentTotal = [],
+  totals = [],
 }) => {
-  const expressFee = getValueFromTotals(
-    shipmentTotal,
-    "express_delivery_charges"
-  );
+  const expressFee = getValueFromTotals(totals, "express_delivery_charges");
 
   let checkIsExpressShipment = expected_shipments.some(
     (shipment) =>
