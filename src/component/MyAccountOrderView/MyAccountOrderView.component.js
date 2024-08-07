@@ -21,7 +21,7 @@ import { ExtendedOrderType } from "Type/API";
 import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
-import { formatDate, getDefaultEddDate } from "Util/Date";
+import { formatDate, getDefaultEddDate, formatRefundDate } from "Util/Date";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
@@ -1302,28 +1302,7 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  formatRefundDate = (dateStr) => {
-    // Convert the date string to a Date object
-
-    const countryCode = getCountryFromUrl();
-
-    const dateObj = new Date(dateStr);
-
-    // Define options for formatting the date
-    const options = {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-
-    // Format the date to the desired string
-    return dateObj
-      .toLocaleString("en-" + countryCode.toUpperCase(), options)
-      .replace(",", "");
-  };
+  
 
   renderMessage(groupStatus, group) {
     const {
@@ -1332,6 +1311,7 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     let message = "";
     let date = "";
+    const countryCode = getCountryFromUrl();
     if (
       status == "canceled" &&
       refund_date &&
@@ -1343,14 +1323,14 @@ class MyAccountOrderView extends PureComponent {
         order_currency_code,
         parseFloat(refund_amount)
       );
-      date = this.formatRefundDate(refund_date);
+      date = formatRefundDate(refund_date, countryCode);
     } else if(groupStatus == "delivery_failed" && order_currency_code && group.rto_refund_amount && group.rto_date) {
       message = __(
         "Refund of %s %s has been initiated to your original payment method. For card payments, it should reflect within 5-7 days.", 
         order_currency_code, 
         parseFloat(group.rto_refund_amount)
       );
-      date = this.formatRefundDate(group.rto_date);
+      date = formatRefundDate(group.rto_date, countryCode);
     }
     if(message && date) {
       return (

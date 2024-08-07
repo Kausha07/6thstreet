@@ -177,3 +177,39 @@ export const getDefaultEddMessage = (
   }
   return { defaultEddMess, defaultEdd };
 };
+
+export const formatRefundDate = (dateStr, countryCode) => {
+  // Convert the date string to a Date object
+
+  let countryTimeZone = {
+    "ae": "Asia/Dubai",
+    "sa": "Asia/Riyadh",
+    "bh": "Asia/Bahrain",
+    "om": "Asia/Muscat",
+    "qa": "Asia/Qatar",
+    "kw": "Asia/Kuwait"
+  }
+  const timeZone = countryTimeZone[countryCode.toLowerCase()]
+  const utcDate = new Date(dateStr + " UTC");
+
+  // Define options for formatting the date
+  const options = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+    timeZone: timeZone
+  };
+
+  // Format the date according to the specified time zone
+  const formattedDate = utcDate.toLocaleString('en-GB', options);
+
+  // Split the formatted date to rearrange
+  const [datePart, timePart] = formattedDate.split(", ");
+  const [day, month, year] = datePart.split(" ");
+  
+  return `${parseInt(day)} ${month} ${year} ${timePart}`;
+};
