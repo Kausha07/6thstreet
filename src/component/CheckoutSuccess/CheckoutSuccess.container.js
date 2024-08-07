@@ -158,6 +158,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       isChangePhonePopupOpen: false,
       isMobileVerification: false,
       ...MyAccountContainer.navigateToSelectedTab(this.props),
+      cartTotalRes: BrowserDatabase.getItem("CART_DETAILS"),
     };
 
     /*
@@ -267,6 +268,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
       initialTotals = {},
+      cartTotalRes,
     } = this.state;
     const {
       isFailed,
@@ -306,7 +308,8 @@ export class CheckoutSuccessContainer extends PureComponent {
         : orderDetailsCartTotal,
       initialTotals: isRedirectPayment ? newInitialTotal : initialTotals,
       payMethodCode: { code: redirectPaymentMethod },
-      shipmentDetails
+      shipmentDetails,
+      cartTotalRes,
     };
   };
 

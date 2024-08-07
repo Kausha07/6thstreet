@@ -1572,8 +1572,10 @@ export class CheckoutSuccess extends PureComponent {
         total_discount = 0,
         express_delivery_charges = 0,
       } = {},
+      cartTotalRes: { total_segments = [] },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
+    const expressFee = getDiscountFromTotals(total_segments, "express_delivery_charges") || 0;
 
     return (
       <div block="MyAccountOrderView" elem="OrderTotals">
@@ -1605,7 +1607,7 @@ export class CheckoutSuccess extends PureComponent {
                 }
               )}
             {this.renderSitewidePriceLine(
-              express_delivery_charges,
+              express_delivery_charges || expressFee,
               __("Express Service")
             )}
             {store_credit_amount !== 0
@@ -1667,9 +1669,11 @@ export class CheckoutSuccess extends PureComponent {
         international_shipping_charges= 0,
         express_delivery_charges = 0
       },
+      cartTotalRes: { total_segments = [] },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    const expressFee = getDiscountFromTotals(total_segments, "express_delivery_charges") || 0;
 
     return (
       <div block="MyAccountOrderView" elem="OrderTotals">
@@ -1684,7 +1688,7 @@ export class CheckoutSuccess extends PureComponent {
               __("International Shipping fee")
             )}
             {this.renderPriceLineQPAY(
-              express_delivery_charges,
+              express_delivery_charges || expressFee,
               __("Express Service")
             )}
             {customer_balance_amount !== 0
