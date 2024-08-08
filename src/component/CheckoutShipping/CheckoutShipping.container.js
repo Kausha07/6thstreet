@@ -604,6 +604,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
+    // if user is guest user then set adddress in localstorage for get shipment
+    if(!isSignedIn()) {
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(shippingAddressMapped)
+      );
+    }
+
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;

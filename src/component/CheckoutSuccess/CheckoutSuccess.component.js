@@ -1798,6 +1798,7 @@ export class CheckoutSuccess extends PureComponent {
       this.setState({ eventSent: true });
     }
     localStorage.removeItem("cartProducts");
+    console.log('checking=>', 'CheckProps=====>>>', this.props );
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}
