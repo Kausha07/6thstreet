@@ -59,8 +59,8 @@
           }
 
           &::before {
-            top: 19px;
-            left: 10px;
+            top: 17px;
+            left: 7px;
             width: 15px;
             height: 15px;
             border-radius: 50%;
@@ -76,10 +76,11 @@
             &::after {
               opacity: 1;
               top: 17px;
-              left: 9px;
+              left: 7px;
               width: 18px;
               height: 18px;
-              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat center / contain;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
+                center / contain;
               transform: none;
               -webkit-transform: none;
             }
@@ -99,7 +100,7 @@
             svg {
               width: 24px;
               height: 24px;
-              margin: 0 7px;
+              margin: 0 4px;
             }
 
             .EddExpressDeliveryTextBlock {
@@ -155,7 +156,7 @@
             text-align: right;
 
             &-freeExpressText {
-              color: #28D9AA;
+              color: #28d9aa;
               padding-bottom: 5px;
             }
 
@@ -173,7 +174,7 @@
           border-top: none;
           cursor: pointer;
 
-          padding: 0 10px 0 35px;
+          padding: 0 10px 0 24px;
           height: 52px;
 
           &::before,
@@ -184,8 +185,8 @@
           }
 
           &::before {
-            top: 19px;
-            left: 10px;
+            top: 17px;
+            left: 7px;
             width: 15px;
             height: 15px;
             border-radius: 50%;
@@ -201,10 +202,11 @@
             &::after {
               opacity: 1;
               top: 17px;
-              left: 9px;
+              left: 7px;
               width: 18px;
               height: 18px;
-              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat center / contain;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
+                center / contain;
               transform: none;
               -webkit-transform: none;
             }
@@ -226,8 +228,8 @@
               align-items: center;
 
               svg {
-                width: 15px;
-                height: 15px;
+                width: 20px;
+                height: 20px;
                 margin: 0 4px;
               }
 
@@ -261,6 +263,66 @@
         .topBorder {
           border-top: 0.2px solid #d1d3d4;
         }
+
+        .ExpressisArabic {
+          padding: 0 24px 0px 10px;
+          &::before {
+            top: 17px;
+            right: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              right: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+        }
+
+        .StandardisArabic {
+          padding: 0 24px 0 10px;
+          &::before {
+            top: 17px;
+            right: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              right: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+        }
       }
 
       .ProductInfo {
@@ -284,7 +346,6 @@
       &-Header {
         display: flex;
         padding: 20px;
-
       }
 
       &-ItemCount {

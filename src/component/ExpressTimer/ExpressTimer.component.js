@@ -102,11 +102,11 @@ export const ExpressTimer = (props) => {
 
   return (
     <>
-      {!isTimeExpired && (
+      {!isTimeExpired && parseInt(minutes) && parseInt(hours) ? (
         <div block="EddExpressDeliveryCutOffTime">
           {__("Order within %sHrs %sMins", hours, minutes)}
         </div>
-      )}
+      ) : null}
     </>
   );
 };

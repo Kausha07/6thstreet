@@ -1269,7 +1269,12 @@ class FieldMultiselect extends PureComponent {
     if(category === "brand_name" && isBrandPLP) {
       return null;
     }
-
+    if (
+      category === "express_delivery_home" &&
+      (!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled)
+    ) {
+      return null;
+    }
     const datakeys = [];
     if (category === "sizes") {
       Object.keys(data).map((key) => {

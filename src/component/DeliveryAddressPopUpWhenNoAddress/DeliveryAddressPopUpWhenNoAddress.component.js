@@ -35,7 +35,8 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
     if (
       showPopUp &&
       wrapperRef.current &&
-      !wrapperRef?.current?.contains(e.target)
+      !wrapperRef?.current?.contains(e.target) &&
+      !isMobile.any()
     ) {
       showHidePOPUP(false);
       setExpressPopUp(false);
@@ -55,7 +56,8 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
             <div block="deliveryAddressPopUpWhenNoAddressInnerBlock">
               <div block="greetingToUser">
                 <h1 block="headingText">
-                  {__("Hello,")} {firstname} {lastname}
+                  {__("Hello,")} {firstname}{" "}
+                  {lastname != "LASTNAME_PLACEHOLDER" && lastname}
                 </h1>
               </div>
               <div block="deliveryNote">

@@ -1037,7 +1037,7 @@ export class CartItem extends PureComponent {
   }
 
   renderQTYUnavailableMSG = (qty, reserved_qty, availableQty) => {
-    if (availableQty > 0 && reserved_qty!= 0 && reserved_qty <= qty) {
+    if (availableQty > 0 && reserved_qty!= 0 && reserved_qty < qty) {
       return (
         <div block="stockQuantityNotReservedText">{__("Only %s qty available. Please update.", reserved_qty)}</div>
       );

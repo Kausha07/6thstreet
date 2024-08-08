@@ -1435,5 +1435,7 @@
     "This item is not exchangeable. Return only.": "هذا المنتج غير قابل للاستبدال. للإرجاع فقط.",
     "Exchange window closed on %s.": "انتهت فترة الاستبدال في %s",
     "Return window closed on %s": "انتهت فترة الارجاع في %s",
-    "Returned/exchange window closed on %s": "انتهت فترة الارجاع/الاستبدال في %s"
+    "Returned/exchange window closed on %s": "انتهت فترة الارجاع/الاستبدال في %s",
+    "Only %s qty available. Please update.":"الكمية المتوفرة  %s فقط. يُرجى التحديث.",
+    "Express Service": "خدمة سريعة"
 }

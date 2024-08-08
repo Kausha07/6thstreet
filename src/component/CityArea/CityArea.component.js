@@ -258,7 +258,13 @@ export const CityArea = (props) => {
             elem="ContentWrapper"
             mods={{ formContent }}
           >
-            <span onClick={() => showCards()} block="popUpBackArrow">
+            <span
+              onClick={() => {
+                showCards();
+                setExpressPLPAddressForm(false);
+              }}
+              block="popUpBackArrow"
+            >
               {" "}
               <ChevronLeft
                 style={{
@@ -304,6 +310,23 @@ export const CityArea = (props) => {
     closePopup();
   };
 
+  const addNewAddressOnCreateAccount = () => {
+    // showHidePOPUP(false);
+    setAddAndEditAddressButtonClicked(true);
+    openForm();
+    showAddEditAddressPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+      displayType: !isMobile.any() ? "desktopPopUp" : "",
+    });
+  };
+
+  const onCreateAccount = () => {
+    setShowSignInRegisterPopup(false);
+    addNewAddressOnCreateAccount();
+  };
+
   const renderMyAccountOverlay = () => {
     if (!showSignInRegisterPopup) {
       return null;
@@ -313,13 +336,15 @@ export const CityArea = (props) => {
         show={showSignInRegisterPopup}
         onClose={() => closePopup}
       >
-        <MyAccountOverlay
-          closePopup={closePopup}
-          onSignIn={onSignIn}
-          isPopup
-          showRegisterScreen={isRegisterScreen}
-          onCreateAccount={onSignIn}
-        />
+        <div block="PageWrapper" mods={{ isArabic: isArabic() }}>
+          <MyAccountOverlay
+            closePopup={closePopup}
+            onSignIn={onSignIn}
+            isPopup
+            showRegisterScreen={isRegisterScreen}
+            onCreateAccount={onCreateAccount}
+          />
+        </div>
       </ModalWithOutsideClick>
     );
   };

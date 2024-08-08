@@ -219,15 +219,15 @@ export class AppConfigDispatcher {
                     campaignName: HPPCampaignName,
                 },
                 NewPDP : {
-                    variationName: abTestingConfig?.NewPDP?.variationName,
+                    variationName: abTestingConfig?.NewPDP?.defaultVariant,
                     vwo: '0',
                     campaignName: newPDPCompaignName
                 },
                 Express : {
-                    variationName: abTestingConfig?.Express?.variationName,
+                    variationName: abTestingConfig?.Express?.defaultVariant,
                     vwo: '0',
                     campaignName: expressCampaignName,
-                    isFeatureEnabled: false,
+                    isFeatureEnabled: abTestingConfig?.Express?.variable?.[0]?.defaultValue,
                 } 
             }
         }

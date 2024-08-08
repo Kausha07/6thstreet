@@ -35,7 +35,8 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
     if (
       showPopUp &&
       wrapperRef.current &&
-      !wrapperRef?.current?.contains(e.target)
+      !wrapperRef?.current?.contains(e.target) &&
+      !isMobile.any()
     ) {
       showHidePOPUP(false);
       setExpressPopUp(false);
