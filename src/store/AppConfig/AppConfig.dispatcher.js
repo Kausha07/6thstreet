@@ -181,10 +181,11 @@ export class AppConfigDispatcher {
     async getAppConfig(dispatch) {
         try {
             const customer = BrowserDatabase.getItem("customer") || {};
-            const bottomNavigationConfig = await getBottomNavigationConfig();
-            const config = await getConfig();
+            // const bottomNavigationConfig = await getBottomNavigationConfig();
+            // const config = await getConfig();
             const gtmConfig = this.getGtmConfig();
-            const abTestingConfigData = await getABTestingConfig();
+            // const abTestingConfigData = await getABTestingConfig();
+            const [config,abTestingConfigData, bottomNavigationConfig] = await Promise.all([getConfig(), getABTestingConfig(), getBottomNavigationConfig()]);
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
             const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigData, config ) || null;
             dispatch(setAppConfig(appConfig));

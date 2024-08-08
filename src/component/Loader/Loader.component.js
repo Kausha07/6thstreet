@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import Image from "Component/Image";
 
-import LoaderImg from "./images/loader-1.gif";
+// import LoaderImg from "./images/loader-1.gif";
 
 import "./Loader.style";
 
@@ -27,9 +27,9 @@ export class Loader extends PureComponent {
     isLoading: PropTypes.bool.isRequired,
   };
 
-  renderMain() {
-    return <img block="Loader" elem="Main" src={LoaderImg} alt="Loader" />;
-  }
+  // renderMain() {
+  //   return <img block="Loader" elem="Main" src={LoaderImg} alt="Loader" />;
+  // }
   renderCSSLoader() {
     return <div block="Loader" elem="SpinningLoader"></div>;
   }

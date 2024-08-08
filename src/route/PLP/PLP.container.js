@@ -164,7 +164,7 @@ export class PLPContainer extends PureComponent {
   }
 
   static async request(isPage, props) {
-    const { requestProductList, requestProductListPage, influencerAlgoliaQuery,
+    const { requestProductList, requestProductListPage, influencerAlgoliaQuery, filters
     } = props;
     let options;
     if (
@@ -187,7 +187,7 @@ export class PLPContainer extends PureComponent {
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
-    requestFunction({ options });
+    requestFunction({ options, filters });
   }
 
   state = {
@@ -1073,12 +1073,6 @@ export class PLPContainer extends PureComponent {
         newActiveFilters: newSelectedActiveFilters,
         moreActiveFilters: newMoreActiveFilters,
       });
-    }
-    let element = document.getElementById(lastHomeItem);
-    if (element) {
-      // window.focus();
-      element.style.scrollMarginTop = "180px";
-      element.scrollIntoView({ behavior: "smooth" });
     }
     const pagePathName = new URL(window.location.href).pathname;
     const isCollectionPage = pagePathName.includes(".html") || false;

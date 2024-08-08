@@ -113,12 +113,12 @@ class PLPPages extends PureComponent {
       this.props.pages.length > prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-      if (!isMobile.any() && !this.state.firstPageLoad) {
-        const last =
-          document.getElementById("Products-Lists")?.lastElementChild;
-        last.style.scrollMarginTop = "180px";
-        last.scrollIntoView({ behavior: "smooth" });
-      }
+      // if (!isMobile.any() && !this.state.firstPageLoad) {
+      //   const last =
+      //     document.getElementById("Products-Lists")?.lastElementChild;
+      //   last.style.scrollMarginTop = "180px";
+      //   last.scrollIntoView({ behavior: "smooth" });
+      // }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
       }
@@ -391,7 +391,7 @@ class PLPPages extends PureComponent {
         {shouldRender &&
           this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
         <PLPPage
-          key={v4()}
+          key={key}
           products={products}
           handleCallback={this.handleCallback}
           impressions={impressions}
@@ -549,8 +549,8 @@ class PLPPages extends PureComponent {
     if (selectedFilters) {
       return (
         <ul>
-          <li key={v4()}>
-            {customSelectedFilter?.map((values) => {
+          <li>
+            {customSelectedFilter?.map((values, idx) => {
               if (values?.type && values?.type === "MoreFilter") {
                 const thisRef = this;
                 const {
@@ -570,7 +570,7 @@ class PLPPages extends PureComponent {
                   is_selected,
                 };
                 return values?.label && (
-                  <li key={v4()}>
+                  <li key={idx}>
                     {thisRef.renderButtonView(label, () =>
                       thisRef.onClickRemoveMoreFilter(modifedValue)
                     )}
@@ -1000,7 +1000,7 @@ class PLPPages extends PureComponent {
           )}
 
           {this.renderPages()}
-          {productLoading && !isMobile.any() && this.renderPlaceHolder()}
+          {/* {productLoading && !isMobile.any() && this.renderPlaceHolder()} */}
         </div>
         {this.inSearch() && (
           <Helmet>

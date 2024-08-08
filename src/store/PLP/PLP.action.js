@@ -59,11 +59,12 @@ export const setProductLoading = (isLoading) => ({
   isLoading,
 });
 
-export const setPLPData = (response, options, isInitial) => ({
+export const setPLPData = (response, options, isInitial, isLoading=false) => ({
   type: SET_PLP_DATA,
   response,
   options,
   isInitial,
+  isLoading
 });
 
 export const setPLPLoading = (isLoading) => ({
