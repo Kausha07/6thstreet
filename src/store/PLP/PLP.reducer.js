@@ -155,6 +155,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
         },
         options: requestedOptions = {},
         isInitial,
+        loading = false
       } = action;
       const { page: initialPage = 0 } = requestedOptions;
       return {
@@ -166,7 +167,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
         pages: {
           [initialPage]: products,
         },
-        isLoading:false,
+        isLoading:loading,
         moreFilters,
       };
 

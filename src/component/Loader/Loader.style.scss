@@ -19,7 +19,7 @@
 }
 
 .Loader {
-  background-color: var(--overlay-black-color);
+  // background-color: var(--overlay-black-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -28,13 +28,13 @@
   z-index: 75;
   margin: auto;
 
-  &-Main {
-    background-image: url(./images/loader-1.gif) no-repeat;
-    width: 60px;
-    height: 60px;
-    border-radius: 60px;
-    background: #ffffff;
-  }
+  // &-Main {
+  //   background-image: url(./images/loader-1.gif) no-repeat;
+  //   width: 60px;
+  //   height: 60px;
+  //   border-radius: 60px;
+  //   background: #ffffff;
+  // }
 
   &-Scale {
     position: absolute;

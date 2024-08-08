@@ -9,10 +9,13 @@ import {
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import CmsPage from "Route/CmsPage";
-import NoMatch from "Route/NoMatch";
+// import CmsPage from "Route/CmsPage";
+// import NoMatch from "Route/NoMatch";
 const PDP = lazy(() => import(/* webpackChunkName: 'PDP' */ "Route/PDP"));
-import PLP from "Route/PLP";
+// import PLP from "Route/PLP";
+const CmsPage = lazy(() => import(/* webpackChunkName: 'CmsPage' */ "Route/CmsPage"));
+const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
+const PLP = lazy(() => import(/* webpackChunkName: 'PLP' */ "Route/PLP"));
 import {
   TYPE_CATEGORY,
   TYPE_CMS_PAGE,
@@ -77,12 +80,14 @@ class UrlRewrites extends PureComponent {
     const { brandDescription, brandImg, brandName, query } = this.props;
     return (
       <GTMRouteWrapper route={CATEGORY}>
-        <PLP
-          brandDescription={brandDescription}
-          brandImg={brandImg}
-          brandName={brandName}
-          query={query}
-        />
+        <Suspense fallback={<div></div>}>
+          <PLP
+            brandDescription={brandDescription}
+            brandImg={brandImg}
+            brandName={brandName}
+            query={query}
+          />
+        </Suspense>
       </GTMRouteWrapper>
     );
   }
@@ -92,7 +97,9 @@ class UrlRewrites extends PureComponent {
 
     return (
       <GTMRouteWrapper route={CMS_PAGE}>
-        <CmsPage pageIds={id} />
+        <Suspense fallback={<div></div>}>
+          <CmsPage pageIds={id} />
+        </Suspense>
       </GTMRouteWrapper>
     );
   }
@@ -129,14 +136,16 @@ class UrlRewrites extends PureComponent {
 
     this.render404 = () => (
       <GTMRouteWrapper route={NOT_FOUND}>
-        <NoMatch {...this.props} />
+        <Suspense fallback={<div></div>}>
+          <NoMatch {...this.props} />
+        </Suspense>
       </GTMRouteWrapper>
     );
 
     if (isLoading) {
       return (
         <>
-          <div block="EmptyPage"></div>
+          {/* <div block="EmptyPage"></div> */}
           <Loader isLoading={isLoading} />
         </>
       );

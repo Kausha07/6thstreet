@@ -31,9 +31,10 @@ export class PLPDispatcher {
   }
 
   async requestProductList(payload, dispatch, state) {
-    const { options = {} } = payload;
+    const { options = {}, filters={} } = payload;
 
     if (Object.keys(options).length !== 0) {
+      dispatch(setPLPData({filters }, options, false, true));
       dispatch(setPLPLoading(true));
       try {
         let categoryData = {};

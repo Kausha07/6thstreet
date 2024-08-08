@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Router from 'Component/Router';
-import SharedTransition from 'Component/SharedTransition';
+// import SharedTransition from 'Component/SharedTransition';
 
 import './Splash.style';
 
@@ -12,14 +12,14 @@ class Splash extends PureComponent {
     };
 
     renderSplash() {
-        return 'splash';
+        return '';
     }
 
     renderWizard() {
         return (
             <>
                 <Router />
-                <SharedTransition />
+                {/* <SharedTransition /> */}
             </>
         );
     }
