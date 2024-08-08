@@ -49,11 +49,7 @@ class SearchPage extends PLP {
         <NoMatch/>
       )
     }
-      if (
-        // isLoading ||
-        (pages.undefined && pages.undefined.length > 0) ||
-        (pages["0"] && pages["0"].length > 0)
-      ) {
+
         return (
           <main block="SearchPage" id="plp-main-scroll-id">
             <ContentWrapper label={__("Product List Page")}>
@@ -75,38 +71,11 @@ class SearchPage extends PLP {
                   </div>
                 )}
               </div>
-              {this.renderSearchNotFound()}
+              {/* {this.renderSearchNotFound()} */}
             </ContentWrapper>
           </main>
         );
-      }
-
-      return (
-        <div className="SearchPage">
-        <div  className="ContentWrapper">
-          <div class="Card"></div>
-          <div block="Wrapper">
-            <div class="Card"></div>
-            <div class="Card"></div>
-            <div class="Card"></div>
-            <div class="Card"></div>
-            <div class="Card"></div>
-            <div class="Card" ></div>
-          </div>
-        </div>
-        </div>
-      )
-
-    // return (
-    //   // <main block="SearchPage" >
-    //   //   <ContentWrapper label={__("Product List Page")}>
-    //   //     {this.renderPLPDetails()}
-    //   //     {this.renderPLPPages()}
-    //   //     {this.renderSearchNotFound()}
-    //   //   </ContentWrapper>
-    //   // </main>
-    // );    
-  }
+      }   
 }
 
 export default SearchPage;

@@ -240,10 +240,11 @@ export class AppConfigDispatcher {
         try {
             const countryCode = getCountryFromUrl().toLowerCase();
             const customer = BrowserDatabase.getItem("customer") || {};
-            const bottomNavigationConfig = await getBottomNavigationConfig();
-            const config = await getConfig();
+            // const bottomNavigationConfig = await getBottomNavigationConfig();
+            // const config = await getConfig();
             const gtmConfig = this.getGtmConfig();
-            const abTestingConfigData = await getABTestingConfig();
+            // const abTestingConfigData = await getABTestingConfig();
+            const [config,abTestingConfigData, bottomNavigationConfig] = await Promise.all([getConfig(), getABTestingConfig(), getBottomNavigationConfig()]);
             const abTestingConfigDataCountrySpecific = abTestingConfigData?.[countryCode] || abTestingConfigData;
             const appConfig = { ...config, ...gtmConfig, bottomNavigationConfig };
             const vwoData =  await this.getUserVWOVariation(customer, abTestingConfigDataCountrySpecific, config ) || null;

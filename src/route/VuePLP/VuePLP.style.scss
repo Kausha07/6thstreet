@@ -16,6 +16,41 @@
           padding-bottom: 60px;
         }
       }
+      .ProductItem {
+        &-ImageBox {
+            padding-top: unset!important;
+            margin-bottom: 6px;
+            @include mobile {
+                margin-bottom: 12px;
+            }
+            .Image {
+                position: unset!important;
+                top: unset!important;
+                left: unset!important;
+                padding-bottom: unset!important;
+            }
+        }
+        .PLPSummary-Colors {
+            background-color: #ffffff;
+            opacity: 0.8;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            padding: 4px 0px;
+        }
+        .PLPSummary-Exclusive {
+            background-color: #ffffff;
+            opacity: 0.8;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            padding: 4px 0px;
+            @include mobile {
+                font-size: 12px;
+                z-index: 1;
+            }
+        }
+      }
     }
         .VueProductSlider{
             &-VueProductContainer{

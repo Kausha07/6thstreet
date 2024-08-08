@@ -208,6 +208,9 @@ export class UrlRewritesContainer extends PureComponent {
         }
       }
 
+      this.setState({
+        isLoading: true,
+      });
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
@@ -264,7 +267,7 @@ export class UrlRewritesContainer extends PureComponent {
       this.setState({
         isLoading: false,
       });
-    }, 3000);
+    }, 0);
     // TODO: switch to "executeGet" afterwards
   }
 

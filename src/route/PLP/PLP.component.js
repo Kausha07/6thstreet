@@ -202,7 +202,10 @@ export class PLP extends PureComponent {
   }
 
   renderPLPPages() {
-    const { prevPath = null, updateFiltersState } = this.props;
+    const { prevPath = null, updateFiltersState, isLoading } = this.props;
+    if(isLoading) {
+      return <Loader isLoading={isLoading}/>
+    }
     return (
       <PLPPages
         {...this.props}
@@ -590,10 +593,6 @@ export class PLP extends PureComponent {
     ) {
       return <NoMatch />;
     }
-    if (
-      (pages.undefined && pages.undefined.length > 0) ||
-      (pages["0"] && pages["0"].length > 0)
-    ) {
       return (
         <main block="PLP" id="plp-main-scroll-id">
           {this.renderMetaContent()}
@@ -630,9 +629,6 @@ export class PLP extends PureComponent {
         </main>
       );
     }
-
-    return <Loader isLoading={isLoading} />;
-  }
 }
 
 export default connect(mapStateToProps)(PLP);
