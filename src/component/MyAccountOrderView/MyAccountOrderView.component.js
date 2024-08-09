@@ -1343,7 +1343,7 @@ class MyAccountOrderView extends PureComponent {
             <p>
               {message}
             </p>
-            <p className="color-grey">
+            <p block="color-grey" mods={{ isArabic }}>
               {date}
             </p>
           </div>
