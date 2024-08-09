@@ -49,7 +49,7 @@ export class CartDispatcher {
 
     const country_code = getCountryFromUrl();
     if (
-      !localStorage.getItem("EddAddressReq") &&
+      !localStorage.getItem("currentSelectedAddress") &&
       (isExpressDelivery || isNewCheckoutPageEnable)
     ) {
       await MobileAPI.get(`order/last?country_specific=true`).then(
@@ -67,7 +67,7 @@ export class CartDispatcher {
               courier: null,
               source: null,
             };
-            localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+            // localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
             localStorage.setItem(
               "currentSelectedAddress",
               JSON.stringify(response?.data)

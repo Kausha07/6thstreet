@@ -77,6 +77,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.expressPopUpOpen(dispatch, val)
     ),
+  setAddressDeleted: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.setAddressDeleted(dispatch, val)
+    ),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -206,9 +210,24 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     });
   }
 
+  setDeletedAddress = () => {
+    const { setAddressDeleted } = this.props;
+    setAddressDeleted(true);
+  };
+
   setLocalStorageAddress = (newAddress) => {
-    const { isExpressDelivery, setNewAddressSaved, vwoData, isNewCheckoutPageEnable, selectedCityArea, expressPopUpOpen } = this.props;
-    if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
+    const {
+      isExpressDelivery,
+      setNewAddressSaved,
+      vwoData,
+      isNewCheckoutPageEnable,
+      selectedCityArea,
+      expressPopUpOpen,
+    } = this.props;
+    if (
+      (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
+      isNewCheckoutPageEnable
+    ) {
       const { country_code = "", city = "", area = "" } = newAddress;
       let requestObj = {
         country: country_code,
@@ -296,7 +315,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       const deleteApiResult = removeAddress(id);
       this.props.setNewAddressSaved(false);
       deleteApiResult
-        .then(this.handleAfterAction, this.handleError)
+        .then(this.handleAfterAction, this.setDeletedAddress(), this.handleError)
         .then(showCards);
       return;
     }
@@ -304,7 +323,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     this.setState({ isLoading: true });
     const deleteApiResult = removeAddress(id);
     deleteApiResult
-      .then(this.handleAfterAction, this.handleError)
+      .then(this.handleAfterAction, this.setDeletedAddress(), this.handleError)
       .then(showCards);
   }
 

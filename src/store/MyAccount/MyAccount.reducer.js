@@ -32,6 +32,7 @@ import {
   SET_EXPRESS_CUTOFF_TIME,
   SET_EXPRESS_POPUP_OPEN,
   SET_EXPRESS_PLP_ADDRESS_OPEN,
+  SET_ADDRESS_DELETED,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -62,6 +63,7 @@ export const initialState = {
   currentSelectedCityArea: {},
   cutOffTime: null,
   isExpressPopUpOpen: false,
+  isAddressDeleted: false,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -279,6 +281,13 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         isExpressPLPAddressOpen: isExpressPLPAddressOpen,
+      };
+
+    case SET_ADDRESS_DELETED:
+      const {val : deletedAdd} = action;
+      return {
+        ...state,
+        isAddressDeleted: deletedAdd,
       };
 
     default:

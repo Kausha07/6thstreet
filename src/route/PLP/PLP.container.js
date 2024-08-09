@@ -1079,10 +1079,10 @@ export class PLPContainer extends PureComponent {
       });
     }
     if (
-      this.props.currentSelectedCityArea.mailing_address_type !=
-        prevProps.currentSelectedCityArea.mailing_address_type &&
-      this.props.isExpressDelivery &&
-      this.props.vwoData?.Express?.isFeatureEnabled
+      this.props.currentSelectedCityArea?.mailing_address_type !=
+        prevProps.currentSelectedCityArea?.mailing_address_type &&
+      this.props?.isExpressDelivery &&
+      this.props?.vwoData?.Express?.isFeatureEnabled
     ) {
       const addressType = getAddressType(prevProps.currentSelectedCityArea);
       this.onUnselectAllPress(`express_delivery_${addressType}`);

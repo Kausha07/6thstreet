@@ -144,11 +144,11 @@ export const CityArea = (props) => {
         if (!isPDP && window.pageType === "PRODUCT") {
           getEddForPDP(reqOBJ?.area, reqOBJ?.city);
         }
-      } else if (!isSignedIn) {
+      } else if (!isSignedIn || !reqOBJ) {
         setFinalAreaText(__("Select Area"));
       }
     }
-  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
 
   useEffect(() => {
     if (
@@ -493,6 +493,7 @@ export const CityArea = (props) => {
     if (isNewCheckoutPage) {
       onAddressSelectPopup(selectedAddress);
     }
+    expressPopUpOpen(false);
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     localStorage.setItem(
@@ -629,6 +630,7 @@ export const CityArea = (props) => {
                 block={`cityAreaText  ${
                   showEllipsisArea ? "showEllipsisArea" : ""
                 }  ${
+                  localStorage.getItem("currentSelectedAddress") &&
                   JSON.parse(localStorage.getItem("currentSelectedAddress"))
                     ?.area
                     ? "colorBlack"
