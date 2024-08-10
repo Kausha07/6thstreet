@@ -337,7 +337,11 @@ class HeaderSearch extends PureComponent {
           }}
         >
           <div
-            block={`${!showSearch && !showMegaMenuHeaderSearchStyle && isExpressDelivery
+            block={`${
+              !showSearch &&
+              !showMegaMenuHeaderSearchStyle &&
+              isExpressDelivery &&
+              !isPDP
                 ? "expressPOsitionCSS"
                 : null
             } HeaderSearch`}
