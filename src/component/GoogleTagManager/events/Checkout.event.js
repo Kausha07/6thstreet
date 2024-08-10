@@ -86,7 +86,14 @@ class CheckoutEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
         : null;
-    
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.city
+        ? BrowserDatabase.getItem("currentSelectedAddress").city
+        : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     const total_items = totals?.items;
     const ga4_items = total_items.map((item) => ({
       item_name: item?.full_item_info?.name,
@@ -99,10 +106,13 @@ class CheckoutEvent extends BaseEvent {
       quantity: item?.full_item_info?.qty,
       item_size: item?.full_item_info?.size_value,
       item_size_type: item?.full_item_info?.size_option,
-      item_url:  item?.full_item_info?.thumbnail_url
+      item_url:  item?.full_item_info?.thumbnail_url,
+      is_express_visible: item?.full_item_info?.express_delivery ? true: false
     }));
 
     this.pushEventData({
+      city: city,
+      area: area,
       ...(step == 2 && {
         sha256_email: sha_email,
         sha256_phone_number: sha_phone,

@@ -67,6 +67,14 @@ class ProductDetailEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
         : null;
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.city
+        ? BrowserDatabase.getItem("currentSelectedAddress").city
+        : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
 
     this.pushEventData({
       sha256_email: sha_email,
@@ -77,6 +85,8 @@ class ProductDetailEvent extends BaseEvent {
       user_view_count :product?.user_view_count ?? "",
       user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
       is_following_brand :product?.is_following_brand ?? "",
+      city: city,
+      area: area,
       ecommerce: {
         currency: this.getCurrencyCode(),
         detail: {
@@ -100,6 +110,7 @@ class ProductDetailEvent extends BaseEvent {
             item_category5:product?.categories?.level5?.[0] ?? "",
             discount: product?.discount ?? "",
             variant_availability: product?.variant_availability ?? "",
+            is_express_visible: product?.is_express_visible ?? ""
           }
         ]
       },

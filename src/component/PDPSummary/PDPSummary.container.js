@@ -75,6 +75,7 @@ export class PDPSummaryContainer extends PureComponent {
       isExpressDelivery,
       isExpressServiceAvailable,
       vwoData,
+      is_express_visible=false
     } = this.props;
     return {
       product,
@@ -99,6 +100,7 @@ export class PDPSummaryContainer extends PureComponent {
       isExpressDelivery,
       isExpressServiceAvailable,
       vwoData,
+      is_express_visible
     };
   };
 
@@ -171,13 +173,14 @@ export class PDPSummaryContainer extends PureComponent {
 
   render() {
     const { url_path } = this.state;
-    const {renderSummary} = this.props
+    const {renderSummary, setExpressVisible=()=>{}} = this.props
     return (
       <PDPSummary
       renderSummary ={renderSummary}
         {...this.containerProps()}
         url_path={url_path}
         brandNameclick={ this.brandNameclick }
+        setExpressVisible={setExpressVisible}
       />
     );
   }

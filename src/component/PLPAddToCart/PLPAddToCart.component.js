@@ -570,6 +570,7 @@ class PLPAddToCart extends PureComponent {
       product,
       newActiveFilters,
       product_Position,
+      is_express_eligible = false
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
     const isFilters = getIsFilters(newActiveFilters);
@@ -810,6 +811,7 @@ class PLPAddToCart extends PureComponent {
       newActiveFilters,
       product_Position,
       edd_info,
+      is_express_visible = false
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -836,6 +838,7 @@ class PLPAddToCart extends PureComponent {
         category: product_type_6s,
         variant: color,
         position: product_Position,
+        is_express_visible: is_express_visible
       },
     });
 
@@ -934,7 +937,8 @@ class PLPAddToCart extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          is_express_visible: is_express_visible
         },
       });
 
@@ -1004,7 +1008,8 @@ class PLPAddToCart extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          is_express_visible: is_express_visible
         },
       });
 

@@ -2,6 +2,7 @@
 import Event, { EVENT_GTM_PRODUCT_REMOVE_FROM_CART } from 'Util/Event';
 
 import BaseEvent from './Base.event';
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const SPAM_PROTECTION_DELAY = 200;
 /**
@@ -27,7 +28,17 @@ class RemoveFromCartEvent extends BaseEvent {
             return;
         }
 
+        const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+            BrowserDatabase.getItem("currentSelectedAddress")?.city
+            ? BrowserDatabase.getItem("currentSelectedAddress").city
+            : null;
+        const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+            BrowserDatabase.getItem("currentSelectedAddress")?.area
+            ? BrowserDatabase.getItem("currentSelectedAddress").area
+            : null;
         this.pushEventData({
+            city: city,
+            area: area,
             ecommerce: {
                 currencyCode: this.getCurrencyCode(),
                 remove: {
@@ -46,7 +57,8 @@ class RemoveFromCartEvent extends BaseEvent {
                       variant_availability: product?.variant_availability ?? "",
                       item_size: product?.size ?? "",
                       item_size_type: product?.size_option ?? "",
-                      quantity: product?.quantity ?? ""
+                      quantity: product?.quantity ?? "",
+                      is_express_visible: product?.is_express_visible ?? ""
                     }
                 ],
             }

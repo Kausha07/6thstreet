@@ -467,6 +467,7 @@ export class PDPAddToCartContainer extends PureComponent {
       cutOffTime,
       isExpressTimeExpired,
       vwoData,
+      is_express_visible= false
     } = this.props;
     const {
       mappedSizeObject,
@@ -499,6 +500,7 @@ export class PDPAddToCartContainer extends PureComponent {
       cutOffTime,
       isExpressTimeExpired,
       vwoData,
+      is_express_visible
     };
   };
 
@@ -602,7 +604,8 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType = "",
       closeAddToCartPopUp,
       edd_info,
-      addtoCartInfo
+      addtoCartInfo,
+      is_express_visible=false
     } = this.props;
 
     const eventPageType = popUpType === "wishListPopUp" ? "wishlist" : "pdp";
@@ -697,6 +700,7 @@ export class PDPAddToCartContainer extends PureComponent {
           size_id: optionId,
           categories: categories, 
           variant_availability: in_stock,
+          is_express_visible: is_express_visible,
           ...addtoCartInfo
         },
       });
@@ -787,6 +791,7 @@ export class PDPAddToCartContainer extends PureComponent {
           size_id: optionId,
           categories: categories, 
           variant_availability: in_stock,
+          is_express_visible: is_express_visible,
           ...addtoCartInfo
         },
       });

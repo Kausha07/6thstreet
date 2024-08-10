@@ -1,7 +1,7 @@
 import Event, { EVENT_GTM_VIEW_ITEM_LIST } from "Util/Event";
 
 import BaseEvent from "./Base.event";
-
+import BrowserDatabase from "Util/BrowserDatabase";
 /**
  * Website places, from where was received event data
  *
@@ -53,6 +53,7 @@ class ProductImpressionEvent extends BaseEvent {
     const storage = this.getStorage();
     let isFilters = false;
     let queryId = null;
+    console.log("impressions plp ", impressions);
     const formattedImpressions = impressions.map(
       (
         {
@@ -69,7 +70,8 @@ class ProductImpressionEvent extends BaseEvent {
           product_Position,
           position,
           productQueryID,
-          in_stock
+          in_stock,
+          is_express_visible
         },
         index
       ) => ({
@@ -93,7 +95,8 @@ class ProductImpressionEvent extends BaseEvent {
           ? position
           : index + 1 || "",
         queryId: productQueryID ? productQueryID : null,
-        variant_availability: in_stock
+        variant_availability: in_stock,
+        is_express_visible : is_express_visible? is_express_visible:""
       })
     );
 
@@ -111,8 +114,18 @@ class ProductImpressionEvent extends BaseEvent {
 
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.city
+        ? BrowserDatabase.getItem("currentSelectedAddress").city
+        : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     this.pushEventData({
       event: EVENT_GTM_VIEW_ITEM_LIST,
+      city: city,
+      area: area,
       ecommerce: {
         currency: this.getCurrencyCode(),
         currencyCode: this.getCurrencyCode(),
@@ -131,7 +144,8 @@ class ProductImpressionEvent extends BaseEvent {
           item_list_id: '',
           price: item.price,
           index: item.position,
-          variant_availability: item.variant_availability
+          variant_availability: item.variant_availability,
+          is_express_visible: item?.is_express_visible ? true: false
         }))
       },
       is_filter: isFilters ? "Yes" : "No",

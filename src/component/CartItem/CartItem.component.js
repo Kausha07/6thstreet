@@ -606,8 +606,8 @@ export class CartItem extends PureComponent {
       isCheckoutPage,
       eddMessageForCheckoutPage,
       vwoData,
+      setExpressVisible
     } = this.props;
-
     let actualEddMess = this.formatEddMessage(crossBorder);
     const isIntlBrand =
       cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
@@ -648,6 +648,7 @@ export class CartItem extends PureComponent {
             mp_quantity={mp_quantity}
             isExpressTimeExpired={this.state.isExpressTimeExpired}
             setTimerStateThroughProps={this.setTimerStateThroughProps}
+            setExpressVisible={setExpressVisible}
           />
         </Suspense>
       </div>

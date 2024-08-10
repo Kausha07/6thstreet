@@ -114,7 +114,8 @@ class ProductItem extends PureComponent {
       imageScroller: false,
       showImageScroller: false,
       colorVarientratingSku: null,
-      colorVarientratingBrand: null
+      colorVarientratingBrand: null,
+      is_express_visible: false
     };
   }
   componentDidMount() {
@@ -122,6 +123,12 @@ class ProductItem extends PureComponent {
     if(pageType !== "wishlist") {
       this.registerViewPortEvent();
     }
+  }
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
   }
 
   registerViewPortEvent() {
@@ -173,8 +180,8 @@ class ProductItem extends PureComponent {
       : null;
     const productDataWithQueryID =
       page == "plp" && queryID
-        ? { ...product, ...{ productQueryID: queryID } }
-        : product;
+        ? { ...product, ...{ productQueryID: queryID }, is_express_visible: this.state.is_express_visible }
+        : {...product, is_express_visible: this.state.is_express_visible};
     if (page == "plp" && sendProductImpressionOnBundle) {
       sendProductImpression([productDataWithQueryID]);
     } else {
@@ -353,6 +360,7 @@ class ProductItem extends PureComponent {
         isFilters={isFilters}
         product_position={position}
         colorVarientButtonClick={this.state?.colorVarientButtonClick}
+        is_express_visible={this.state.is_express_visible}
       />
     );
   }
@@ -862,7 +870,7 @@ class ProductItem extends PureComponent {
       isVueData,
       isFilters,
     } = this.props;
-    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick, is_express_visible } = this.state;
     const modifiedProductData = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data : product; 
     let price = Array.isArray(modifiedProductData?.price)
       ? Object.values(modifiedProductData?.price[0])
@@ -884,6 +892,7 @@ class ProductItem extends PureComponent {
           isVueData={isVueData}
           isFilters={isFilters}
           colorVarientButtonClick={colorVarientButtonClick}
+          is_express_visible={is_express_visible}
         />
       </div>
     );
@@ -1011,7 +1020,7 @@ class ProductItem extends PureComponent {
   renderExpressDeliveryTag = () => {
     const { product } = this.props;
 
-    return <ExpressDeliveryTag productInfo={product} />;
+    return <ExpressDeliveryTag productInfo={product} setExpressVisible={this.setExpressVisible} />;
   };
 
   render() {

@@ -90,6 +90,10 @@ class PDPSummary extends PureComponent {
     isExpressTimeExpired: false,
   };
 
+  setExpressVisible = (visible) => {
+    this.props.setExpressVisible(visible);
+  }
+
   getIdFromCityArea = (addressCityData, city, area) => {
     let cityEntry;
     let areaEntry;
@@ -1044,6 +1048,7 @@ class PDPSummary extends PureComponent {
                 international_vendor={international_vendor}
                 isExpressTimeExpired={this.state.isExpressTimeExpired}
                 setTimerStateThroughProps={this.setTimerStateThroughProps}
+                setExpressVisible={this.setExpressVisible}
               />
             </Suspense>
           </div>
@@ -1369,6 +1374,7 @@ class PDPSummary extends PureComponent {
       product,
       renderMySignInPopup,
       isNewDesign,
+      is_express_visible=false
     } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
@@ -1397,6 +1403,7 @@ class PDPSummary extends PureComponent {
             renderMySignInPopup={renderMySignInPopup}
             data={product}
             pageType="pdp"
+            is_express_visible={is_express_visible}
           />
         </div>
       </>
@@ -1483,6 +1490,7 @@ class PDPSummary extends PureComponent {
   renderAddToCartSection() {
     const {
       product: { simple_products },
+      is_express_visible=false
     } = this.props;
     return (
       <>
@@ -1493,6 +1501,7 @@ class PDPSummary extends PureComponent {
           setSize={this.setSize}
           addTag={this.addTag}
           isExpressTimeExpired={this.state.isExpressTimeExpired}
+          is_express_visible={is_express_visible}
         />
       </>
     );

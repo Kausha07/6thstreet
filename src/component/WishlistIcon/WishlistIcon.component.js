@@ -74,6 +74,7 @@ class WishlistIcon extends PureComponent {
       isFilters,
       product_position,
       indexCodeRedux,
+      is_express_visible=false
     } = this.props;
 
     const customer = BrowserDatabase.getItem("customer");
@@ -215,7 +216,8 @@ class WishlistIcon extends PureComponent {
           productPosition: product_position || "",
           colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
           categories: data?.categories,
-          variant_availability: data?.in_stock
+          variant_availability: data?.in_stock,
+          is_express_visible: is_express_visible
         },
       });
     }

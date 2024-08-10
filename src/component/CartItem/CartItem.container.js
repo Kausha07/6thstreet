@@ -124,15 +124,23 @@ export class CartItemContainer extends PureComponent {
   state = {
     isLoading: false,
     showCartItemQuantityPopup: false,
+    is_express_visible: false
   };
 
   handlers = [];
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
+  }
 
   containerFunctions = {
     handleChangeQuantity: this.handleChangeQuantity.bind(this),
     handleRemoveItem: this.handleRemoveItem.bind(this),
     getCurrentProduct: this.getCurrentProduct.bind(this),
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
+    setExpressVisible: this.setExpressVisible.bind(this),
   };
 
   componentWillUnmount() {
@@ -347,7 +355,8 @@ export class CartItemContainer extends PureComponent {
           size: size_value,
           size_option: size_option, 
           variant_availability: availability, 
-          discount: discount_amount
+          discount: discount_amount,
+          is_express_visible: this.state.is_express_visible
         },
       });
       // vue analytics

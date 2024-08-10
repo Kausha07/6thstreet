@@ -130,7 +130,14 @@ export class CartItemContainer extends PureComponent {
     isLoading: false,
     showCartItemQuantityPopup: false,
     isArabic: isArabic(),
+    is_express_visible: false
   };
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
+  }
 
   handlers = [];
 
@@ -139,6 +146,7 @@ export class CartItemContainer extends PureComponent {
     handleRemoveItem: this.handleRemoveItem.bind(this),
     getCurrentProduct: this.getCurrentProduct.bind(this),
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
+    setExpressVisible: this.setExpressVisible.bind(this)
   };
 
   getIdFromCityArea = (addressCityData, city, area) => {
@@ -455,7 +463,8 @@ export class CartItemContainer extends PureComponent {
           size: size_value,
           size_option: size_option, 
           variant_availability: availability, 
-          discount: discount_amount
+          discount: discount_amount,
+          is_express_visible: this.state.is_express_visible
         },
       });
 

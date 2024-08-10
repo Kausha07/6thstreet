@@ -100,6 +100,13 @@ export class CartItem extends PureComponent {
     super(props);
     this.cartItemRef = React.createRef();
   }
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
+  }
+
   componentDidMount() {
     this.cartItemRef.current.addEventListener(
       "mousedown",
@@ -563,6 +570,7 @@ export class CartItem extends PureComponent {
         full_item_info: { config_sku },
       },
       item,
+      is_express_visible=false
     } = this.props;
     this.setState({ isSwipe: false });
     const { handleRemoveItem } = this.props;
@@ -577,6 +585,7 @@ export class CartItem extends PureComponent {
           renderMySignInPopup={() => {
             handleRemoveItem();
           }}
+          is_express_visible={is_express_visible}
         />
         {/* {handleRemoveItem()} */}
         <span block="title">{__("Save to Wishlist")}</span>
@@ -945,6 +954,7 @@ export class CartItem extends PureComponent {
       international_shipping_fee,
       isExpressDelivery,
       vwoData,
+      setExpressVisible
     } = this.props;
 
     let actualEddMess = this.formatEddMessage(crossBorder);
@@ -984,6 +994,7 @@ export class CartItem extends PureComponent {
             mp_quantity={mp_quantity}
             isExpressTimeExpired={this.state.isExpressTimeExpired}
             setTimerStateThroughProps={this.setTimerStateThroughProps}
+            setExpressVisible={setExpressVisible}
           />
         </Suspense>
       </div>

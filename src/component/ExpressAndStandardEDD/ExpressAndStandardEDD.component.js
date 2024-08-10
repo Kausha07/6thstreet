@@ -61,6 +61,7 @@ export const ExpressAndStandardEDD = ({
   isExpressTimeExpired = false,
   setTimerStateThroughProps,
   vwoData,
+  setExpressVisible = ()=>{}
 }) => {
   const [isTimeExpired, setIsTimeExpired] = useState(false);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
@@ -189,7 +190,17 @@ export const ExpressAndStandardEDD = ({
 
   const render = () => {
     const showStandardDelivery = checkStandardDeliveryAvailable();
-
+    if(currentSelectedAddress &&
+      isExpressServiceAvailable?.express_eligible &&
+      isExpressDelivery &&
+      vwoData?.Express?.isFeatureEnabled &&
+      ((isProductExpressEligible && !selectedSizeCode) ||
+        isSKUExpressEligible) &&
+      !isInternationalProduct &&
+      isProductOfficeServicable &&
+      express_delivery_key){
+        setExpressVisible(true);
+      }
     return (
       <div>
         {currentSelectedAddress &&

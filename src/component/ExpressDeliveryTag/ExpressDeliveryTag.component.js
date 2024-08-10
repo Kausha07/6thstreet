@@ -26,6 +26,7 @@ export const ExpressDeliveryTag = (props) => {
     isExpressServiceAvailable,
     isExpressDelivery,
     vwoData,
+    setExpressVisible = () =>null
   } = props;
 
   const currentSelectedAddress = JSON.parse(
@@ -66,6 +67,7 @@ export const ExpressDeliveryTag = (props) => {
     ) {
       return null;
     }
+    setExpressVisible(true);
 
     return (
       <div block="ExpressDeliveryTagBlock">
