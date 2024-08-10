@@ -19,9 +19,11 @@ import { countriesType } from "Type/Config";
 import { isArabic } from "Util/App";
 import { connect } from "react-redux";
 import { setNewAddressSaved } from "Store/MyAccount/MyAccount.action";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 
 export const mapDispatchToProps = (dispatch) => ({
   setNewAddressSaved: (val) => dispatch(setNewAddressSaved(val)),
+  setPrevSelectedAddressForPLPFilters: (val) => MyAccountDispatcher.setPrevSelectedAddressForPLPFilters(dispatch,val),
 });
 export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   static propTypes = {
@@ -132,7 +134,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   };
 
   onFormSuccess = (fields) => {
-    const { onSave, setNewAddressSaved, address } = this.props;
+    const { onSave, setNewAddressSaved, address, setPrevSelectedAddressForPLPFilters } = this.props;
     const {
       region_id,
       region_string: region,
@@ -149,6 +151,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       ? address?.mailing_address_type
       : "37303";
     setNewAddressSaved(true);
+    setPrevSelectedAddressForPLPFilters(JSON.parse(localStorage.getItem("currentSelectedAddress")));
     onSave(newAddress);
   };
 

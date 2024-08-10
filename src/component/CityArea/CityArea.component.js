@@ -59,6 +59,8 @@ export const mapDispatchToProps = (dispatch) => ({
   setExpressPLPAddressForm: (val) =>
     MyAccountDispatcher.setExpressPLPAddressForm(dispatch, val),
   getCart: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  setPrevSelectedAddressForPLPFilters: (val) =>
+    MyAccountDispatcher.setPrevSelectedAddressForPLPFilters(dispatch, val),
 });
 
 export const CityArea = (props) => {
@@ -94,6 +96,7 @@ export const CityArea = (props) => {
     cartItems,
     renderSelectedAddressMsite = () => {},
     vwoData = {},
+    setPrevSelectedAddressForPLPFilters,
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -144,6 +147,17 @@ export const CityArea = (props) => {
         if (!isPDP && window.pageType === "PRODUCT") {
           getEddForPDP(reqOBJ?.area, reqOBJ?.city);
         }
+      } else if (!isSignedIn || !reqOBJ) {
+        setFinalAreaText(__("Select Area"));
+      }
+    }
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
+
+  useEffect(() => {
+    if (isExpressDelivery) {
+      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      if (reqOBJ?.area) {
+        setFinalAreaText(reqOBJ?.area);
       } else if (!isSignedIn || !reqOBJ) {
         setFinalAreaText(__("Select Area"));
       }
@@ -494,6 +508,9 @@ export const CityArea = (props) => {
       onAddressSelectPopup(selectedAddress);
     }
     expressPopUpOpen(false);
+    setPrevSelectedAddressForPLPFilters(
+      JSON.parse(localStorage.getItem("currentSelectedAddress"))
+    );
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     localStorage.setItem(

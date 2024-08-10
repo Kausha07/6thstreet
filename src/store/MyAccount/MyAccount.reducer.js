@@ -33,6 +33,7 @@ import {
   SET_EXPRESS_POPUP_OPEN,
   SET_EXPRESS_PLP_ADDRESS_OPEN,
   SET_ADDRESS_DELETED,
+  SET_PREVIOUS_SELECTED_ADDRESS,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -64,6 +65,7 @@ export const initialState = {
   cutOffTime: null,
   isExpressPopUpOpen: false,
   isAddressDeleted: false,
+  prevSelectedAddress: null,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -289,6 +291,13 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         isAddressDeleted: deletedAdd,
       };
+
+    case SET_PREVIOUS_SELECTED_ADDRESS:
+      const { val: prevAdd } = action;
+      return{
+        ...state,
+        prevSelectedAddress: prevAdd,
+      }
 
     default:
       return state;

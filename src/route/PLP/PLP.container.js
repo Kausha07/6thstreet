@@ -69,6 +69,7 @@ import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisa
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { getAddressType } from "Util/Common/index";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -95,6 +96,8 @@ export const mapStateToProps = (state) => ({
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   vwoData: state.AppConfig.vwoData,
+  isAddressDeleted: state.MyAccountReducer.isAddressDeleted,
+  prevSelectedAddress: state.MyAccountReducer.prevSelectedAddress,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -123,6 +126,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   setColourVarientsButtonClick: (colourVarientsButtonClick) =>
     dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
+  setAddressDeleted: (val) => MyAccountDispatcher.setAddressDeleted(dispatch,val),
+  setPrevSelectedAddressForPLPFilters: (val) => MyAccountDispatcher.setPrevSelectedAddressForPLPFilters(dispatch,val),
 });
 
 export class PLPContainer extends PureComponent {
@@ -929,6 +934,10 @@ export class PLPContainer extends PureComponent {
       lastHomeItem,
       pages,
       newSelectedActiveFilters = {},
+      isAddressDeleted,
+      setAddressDeleted,
+      prevSelectedAddress,
+      setPrevSelectedAddressForPLPFilters,
     } = this.props;
     let newMoreActiveFilters = {};
     const { isLoading: isCategoriesLoading } = this.state;
@@ -1079,12 +1088,46 @@ export class PLPContainer extends PureComponent {
       });
     }
     if (
-      this.props.currentSelectedCityArea?.mailing_address_type !=
-        prevProps.currentSelectedCityArea?.mailing_address_type &&
+      (this.props.currentSelectedCityArea?.mailing_address_type !=
+        prevProps.currentSelectedCityArea?.mailing_address_type ||
+        (this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+          this.props.currentSelectedCityArea?.mailing_address_type != null &&
+          prevProps.currentSelectedCityArea?.mailing_address_type != null &&
+          isAddressDeleted &&
+          prevProps.currentSelectedCityArea?.mailing_address_type !=
+            isAddressDeleted?.mailing_address_type) ||
+        (this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+          this.props.currentSelectedCityArea?.mailing_address_type != null &&
+          prevProps.currentSelectedCityArea?.mailing_address_type != null &&
+          prevSelectedAddress &&
+          prevProps.currentSelectedCityArea?.mailing_address_type !=
+            prevSelectedAddress?.mailing_address_type)) &&
       this.props?.isExpressDelivery &&
       this.props?.vwoData?.Express?.isFeatureEnabled
     ) {
-      const addressType = getAddressType(prevProps.currentSelectedCityArea);
+      let finalAddressType = prevProps.currentSelectedCityArea;
+      if (
+        this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+        prevProps.currentSelectedCityArea?.mailing_address_type !=
+          isAddressDeleted?.mailing_address_type
+      ) {
+        finalAddressType = isAddressDeleted?.mailing_address_type;
+      }
+
+      if (
+        this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+        prevProps.currentSelectedCityArea?.mailing_address_type !=
+        prevSelectedAddress?.mailing_address_type
+      ) {
+        finalAddressType = prevSelectedAddress?.mailing_address_type;
+        setPrevSelectedAddressForPLPFilters(null);
+      }
+      const addressType = getAddressType(finalAddressType);
+      setAddressDeleted(null);
       this.onUnselectAllPress(`express_delivery_${addressType}`);
       PLPContainer.requestProductList(this.props);
     }

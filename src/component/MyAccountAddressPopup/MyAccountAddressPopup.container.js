@@ -81,6 +81,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.setAddressDeleted(dispatch, val)
     ),
+  setPrevSelectedAddressForPLPFilters: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.setPrevSelectedAddressForPLPFilters(dispatch, val)
+    ),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -210,9 +214,9 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     });
   }
 
-  setDeletedAddress = () => {
+  setDeletedAddress = (address) => {
     const { setAddressDeleted } = this.props;
-    setAddressDeleted(true);
+    setAddressDeleted(address);
   };
 
   setLocalStorageAddress = (newAddress) => {
@@ -223,6 +227,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       isNewCheckoutPageEnable,
       selectedCityArea,
       expressPopUpOpen,
+      setPrevSelectedAddressForPLPFilters,
     } = this.props;
     if (
       (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
@@ -236,6 +241,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         courier: null,
         source: null,
       };
+      setPrevSelectedAddressForPLPFilters( JSON.parse(localStorage.getItem("currentSelectedAddress")));
       localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
       localStorage.setItem(
         "currentSelectedAddress",
@@ -315,7 +321,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       const deleteApiResult = removeAddress(id);
       this.props.setNewAddressSaved(false);
       deleteApiResult
-        .then(this.handleAfterAction, this.setDeletedAddress(), this.handleError)
+        .then(this.handleAfterAction, this.setDeletedAddress(this.props?.payload?.address), this.handleError)
         .then(showCards);
       return;
     }
@@ -323,7 +329,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     this.setState({ isLoading: true });
     const deleteApiResult = removeAddress(id);
     deleteApiResult
-      .then(this.handleAfterAction, this.setDeletedAddress(), this.handleError)
+      .then(this.handleAfterAction, this.setDeletedAddress(this.props?.payload?.address), this.handleError)
       .then(showCards);
   }
 

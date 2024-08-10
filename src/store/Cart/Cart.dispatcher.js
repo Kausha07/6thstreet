@@ -37,7 +37,12 @@ export class CartDispatcher {
     dispatch(setCheckoutDetails(checkoutDetails));
   }
 
-  async getCart(dispatch, isNewCart = false, createNewCart = true) {
+  async getCart(
+    dispatch,
+    isNewCart = false,
+    createNewCart = true,
+    isToMakeLastOrderAPICall = true
+  ) {
     const {
       Cart: { cartId },
       AppConfig: {
@@ -50,6 +55,8 @@ export class CartDispatcher {
     const country_code = getCountryFromUrl();
     if (
       !localStorage.getItem("currentSelectedAddress") &&
+      isToMakeLastOrderAPICall &&
+      !localStorage.getItem("EddAddressReq") &&
       (isExpressDelivery || isNewCheckoutPageEnable)
     ) {
       await MobileAPI.get(`order/last?country_specific=true`).then(

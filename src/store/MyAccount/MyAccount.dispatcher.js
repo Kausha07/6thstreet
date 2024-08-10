@@ -22,6 +22,7 @@ import {
   setisExpressPopUpOpen,
   setisExpressPLPAddressForm,
   setAddressdeleted,
+  setPrevSelectedAddressForPLPFilters,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -139,10 +140,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         (!localStorage.getItem("EddAddressReq") || isAddressDeleted) &&
         (isExpressDelivery || isNewCheckoutPageEnable)
       ) {
+        const selectedAddress = JSON.parse(
+          localStorage.getItem("currentSelectedAddress")
+        );
+
         let checkAddressExist = countryWiseAddresses.find(
-          (obj) =>
-            obj?.id ===
-            JSON.parse(localStorage.getItem("currentSelectedAddress"))?.id
+          (obj) => obj?.id === selectedAddress?.id
         );
 
         let finalAddress = checkAddressExist
@@ -152,6 +155,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           : countryWiseAddresses
           ? countryWiseAddresses?.[0]
           : null;
+
+        if (
+          !selectedAddress?.id &&
+          selectedAddress?.area != null &&
+          selectedAddress?.city != null
+        ) {
+          finalAddress = selectedAddress;
+        }
 
         let requestObj = {
           country: countryCode,
@@ -169,12 +180,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           );
           this.expressPopUpOpen(dispatch, false);
           this.selectedCityArea(dispatch, finalAddress);
-          CartDispatcher.getCart(dispatch);
+          CartDispatcher.getCart(dispatch, false, false, false);
         } else {
           localStorage.removeItem("currentSelectedAddress");
           localStorage.removeItem("EddAddressReq");
           this.selectedCityArea(dispatch, null);
-          CartDispatcher.getCart(dispatch);
+          CartDispatcher.getCart(dispatch, false, false, false);
         }
       }
 
@@ -361,6 +372,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             );
             this.selectedCityArea(dispatch, newlyAddedAddress);
             this.expressPopUpOpen(dispatch, false);
+            CartDispatcher.getCart(dispatch, false, false, false)
           }
         }
         if (addressCityData.length === 0) {
@@ -956,6 +968,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   setAddressDeleted(dispatch, val){
     dispatch(setAddressdeleted(val));
+  }
+
+  setPrevSelectedAddressForPLPFilters(dispatch, val) {
+    dispatch(setPrevSelectedAddressForPLPFilters(val));
   }
 }
 

@@ -122,6 +122,12 @@ export const ExpressAndStandardEDD = ({
     ) || +cross_border;
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area) {
+      setCurrentSelectedAddress(null);
+    }
+  }, [JSON.parse(localStorage.getItem("currentSelectedAddress"))]);
+
+  useEffect(() => {
     if (JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area) {
       setCurrentSelectedAddress(
         JSON.parse(localStorage.getItem("currentSelectedAddress"))
