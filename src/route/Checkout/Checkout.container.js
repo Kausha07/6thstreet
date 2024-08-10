@@ -1519,6 +1519,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     });
                 }
               }
+              //  saving cart details to local for use on Thank you page
+              localStorage.setItem("CART_DETAILS", JSON.stringify(totals));
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
               this.setDetailsStep(order_id, increment_id);
               this.resetCart();
