@@ -84,7 +84,7 @@ export const getDefaultEddDate = (days) => {
     .toISOString()
     .substring(0, 10);
   const defaultEddDay = defaultEddDate.toLocaleString("en-US", {
-    weekday: "long",
+    weekday: "short",
   });
   const defaultEddMonth = defaultEddDate.toLocaleString("en-US", {
     month: "short",
