@@ -5,7 +5,7 @@ import Loader from "Component/Loader";
 import Field from "Component/Field";
 import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor, arabicTranslatorForExpress } from "Util/Common";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
 import "./PLPFilterOption.style";
@@ -349,6 +349,10 @@ class PLPFilterOption extends PureComponent {
       const words = label?.split(" ");
       if (words.length > 1) {
         finalLabel = `${words[0]}`;
+      }
+
+      if (isArabic()) {
+        finalLabel = arabicTranslatorForExpress(finalLabel);
       }
 
       return (

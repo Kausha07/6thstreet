@@ -989,3 +989,14 @@ export const knowInventoryOnPageLoad = (simple_products) => {
 
   return { whs, store, mp };
 };
+
+export const arabicTranslatorForExpress = (day = "") => {
+  switch (day?.toLowerCase()) {
+    case "today":
+      return "اليوم";
+    case "tomorrow":
+      return "الغد";
+    default:
+      return "";
+  }
+};
