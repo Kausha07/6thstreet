@@ -91,8 +91,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data, eddItems) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
+  createOrder: (code, additional_data, eddItems, vipData) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems, vipData),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -181,6 +181,7 @@ export const mapStateToProps = (state) => ({
   isAddressSelected: state.CheckoutReducer.isAddressSelected,
   shipment: state.CheckoutReducer.shipment,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -1315,7 +1316,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd, eddItems) {
-    const { createOrder, showErrorNotification, totals, isExpressDelivery } = this.props;
+    const {
+      createOrder,
+      showErrorNotification,
+      totals,
+      isExpressDelivery,
+      customer,
+      isExpressServiceAvailable,
+    } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -1326,7 +1334,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data, eddItems);
+      const vipData = {
+        is_vip : customer?.vipCustomer == 1 ? true : false,
+        is_vip_chargeable: isExpressServiceAvailable?.is_vip_chargeable,
+      };
+      const response = await createOrder(code, data, eddItems, vipData);
       if (response?.data?.code === "CHK-33" && isExpressDelivery) {
         showErrorNotification(__(response?.data?.message));
         history.push({
