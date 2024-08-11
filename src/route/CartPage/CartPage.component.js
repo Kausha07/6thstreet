@@ -193,6 +193,7 @@ export class CartPage extends PureComponent {
       productQty = [],
       productCategory = [],
       productItemPrice = [];
+    let is_express_visible = false;
     items.forEach((item) => {
       let productKeys = item?.full_item_info;
       productName.push(productKeys?.name);
@@ -209,9 +210,22 @@ export class CartPage extends PureComponent {
       productQty.push(productKeys?.qty);
       productCategory.push(productKeys?.gender);
       productItemPrice.push(productKeys?.itemPrice);
+      if(['today delivery', 'tomorrow delivery'].indexOf(item?.full_item_info?.express_delivery?.toLowerCase()) > -1 ){
+        is_express_visible = true;
+      }
     });
     if (pageLoaded) {
+      const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.city
+        ? BrowserDatabase.getItem("currentSelectedAddress").city
+        : null;
+      const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.area
+          ? BrowserDatabase.getItem("currentSelectedAddress").area
+          : null;
       MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS, {
+        city: city,
+        area: area,
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         brand_name: productBrand.length > 0 ? productBrand : "",
@@ -232,6 +246,7 @@ export class CartPage extends PureComponent {
         gender: productGender.length > 0 ? productGender : "",
         subcategory: productSubCategory.length > 0 ? productSubCategory : "",
         app6thstreet_platform: "Web",
+        is_express_visible: is_express_visible
       });
     }
   }

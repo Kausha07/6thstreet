@@ -172,6 +172,7 @@ export class CartOverlayContainer extends PureComponent {
       productQty = [],
       productCategory = [],
       productItemPrice = [];
+    let is_express_visible = false;
     items.forEach((item) => {
       let productKeys = item?.full_item_info;
       productName.push(productKeys?.name);
@@ -188,8 +189,21 @@ export class CartOverlayContainer extends PureComponent {
       productQty.push(productKeys?.qty);
       productCategory.push(productKeys?.original_price);
       productItemPrice.push(productKeys?.itemPrice);
+      if(['today delivery', 'tomorrow delivery'].indexOf(item?.full_item_info?.express_delivery?.toLowerCase()) > -1 ){
+        is_express_visible= true;
+      }
     });
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.city
+        ? BrowserDatabase.getItem("currentSelectedAddress").city
+        : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(EVENT_MOE_BEGIN_CHECKOUT, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState?.gender
@@ -213,6 +227,7 @@ export class CartOverlayContainer extends PureComponent {
       size: productSizeValue.length > 0 ? productSizeValue : "",
       subcategory: productSubCategory.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
+      is_express_visible: is_express_visible
     });
   }
   handleCheckoutClick(e) {

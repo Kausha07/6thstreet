@@ -410,7 +410,17 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.city
+          ? BrowserDatabase.getItem("currentSelectedAddress").city
+          : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -437,6 +447,7 @@ export class CartItemContainer extends PureComponent {
       cart_id: getCartID || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      is_express_visible: this.state.is_express_visible
     });
   }
 

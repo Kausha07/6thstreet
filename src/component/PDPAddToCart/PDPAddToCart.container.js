@@ -900,7 +900,8 @@ export class PDPAddToCartContainer extends PureComponent {
         size_us = [],
       },
       product,
-      addtoCartInfo
+      addtoCartInfo,
+      is_express_visible = false
     } = this.props;
     let newCartInfo = {};
     const { selectedSizeType, selectedSizeCode } = this.state;
@@ -950,7 +951,17 @@ export class PDPAddToCartContainer extends PureComponent {
     if(event === EVENT_MOE_ADD_TO_CART){
       newCartInfo = addtoCartInfo;
     }
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+      BrowserDatabase.getItem("currentSelectedAddress")?.city
+      ? BrowserDatabase.getItem("currentSelectedAddress").city
+      : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -975,6 +986,7 @@ export class PDPAddToCartContainer extends PureComponent {
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      is_express_visible: is_express_visible,
       ...newCartInfo
     });
   }

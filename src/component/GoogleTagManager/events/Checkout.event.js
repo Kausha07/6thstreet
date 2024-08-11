@@ -107,7 +107,7 @@ class CheckoutEvent extends BaseEvent {
       item_size: item?.full_item_info?.size_value,
       item_size_type: item?.full_item_info?.size_option,
       item_url:  item?.full_item_info?.thumbnail_url,
-      is_express_visible: item?.full_item_info?.express_delivery ? true: false
+      is_express_visible: ['today delivery', 'tomorrow delivery'].indexOf(item?.full_item_info?.express_delivery?.toLowerCase()) > -1 ? true: false
     }));
 
     this.pushEventData({

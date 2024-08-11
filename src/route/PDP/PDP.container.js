@@ -285,7 +285,17 @@ export class PDPContainer extends PureComponent {
           },
         });
         const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+        const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.city
+          ? BrowserDatabase.getItem("currentSelectedAddress").city
+          : null;
+        const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+            BrowserDatabase.getItem("currentSelectedAddress")?.area
+            ? BrowserDatabase.getItem("currentSelectedAddress").area
+            : null;
         MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
+          city: city,
+          area: area,
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           category: currentAppState.gender
@@ -307,6 +317,7 @@ export class PDPContainer extends PureComponent {
           isLoggedIn: isSignedIn(),
           app6thstreet_platform: "Web",
           colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
+          is_express_visible: is_express_visible,
           ...addtoCartInfo,
         });
       

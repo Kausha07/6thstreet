@@ -620,9 +620,18 @@ class PLPAddToCart extends PureComponent {
     const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
-
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+      BrowserDatabase.getItem("currentSelectedAddress")?.city
+      ? BrowserDatabase.getItem("currentSelectedAddress").city
+      : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
