@@ -1115,7 +1115,7 @@ class MyAccountOrderView extends PureComponent {
     if (!price && !allowZero) {
       return null;
     }
-    const { isTotal, isStoreCredit, isClubApparel } = mods;
+    const { isTotal, isStoreCredit, isClubApparel, isFeeTextVisible = false } = mods;
     const formatPrice =
       isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
 
@@ -1123,7 +1123,11 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency_code = getCurrency() },
     } = this.props;
     const finalPrice = getFinalPrice(formatPrice, currency_code);
-    const freeTextArray = [__("Shipping"), __("International Shipping Fee")];
+    const freeTextArray = [__("Shipping"), __("International Shipping Fee"), __("Express Service")];
+    
+    if(!isFeeTextVisible && parseFloat(price) == 0 ) {
+      return null;
+    }
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
@@ -1176,6 +1180,17 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
+  checkIsAnyExpressOrder = (groups = []) => {
+      for (let group of groups) {
+          for (let item of group?.items) {
+              if (item.is_express_delivery) {
+                  return true;
+              }
+          }
+      }
+      return false;
+  }
+
   renderPaymentSummary() {
     const {
       order: {
@@ -1195,11 +1210,18 @@ class MyAccountOrderView extends PureComponent {
         total_mrp = 0,
         total_discount = 0,
         express_delivery_charges = 0,
+        groups = [],
+        is_vip = "0",
+        is_vip_chargeable = "0"
       },
       isSidewideCouponEnabled,
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    let isFreeExpressDelivery = false;
+    if (parseInt(express_delivery_charges) == 0 && is_vip_chargeable == 0 && is_vip == 1) {
+      isFreeExpressDelivery = this.checkIsAnyExpressOrder(groups);
+    }
 
     return (
       <div block="MyAccountOrderView" elem="OrderTotals">
@@ -1228,12 +1250,12 @@ class MyAccountOrderView extends PureComponent {
                   divider: true,
                 }
               )}
-            {express_delivery_charges && express_delivery_charges != 0 &&
-              this.renderPriceLine(
+              {this.renderPriceLine(
                 express_delivery_charges,
                 __("Express Service"),
                 {
                   divider: true,
+                  isFeeTextVisible: isFreeExpressDelivery
                 }
               )}
             {store_credit_amount !== 0
