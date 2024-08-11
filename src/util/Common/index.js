@@ -786,9 +786,12 @@ export const inventoryCheck = (quantity, cutoffTime) => {
 };
 
 export const checkProductExpressEligible = (express_delivery_key) => {
-  return ["today delivery", "tomorrow delivery"].includes?.(
-    express_delivery_key?.toLowerCase()
-  );
+  return [
+    "today delivery",
+    "tomorrow delivery",
+    "التسليم غدا",
+    "التسليم اليوم",
+  ].includes?.(express_delivery_key?.toLowerCase());
 };
 
 export const getTodaysCutOffTime = ({
@@ -845,7 +848,8 @@ export const getTodaysCutOffTime = ({
   if (
     !tempTodaysCutOffTime &&
     !selectedSizeCode &&
-    express_delivery_key?.toLowerCase()?.includes("today")
+    (express_delivery_key?.toLowerCase()?.includes("today") ||
+      express_delivery_key?.toLowerCase()?.includes("اليوم"))
   ) {
     let {
       whs = false,

@@ -347,12 +347,14 @@ class PLPFilterOption extends PureComponent {
     if (facet_key === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       let finalLabel = label;
       const words = label?.split(" ");
-      if (words.length > 1) {
-        finalLabel = `${words[0]}`;
+      if (words?.length > 1) {
+        finalLabel = `${words?.[0]}`;
       }
 
-      if (isArabic()) {
-        finalLabel = arabicTranslatorForExpress(finalLabel);
+      if(isArabic()) {
+        if (words?.length > 1) {
+          finalLabel = `${words?.[1]}`;
+        }
       }
 
       return (

@@ -236,13 +236,18 @@ export const ExpressAndStandardEDD = ({
                     </span>
                     <span block="EddExpressDeliveryTextBold">
                       &nbsp;
-                      {express_delivery_key?.toLowerCase() ===
-                        "today delivery" && !isExpressTimeExpired
+                      {(express_delivery_key?.toLowerCase() ===
+                        "today delivery" ||
+                        express_delivery_key === "التسليم اليوم") &&
+                      !isExpressTimeExpired
                         ? __("Today")
                         : express_delivery_key?.toLowerCase() ===
                             "tomorrow delivery" ||
-                          (express_delivery_key?.toLowerCase() ===
-                            "today delivery" &&
+                          express_delivery_key?.toLowerCase() ===
+                            "التسليم غدا" ||
+                          ((express_delivery_key?.toLowerCase() ===
+                            "today delivery" ||
+                            express_delivery_key === "التسليم اليوم") &&
                             isExpressTimeExpired)
                         ? __("Tomorrow")
                         : ""}
