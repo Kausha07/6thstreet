@@ -40,6 +40,7 @@ export const mapStateToProps = (state) => ({
   pdpProduct: state.PDP.product,
   cartId: state.Cart.cartId,
   vwoData: state.AppConfig.vwoData,
+  isAddressDeleted: state.MyAccountReducer.isAddressDeleted,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -97,6 +98,7 @@ export const CityArea = (props) => {
     renderSelectedAddressMsite = () => {},
     vwoData = {},
     setPrevSelectedAddressForPLPFilters,
+    isAddressDeleted,
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -144,7 +146,7 @@ export const CityArea = (props) => {
       const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
-        if (!isPDP && window.pageType === "PRODUCT") {
+        if (!isPDP && window.pageType === "PRODUCT" && isAddressDeleted) {
           getEddForPDP(reqOBJ?.area, reqOBJ?.city);
         }
       } else if (!isSignedIn || !reqOBJ) {
@@ -497,7 +499,7 @@ export const CityArea = (props) => {
 
     let requestObj = {
       country: country_code || getCountryFromUrl(),
-      city: isArabic() && area_ar ? area_ar : city,
+      city: isArabic() && area_ar ? city_ar : city,
       area: isArabic() && area_ar ? area_ar : area,
       courier: null,
       source: null,

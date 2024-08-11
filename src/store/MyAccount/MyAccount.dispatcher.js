@@ -797,14 +797,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
   estimateEddResponseForPDP(dispatch, request){
     const {
-      AppConfig: { isExpressDelivery = false, vwoData = {} },
+      AppConfig: { isExpressDelivery = false, vwoData = {}, isNewCheckoutPageEnable = false },
+      MyAccountReducer: { addressCityData = [] },
     } = getStore().getState();
-
-    if (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+    
+    if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
       let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+      let city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      let area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      const { finalCity, finalArea } = this.getArabicCityArea(
+        city,
+        area,
+        addressCityData
+      );
 
-      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
-      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.city = isArabic() ? finalCity : city;
+      request.area = isArabic() ? finalArea : area;
       request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
     }
 
@@ -831,13 +839,21 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   async estimateEddResponse(dispatch, request, type) {
     const {
       AppConfig: { isExpressDelivery = false, vwoData = {}, isNewCheckoutPageEnable = false },
+      MyAccountReducer: { addressCityData = [] },
     } = getStore().getState();
     
     if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
       let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+      let city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      let area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      const { finalCity, finalArea } = this.getArabicCityArea(
+        city,
+        area,
+        addressCityData
+      );
 
-      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
-      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.city = isArabic() ? finalCity : city;
+      request.area = isArabic() ? finalArea : area;
       request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
     }
 

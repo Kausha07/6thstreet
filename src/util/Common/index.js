@@ -160,6 +160,13 @@ export const WEEK_ARABIC_TRANSLATION = {
   Thursday: "الخميس",
   Friday: "الجمعة",
   Saturday: "السبت",
+  Sun: "الأحد",
+  Mon: "الإثنين",
+  Tue: "الثلاثاء",
+  Wed: "الأربعاء",
+  Thu: "الخميس",
+  Fri: "الجمعة",
+  Sat: "السبت",
 };
 
 export const MONTHS_ARABIC_TRANSLATION = {
