@@ -3,6 +3,7 @@ export const SET_CART_TOTAL = "SET_CART_TOTAL";
 export const SET_IS_ADDRESS_SELECTED = "SET_IS_ADDRESS_SELECTED";
 export const SET_SHIPMENT = "SET_SHIPMENT";
 export const SET_CHECKOUT_LOADER = "SET_CHECKOUT_LOADER";
+export const SET_PROCESS_ADDRESS_CHANGE = "SET_PROCESS_ADDRESS_CHANGE";
 
 export const setShipping = (shipping) => ({
     type: SET_SHIPPING,
@@ -27,4 +28,9 @@ export const setShipment = (shipment) => ({
 export const setCheckoutLoader = (currState) => ({
     type: SET_CHECKOUT_LOADER,
     currState
+});
+
+export const setProcessAddressChange = (currState) => ({
+    type: SET_PROCESS_ADDRESS_CHANGE,
+    currAddState : currState
 });

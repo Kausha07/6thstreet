@@ -35,6 +35,7 @@ const PlaceOrderBtn = (props) => {
     isDropdownOpen,
     onDropdownClicked,
     isArabic,
+    processAddressChange,
   } = props;
 
   const cashOnDeliveryFee = getValueFromTotals(
@@ -174,7 +175,7 @@ const PlaceOrderBtn = (props) => {
                     : "Button",
               }}
             >
-              {processingRequest || processingPaymentSelectRequest ? (
+              {processingRequest || processingPaymentSelectRequest || processAddressChange ? (
                 <ThreeDots color="white" height={6} width={"100%"} />
               ) : isTabbyPay ? (
                 __("Place tabby order")

@@ -45,6 +45,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   processingPaymentSelectRequest:
     state.CartReducer.processingPaymentSelectRequest,
+  processAddressChange: state.CheckoutReducer.processAddressChange,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -117,6 +118,7 @@ const NewCheckoutPayment = (props) => {
     isAddressSelected,
     vwoData,
     showError,
+    processAddressChange,
   } = props;
 
   const isSignedInUser = isSignedIn();
@@ -363,6 +365,7 @@ const NewCheckoutPayment = (props) => {
           isDropdownOpen={isDropdownOpen}
           onDropdownClicked={onDropdownClicked}
           isArabic={isArabic}
+          processAddressChange={processAddressChange}
         />
       </>
     );

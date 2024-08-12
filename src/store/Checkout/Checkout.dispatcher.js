@@ -7,6 +7,7 @@ import {
   setIsAddressSelected,
   setShipment,
   setCheckoutLoader,
+  setProcessAddressChange,
 } from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -297,6 +298,10 @@ export class CheckoutDispatcher {
     dispatch(setIsAddressSelected(isAddress));
   }
 
+  setProcessAddressChange(dispatch, currState) {
+    dispatch(setProcessAddressChange(currState));
+  }
+
   async getShipment(dispatch, cartId) {
     const {
       AppConfig: { isExpressDelivery = false, vwoData = {} },
@@ -304,6 +309,7 @@ export class CheckoutDispatcher {
 
     if(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled ) {
       dispatch(setShipment({}));
+      this.setProcessAddressChange(dispatch, false);
       return {};
     }
 
@@ -318,6 +324,7 @@ export class CheckoutDispatcher {
 
     try {
       const response = await getShipment({ cartId, params });
+      this.setProcessAddressChange(dispatch, false);
       await CartDispatcher.getCartTotals(dispatch, cartId);
       if(response) {
         dispatch(setShipment(response));

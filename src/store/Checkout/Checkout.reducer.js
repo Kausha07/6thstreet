@@ -4,6 +4,7 @@ import {
     SET_IS_ADDRESS_SELECTED,
     SET_SHIPMENT,
     SET_CHECKOUT_LOADER,
+    SET_PROCESS_ADDRESS_CHANGE,
 } from './Checkout.action';
 
 export const getInitialState = () => ({
@@ -12,6 +13,7 @@ export const getInitialState = () => ({
     isAddressSelected: false,
     shipment: {},
     checkoutLoader: false,
+    processAddressChange: false,
 });
 
 export const CheckoutReducer = (state = getInitialState(), action) => {
@@ -54,6 +56,14 @@ export const CheckoutReducer = (state = getInitialState(), action) => {
             ...state,
             checkoutLoader : currState,
         };
+
+    case SET_PROCESS_ADDRESS_CHANGE:
+        const { currAddState } = action;
+
+        return {
+            ...state,
+            processAddressChange : currAddState
+        }
 
     default:
         return state;

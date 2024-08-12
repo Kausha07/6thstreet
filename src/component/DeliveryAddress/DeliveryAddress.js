@@ -19,6 +19,7 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { getSelectedAddress } from "./utils/DeliveryAddress.helper";
 import { showPopup } from "Store/Popup/Popup.action";
 import CityArea from "Component/CityArea/index";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
@@ -33,6 +34,8 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   selectedCityArea: (data) =>
     MyAccountDispatcher.selectedCityArea(dispatch, data),
+  setProcessAddressChange: (currState) =>
+    CheckoutDispatcher.setProcessAddressChange(dispatch, currState),
 });
 
 const DeliveryAddress = (props) => {
@@ -44,6 +47,7 @@ const DeliveryAddress = (props) => {
     onAddressSelect,
     isSignedIn,
     editCheckoutAddress,
+    setProcessAddressChange,
   } = props;
 
   const selectedAddressForRender = isSignedIn
@@ -53,6 +57,7 @@ const DeliveryAddress = (props) => {
   const isMobileDevice = isMobile.any() || isMobile.tablet();
 
   const onAddressSelectPopup = (selectedAddress) => {
+    setProcessAddressChange(true);
     onAddressSelect(selectedAddress);
   };
 
