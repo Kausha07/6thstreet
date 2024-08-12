@@ -11,12 +11,12 @@ export const doFetch = async (url, options,  checkUser=false, isCareemPay=false)
 
         if (!ok && !url.match(regExpUrl)) {
 
-            const errorForExpress = await response.json();
-            if (status === 400 && errorForExpress?.data?.code === "CHK-33") {
-              return errorForExpress;
+            const jsonFormatErrorResp = await response.json();
+            if (status === 400 && jsonFormatErrorResp?.data?.code === "CHK-33") {
+              return jsonFormatErrorResp;
             }
             
-            const error = getErrorMsg(response, isCareemPay);
+            const error = getErrorMsg(jsonFormatErrorResp, isCareemPay);
 
         // In Careem Pay order API, in error case we need both the data and message field. - API format is also changes in this case. 
             if(isCareemPay) {
