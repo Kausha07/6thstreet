@@ -92,17 +92,17 @@ export class AppConfigDispatcher {
         let defaultVariationName =
           abTestingConfig?.Express?.defaultVariant || "c";
         let campaignName =
-          abTestingConfig?.Express?.campaignName || "ExpressDeliveryUAE";
+          abTestingConfig?.Express?.campaignName || "express_delivery_ae";
         let isExpressDeliveryEnable = defaultVariationName !== "c" ? true : false;
-  
+        let defaultValue = false;
+        if(abTestingConfig && abTestingConfig.Express && abTestingConfig?.Express?.variable && Array.isArray(abTestingConfig?.Express?.variable)){
+            defaultValue = abTestingConfig.Express.variable.filter(item => item.name === "enable")[0]['defaultValue'];
+        }
         let result = {
           variationName: defaultVariationName,
           vwo: "0",
           campaignName,
-          isFeatureEnabled:
-            defaultVariationName === "c"
-              ? false
-              : abTestingConfig?.Express?.variable?.[0]?.defaultValue,
+          isFeatureEnabled: defaultValue
         };
   
         if (isEnable && callVwo) {
@@ -118,19 +118,17 @@ export class AppConfigDispatcher {
             options
           );
   
+          const enable = vwoClientInstance.getFeatureVariableValue(campaignName, 'enable', `${userId}`, options);
+
           result = {
             variationName: variationName ? variationName : defaultVariationName,
             vwo: variationName ? "1" : "0",
             campaignName,
-            isFeatureEnabled: variationName
-              ? variationName === "c"
-                ? false
-                : true
-              : abTestingConfig?.Express?.variable?.[0]?.defaultValue,
+            isFeatureEnabled: isFeatureEnabled && enable
           };
         }
         return result;
-      };
+    };
     // Get Logged in User Variations from VWO tool
     try {
         if (userId && window.vwoClientInstance) {
@@ -205,6 +203,10 @@ export class AppConfigDispatcher {
             window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
             return { SiteWideCoupon, HPP, NewPDP, Express };
         } else {
+            let defaultValueForExpress = false;
+            if(abTestingConfig && abTestingConfig.Express && abTestingConfig?.Express?.variable && Array.isArray(abTestingConfig?.Express?.variable)){
+                defaultValueForExpress = abTestingConfig.Express.variable.filter(item => item.name === "enable")[0]['defaultValue'];
+            }
             return {
                 SiteWideCoupon : {
                     isFeatureEnabled: false,
@@ -227,7 +229,7 @@ export class AppConfigDispatcher {
                     variationName: abTestingConfig?.Express?.defaultVariant,
                     vwo: '0',
                     campaignName: expressCampaignName,
-                    isFeatureEnabled: abTestingConfig?.Express?.variable?.[0]?.defaultValue,
+                    isFeatureEnabled: defaultValueForExpress,
                 } 
             }
         }
