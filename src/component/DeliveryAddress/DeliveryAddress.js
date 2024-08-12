@@ -107,7 +107,7 @@ const DeliveryAddress = (props) => {
       <div block="address-card" mods={{ isGuestUser: !isSignedIn }}>
         <div block="address-card" elem="header">
           <>
-            <h2>Delivery Address</h2>
+            <h2>{__("Delivery Address")}</h2>
             {isSignedIn ? (
               <CityArea
                 isNewCheckoutPage={true}
@@ -119,7 +119,7 @@ const DeliveryAddress = (props) => {
                 type="button"
                 onClick={editCheckoutAddress}
               >
-                Edit
+                {__("Edit")}
               </button>
             )}
           </>

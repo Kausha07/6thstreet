@@ -114,7 +114,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="HeaderWrapper">
         <span block="CheckoutOrderSummary" elem="ItemCount">
-          {__(" Coupon & offer ")}
+          {__("Coupon & offer")}
         </span>
       </div>
     );

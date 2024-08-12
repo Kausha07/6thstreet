@@ -121,7 +121,9 @@ export const NewCheckoutShippment = (props) => {
       <li block="NewShippmentItem">
         <div block="CartItemHeading">
           <span block="NumOfShipments">
-            {__(`Shipment ${shipmentNumber} of ${totalShipmentCount}`)}
+            {
+              __(`Shipment %s of %s`, shipmentNumber, totalShipmentCount)
+            }
           </span>
         </div>
         <div block="ExpressOrStandadrdDeliverySelection">
