@@ -1437,5 +1437,6 @@
     "Return window closed on %s": "انتهت فترة الارجاع في %s",
     "Returned/exchange window closed on %s": "انتهت فترة الارجاع/الاستبدال في %s",
     "Only %s qty available. Please update.":"الكمية المتوفرة  %s فقط. يُرجى التحديث.",
-    "Express Service": "خدمة سريعة"
+    "Express Service": "خدمة سريعة",
+    "Refund of %s %s has been initiated to your original payment method. For card payments, it should reflect within 5-7 days.": "لقد تم رد مبلغ  %s  %s إلى طريقة الدفع الأصلية الخاصة بك. بالنسبة للمدفوعات بالبطاقة، يجب أن يظهر في حسابك خلال 5-7 أيام"
 }

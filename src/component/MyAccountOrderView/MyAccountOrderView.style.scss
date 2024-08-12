@@ -219,6 +219,10 @@
     .order-group-message {
       .color-grey {
         color: var(--color-light-gray);
+        &_isArabic {
+          direction: ltr;
+          text-align: right;
+        }
       }
     }
   }

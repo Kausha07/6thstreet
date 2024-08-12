@@ -222,15 +222,22 @@ export class CheckoutDispatcher {
     return removeBinPromotion({ cartId });
   }
 
-  async createOrder(dispatch, code, additional_data, eddItems) {
+  async createOrder(dispatch, code, additional_data, eddItems, vipData = {} ) {
     const {
       Cart: { cartId },
     } = getStore().getState();
+
+    const {
+      is_vip = false,
+      is_vip_chargeable = true,
+    } = vipData;
 
     return createOrder({
       data: {
         cart_id: cartId,
         edd_items: eddItems,
+        is_vip,
+        is_vip_chargeable,
         payment: {
           method: code,
           data: additional_data,

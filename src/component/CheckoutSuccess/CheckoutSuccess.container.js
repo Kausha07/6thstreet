@@ -59,6 +59,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -279,6 +280,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       isSignedIn,
       paymentMethod,
       redirectPaymentMethod,
+      isExpressDelivery,
     } = this.props;
     let isRedirectPayment = false;
     let newInitialTotal= {};
@@ -310,6 +312,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       payMethodCode: { code: redirectPaymentMethod },
       shipmentDetails,
       cartTotalRes,
+      isExpressDelivery,
     };
   };
 
