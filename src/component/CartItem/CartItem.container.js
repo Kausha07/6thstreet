@@ -176,11 +176,12 @@ export class CartItemContainer extends PureComponent {
       cartTotals: { status = null },
       isExpressDelivery,
     } = this.props;
+    let max_sale_qty = 0;
 
     if (status != null && isExpressDelivery && availableQty === 0) {
       max_sale_qty = reserved_qty;
     }
-    const max_sale_qty =
+    max_sale_qty =
     availableQty === 0 ? availableQty :
       availableQty >= DEFAULT_MAX_PRODUCTS
         ? DEFAULT_MAX_PRODUCTS
