@@ -77,14 +77,6 @@ class PurchaseEvent extends BaseEvent {
         BrowserDatabase.getItem("SHIPMENT_DETAILS")
           ? BrowserDatabase.getItem("SHIPMENT_DETAILS")
           : [];
-    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
-      BrowserDatabase.getItem("currentSelectedAddress")?.city
-      ? BrowserDatabase.getItem("currentSelectedAddress").city
-      : null;
-    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
-      BrowserDatabase.getItem("currentSelectedAddress")?.area
-      ? BrowserDatabase.getItem("currentSelectedAddress").area
-      : null;
     const total_items = totals?.items;
     const ga4_items = total_items.map((item) => ({
       item_name: item?.full_item_info?.name,
@@ -101,8 +93,6 @@ class PurchaseEvent extends BaseEvent {
     }));
 
     this.pushEventData({
-      city: city,
-      area: area,
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
       ecommerce: {

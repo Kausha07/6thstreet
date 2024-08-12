@@ -28,17 +28,7 @@ class RemoveFromCartEvent extends BaseEvent {
             return;
         }
 
-        const city = BrowserDatabase.getItem("currentSelectedAddress") &&
-            BrowserDatabase.getItem("currentSelectedAddress")?.city
-            ? BrowserDatabase.getItem("currentSelectedAddress").city
-            : null;
-        const area = BrowserDatabase.getItem("currentSelectedAddress") &&
-            BrowserDatabase.getItem("currentSelectedAddress")?.area
-            ? BrowserDatabase.getItem("currentSelectedAddress").area
-            : null;
         this.pushEventData({
-            city: city,
-            area: area,
             ecommerce: {
                 currencyCode: this.getCurrencyCode(),
                 remove: {

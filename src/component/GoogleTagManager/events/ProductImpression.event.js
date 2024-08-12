@@ -113,18 +113,8 @@ class ProductImpressionEvent extends BaseEvent {
 
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
-    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
-        BrowserDatabase.getItem("currentSelectedAddress")?.city
-        ? BrowserDatabase.getItem("currentSelectedAddress").city
-        : null;
-    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
-        BrowserDatabase.getItem("currentSelectedAddress")?.area
-        ? BrowserDatabase.getItem("currentSelectedAddress").area
-        : null;
     this.pushEventData({
       event: EVENT_GTM_VIEW_ITEM_LIST,
-      city: city,
-      area: area,
       ecommerce: {
         currency: this.getCurrencyCode(),
         currencyCode: this.getCurrencyCode(),

@@ -517,6 +517,8 @@ class GoogleTagManager extends PureComponent {
         search_term: null,
         BannerName: null,
       });
+      const currentSelectedAddress = BrowserDatabase.getItem("currentSelectedAddress");
+      const { city = "", area = "" } = currentSelectedAddress ? currentSelectedAddress: {};
       const additionalDetails = {
         ...(!data?.screen_name && {
           screen_name: sessionStorage.getItem("currentScreen") || null,
@@ -536,6 +538,8 @@ class GoogleTagManager extends PureComponent {
         vip_customer: isVipCustomer || false,
         device_id: uuid,
         user_id: isCustomerID,
+        city: city,
+        area: area
       };
       this.addDataLayer({ ...data, ...additionalDetails });
 

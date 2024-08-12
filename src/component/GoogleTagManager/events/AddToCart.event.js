@@ -48,14 +48,6 @@ class AddToCartEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
         : null;
-    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
-      BrowserDatabase.getItem("currentSelectedAddress")?.city
-      ? BrowserDatabase.getItem("currentSelectedAddress").city
-      : null;
-    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
-      BrowserDatabase.getItem("currentSelectedAddress")?.area
-      ? BrowserDatabase.getItem("currentSelectedAddress").area
-      : null;
     this.pushEventData({
       sha256_email: sha_email,
       sha256_phone_number: sha_phone,
@@ -65,8 +57,6 @@ class AddToCartEvent extends BaseEvent {
       user_view_count :product?.user_view_count ?? "",
       user_added_to_cart_count :product?.user_added_to_cart_count ?? "",
       is_following_brand :product?.is_following_brand ?? "",
-      city: city,
-      area: area,
       ecommerce: {
         currency: this.getCurrencyCode(),
         currencyCode:  this.getCurrencyCode(),
