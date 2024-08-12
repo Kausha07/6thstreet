@@ -162,7 +162,8 @@ const PlaceOrderBtn = (props) => {
                 processingRequest ||
                 processingPaymentSelectRequest ||
                 isApplePay ||
-                !isCODInLimit
+                !isCODInLimit ||
+                processAddressChange
               }
               onClick={processPlaceOrder}
               mix={{
