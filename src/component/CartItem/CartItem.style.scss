@@ -151,7 +151,7 @@
 
     @include desktop() {
       height: 130px;
-      width: 100%;
+      width: 73%;
       margin-left: 6px;
       &_isArabic {
         margin-left: 0px;
@@ -174,7 +174,7 @@
   }
 
   &-Wrapper {
-    width: 100%;
+    width: 98%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -230,7 +230,7 @@
 
   &-Heading {
     flex-grow: 1;
-    width: 80%;
+    width: 100%;
     margin-bottom: 0;
     color: var(--cart-item-heading-color);
     text-align: left;
