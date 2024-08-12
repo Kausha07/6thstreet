@@ -227,6 +227,39 @@
     }
   }
 
+  &-PackagesMessageForREDD {
+    background: var(--my-acc-background);
+    padding: 10px 25px;
+    font-family: Avenir Next;
+    font-size: 12px;
+
+    p {
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    &_isArabic {
+      .Image {
+        margin: 5px 0 0 15px;
+      }
+    }
+
+    .order-group-message {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .color-grey {
+        color: #555555;
+        font-size: 12px;
+        font-weight: 400;
+        &_isArabic {
+          direction: ltr;
+          text-align: right;
+        }
+      }
+    }
+  }
+
   &-Summary {
     border-bottom: 2px solid var(--divider-color);
     padding: 15px 0;

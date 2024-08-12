@@ -1398,6 +1398,35 @@ class MyAccountOrderView extends PureComponent {
     return null;
   }
 
+  renderREDDMsg = () => {
+    const {
+      order: { express_redd_refund = [] },
+    } = this.props;
+    const { isArabic } = this.state;
+    if (Array.isArray(express_redd_refund) && express_redd_refund?.length > 0) {
+      return express_redd_refund?.map((item, i) => {
+        const { refund_message = "", refund_date = "" } = item;
+        if (refund_message && refund_date) {
+          return (
+            <div
+              block="MyAccountOrderView"
+              elem="PackagesMessageForREDD"
+              mods={{ isArabic }}
+              key={i}
+            >
+              <div block="order-group-message">
+                <p>{__(refund_message)}</p>
+                <p block="color-grey" mods={{ isArabic }}>
+                  {refund_date}
+                </p>
+              </div>
+            </div>
+          );
+        } else return null;
+      });
+    } else return null;
+  };
+
   render() {
     const { isLoading, order } = this.props;
     if (isLoading || !order) {
@@ -1417,6 +1446,7 @@ class MyAccountOrderView extends PureComponent {
         </div>
         {this.renderStatus()}
         {/* {this.renderPackagesMessage()} */}
+        {this.renderREDDMsg()}
         {this.renderAccordions()}
         {this.renderFailedOrderDetails()}
         {this.renderSummary()}
