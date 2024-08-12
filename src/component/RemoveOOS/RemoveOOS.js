@@ -62,7 +62,7 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic, isExp
         } = totals;
 
         if (items.length !== 0) {
-            const mappedItems = checkProducts(items, totals) || [];
+            const mappedItems = checkProducts(items, totals, isExpressDelivery) || [];
             const availableItems = checkIsAvailableProducts(items) || [];
 
             if(mappedItems) {

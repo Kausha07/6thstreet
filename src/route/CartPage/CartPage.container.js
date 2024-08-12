@@ -245,7 +245,7 @@ export class CartPageContainer extends PureComponent {
     this._changeHeaderState();
     getCouponList();
 
-    const mappedItems = checkProducts(items) || [];
+    const mappedItems = checkProducts(items, this.props?.totals, this.props?.isExpressDelivery) || [];
     if (
       mappedItems.length !== 0 &&
       (this.state.errorState === false || propErrorState === false)
@@ -389,7 +389,7 @@ export class CartPageContainer extends PureComponent {
       totals: prevtotals,
     } = prevProps;
     if (JSON.stringify(prevtotals) !== JSON.stringify(totals)) {
-      const mappedItems = checkProducts(items) || [];
+      const mappedItems = checkProducts(items,  this.props?.totals, this.props?.isExpressDelivery) || [];
       if (mappedItems.length !== 0) {
         showNotification(
           "error",

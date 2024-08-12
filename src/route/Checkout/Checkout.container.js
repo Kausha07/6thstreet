@@ -706,6 +706,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       totals: { items = [], discount = 0, total, total_segments = [] },
       updateStoreCredit,
       isSignedIn,
+      isExpressDelivery,
     } = this.props;
 
     const { checkoutStep, initialGTMSent, PaymentRedirect } = this.state;
@@ -759,7 +760,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     if (items.length !== 0) {
-      const mappedItems = checkProducts(items) || [];
+      const mappedItems = checkProducts(items, totals, isExpressDelivery) || [];
 
       if (mappedItems.length !== 0) {
         history.push("/cart", { errorState: false });
