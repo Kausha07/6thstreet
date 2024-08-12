@@ -21,6 +21,8 @@ import {
   setExpressCutOffTime,
   setisExpressPopUpOpen,
   setisExpressPLPAddressForm,
+  setAddressdeleted,
+  setPrevSelectedAddressForPLPFilters,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -121,6 +123,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
       const {
         AppConfig: { edd_info = {}, isExpressDelivery = false, vwoData = {}, isNewCheckoutPageEnable = false },
+        MyAccountReducer: { isAddressDeleted = false },
       } = getStore().getState();
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
@@ -128,6 +131,63 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         }
       );
       const countryCode = getCountryFromUrl();
+
+      let countryWiseAddresses = response?.data?.filter(
+        (obj) => obj?.country_code === countryCode
+      );
+
+      if (
+        (!localStorage.getItem("EddAddressReq") || isAddressDeleted) &&
+        (isExpressDelivery || isNewCheckoutPageEnable)
+      ) {
+        const selectedAddress = JSON.parse(
+          localStorage.getItem("currentSelectedAddress")
+        );
+
+        let checkAddressExist = countryWiseAddresses.find(
+          (obj) => obj?.id === selectedAddress?.id
+        );
+
+        let finalAddress = checkAddressExist
+          ? checkAddressExist
+          : defaultShippingAddress?.length > 0
+          ? defaultShippingAddress?.[0]
+          : countryWiseAddresses
+          ? countryWiseAddresses?.[0]
+          : null;
+
+        if (
+          !selectedAddress?.id &&
+          selectedAddress?.area != null &&
+          selectedAddress?.city != null
+        ) {
+          finalAddress = selectedAddress;
+        }
+
+        let requestObj = {
+          country: countryCode,
+          city: finalAddress?.city,
+          area: finalAddress?.area,
+          courier: null,
+          source: null,
+        };
+
+        if (finalAddress) {
+          localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+          localStorage.setItem(
+            "currentSelectedAddress",
+            JSON.stringify(finalAddress)
+          );
+          this.expressPopUpOpen(dispatch, false);
+          this.selectedCityArea(dispatch, finalAddress);
+          CartDispatcher.getCart(dispatch, false, false, false);
+        } else {
+          localStorage.removeItem("currentSelectedAddress");
+          localStorage.removeItem("EddAddressReq");
+          this.selectedCityArea(dispatch, null);
+          CartDispatcher.getCart(dispatch, false, false, false);
+        }
+      }
 
       if (localStorage.getItem("EddAddressReq") && ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable)) {
         const request = JSON.parse(localStorage.getItem("EddAddressReq"));
@@ -289,22 +349,31 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           let countryWiseAddresses = response?.data?.filter(
             (obj) => obj?.country_code === getCountryFromUrl()
           );
-          let newlyAddedAddress = countryWiseAddresses?.[countryWiseAddresses.length-1];
-          const {country_code = "", city = "", area = "" } = newlyAddedAddress;
-          let requestObj = {
-            country: country_code,
-            city: city,
-            area: area,
-            courier: null,
-            source: null,
-          };
-          localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+          let newlyAddedAddress =
+            countryWiseAddresses?.[countryWiseAddresses.length - 1];
+
+          if (newlyAddedAddress) {
+            const {
+              country_code = "",
+              city = "",
+              area = "",
+            } = newlyAddedAddress;
+            let requestObj = {
+              country: country_code,
+              city: city,
+              area: area,
+              courier: null,
+              source: null,
+            };
+            localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
             localStorage.setItem(
               "currentSelectedAddress",
               JSON.stringify(newlyAddedAddress)
             );
             this.selectedCityArea(dispatch, newlyAddedAddress);
             this.expressPopUpOpen(dispatch, false);
+            CartDispatcher.getCart(dispatch, false, false, false)
+          }
         }
         if (addressCityData.length === 0) {
           AppConfigDispatcher.getCities().then((resp) => {
@@ -728,14 +797,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
   estimateEddResponseForPDP(dispatch, request){
     const {
-      AppConfig: { isExpressDelivery = false, vwoData = {} },
+      AppConfig: { isExpressDelivery = false, vwoData = {}, isNewCheckoutPageEnable = false },
+      MyAccountReducer: { addressCityData = [] },
     } = getStore().getState();
-
-    if (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+    
+    if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
       let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+      let city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      let area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      const { finalCity, finalArea } = this.getArabicCityArea(
+        city,
+        area,
+        addressCityData
+      );
 
-      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
-      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.city = isArabic() ? finalCity : city;
+      request.area = isArabic() ? finalArea : area;
       request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
     }
 
@@ -762,13 +839,21 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   async estimateEddResponse(dispatch, request, type) {
     const {
       AppConfig: { isExpressDelivery = false, vwoData = {}, isNewCheckoutPageEnable = false },
+      MyAccountReducer: { addressCityData = [] },
     } = getStore().getState();
     
     if ((isExpressDelivery && vwoData?.Express?.isFeatureEnabled) || isNewCheckoutPageEnable) {
       let reqOBJ = JSON.parse(localStorage.getItem("EddAddressReq"));
+      let city = reqOBJ?.city ? reqOBJ?.city : request?.city;
+      let area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      const { finalCity, finalArea } = this.getArabicCityArea(
+        city,
+        area,
+        addressCityData
+      );
 
-      request.city = reqOBJ?.city ? reqOBJ?.city : request?.city;
-      request.area = reqOBJ?.area ? reqOBJ?.area : request?.area;
+      request.city = isArabic() ? finalCity : city;
+      request.area = isArabic() ? finalArea : area;
       request.country = reqOBJ?.country ? reqOBJ?.country : request?.country;
     }
 
@@ -895,6 +980,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   setExpressPLPAddressForm(dispatch, val) {
     dispatch(setisExpressPLPAddressForm(val));
+  }
+
+  setAddressDeleted(dispatch, val){
+    dispatch(setAddressdeleted(val));
+  }
+
+  setPrevSelectedAddressForPLPFilters(dispatch, val) {
+    dispatch(setPrevSelectedAddressForPLPFilters(val));
   }
 }
 

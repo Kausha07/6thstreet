@@ -40,6 +40,7 @@ export const mapStateToProps = (state) => ({
   pdpProduct: state.PDP.product,
   cartId: state.Cart.cartId,
   vwoData: state.AppConfig.vwoData,
+  isAddressDeleted: state.MyAccountReducer.isAddressDeleted,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -59,6 +60,8 @@ export const mapDispatchToProps = (dispatch) => ({
   setExpressPLPAddressForm: (val) =>
     MyAccountDispatcher.setExpressPLPAddressForm(dispatch, val),
   getCart: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  setPrevSelectedAddressForPLPFilters: (val) =>
+    MyAccountDispatcher.setPrevSelectedAddressForPLPFilters(dispatch, val),
 });
 
 export const CityArea = (props) => {
@@ -94,6 +97,8 @@ export const CityArea = (props) => {
     cartItems,
     renderSelectedAddressMsite = () => {},
     vwoData = {},
+    setPrevSelectedAddressForPLPFilters,
+    isAddressDeleted,
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -141,14 +146,25 @@ export const CityArea = (props) => {
       const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
-        if (!isPDP && window.pageType === "PRODUCT") {
+        if (!isPDP && window.pageType === "PRODUCT" && isAddressDeleted) {
           getEddForPDP(reqOBJ?.area, reqOBJ?.city);
         }
-      } else if (!isSignedIn) {
+      } else if (!isSignedIn || !reqOBJ) {
         setFinalAreaText(__("Select Area"));
       }
     }
   }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
+
+  useEffect(() => {
+    if (isExpressDelivery) {
+      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      if (reqOBJ?.area) {
+        setFinalAreaText(reqOBJ?.area);
+      } else if (!isSignedIn || !reqOBJ) {
+        setFinalAreaText(__("Select Area"));
+      }
+    }
+  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
 
   useEffect(() => {
     if (
@@ -484,7 +500,7 @@ export const CityArea = (props) => {
 
     let requestObj = {
       country: country_code || getCountryFromUrl(),
-      city: isArabic() && area_ar ? area_ar : city,
+      city: isArabic() && area_ar ? city_ar : city,
       area: isArabic() && area_ar ? area_ar : area,
       courier: null,
       source: null,
@@ -494,6 +510,10 @@ export const CityArea = (props) => {
     if (isNewCheckoutPage) {
       onAddressSelectPopup(selectedAddress);
     }
+    expressPopUpOpen(false);
+    setPrevSelectedAddressForPLPFilters(
+      JSON.parse(localStorage.getItem("currentSelectedAddress"))
+    );
 
     localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
     localStorage.setItem(
@@ -630,6 +650,7 @@ export const CityArea = (props) => {
                 block={`cityAreaText  ${
                   showEllipsisArea ? "showEllipsisArea" : ""
                 }  ${
+                  localStorage.getItem("currentSelectedAddress") &&
                   JSON.parse(localStorage.getItem("currentSelectedAddress"))
                     ?.area
                     ? "colorBlack"

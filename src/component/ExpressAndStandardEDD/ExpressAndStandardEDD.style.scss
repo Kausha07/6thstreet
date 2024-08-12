@@ -4,9 +4,9 @@
   justify-content: center;
   flex-direction: column;
   border-radius: 8px;
-  margin-top: 10px;
   text-transform: initial;
-  padding: 4px 0;
+  padding: 3px 0;
+  line-height: 8px;
 
   .eddExpressDeliveryBlock {
     display: flex;
@@ -82,7 +82,7 @@
 .eddStandardDelivery {
   display: flex;
   background: #8686861a;
-  padding: 10px 0;
+  padding: 7px 0;
   justify-content: center;
   flex-direction: column;
   border-radius: 8px;

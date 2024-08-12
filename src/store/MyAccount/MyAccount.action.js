@@ -34,6 +34,8 @@ export const SET_SELECTED_CITY_AREA = "SET_SELECTED_CITY_AREA";
 export const SET_EXPRESS_CUTOFF_TIME = "SET_EXPRESS_CUTOFF_TIME";
 export const SET_EXPRESS_POPUP_OPEN = "SET_EXPRESS_POPUP_OPEN";
 export const SET_EXPRESS_PLP_ADDRESS_OPEN = "SET_EXPRESS_PLP_ADDRESS_OPEN";
+export const SET_ADDRESS_DELETED = "SET_ADDRESS_DELETED";
+export const SET_PREVIOUS_SELECTED_ADDRESS = "SET_PREVIOUS_SELECTED_ADDRESS";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -158,3 +160,13 @@ export const setisExpressPLPAddressForm = (isExpressPLPAddressOpen) => ({
   type: SET_EXPRESS_PLP_ADDRESS_OPEN,
   isExpressPLPAddressOpen,
 });
+
+export const setAddressdeleted = (val) => ({
+  type: SET_ADDRESS_DELETED,
+  val,
+});
+
+export const setPrevSelectedAddressForPLPFilters = (val) => ({
+  type: SET_PREVIOUS_SELECTED_ADDRESS,
+  val,
+})

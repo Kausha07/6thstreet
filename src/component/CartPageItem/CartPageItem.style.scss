@@ -121,7 +121,7 @@
     .stockQuantityNotReservedText {
       font-size: 12px;
       font-weight: 500;
-      margin-top: 10px;
+      margin-top: 5px;
       color: #d12228;
     }
   }
@@ -484,6 +484,10 @@
 
   .EddExpressWrapper {
     @include mobile {
+      margin-top: 5px;
+      .EddExpressDeliveryCutOffTime {
+        margin: 0 32px;
+      }
       .internationalShipmentTag {
         margin: 0 28px;
       }

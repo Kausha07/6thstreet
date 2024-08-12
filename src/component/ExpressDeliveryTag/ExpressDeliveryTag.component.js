@@ -61,9 +61,12 @@ export const ExpressDeliveryTag = (props) => {
         !isExpressServiceAvailable?.express_eligible) ||
       express_delivery === 1 ||
       express_delivery === 0 ||
-      !["today delivery", "tomorrow delivery"].includes?.(
-        express_delivery?.toLowerCase()
-      )
+      ![
+        "today delivery",
+        "tomorrow delivery",
+        "التسليم اليوم",
+        "التسليم غدا",
+      ].includes?.(express_delivery?.toLowerCase())
     ) {
       return null;
     }
@@ -82,7 +85,8 @@ export const ExpressDeliveryTag = (props) => {
             &nbsp;
             {express_delivery !== 1 &&
             express_delivery !== 0 &&
-            express_delivery?.toLowerCase() !== "tomorrow delivery"
+            (express_delivery?.toLowerCase() !== "tomorrow delivery" &&
+              express_delivery?.toLowerCase() !== "التسليم غدا")
               ? __("Today")
               : __("Tomorrow")}
           </span>

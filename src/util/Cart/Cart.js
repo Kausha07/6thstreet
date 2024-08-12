@@ -6,8 +6,7 @@ export const checkProducts = (items = {}, totals = {}, isExpressEnable = false) 
     const { status = null } = totals;
     if (
       status != null &&
-      item[1].availableQty > 0 &&
-      +reserved_qty === 0 &&
+      reserved_qty < item[1].qty &&
       isExpressEnable
     ) {
       acc.push(0);

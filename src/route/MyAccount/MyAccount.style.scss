@@ -793,9 +793,16 @@
   margin-top: 14px;
   margin-bottom: 14px;
   margin-left: 5px;
+  display: flex;
 
   .UserName {
     font-weight: bold;
+    display: inline-block;
+    width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 5px;
   }
 }
 

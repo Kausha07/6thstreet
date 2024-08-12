@@ -337,11 +337,14 @@ class HeaderSearch extends PureComponent {
           }}
         >
           <div
-            block={`HeaderSearch ${
-              !showSearch && !showMegaMenuHeaderSearchStyle && isExpressDelivery
+            block={`${
+              !showSearch &&
+              !showMegaMenuHeaderSearchStyle &&
+              isExpressDelivery &&
+              !isPDP
                 ? "expressPOsitionCSS"
                 : null
-            }`}
+            } HeaderSearch`}
             mods={{ isArabic, isPLP }}
             style={mobileMegaMenuStyle}
           >

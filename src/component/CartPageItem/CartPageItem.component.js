@@ -174,10 +174,16 @@ export class CartItem extends PureComponent {
     if (
       isExpressDelivery &&
       status != null && 
-      availableQty > 0 &&
       reserved_qty === 0
     ) {
       return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
+    } else if (isExpressDelivery &&
+      status != null && 
+      reserved_qty > 0){
+        return {
+          isNotAvailble: false, 
+          intlEddResponseState: intlEddResponse
+        };
     }
 
     return {
@@ -1048,7 +1054,7 @@ export class CartItem extends PureComponent {
   }
 
   renderQTYUnavailableMSG = (qty, reserved_qty, availableQty) => {
-    if (availableQty > 0 && reserved_qty!= 0 && reserved_qty < qty) {
+    if (reserved_qty!= 0 && reserved_qty < qty) {
       return (
         <div block="stockQuantityNotReservedText">{__("Only %s qty available. Please update.", reserved_qty)}</div>
       );

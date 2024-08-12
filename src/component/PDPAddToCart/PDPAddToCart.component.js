@@ -137,8 +137,8 @@ class PDPAddToCart extends PureComponent {
       this.getRecommendedSize("size_bar");
     }
 
-    if (prevProps.isSignedIn != this.props.isSignedIn) {
-      if (this.props.isSignedIn) {
+    if (prevProps.isSignedIn != this.props.isSignedIn || !this.props.currentSelectedCityArea) {
+      if (this.props.isSignedIn && this.props.currentSelectedCityArea) {
         this.setState({
           selectedCityArea: this.props.currentSelectedCityArea
             ? this.props.currentSelectedCityArea
@@ -146,7 +146,7 @@ class PDPAddToCart extends PureComponent {
             ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
             : {},
         });
-      } else if (!this.props.isSignedIn) {
+      } else if (!this.props.isSignedIn || !this.props.currentSelectedCityArea) {
         this.setState({ selectedCityArea: null });
       }
     }

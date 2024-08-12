@@ -5,7 +5,7 @@ import Loader from "Component/Loader";
 import Field from "Component/Field";
 import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor, arabicTranslatorForExpress } from "Util/Common";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
 import "./PLPFilterOption.style";
@@ -347,8 +347,14 @@ class PLPFilterOption extends PureComponent {
     if (facet_key === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
       let finalLabel = label;
       const words = label?.split(" ");
-      if (words.length > 1) {
-        finalLabel = `${words[0]}`;
+      if (words?.length > 1) {
+        finalLabel = `${words?.[0]}`;
+      }
+
+      if(isArabic()) {
+        if (words?.length > 1) {
+          finalLabel = `${words?.[1]}`;
+        }
       }
 
       return (

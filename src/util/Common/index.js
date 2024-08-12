@@ -160,6 +160,13 @@ export const WEEK_ARABIC_TRANSLATION = {
   Thursday: "الخميس",
   Friday: "الجمعة",
   Saturday: "السبت",
+  Sun: "الأحد",
+  Mon: "الإثنين",
+  Tue: "الثلاثاء",
+  Wed: "الأربعاء",
+  Thu: "الخميس",
+  Fri: "الجمعة",
+  Sat: "السبت",
 };
 
 export const MONTHS_ARABIC_TRANSLATION = {
@@ -786,9 +793,12 @@ export const inventoryCheck = (quantity, cutoffTime) => {
 };
 
 export const checkProductExpressEligible = (express_delivery_key) => {
-  return ["today delivery", "tomorrow delivery"].includes?.(
-    express_delivery_key?.toLowerCase()
-  );
+  return [
+    "today delivery",
+    "tomorrow delivery",
+    "التسليم غدا",
+    "التسليم اليوم",
+  ].includes?.(express_delivery_key?.toLowerCase());
 };
 
 export const getTodaysCutOffTime = ({
@@ -845,7 +855,8 @@ export const getTodaysCutOffTime = ({
   if (
     !tempTodaysCutOffTime &&
     !selectedSizeCode &&
-    express_delivery_key?.toLowerCase()?.includes("today")
+    (express_delivery_key?.toLowerCase()?.includes("today") ||
+      express_delivery_key?.toLowerCase()?.includes("اليوم"))
   ) {
     let {
       whs = false,
@@ -988,4 +999,15 @@ export const knowInventoryOnPageLoad = (simple_products) => {
   }
 
   return { whs, store, mp };
+};
+
+export const arabicTranslatorForExpress = (day = "") => {
+  switch (day?.toLowerCase()) {
+    case "today":
+      return "اليوم";
+    case "tomorrow":
+      return "الغد";
+    default:
+      return "";
+  }
 };

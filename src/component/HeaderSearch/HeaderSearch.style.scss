@@ -39,6 +39,7 @@
     @include mobile {
       position: fixed;
       // display: flex;
+      display: block !important;
       padding-top: 12px !important;
       height: 85px !important;
       background: #F8F8F8 !important;
