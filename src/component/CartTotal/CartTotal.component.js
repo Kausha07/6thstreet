@@ -105,7 +105,7 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {isArabic
             ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
-                name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice
+                name === __("My Cash") || name === __("Coupon Savings") || name ===  __("My Rewards") ? Math.abs(finalPrice) : finalPrice
               } ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? currency_code : ""

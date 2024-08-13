@@ -612,7 +612,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     } = this.props;
     const finalPrice = getFinalPrice(price, currency_code);
 
-    if(name === "Coupon Code" || name === "My Cash"|| name === "My Rewards"){
+    if(name === __("Coupon Code") || name === __("My Cash") || name === __("My Rewards")){
       return (
         <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
           <strong block="CheckoutOrderSummary" elem="Text">
