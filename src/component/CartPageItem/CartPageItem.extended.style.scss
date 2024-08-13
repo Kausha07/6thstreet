@@ -48,8 +48,8 @@
     }
 
     &-Heading {
-      // display: flex;
-      // flex-wrap: wrap;
+      display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       font-size: 14px;
       font-weight: 400;
@@ -59,13 +59,6 @@
         font-weight: 600;
         line-height: 30px;
         margin-bottom: 3px;
-      }
-
-      @include mobile{
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 70%;
       }
     }
 
@@ -78,6 +71,9 @@
         &:nth-child(2) {
           color: black;
         }
+      }
+      @include mobile{
+        margin-top: 5px;
       }
     }
 

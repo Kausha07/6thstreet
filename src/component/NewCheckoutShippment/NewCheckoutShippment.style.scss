@@ -328,6 +328,9 @@
       .ProductInfo {
         .CartItem {
           margin: 0;
+          .CartItem-Price, .CartItem-ColSizeQty{
+            margin-top: 5px;
+          }
         }
       }
 

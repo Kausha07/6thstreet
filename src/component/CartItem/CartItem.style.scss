@@ -151,7 +151,7 @@
 
     @include desktop() {
       height: 130px;
-      width: 73%;
+      width: 100%;
       margin-left: 6px;
       &_isArabic {
         margin-left: 0px;
@@ -174,7 +174,7 @@
   }
 
   &-Wrapper {
-    width: 98%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -241,9 +241,6 @@
     line-height: 14px;
     margin-top: 5px;
     font-weight: 400;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 
     &_brandName {
       font-weight: 600;
@@ -283,7 +280,6 @@
     display: flex;
     align-items: center;
     width: 100%;
-    margin-top: 5px;
 
     span {
       margin-left: 5px;
