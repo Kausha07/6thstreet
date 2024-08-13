@@ -203,16 +203,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
           status !== "payment_aborted" ?
           this.renderEdd(parseInt(cross_border) === 1, orderEddDetails) : null
         }
-        {(isIntlBrand &&
-          edd_info &&
-          edd_info.is_enable &&
-          !isFailed &&
-          status !== "payment_failed" &&
-          status !== "payment_aborted") ||
-        (international_shipping_fee && +cross_border) ||
-        int_shipment === "1"
-          ? this.renderIntlTag()
-          : null}
       </div>
     );
   }
@@ -233,8 +223,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null, is_express_delivery = false },
+      isFailed,
+      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null, is_express_delivery = false, 
+        int_shipment = "0",
+        cross_border = 0 
+      },
+      status,
       intlEddResponse,
+      international_shipping_fee,
       itemStatus= this.props
     } = this.props;
     let actualEddMess = "";
@@ -246,15 +242,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
     const { defaultEddDay, defaultEddMonth, defaultEddDat } =
       getDefaultEddDate(defaultDay);
-
+    const isIntlBrand =
+      (parseInt(cross_border) === 1 &&
+        edd_info &&
+        edd_info.has_cross_border_enabled) ||
+      int_shipment === "1";
     if (compRef === "checkout") {
       let customDefaultMess = isArabic()
         ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
         : DEFAULT_READY_MESSAGE;
-      const isIntlBrand =
-        crossBorder &&
-        edd_info &&
-        edd_info.has_cross_border_enabled;
       const intlEddObj = intlEddResponse["thankyou"]?.find(
         ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
@@ -343,6 +339,16 @@ export class MyAccountOrderViewItem extends SourceComponent {
               </span>
             </div>
           </div>
+          {(isIntlBrand &&
+                edd_info &&
+                edd_info.is_enable &&
+                !isFailed &&
+                status !== "payment_failed" &&
+                status !== "payment_aborted") ||
+              (international_shipping_fee && +cross_border) ||
+              int_shipment === "1"
+                ? <div>{this.renderIntlTag()}</div>
+                : null}
         </div>
       )
     }
