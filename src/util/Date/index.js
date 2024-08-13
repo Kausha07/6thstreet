@@ -180,7 +180,9 @@ export const getDefaultEddMessage = (
 
 export const formatRefundDate = (dateStr, countryCode) => {
   // Convert the date string to a Date object
-
+  if(dateStr == null){
+    return null;
+  }
   let countryTimeZone = {
     "ae": "Asia/Dubai",
     "sa": "Asia/Riyadh",
