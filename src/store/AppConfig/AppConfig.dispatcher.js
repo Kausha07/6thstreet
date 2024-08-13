@@ -123,7 +123,7 @@ export class AppConfigDispatcher {
             variationName: variationName ? variationName : defaultVariationName,
             vwo: variationName ? "1" : "0",
             campaignName,
-            isFeatureEnabled: isFeatureEnabled && enable
+            isFeatureEnabled: variationName ? isFeatureEnabled && enable : defaultValue,
           };
         }
         return result;
