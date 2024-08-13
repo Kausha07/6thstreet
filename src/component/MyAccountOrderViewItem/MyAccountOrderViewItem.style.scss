@@ -70,6 +70,9 @@
     border-radius: 8px;
     text-transform: initial;
     width: 343px;
+    @include mobile {
+      width: 285px;
+    }
     .EddStandardDeliveryTextBlock {
       display: flex;
       align-items: center;
