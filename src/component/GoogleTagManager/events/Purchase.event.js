@@ -118,6 +118,8 @@ class PurchaseEvent extends BaseEvent {
       },
     });
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const currentSelectedAddress = BrowserDatabase.getItem("currentSelectedAddress");
+    const { city = "", area = "" } = currentSelectedAddress ? currentSelectedAddress: {};
     const productDetails = totals?.items;
     let productName = [],
       productColor = [],

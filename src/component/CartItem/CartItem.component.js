@@ -109,13 +109,12 @@ export class CartItem extends PureComponent {
     if (
       isExpressDelivery &&
       status != null &&
-      reserved_qty === 0 &&
-      !isCheckoutPage
+      reserved_qty === 0
     ) {
       return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
     } else if (isExpressDelivery &&
       status != null && 
-      reserved_qty > 0 && !isCheckoutPage){
+      reserved_qty > 0){
         return {
           isNotAvailble: false, 
           intlEddResponseState: intlEddResponse

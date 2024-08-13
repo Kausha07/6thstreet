@@ -1004,10 +1004,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const today = new Date();
     let targetDate;
   
-    if (dayType.toLowerCase() === 'tomorrow delivery') {
+    if (dayType?.toLowerCase() === 'tomorrow delivery') {
       targetDate = new Date(today);
-      targetDate.setDate(today.getDate() + 1);
-    } else if (dayType.toLowerCase() === 'today delivery') {
+      targetDate?.setDate(today.getDate() + 1);
+    } else if (dayType?.toLowerCase() === 'today delivery') {
       targetDate = today;
     } else {
       return "";
