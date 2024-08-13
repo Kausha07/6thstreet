@@ -121,7 +121,8 @@ export const CityArea = (props) => {
   const [showPopUp, setShowPopUp] = useState(
     showSignInPopUpForGuest &&
       !isSignedIn &&
-      !JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area &&
+      !localStorage.getItem("currentSelectedAddress") &&
+      !localStorage?.getItem("EddAddressReq") &&
       [
         "/",
         "/men.html",
@@ -146,6 +147,7 @@ export const CityArea = (props) => {
       const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
+        setShowPopUp(false);
         if (!isPDP && window.pageType === "PRODUCT" && isAddressDeleted) {
           getEddForPDP(reqOBJ?.area, reqOBJ?.city);
         }
@@ -177,6 +179,7 @@ export const CityArea = (props) => {
         "currentSelectedAddress",
         JSON.stringify(defaultShippingAddress)
       );
+      setShowPopUp(false);
       const {
         country_code = "",
         city = "",
@@ -294,13 +297,14 @@ export const CityArea = (props) => {
               />
             </span>
             <div block="PageWrapper" mods={{ isArabic: isArabic() }}>
-            <MyAccountAddressPopup
-              formContent={formContent}
-              closeForm={closeForm}
-              openForm={openForm}
-              showCards={showCards}
-              customer={customer}
-            /></div>{" "}
+              <MyAccountAddressPopup
+                formContent={formContent}
+                closeForm={closeForm}
+                openForm={openForm}
+                showCards={showCards}
+                customer={customer}
+              />
+            </div>{" "}
           </div>
         </ModalWithOutsideClick>
       );
