@@ -92,8 +92,7 @@ export class AppConfigDispatcher {
         let defaultVariationName =
           abTestingConfig?.Express?.defaultVariant || "c";
         let campaignName =
-          abTestingConfig?.Express?.campaignName || "express_delivery_ae";
-        let isExpressDeliveryEnable = defaultVariationName !== "c" ? true : false;
+          abTestingConfig?.Express?.campaignName || "ed_ae";
         let defaultValue = false;
         if(abTestingConfig && abTestingConfig.Express && abTestingConfig?.Express?.variable && Array.isArray(abTestingConfig?.Express?.variable)){
             defaultValue = abTestingConfig.Express.variable.filter(item => item.name === "enable")[0]['defaultValue'];
