@@ -160,7 +160,7 @@ export const CityArea = (props) => {
       const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
-      } else if (!isSignedIn || !reqOBJ) {
+      } else if (!reqOBJ) {
         setFinalAreaText(__("Select Area"));
       }
     }
@@ -320,6 +320,7 @@ export const CityArea = (props) => {
   const closePopup = () => {
     setShowSignInRegisterPopup(false);
     setExpressPopUp(false);
+    setShowPopUp(false);
   };
 
   const onSignIn = () => {
