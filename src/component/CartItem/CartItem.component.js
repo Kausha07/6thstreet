@@ -724,6 +724,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderExpressIntlTag = () => {
+    return (
+      <div block="ExpressInternationalShippmentTag">
+        <Shipping /> <div>{__("International Shipment")}</div>
+      </div>
+    );
+  };
+
   renderOOSMessage(){
     return(
       <span block="CartItem" elem="NotAvailable">
@@ -800,6 +808,17 @@ export class CartItem extends PureComponent {
               edd_info.has_item_level) &&
             !isNotAvailble &&
             this.renderEddWhenExpressEnabled(cross_border === 1)}
+          {isExpressDelivery &&
+          vwoData?.Express?.isFeatureEnabled &&
+          isCheckoutPage &&
+          (isIntlBrand ||
+            (international_shipping_fee &&
+              (+cross_border ||
+                (edd_info.international_vendors &&
+                  edd_info.international_vendors.indexOf(international_vendor) >
+                    -1))))
+            ? this.renderExpressIntlTag()
+            : null}
 
           {row_total === 0 ? null : this.renderActions()}
         </div>
