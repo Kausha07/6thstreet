@@ -209,7 +209,8 @@ export const formatRefundDate = (dateStr, countryCode) => {
 
   // Split the formatted date to rearrange
   const [datePart, timePart] = formattedDate.split(", ");
-  const [day, month, year] = datePart.split(" ");
+  let [day, month, year] = datePart.split(" ");
+  month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
   
   return `${parseInt(day)} ${month} ${year} ${timePart}`;
 };
