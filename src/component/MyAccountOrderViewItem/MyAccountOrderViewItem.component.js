@@ -328,6 +328,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="eddStandardDelivery">
           <div block="EddStandardDeliveryTextBlock">
             <Shipping />
+            <div>
             <div block="shipmentText">
               <span block="EddStandardDeliveryText">
                 {__("Standard")} {}
@@ -338,8 +339,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                 {actualEddMess?.split(splitKey)?.[1]}
               </span>
             </div>
-          </div>
-          {(isIntlBrand &&
+            {(isIntlBrand &&
                 edd_info &&
                 edd_info.is_enable &&
                 !isFailed &&
@@ -349,6 +349,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
               int_shipment === "1"
                 ? <div>{this.renderIntlTag()}</div>
                 : null}
+            </div>
+          </div>
         </div>
       )
     }
