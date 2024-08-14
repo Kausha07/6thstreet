@@ -25,6 +25,7 @@ export const mapStateToProps = (state) => {
     international_shipping_fee: state.AppConfig.international_shipping_fee,
     isExpressDelivery: state.AppConfig.isExpressDelivery,
     shipment: state.CheckoutReducer.shipment,
+    vwoData: state.AppConfig.vwoData,
   };
 };
 
@@ -46,6 +47,7 @@ function CartTotal(props) {
       expected_shipments = [],
     },
     isExpressDelivery,
+    vwoData,
   } = props;
   const isArabic = checkIsArabic();
   const currency_code = getCurrency();
@@ -60,7 +62,7 @@ function CartTotal(props) {
     }
   });
   const CODFee = getValueFromTotals(totals, "msp_cashondelivery") || 0;
-  const grandTotal =
+  let grandTotal =
   total > CODFee  || !cashOnDeliveryFee
     ? getFinalPrice(total, currency_code) - getFinalPrice(CODFee, currency_code)
     : getFinalPrice(total, currency_code);
@@ -162,6 +164,15 @@ function CartTotal(props) {
     );
   };
 
+  const expressDeliveryFee = getValueFromTotals(
+    totals,
+    "express_delivery_charges"
+  );
+
+  grandTotal = expressDeliveryFee
+    ? grandTotal - expressDeliveryFee
+    : grandTotal;
+
   return (
     <div block={block} elem="OrderTotals">
       <h3 block="OrderTotalsHeading">{__("ORDER DETAILS")}</h3>
@@ -189,13 +200,18 @@ function CartTotal(props) {
               international_shipping_amount,
               __("International Shipping Fee")
             )}
-          {renderPriceLine(
-            getValueFromTotals(
-              totals,
-              "express_delivery_charges"
-            ) || ((isFreeExpressDelivery && pageType === "CheckoutPage") ? __("FREE") : 0),
-            __("Express Service")
-          )}
+          {expressDeliveryFee != null &&
+            expressDeliveryFee != undefined &&
+            pageType === "CheckoutPage" &&
+            isExpressDelivery &&
+            vwoData?.Express?.isFeatureEnabled &&
+            renderPriceLine(
+              getValueFromTotals(totals, "express_delivery_charges") ||
+                (isFreeExpressDelivery && pageType === "CheckoutPage"
+                  ? __("FREE")
+                  : 0),
+              __("Express Service")
+            )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
             __("My Cash"),
