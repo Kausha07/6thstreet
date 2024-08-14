@@ -166,6 +166,23 @@ export class CartItemContainer extends PureComponent {
       this.getCurrentProduct() || {};
     return min_sale_qty || 1;
   }
+// quote_status == null
+  // available -> 4
+  // reserved_qty -> 3
+  // cart => 3(4)
+  
+  // quote_status == null
+  // available -> 2
+  // reserved_qty -> 3
+  // cart => 3(1)
+
+    // quote_status == null
+  // available -> 1
+  // qty->5
+  // reserved_qty -> 3
+  // cart => 3(1)
+
+
 
   getMaxQuantity() {
     const {
@@ -178,9 +195,9 @@ export class CartItemContainer extends PureComponent {
     } = this.props;
     let max_sale_qty = 0;
 
-    if (status != null && isExpressDelivery && availableQty === 0) {
-      return max_sale_qty = reserved_qty;
-    }
+    // if (status != null && isExpressDelivery && availableQty === 0) {
+    //   return max_sale_qty = reserved_qty;
+    // }
     max_sale_qty =
     availableQty === 0 ? availableQty :
       availableQty >= DEFAULT_MAX_PRODUCTS

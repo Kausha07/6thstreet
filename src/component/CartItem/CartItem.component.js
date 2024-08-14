@@ -106,20 +106,20 @@ export class CartItem extends PureComponent {
       isCheckoutPage,
     } = props;
 
-    if (
-      isExpressDelivery &&
-      status != null &&
-      reserved_qty === 0
-    ) {
-      return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
-    } else if (isExpressDelivery &&
-      status != null && 
-      reserved_qty > 0){
-        return {
-          isNotAvailble: false, 
-          intlEddResponseState: intlEddResponse
-        };
-    }
+    // if (
+    //   isExpressDelivery &&
+    //   status != null &&
+    //   reserved_qty === 0
+    // ) {
+    //   return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
+    // } else if (isExpressDelivery &&
+    //   status != null && 
+    //   reserved_qty > 0){
+    //     return {
+    //       isNotAvailble: false, 
+    //       intlEddResponseState: intlEddResponse
+    //     };
+    // }
 
     return {
       isNotAvailble:

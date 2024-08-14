@@ -11,9 +11,13 @@ export const checkProducts = (
     const { status = null } = totals;
     if (status != null && reserved_qty < item[1].qty && isExpressEnable) {
       acc.push(0);
-    } else if (status != null && isExpressEnable && reserved_qty != 0) {
-      return acc;
-    } else if (
+    } 
+    //else 
+    // if (status != null && isExpressEnable && reserved_qty != 0) {
+    //   return acc;
+    // } 
+    //else 
+    if (
       item[1].availableQty === 0 ||
       item[1].availableQty < item[1].qty
     ) {

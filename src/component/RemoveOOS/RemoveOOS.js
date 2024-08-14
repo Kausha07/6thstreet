@@ -19,15 +19,15 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic, isExp
             full_item_info: { reserved_qty = 0 },
           } = item?.[1];
           const { status = null } = totals;
-          if (
-            status != null &&
-            item[1].availableQty > 0 &&
-            +reserved_qty === 0 &&
-            isExpressDelivery
-          ) {
-            const item1 = { ...item[1], id: item[1].item_id };
-            acc.push(item1);
-          }
+        //   if (
+        //     status != null &&
+        //     item[1].availableQty > 0 &&
+        //     +reserved_qty === 0 &&
+        //     isExpressDelivery
+        //   ) {
+        //     const item1 = { ...item[1], id: item[1].item_id };
+        //     acc.push(item1);
+        //   }
 
         if (item[1].availableQty === 0 || item[1].availableQty < item[1].qty) {
             const item1 = {...item[1], id: item[1].item_id}

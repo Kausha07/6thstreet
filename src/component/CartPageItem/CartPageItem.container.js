@@ -295,9 +295,9 @@ export class CartItemContainer extends PureComponent {
     } = this.props;
     let max_sale_qty = 0;
 
-    if (status != null && isExpressDelivery &&  availableQty === 0) {
-      return max_sale_qty = reserved_qty;
-    }
+    // if (status != null && isExpressDelivery &&  availableQty === 0) {
+    //   return max_sale_qty = reserved_qty;
+    // }
 
     max_sale_qty =
       availableQty === 0

@@ -328,7 +328,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="eddStandardDelivery">
           <div block="EddStandardDeliveryTextBlock">
             <Shipping />
-            <div>
             <div block="shipmentText">
               <span block="EddStandardDeliveryText">
                 {__("Standard")} {}
@@ -339,17 +338,18 @@ export class MyAccountOrderViewItem extends SourceComponent {
                 {actualEddMess?.split(splitKey)?.[1]}
               </span>
             </div>
+          </div>
+          <div>
             {(isIntlBrand &&
-                edd_info &&
-                edd_info.is_enable &&
-                !isFailed &&
-                status !== "payment_failed" &&
-                status !== "payment_aborted") ||
-              (international_shipping_fee && +cross_border) ||
-              int_shipment === "1"
-                ? <div>{this.renderIntlTag()}</div>
-                : null}
-            </div>
+                  edd_info &&
+                  edd_info.is_enable &&
+                  !isFailed &&
+                  status !== "payment_failed" &&
+                  status !== "payment_aborted") ||
+                (international_shipping_fee && +cross_border) ||
+                int_shipment === "1"
+                  ? <div>{this.renderIntlTag()}</div>
+                  : null}
           </div>
         </div>
       )
