@@ -541,6 +541,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       addressCityData,
       customer,
       onMailingAddressTypeChange,
+      onUpdateAddress,
+      setCurrentAddress,
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -565,6 +567,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         onIdentityNumberChange={this.props?.onIdentityNumberChange}
         onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
         onMailingAddressTypeChange={onMailingAddressTypeChange}
+        onUpdateAddress={onUpdateAddress}
+        setCurrentAddress={setCurrentAddress}
       />
     );
   }

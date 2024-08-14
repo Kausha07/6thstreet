@@ -85,6 +85,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onShippingError: this.onShippingError.bind(this),
     checkClickAndCollect: this.checkClickAndCollect.bind(this),
     onAddressSelect: this.onAddressSelect.bind(this),
+    onUpdateAddress: this.onUpdateAddress.bind(this),
+    setCurrentAddress: this.setCurrentAddress.bind(this),
     handleClickNCollectPayment: this.handleClickNCollectPayment.bind(this),
     onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
@@ -94,6 +96,13 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onMailingAddressTypeChange: this.props?.onMailingAddressTypeChange,
   };
 
+  constructor(props) {
+    super(props); 
+    this.state = {
+      currentAddress: {},
+    }
+  }
+  
   static defaultProps = {
     guestEmail: "",
   };
@@ -102,6 +111,23 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     this.setState({ selectedCustomerAddressId: id }, () => {
       this.onAddressSelectNewCheckoutFlow();
     });
+  }
+
+  setCurrentAddress(currentAddress) {
+    this.setState({ currentAddress: currentAddress });
+  }
+
+  onUpdateAddress() {
+    const { currentAddress } = this.state
+    const { id } = currentAddress;
+
+    if(id){
+      this.setState({ selectedCustomerAddressId: id }, () => {
+        this.onShippingSuccess(currentAddress, true);
+      });
+    }else {
+      this.onShippingSuccess(currentAddress, true);
+    }
   }
 
   onAddressSelectNewCheckoutFlow = async () => {
@@ -152,6 +178,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       action: ADD_ADDRESS,
       title: __("Add new address"),
       address: {},
+      onUpdateAddress: this.onUpdateAddress.bind(this),
+      setCurrentAddress: this.setCurrentAddress.bind(this),
     });
     setNewAddressFromClick(true);
   }
@@ -259,7 +287,20 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     );
   }
 
-  onShippingSuccess(fields) {
+  isEmptyObject = (objectName) => {
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
+  };
+
+  onShippingSuccess(fields, isAddressesUpdating = false) {
+
+    if( (!fields && isSignedIn()) || this.isEmptyObject(fields)) {
+      return;
+    }
+
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
     const {
       setLoading,
@@ -271,7 +312,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       addressCityData,
     } = this.props;
     setLoading(true);
-    const shippingAddress = selectedCustomerAddressId
+    const shippingAddress = selectedCustomerAddressId && !isAddressesUpdating
       ? this.getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
     const addressForValidation =
@@ -367,7 +408,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                     {
                       selectedShippingMethod: response.data[0],
                     },
-                    () => this.processDelivery(fields)
+                    () => this.processDelivery(fields, isAddressesUpdating)
                   );
                 } else {
                   const { error } = response;
@@ -385,7 +426,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             }
           });
         } else if (success) {
-          this.processDelivery(fields);
+          this.processDelivery(fields, isAddressesUpdating);
         } else {
           this.handleError(response);
         }
@@ -469,7 +510,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                   {
                     selectedShippingMethod: response.data[0],
                   },
-                  () => this.processDelivery(fields)
+                  () => this.processDelivery(fields, isAddressesUpdating)
                 );
               } else {
                 const { error } = response;
@@ -487,7 +528,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           }
         });
       } else {
-        this.processDelivery(fields);
+        this.processDelivery(fields, isAddressesUpdating);
       }
     }
   }
@@ -502,7 +543,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     setLoading(false);
   }
 
-  processDelivery(fields) {
+  processDelivery(fields, isAddressesUpdating = false) {
     const {
       saveAddressInformation,
       customer: { email },
@@ -518,7 +559,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     }
 
     const shippingAddress =
-      selectedCustomerAddressId && !this.checkClickAndCollect()
+      selectedCustomerAddressId && !this.checkClickAndCollect() && !isAddressesUpdating
         ? this.getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
     const {

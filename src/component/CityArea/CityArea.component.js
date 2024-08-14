@@ -99,6 +99,8 @@ export const CityArea = (props) => {
     vwoData = {},
     setPrevSelectedAddressForPLPFilters,
     isAddressDeleted,
+    onUpdateAddress,
+    setCurrentAddress,
   } = props;
 
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
@@ -228,6 +230,8 @@ export const CityArea = (props) => {
       title: __("Edit address"),
       address,
       displayType: !isMobile.any() ? "desktopPopUp" : "",
+      setCurrentAddress,
+      onUpdateAddress,
     });
   };
 
@@ -241,6 +245,8 @@ export const CityArea = (props) => {
       title: __("Add new address"),
       address: {},
       displayType: !isMobile.any() ? "desktopPopUp" : "",
+      setCurrentAddress,
+      onUpdateAddress,
     });
   };
 

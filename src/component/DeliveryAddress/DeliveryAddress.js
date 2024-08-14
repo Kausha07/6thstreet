@@ -48,6 +48,8 @@ const DeliveryAddress = (props) => {
     isSignedIn,
     editCheckoutAddress,
     setProcessAddressChange,
+    onUpdateAddress,
+    setCurrentAddress,
   } = props;
 
   const selectedAddressForRender = isSignedIn
@@ -100,6 +102,8 @@ const DeliveryAddress = (props) => {
             isNewCheckoutPage={true}
             onAddressSelectPopup={onAddressSelectPopup}
             renderSelectedAddressMsite={renderSelectedAddressMsite}
+            setCurrentAddress={setCurrentAddress}
+            onUpdateAddress={onUpdateAddress}
           />
         );
       }
@@ -117,6 +121,8 @@ const DeliveryAddress = (props) => {
               <CityArea
                 isNewCheckoutPage={true}
                 onAddressSelectPopup={onAddressSelectPopup}
+                setCurrentAddress={setCurrentAddress}
+                onUpdateAddress={onUpdateAddress}
               />
             ) : (
               <button

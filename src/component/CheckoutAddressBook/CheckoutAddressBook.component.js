@@ -77,6 +77,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       selectedAddressId,
       onAddressSelect,
       isAddressSelected,
+      onUpdateAddress,
+      setCurrentAddress,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -88,6 +90,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
             onAddressSelect={onAddressSelect}
             shippingAddress={shippingAddress}
             editCheckoutAddress={this.editCheckoutAddress}
+            onUpdateAddress={onUpdateAddress}
+            setCurrentAddress={setCurrentAddress}
           />
         </div>
       );
@@ -165,8 +169,18 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderAddressList() {
-    const { addresses, selectedAddressId, onAddressSelect, shippingAddress } = this.props;
-    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
+    const {
+      addresses,
+      selectedAddressId,
+      onAddressSelect,
+      shippingAddress,
+      onUpdateAddress,
+      setCurrentAddress,
+    } = this.props;
+    const isCountryNotAddressAvailable =
+      !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
+      !isMobile.any();
+
     if (!addresses) {
       return this.renderLoading();
     }
@@ -180,6 +194,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         onAddressSelect={onAddressSelect}
         shippingAddress={shippingAddress}
         editCheckoutAddress={this.editCheckoutAddress}
+        onUpdateAddress={onUpdateAddress}
+        setCurrentAddress={setCurrentAddress}
       />
     );
 

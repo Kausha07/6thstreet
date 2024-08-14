@@ -125,6 +125,9 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       setAddressLoadingStatus
     } = this.props;
 
+    this.props?.payload?.onUpdateAddress ? 
+      this.props.payload.onUpdateAddress() : null;
+
     updateCustomerDetails().then(() => {
       this.setState({ isLoading: false }, () => {
         hideActiveOverlay();
@@ -203,6 +206,11 @@ export class MyAccountAddressPopupContainer extends PureComponent {
           elmnts[0].scrollIntoView({ behavior: "smooth", block: "end" });
         }
         setAddressLoadingStatus(false); 
+
+        let isAddressValidated = true;
+        this.props?.payload?.setCurrentAddress ? 
+          this.props.payload.setCurrentAddress({...address, id}, isAddressValidated) : null;
+
         if (id) {
           return this.handleEditAddress(address);
         }
