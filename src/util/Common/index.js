@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import cardValidator from "card-validator";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const CONST_TEN = 10;
 
@@ -703,8 +704,10 @@ export const getTodaysWeekDay = () => {
 
 export const getAddressType = (addressType) => {
   const currentSelectedAddress = addressType
-    ? addressType
-    : JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+  ? addressType
+  : JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+    BrowserDatabase.getItem("cityAreaFromSelectionPopUp") ||
+    {};
   switch (currentSelectedAddress?.mailing_address_type) {
     case "37303":
       return "home";

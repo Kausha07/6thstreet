@@ -14,6 +14,7 @@ import {
   checkProductExpressEligible,
 } from "Util/Common";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 import "./ExpressAndStandardEDD.style";
 
 export const mapStateToProps = (state) => ({
@@ -61,14 +62,19 @@ export const ExpressAndStandardEDD = ({
   isExpressTimeExpired = false,
   setTimerStateThroughProps,
   vwoData,
-  setExpressVisible = ()=>{}
+  setExpressVisible = () => {},
 }) => {
+  const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+    "cityAreaFromSelectionPopUp"
+  );
   const [isTimeExpired, setIsTimeExpired] = useState(false);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(
     currentSelectedCityArea
       ? currentSelectedCityArea
       : JSON.parse(localStorage.getItem("currentSelectedAddress"))
       ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      : cityAreaFromSelectionPopUp
+      ? cityAreaFromSelectionPopUp
       : {}
   );
   let todaysCutOffTime = "00:00";
@@ -138,6 +144,26 @@ export const ExpressAndStandardEDD = ({
     }
   }, [JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area]);
 
+  useEffect(() => {
+    if (
+      !cityAreaFromSelectionPopUp?.area &&
+      !JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area
+    ) {
+      setCurrentSelectedAddress(null);
+    }
+  }, [cityAreaFromSelectionPopUp]);
+
+  useEffect(() => {
+    if (
+      cityAreaFromSelectionPopUp?.area &&
+      !JSON.parse(localStorage.getItem("currentSelectedAddress"))?.area
+    ) {
+      setCurrentSelectedAddress(cityAreaFromSelectionPopUp);
+    } else if (!isSignedIn) {
+      setCurrentSelectedAddress(null);
+    }
+  }, [cityAreaFromSelectionPopUp?.area]);
+
   isProductOfficeServicable = productOfficeServicable({
     cutOffTime,
     express_delivery_key,
@@ -196,7 +222,8 @@ export const ExpressAndStandardEDD = ({
 
   const render = () => {
     const showStandardDelivery = checkStandardDeliveryAvailable();
-    if(currentSelectedAddress &&
+    if (
+      currentSelectedAddress &&
       isExpressServiceAvailable?.express_eligible &&
       isExpressDelivery &&
       vwoData?.Express?.isFeatureEnabled &&
@@ -204,9 +231,10 @@ export const ExpressAndStandardEDD = ({
         isSKUExpressEligible) &&
       !isInternationalProduct &&
       isProductOfficeServicable &&
-      express_delivery_key){
-        setExpressVisible(true);
-      }
+      express_delivery_key
+    ) {
+      setExpressVisible(true);
+    }
     return (
       <div>
         {currentSelectedAddress &&

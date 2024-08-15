@@ -59,7 +59,8 @@ export const CityAreaSelectionPopUp = (props) => {
     setSelectedArea(val?.[isArabic() ? "area_ar" : "area"]);
     setCityAreaSearchedText("");
     showHideCityAreaSelection(false);
-    autoPopulateCityArea(val);
+    let value = { ...val, isSelectedFromCitySelectionPopUp: true };
+    autoPopulateCityArea(value);
   };
 
   const handleCityAreaText = (e) => {

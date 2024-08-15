@@ -157,7 +157,12 @@ export class CartDispatcher {
   }
 
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
-    const reqObj = JSON.parse(localStorage.getItem("currentSelectedAddress"));
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+      "cityAreaFromSelectionPopUp"
+    );
+    const reqObj =
+      JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      cityAreaFromSelectionPopUp;
     const params = {
       area: reqObj?.area || "",
       city: reqObj?.city || "",

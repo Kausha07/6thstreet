@@ -103,6 +103,13 @@ export const CityArea = (props) => {
     setCurrentAddress,
   } = props;
 
+  const currentSelectedAddress = JSON.parse(
+    localStorage.getItem("currentSelectedAddress")
+  );
+  const EddAddressReq = JSON.parse(localStorage.getItem("EddAddressReq"));
+  const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+    "cityAreaFromSelectionPopUp"
+  );
   const [showSignInRegisterPopup, setShowSignInRegisterPopup] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
   const [showCityAreaSelectionPopUp, setShowCityAreaSelectionPopUp] =
@@ -113,8 +120,10 @@ export const CityArea = (props) => {
     useState(false);
 
   const [finalAreaText, setFinalAreaText] = useState(
-    JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
-      ? JSON.parse(localStorage?.getItem("EddAddressReq"))?.area
+    EddAddressReq?.area
+      ? EddAddressReq?.area
+      : cityAreaFromSelectionPopUp
+      ? cityAreaFromSelectionPopUp?.area
       : defaultShippingAddress?.area
       ? defaultShippingAddress?.area
       : __("Select Area")
@@ -123,8 +132,8 @@ export const CityArea = (props) => {
   const [showPopUp, setShowPopUp] = useState(
     showSignInPopUpForGuest &&
       !isSignedIn &&
-      !localStorage.getItem("currentSelectedAddress") &&
-      !localStorage?.getItem("EddAddressReq") &&
+      !currentSelectedAddress &&
+      !EddAddressReq &&
       [
         "/",
         "/men.html",
@@ -146,7 +155,7 @@ export const CityArea = (props) => {
   // Effect to update finalAreaText based on localStorage changes
   useEffect(() => {
     if (isExpressDelivery) {
-      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      const reqOBJ = EddAddressReq;
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
         setShowPopUp(false);
@@ -157,23 +166,23 @@ export const CityArea = (props) => {
         setFinalAreaText(__("Select Area"));
       }
     }
-  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))?.area]);
+  }, [EddAddressReq?.area]);
 
   useEffect(() => {
     if (isExpressDelivery) {
-      const reqOBJ = JSON.parse(localStorage?.getItem("EddAddressReq"));
+      const reqOBJ = EddAddressReq;
       if (reqOBJ?.area) {
         setFinalAreaText(reqOBJ?.area);
       } else if (!reqOBJ) {
         setFinalAreaText(__("Select Area"));
       }
     }
-  }, [JSON.parse(localStorage?.getItem("EddAddressReq"))]);
+  }, [EddAddressReq]);
 
   useEffect(() => {
     if (
       defaultShippingAddress?.area &&
-      !JSON.parse(localStorage?.getItem("EddAddressReq"))?.area &&
+      !EddAddressReq?.area &&
       isExpressDelivery
     ) {
       setFinalAreaText(defaultShippingAddress?.area);
@@ -200,8 +209,10 @@ export const CityArea = (props) => {
 
   useEffect(() => {
     if (!isPDP && isExpressDelivery) {
-      const reqOBJ = JSON.parse(localStorage?.getItem("currentSelectedAddress"))
-        ? JSON.parse(localStorage?.getItem("currentSelectedAddress"))
+      const reqOBJ = cityAreaFromSelectionPopUp
+        ? cityAreaFromSelectionPopUp
+        : currentSelectedAddress
+        ? currentSelectedAddress
         : defaultShippingAddress
         ? defaultShippingAddress
         : {};
@@ -215,6 +226,18 @@ export const CityArea = (props) => {
       }
     }
   }, [finalAreaText]);
+
+  useEffect(() => {
+    if (isExpressDelivery) {
+      const reqOBJ = cityAreaFromSelectionPopUp;
+
+      if (reqOBJ?.area) {
+        setFinalAreaText(reqOBJ?.area);
+      } else if (!reqOBJ) {
+        setFinalAreaText(__("Select Area"));
+      }
+    }
+  }, [cityAreaFromSelectionPopUp]);
 
   const setExpressPopUp = (val) => {
     expressPopUpOpen(val);
@@ -507,6 +530,7 @@ export const CityArea = (props) => {
       country_code = "",
       area_ar = "",
       city_ar = "",
+      isSelectedFromCitySelectionPopUp = false,
     } = selectedAddress;
 
     let requestObj = {
@@ -522,15 +546,30 @@ export const CityArea = (props) => {
       onAddressSelectPopup(selectedAddress);
     }
     expressPopUpOpen(false);
-    setPrevSelectedAddressForPLPFilters(
-      JSON.parse(localStorage.getItem("currentSelectedAddress"))
-    );
 
-    localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
-    localStorage.setItem(
-      "currentSelectedAddress",
-      JSON.stringify(selectedAddress)
-    );
+    if (isSelectedFromCitySelectionPopUp) {
+      setPrevSelectedAddressForPLPFilters(
+        JSON.parse(localStorage.getItem("cityAreaFromSelectionPopUp"))
+      );
+    }
+
+    if (!isSelectedFromCitySelectionPopUp) {
+      setPrevSelectedAddressForPLPFilters(
+        JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      );
+    }
+
+    if (!isSelectedFromCitySelectionPopUp) {
+      localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(selectedAddress)
+      );
+    }
+
+    if (isSelectedFromCitySelectionPopUp) {
+      BrowserDatabase.setItem(requestObj, "cityAreaFromSelectionPopUp");
+    }
 
     // whenever you change address make get carts API call to send the current selected city and area to backend team in API params
     if (cartItems?.length > 0) {
@@ -546,7 +585,7 @@ export const CityArea = (props) => {
       await getEddResponse(requestObj, true);
     }
 
-    const request = JSON.parse(localStorage.getItem("EddAddressReq"));
+    const request = EddAddressReq;
     setFinalAreaText(request?.area);
   };
 
@@ -661,9 +700,8 @@ export const CityArea = (props) => {
                 block={`cityAreaText  ${
                   showEllipsisArea ? "showEllipsisArea" : ""
                 }  ${
-                  localStorage.getItem("currentSelectedAddress") &&
-                  JSON.parse(localStorage.getItem("currentSelectedAddress"))
-                    ?.area
+                  currentSelectedAddress?.area ||
+                  cityAreaFromSelectionPopUp?.area
                     ? "colorBlack"
                     : "colorBlue"
                 }`}

@@ -137,16 +137,25 @@ class PDPAddToCart extends PureComponent {
       this.getRecommendedSize("size_bar");
     }
 
-    if (prevProps.isSignedIn != this.props.isSignedIn || !this.props.currentSelectedCityArea) {
+    if (
+      prevProps.isSignedIn != this.props.isSignedIn ||
+      !this.props.currentSelectedCityArea
+    ) {
       if (this.props.isSignedIn && this.props.currentSelectedCityArea) {
         this.setState({
           selectedCityArea: this.props.currentSelectedCityArea
             ? this.props.currentSelectedCityArea
             : JSON.parse(localStorage.getItem("currentSelectedAddress"))
             ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            : BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+            ? BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
             : {},
         });
-      } else if (!this.props.isSignedIn || !this.props.currentSelectedCityArea) {
+      } else if (
+        !this.props.isSignedIn ||
+        !this.props.currentSelectedCityArea ||
+        !BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+      ) {
         this.setState({ selectedCityArea: null });
       }
     }

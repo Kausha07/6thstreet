@@ -233,7 +233,9 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
 
 const getAddressType = () => {
   const currentSelectedAddress =
-    JSON.parse(localStorage.getItem("currentSelectedAddress")) || {};
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+    localStorage.getItem("cityAreaFromSelectionPopUp") ||
+    {};
 
   if (currentSelectedAddress) {
     switch (currentSelectedAddress?.mailing_address_type) {

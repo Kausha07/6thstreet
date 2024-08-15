@@ -46,6 +46,7 @@ import {
 } from "./utils/FieldMultiselect.helper";
 import CityArea from "Component/CityArea";
 import { getAddressType } from "Util/Common/index";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
@@ -794,9 +795,12 @@ class FieldMultiselect extends PureComponent {
     }
 
     if (category === `express_delivery_${getAddressType()}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+      const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+        "cityAreaFromSelectionPopUp"
+      );
       const selctedAddress = JSON.parse(
         localStorage.getItem("currentSelectedAddress")
-      );
+      ) || cityAreaFromSelectionPopUp;
       if (!selctedAddress) {
         this.props.onUnselectAllPress(category);
         return (

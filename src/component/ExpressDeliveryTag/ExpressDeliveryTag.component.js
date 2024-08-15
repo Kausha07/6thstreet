@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import BrowserDatabase from "Util/BrowserDatabase";
 import { ExpressDeliveryTruck } from "Component/Icons";
 import "./ExpressDeliveryTag.style";
 
@@ -26,12 +27,15 @@ export const ExpressDeliveryTag = (props) => {
     isExpressServiceAvailable,
     isExpressDelivery,
     vwoData,
-    setExpressVisible = () =>null
+    setExpressVisible = () => null,
   } = props;
 
-  const currentSelectedAddress = JSON.parse(
-    localStorage.getItem("currentSelectedAddress")
+  const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+    "cityAreaFromSelectionPopUp"
   );
+  const currentSelectedAddress =
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+    cityAreaFromSelectionPopUp;
 
   const getFinalExpressDeliveryKey = () => {
     if (currentSelectedAddress?.mailing_address_type === "37303") {
@@ -85,8 +89,8 @@ export const ExpressDeliveryTag = (props) => {
             &nbsp;
             {express_delivery !== 1 &&
             express_delivery !== 0 &&
-            (express_delivery?.toLowerCase() !== "tomorrow delivery" &&
-              express_delivery?.toLowerCase() !== "التسليم غدا")
+            express_delivery?.toLowerCase() !== "tomorrow delivery" &&
+            express_delivery?.toLowerCase() !== "التسليم غدا"
               ? __("Today")
               : __("Tomorrow")}
           </span>

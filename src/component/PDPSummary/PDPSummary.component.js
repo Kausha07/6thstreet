@@ -956,9 +956,12 @@ class PDPSummary extends PureComponent {
   }
 
   renderExpressMsg = () => {
-    const selctedAddress = JSON.parse(
-      localStorage.getItem("currentSelectedAddress")
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+      "cityAreaFromSelectionPopUp"
     );
+    const selctedAddress =
+      JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      cityAreaFromSelectionPopUp;
 
     if (!selctedAddress) {
       return (

@@ -69,6 +69,8 @@ const CartPageSizePopUp = (props) => {
           ? currentSelectedCityArea
           : JSON.parse(localStorage.getItem("currentSelectedAddress"))
           ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+          : BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+          ? BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
           : {}
       );
     } else if (!isSignedIn) {

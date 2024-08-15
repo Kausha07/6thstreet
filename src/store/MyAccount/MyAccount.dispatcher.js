@@ -150,7 +150,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         let finalAddress = checkAddressExist
           ? checkAddressExist
-          : defaultShippingAddress?.length > 0
+          : defaultShippingAddress?.length > 0 &&
+            countryCode == defaultShippingAddress?.[0]?.["country_code"]
           ? defaultShippingAddress?.[0]
           : countryWiseAddresses
           ? countryWiseAddresses?.[0]
@@ -163,6 +164,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         ) {
           finalAddress = selectedAddress;
         }
+
+        const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+          "cityAreaFromSelectionPopUp"
+        );
+        if (!finalAddress && cityAreaFromSelectionPopUp) {
+          finalAddress = cityAreaFromSelectionPopUp;
+        }
+
 
         let requestObj = {
           country: countryCode,
@@ -181,10 +190,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           this.expressPopUpOpen(dispatch, false);
           this.selectedCityArea(dispatch, finalAddress);
           CartDispatcher.getCart(dispatch, false, false, false);
+          BrowserDatabase.deleteItem("cityAreaFromSelectionPopUp");
         } else {
           localStorage.removeItem("currentSelectedAddress");
           localStorage.removeItem("EddAddressReq");
           this.selectedCityArea(dispatch, null);
+          BrowserDatabase.deleteItem("cityAreaFromSelectionPopUp");
           CartDispatcher.getCart(dispatch, false, false, false);
         }
       }
@@ -491,6 +502,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     localStorage.removeItem("EddAddressReq");
     localStorage.removeItem("currentSelectedAddress");
     localStorage.removeItem("EddAddressRes");
+    BrowserDatabase.deleteItem("cityAreaFromSelectionPopUp");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
     localStorage.removeItem("RmaId");
