@@ -914,14 +914,13 @@ export class CheckoutSuccess extends PureComponent {
             getDiscountFromTotals(total_segments, "express_delivery_charges") || (isFreeExpressDelivery ? __("FREE") : 0),
             __("Express Service")
           )}
-        {cashOnDeliveryFee
-          ? this.renderPriceLine(
+        {this.renderPriceLine(
               getDiscountFromTotals(total_segments, "msp_cashondelivery"),
               getCountryFromUrl() === "QA"
                 ? __("Cash on Receiving Fee")
                 : __("Cash on Delivery Fee")
             )
-          : null}
+          }
         {this.renderDiscountPriceLine(
             getDiscountFromTotals(total_segments, "customerbalance"),
             __("My Cash"),
