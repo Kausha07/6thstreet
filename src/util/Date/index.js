@@ -179,22 +179,21 @@ export const getDefaultEddMessage = (
 };
 
 export const formatRefundDate = (dateStr, countryCode) => {
-  // Convert the date string to a Date object
-  if(dateStr == null){
+  if (dateStr == null) {
     return null;
   }
-  let countryTimeZone = {
+
+  const countryTimeZone = {
     "ae": "Asia/Dubai",
     "sa": "Asia/Riyadh",
     "bh": "Asia/Bahrain",
     "om": "Asia/Muscat",
     "qa": "Asia/Qatar",
     "kw": "Asia/Kuwait"
-  }
-  const timeZone = countryTimeZone[countryCode.toLowerCase()]
-  const utcDate = new Date(dateStr + " UTC");
+  };
+  const timeZone = countryTimeZone[countryCode.toLowerCase()];
+  const utcDate = new Date(dateStr);
 
-  // Define options for formatting the date
   const options = {
     day: '2-digit',
     month: 'short',
@@ -206,13 +205,12 @@ export const formatRefundDate = (dateStr, countryCode) => {
     timeZone: timeZone
   };
 
-  // Format the date according to the specified time zone
-  const formattedDate = utcDate.toLocaleString('en-GB', options);
+  const formatter = new Intl.DateTimeFormat('en-GB', options);
+  const formattedDate = formatter.format(utcDate);
 
-  // Split the formatted date to rearrange
   const [datePart, timePart] = formattedDate.split(", ");
   let [day, month, year] = datePart.split(" ");
   month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
-  
+
   return `${parseInt(day)} ${month} ${year} ${timePart}`;
 };
