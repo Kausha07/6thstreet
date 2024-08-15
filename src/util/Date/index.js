@@ -192,8 +192,7 @@ export const formatRefundDate = (dateStr, countryCode) => {
     "kw": "Asia/Kuwait"
   };
   const timeZone = countryTimeZone[countryCode.toLowerCase()];
-  const utcDate = new Date(dateStr);
-
+  const utcDate = new Date(dateStr + " UTC");
   const options = {
     day: '2-digit',
     month: 'short',
@@ -205,12 +204,44 @@ export const formatRefundDate = (dateStr, countryCode) => {
     timeZone: timeZone
   };
 
+  // Use `formatToParts` to get an array of parts of the date string
   const formatter = new Intl.DateTimeFormat('en-GB', options);
-  const formattedDate = formatter.format(utcDate);
+  const parts = formatter.formatToParts(utcDate);
 
-  const [datePart, timePart] = formattedDate.split(", ");
-  let [day, month, year] = datePart.split(" ");
+  // Extract different parts from the `parts` array
+  let day, month, year, hour, minute, second, dayPeriod;
+  parts.forEach(part => {
+    switch (part.type) {
+      case 'day':
+        day = part.value;
+        break;
+      case 'month':
+        month = part.value;
+        break;
+      case 'year':
+        year = part.value;
+        break;
+      case 'hour':
+        hour = part.value;
+        break;
+      case 'minute':
+        minute = part.value;
+        break;
+      case 'second':
+        second = part.value;
+        break;
+      case 'dayPeriod':
+        dayPeriod = part.value;
+        break;
+      default:
+        break;
+    }
+  });
+
+  // Translate month if needed
   month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
 
-  return `${parseInt(day)} ${month} ${year} ${timePart}`;
+  // Construct the final formatted date string
+  const formattedDate = `${parseInt(day)} ${month} ${year} ${hour}:${minute}:${second} ${dayPeriod}`;
+  return formattedDate;
 };
