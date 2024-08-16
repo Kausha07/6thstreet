@@ -193,14 +193,11 @@ export const formatRefundDate = (dateStr, countryCode) => {
   };
   const timeZone = countryTimeZone[countryCode.toLowerCase()];
   const utcDate = new Date(dateStr + " UTC");
+
   const options = {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true,
     timeZone: timeZone
   };
 
@@ -209,7 +206,7 @@ export const formatRefundDate = (dateStr, countryCode) => {
   const parts = formatter.formatToParts(utcDate);
 
   // Extract different parts from the `parts` array
-  let day, month, year, hour, minute, second, dayPeriod;
+  let day, month, year;
   parts.forEach(part => {
     switch (part.type) {
       case 'day':
@@ -221,18 +218,6 @@ export const formatRefundDate = (dateStr, countryCode) => {
       case 'year':
         year = part.value;
         break;
-      case 'hour':
-        hour = part.value;
-        break;
-      case 'minute':
-        minute = part.value;
-        break;
-      case 'second':
-        second = part.value;
-        break;
-      case 'dayPeriod':
-        dayPeriod = part.value;
-        break;
       default:
         break;
     }
@@ -242,6 +227,6 @@ export const formatRefundDate = (dateStr, countryCode) => {
   month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
 
   // Construct the final formatted date string
-  const formattedDate = `${parseInt(day)} ${month} ${year} ${hour}:${minute}:${second} ${dayPeriod}`;
+  const formattedDate = `${parseInt(day)} ${month} ${year}`;
   return formattedDate;
 };
