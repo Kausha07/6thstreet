@@ -301,7 +301,6 @@ export class SuccessCheckoutItem extends PureComponent {
         sku,
         extension_attributes,
       },
-      isExpressDelivery,
       shipmentDetails
     } = this.props;
 
