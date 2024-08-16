@@ -179,54 +179,40 @@ export const getDefaultEddMessage = (
 };
 
 export const formatRefundDate = (dateStr, countryCode) => {
-  if (dateStr == null) {
-    return null;
-  }
+  if (!dateStr) return null;
 
-  const countryTimeZone = {
-    "ae": "Asia/Dubai",
-    "sa": "Asia/Riyadh",
-    "bh": "Asia/Bahrain",
-    "om": "Asia/Muscat",
-    "qa": "Asia/Qatar",
-    "kw": "Asia/Kuwait"
-  };
-  const timeZone = countryTimeZone[countryCode.toLowerCase()];
+  // Create a new Date object from the UTC date string
   const utcDate = new Date(dateStr + " UTC");
 
-  const options = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    timeZone: timeZone
+  // Define time zone offsets for the respective country codes
+  const timeZoneOffsets = {
+    "ae": 4,  // UAE (Asia/Dubai) is UTC+4
+    "sa": 3,  // KSA (Asia/Riyadh) is UTC+3
+    "bh": 3,  // Bahrain (Asia/Bahrain) is UTC+3
+    "om": 4,  // Oman (Asia/Muscat) is UTC+4
+    "kw": 3,  // Kuwait (Asia/Kuwait) is UTC+3
+    "qa": 3   // Qatar (Asia/Qatar) is UTC+3
   };
 
-  // Use `formatToParts` to get an array of parts of the date string
-  const formatter = new Intl.DateTimeFormat('en-GB', options);
-  const parts = formatter.formatToParts(utcDate);
+  // Get the offset based on the country code (default to 0 if not found)
+  const offset = timeZoneOffsets[countryCode.toLowerCase()] || 0;
 
-  // Extract different parts from the `parts` array
-  let day, month, year;
-  parts.forEach(part => {
-    switch (part.type) {
-      case 'day':
-        day = part.value;
-        break;
-      case 'month':
-        month = part.value;
-        break;
-      case 'year':
-        year = part.value;
-        break;
-      default:
-        break;
-    }
-  });
+  // Convert UTC to local time based on the offset
+  utcDate.setHours(utcDate.getHours() + offset);
+
+  // Define an array for month names
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Extract the day, month, and year from the Date object
+  const day = utcDate.getUTCDate(); // Get day of the month (1-31)
+  let month = monthNames[utcDate.getUTCMonth()]; // Get month name
+  const year = utcDate.getUTCFullYear(); // Get full year (e.g., 2023)
+
+  console.log("day month year ", day, month, year);
 
   // Translate month if needed
   month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
 
-  // Construct the final formatted date string
-  const formattedDate = `${parseInt(day)} ${month} ${year}`;
-  return formattedDate;
+  // Format the date as "DD Mon YYYY"
+  return `${day} ${month} ${year}`;
 };
