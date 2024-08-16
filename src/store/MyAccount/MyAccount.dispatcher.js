@@ -382,6 +382,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               JSON.stringify(newlyAddedAddress)
             );
             this.selectedCityArea(dispatch, newlyAddedAddress);
+            BrowserDatabase.deleteItem("cityAreaFromSelectionPopUp");
             this.expressPopUpOpen(dispatch, false);
             CartDispatcher.getCart(dispatch, false, false, false)
           }
