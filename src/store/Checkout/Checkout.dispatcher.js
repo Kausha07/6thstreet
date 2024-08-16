@@ -48,6 +48,7 @@ import {
   verifyTamaraPayment,
   updateTamaraPayment,
 } from "Util/API/endpoint/Tamara/Tamara.endpoint";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export class CheckoutDispatcher {
   async validateAddress(dispatch, address) {
@@ -313,9 +314,13 @@ export class CheckoutDispatcher {
       return {};
     }
 
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+        "cityAreaFromSelectionPopUp"
+    );
+ 
     const reqObj = await JSON.parse(
       localStorage.getItem("currentSelectedAddress")
-    );
+    )|| cityAreaFromSelectionPopUp;
     const params = {
       area: reqObj?.area || "",
       city: reqObj?.city || "",
