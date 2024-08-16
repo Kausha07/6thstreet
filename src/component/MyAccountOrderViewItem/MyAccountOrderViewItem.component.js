@@ -331,7 +331,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
             <div block="shipmentText">
               <span block="EddStandardDeliveryText">
                 {__("Standard")} {}
-                {actualEddMess?.split(splitKey)?.[0]} {}
+                {__("Delivery")} {}
                 {splitKey} {}
               </span>
               <span block="EddStandardDeliveryTextBold">

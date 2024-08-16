@@ -339,7 +339,7 @@ export class SuccessCheckoutItem extends PureComponent {
             store_quantity={store_quantity}
             mp_quantity={mp_quantity}
             showTimer={false}
-            showStandardText={false}
+            showStandardText={true}
           />
         </Suspense>
       </div>
