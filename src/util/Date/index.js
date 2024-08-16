@@ -182,7 +182,7 @@ export const formatRefundDate = (dateStr, countryCode) => {
   if (!dateStr) return null;
 
   // Create a new Date object from the UTC date string
-  const utcDate = new Date(dateStr + " UTC");
+  const utcDate = new Date(dateStr);
 
   // Define time zone offsets for the respective country codes
   const timeZoneOffsets = {
