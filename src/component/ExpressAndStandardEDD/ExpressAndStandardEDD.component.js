@@ -317,7 +317,7 @@ export const ExpressAndStandardEDD = ({
               <div block="shipmentText">
                 <span block="EddStandardDeliveryText">
                   {showStandardText && __("Standard")} {}
-                  {actualEddMess?.split(splitKey)?.[0]} {}
+                  {__("Delivery")} {}
                   {splitKey} {}
                 </span>
                 <span block="EddStandardDeliveryTextBold">

@@ -28,6 +28,7 @@ import MyAccountAddressPopup from "./MyAccountAddressPopup.component";
 import { ADDRESS_POPUP_ID, ADD_ADDRESS } from "./MyAccountAddressPopup.config";
 import { showPopup } from "Store/Popup/Popup.action";
 import { setNewAddressSaved } from "Store/MyAccount/MyAccount.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -84,6 +85,13 @@ export const mapDispatchToProps = (dispatch) => ({
   setPrevSelectedAddressForPLPFilters: (val) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.setPrevSelectedAddressForPLPFilters(dispatch, val)
+    ),
+  getCart: (isNewCart, createNewCart, isToMakeLastOrderAPICall) =>
+    CartDispatcher.getCart(
+      dispatch,
+      isNewCart,
+      createNewCart,
+      isToMakeLastOrderAPICall
     ),
 });
 
@@ -236,6 +244,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       selectedCityArea,
       expressPopUpOpen,
       setPrevSelectedAddressForPLPFilters,
+      getCart,
     } = this.props;
     if (
       (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
@@ -258,6 +267,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       setNewAddressSaved(false);
       selectedCityArea(newAddress);
       expressPopUpOpen(false);
+      getCart(false, false, false);
     }
   };
 
