@@ -67,9 +67,13 @@ export const homePageScreenViewTrackingEvent = (
   const userSegment = user_segment
     ? user_segment
     : abTestingConfig?.HPP?.defaultUserSegment;
+  const currentSelectedAddress = BrowserDatabase.getItem("currentSelectedAddress");
+  const { city = "", area = "" } = currentSelectedAddress ? currentSelectedAddress: {};
   MOE_trackEvent(EVENT_HOME_SCREEN_VIEW, {
     segment_name: userSegment,
     variant_name: variantName,
+    city: city,
+    area: area
   });
   Event.dispatch(EVENT_HOME_SCREEN_VIEW, {
     segment_name: userSegment,
