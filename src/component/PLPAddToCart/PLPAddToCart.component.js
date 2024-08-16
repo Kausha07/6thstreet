@@ -570,7 +570,7 @@ class PLPAddToCart extends PureComponent {
       product,
       newActiveFilters,
       product_Position,
-      is_express_eligible = false
+      is_express_visible = false
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
     const isFilters = getIsFilters(newActiveFilters);
@@ -659,6 +659,7 @@ class PLPAddToCart extends PureComponent {
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_Position || "",
       colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+      is_express_visible: is_express_visible
     });
   }
 
