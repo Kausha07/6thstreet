@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ExpressDeliveryTruck } from "Component/Icons";
+import { getFinalAddressInWords } from "Util/Common";
 import "./ExpressDeliveryTag.style";
 
 export const mapStateToProps = (state) => ({
@@ -9,6 +10,7 @@ export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   edd_info: state.AppConfig.edd_info,
   vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const ExpressDeliveryTag = (props) => {
@@ -28,6 +30,7 @@ export const ExpressDeliveryTag = (props) => {
     isExpressDelivery,
     vwoData,
     setExpressVisible = () => null,
+    mailing_address_type,
   } = props;
 
   const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
@@ -38,12 +41,19 @@ export const ExpressDeliveryTag = (props) => {
     cityAreaFromSelectionPopUp;
 
   const getFinalExpressDeliveryKey = () => {
-    if (currentSelectedAddress?.mailing_address_type === "37303") {
-      return express_delivery_home;
-    } else if (currentSelectedAddress?.mailing_address_type === "37304") {
-      return express_delivery_work;
-    } else if (currentSelectedAddress?.mailing_address_type === "37305") {
-      return express_delivery_other;
+    const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+      let keyName = item?.label?.en?.toLowerCase();
+      const deliveryKey = `express_delivery_${keyName}`;
+      acc[item?.value] = deliveryKey;
+      return acc;
+    }, {});
+
+    const tempMailingAddress =
+      currentSelectedAddress?.mailing_address_type ||
+      getFinalAddressInWords(mailing_address_type)?.["home"];
+
+    if (deliveryMappings) {
+      return props.productInfo?.[deliveryMappings[tempMailingAddress]];
     } else return express_delivery_home;
   };
 

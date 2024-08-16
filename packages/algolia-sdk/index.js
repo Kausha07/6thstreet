@@ -37,8 +37,8 @@ const AlgoliaSDK = {
 
   getAlgoliaIndex: () => AlgoliaSDK.index,
   
-  getPLP: (URL, params, categoryData, moreFiltersData) =>
-    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params, categoryData, moreFiltersData),
+  getPLP: (URL, params, categoryData, moreFiltersData, mailing_address_type) =>
+    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params, categoryData, moreFiltersData, mailing_address_type),
   getProductForSearchContainer: (URL, params, suggestionQuery) =>
     getProductForSearchContainer(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params, suggestionQuery),
   getPromotions: (URL, params) =>

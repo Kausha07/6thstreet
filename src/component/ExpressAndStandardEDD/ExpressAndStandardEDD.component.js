@@ -45,7 +45,7 @@ export const ExpressAndStandardEDD = ({
   customer = {},
   currentSelectedCityArea = {},
   cutOffTime = {},
-  mailing_address_type = [],
+  mailing_address_type = {},
   isPDP = false,
   isIntlBrand = false,
   international_shipping_fee,
@@ -63,6 +63,7 @@ export const ExpressAndStandardEDD = ({
   setTimerStateThroughProps,
   vwoData,
   setExpressVisible = () => {},
+  productInfo = {},
 }) => {
   const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
     "cityAreaFromSelectionPopUp"
@@ -86,6 +87,8 @@ export const ExpressAndStandardEDD = ({
     express_delivery_work,
     express_delivery_other,
     express_delivery,
+    mailing_address_type,
+    productInfo,
   });
 
   // check product is express eligible  or not
@@ -168,6 +171,7 @@ export const ExpressAndStandardEDD = ({
     cutOffTime,
     express_delivery_key,
     isExpressTimeExpired,
+    mailing_address_type,
   });
 
   todaysCutOffTime =
@@ -180,6 +184,7 @@ export const ExpressAndStandardEDD = ({
       whs_quantity,
       store_quantity,
       mp_quantity,
+      mailing_address_type,
     }) || "00:00";
 
   const checkStandardDeliveryAvailable = () => {

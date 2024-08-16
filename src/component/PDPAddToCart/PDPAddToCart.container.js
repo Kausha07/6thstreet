@@ -63,6 +63,7 @@ export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   cutOffTime: state.MyAccountReducer.cutOffTime,
   vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -467,7 +468,8 @@ export class PDPAddToCartContainer extends PureComponent {
       cutOffTime,
       isExpressTimeExpired,
       vwoData,
-      is_express_visible= false
+      is_express_visible= false,
+      mailing_address_type,
     } = this.props;
     const {
       mappedSizeObject,
@@ -500,7 +502,8 @@ export class PDPAddToCartContainer extends PureComponent {
       cutOffTime,
       isExpressTimeExpired,
       vwoData,
-      is_express_visible
+      is_express_visible,
+      mailing_address_type,
     };
   };
 

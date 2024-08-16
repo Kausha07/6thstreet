@@ -702,22 +702,18 @@ export const getTodaysWeekDay = () => {
   return currentDayName?.toLowerCase();
 };
 
-export const getAddressType = (addressType) => {
+export const getAddressType = (mailing_address_type, addressType) => {
   const currentSelectedAddress = addressType
-  ? addressType
-  : JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
-    BrowserDatabase.getItem("cityAreaFromSelectionPopUp") ||
-    {};
-  switch (currentSelectedAddress?.mailing_address_type) {
-    case "37303":
-      return "home";
-    case "37304":
-      return "work";
-    case "37305":
-      return "other";
-    default:
-      return "home";
-  }
+    ? addressType
+    : JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      BrowserDatabase.getItem("cityAreaFromSelectionPopUp") ||
+      {};
+
+  const getAddressType = getMailingAddressType(mailing_address_type);
+
+  if (getAddressType?.[currentSelectedAddress?.mailing_address_type]) {
+    return getAddressType?.[currentSelectedAddress?.mailing_address_type];
+  } else return "home";
 };
 
 export const getCurrentTimeForCountry = (countryCode) => {
@@ -748,21 +744,24 @@ export const getCurrentTimeForCountry = (countryCode) => {
   return now;
 };
 
-export const getNumericAddressType = () => {
+export const getNumericAddressType = (mailing_address_type) => {
   const addressType =
     JSON.parse(localStorage.getItem("currentSelectedAddress"))
-      ?.mailing_address_type || "37303";
+      ?.mailing_address_type ||
+    getFinalAddressInWords(mailing_address_type)?.["home"];
   return addressType;
 };
 
 export const checkProductOfficeServicable = ({
-  addressType = "37303",
+  addressType = "",
   isOfficeSameDayExpressServicable = true,
   isOfficeNextDayExpressServicable = true,
   isExpressTimeExpired = false,
   express_delivery_key = "",
+  mailing_address_type,
 }) => {
-  if (addressType === "37304") {
+  getFinalAddressInWords;
+  if (addressType === getFinalAddressInWords(mailing_address_type)?.["work"]) {
     if (
       isOfficeSameDayExpressServicable &&
       !isOfficeNextDayExpressServicable &&
@@ -813,10 +812,11 @@ export const getTodaysCutOffTime = ({
   whs_quantity = 0,
   store_quantity = 0,
   mp_quantity = 0,
+  mailing_address_type,
 }) => {
   let tempTodaysCutOffTime = "00:00";
   const todaysWeekDayName = getTodaysWeekDay();
-  const addressType = getNumericAddressType();
+  const addressType = getNumericAddressType(mailing_address_type);
 
   const data =
     cutOffTime?.data?.find((item) => {
@@ -885,16 +885,16 @@ export const getFinalExpressDeliveryKey = ({
   express_delivery_work = "",
   express_delivery_other = "",
   express_delivery = "",
+  mailing_address_type,
+  productInfo = {},
 }) => {
-  const addressType = getNumericAddressType();
+  const addressType = getNumericAddressType(mailing_address_type);
   if (isPDP) {
-    if (addressType === "37303") {
-      return express_delivery_home;
-    } else if (addressType === "37304") {
-      return express_delivery_work;
-    } else if (addressType === "37305") {
-      return express_delivery_other;
-    } else return express_delivery_home;
+    return getFinalExpressDelivery(
+      mailing_address_type,
+      productInfo,
+      addressType
+    );
   } else {
     return express_delivery;
   }
@@ -904,8 +904,9 @@ export const productOfficeServicable = ({
   cutOffTime = {},
   express_delivery_key = "",
   isExpressTimeExpired = false,
+  mailing_address_type,
 }) => {
-  const addressType = getNumericAddressType();
+  const addressType = getNumericAddressType(mailing_address_type);
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
   const isProductExpressEligible =
     checkProductExpressEligible(express_delivery_key);
@@ -921,7 +922,7 @@ export const productOfficeServicable = ({
     isProductExpressEligible
   ) {
     if (
-      addressType === "37304" &&
+      addressType === getFinalAddressInWords(mailing_address_type)?.["work"] &&
       ["friday", "saturday", "sunday"].includes?.(
         todaysWeekDayName?.toLowerCase()
       )
@@ -936,6 +937,7 @@ export const productOfficeServicable = ({
             isOfficeNextDayExpressServicable,
             isExpressTimeExpired,
             express_delivery_key,
+            mailing_address_type,
           });
           break;
 
@@ -948,6 +950,7 @@ export const productOfficeServicable = ({
             isOfficeNextDayExpressServicable,
             isExpressTimeExpired,
             express_delivery_key,
+            mailing_address_type,
           });
           break;
 
@@ -960,6 +963,7 @@ export const productOfficeServicable = ({
             isOfficeNextDayExpressServicable,
             isExpressTimeExpired,
             express_delivery_key,
+            mailing_address_type,
           });
           break;
 
@@ -1013,4 +1017,40 @@ export const arabicTranslatorForExpress = (day = "") => {
     default:
       return "";
   }
+};
+
+export const getMailingAddressType = (mailing_address_type) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+
+  return deliveryMappings;
+};
+
+export const getFinalAddressInWords = (mailing_address_type) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[deliveryKey] = item?.value;
+    return acc;
+  }, {});
+
+  return deliveryMappings;
+};
+
+export const getFinalExpressDelivery = (
+  mailing_address_type,
+  productInfo,
+  addressType
+) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    let keyName = item?.label?.en?.toLowerCase();
+    const deliveryKey = `express_delivery_${keyName}`;
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+  if (deliveryMappings) {
+    return productInfo?.[deliveryMappings[addressType]];
+  } else return productInfo?.express_delivery_home || "";
 };

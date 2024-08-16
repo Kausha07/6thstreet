@@ -314,7 +314,9 @@ class PDPAddToCart extends PureComponent {
         express_delivery_work = "",
         express_delivery_other = "",
       },
+      mailing_address_type,
     } = this.props;
+    const { product : productInfo } = this.props;
 
     const product = productStock[code];
     const whs_quantity = +product?.whs_quantity || 0;
@@ -325,6 +327,8 @@ class PDPAddToCart extends PureComponent {
       express_delivery_home,
       express_delivery_work,
       express_delivery_other,
+      mailing_address_type,
+      productInfo,
     });
 
     const isProductExpressEligible =
@@ -338,6 +342,7 @@ class PDPAddToCart extends PureComponent {
       cutOffTime,
       express_delivery_key,
       isExpressTimeExpired,
+      mailing_address_type,
     });
 
     const isExpressEligibleSKU =

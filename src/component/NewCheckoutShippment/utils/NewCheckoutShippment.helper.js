@@ -58,6 +58,7 @@ export const getShipmentItems = ({ shipmentItem = {}, cartItems = [] }) => {
 export const getCutOffTimeCheckoutPage = ({
   shipmentItems = [],
   cutOffTime = {},
+  mailing_address_type,
 }) => {
   let cutOffTimeShipment = [];
 
@@ -71,6 +72,7 @@ export const getCutOffTimeCheckoutPage = ({
       whs_quantity,
       store_quantity,
       mp_quantity,
+      mailing_address_type,
     });
 
     if (cutOffTimeSku) {

@@ -31,6 +31,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   cutOffTime: state.MyAccountReducer.cutOffTime,
   vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -51,6 +52,7 @@ export const NewCheckoutShippment = (props) => {
     customer,
     cutOffTime,
     vwoData,
+    mailing_address_type,
   } = props;
   const { expected_shipments = [] } = shipment;
   const totalShipmentCount = expected_shipments.length || 0;
@@ -112,7 +114,7 @@ export const NewCheckoutShippment = (props) => {
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
     const todaysCutOffTime = isExpressDeliveryAvailable
-      ? getCutOffTimeCheckoutPage({ shipmentItems, cutOffTime }) || "00:00"
+      ? getCutOffTimeCheckoutPage({ shipmentItems, cutOffTime, mailing_address_type }) || "00:00"
       : "00:00";
     if (shipmentItems && !shipmentItems.length) {
       return null;

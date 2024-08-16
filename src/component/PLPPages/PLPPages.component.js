@@ -29,6 +29,7 @@ export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 class PLPPages extends PureComponent {
@@ -219,9 +220,9 @@ class PLPPages extends PureComponent {
   };
 
   shouldRenderQuickFilter = (filters, index) => {
-    const { pages = {} } = this.props;
+    const { pages = {}, mailing_address_type, } = this.props;
     let inlineFilterList = this.getInlineFilterList(filters);
-    let expressDeliveryKeyLabel = `express_delivery_${getAddressType()}`;
+    let expressDeliveryKeyLabel = `express_delivery_${getAddressType(mailing_address_type)}`;
 
     const keyLabel = {
       discount: __("Discount"),

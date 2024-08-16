@@ -1000,6 +1000,7 @@ class PDPSummary extends PureComponent {
       isExpressDelivery,
       isExpressServiceAvailable,
       vwoData,
+      product,
     } = this.props;
 
     const sku = selectedSizeCode || this.getInStockSKU(simple_products);
@@ -1052,6 +1053,7 @@ class PDPSummary extends PureComponent {
                 isExpressTimeExpired={this.state.isExpressTimeExpired}
                 setTimerStateThroughProps={this.setTimerStateThroughProps}
                 setExpressVisible={this.setExpressVisible}
+                productInfo={product}
               />
             </Suspense>
           </div>

@@ -324,7 +324,7 @@ export class CheckoutDispatcher {
     const params = {
       area: reqObj?.area || "",
       city: reqObj?.city || "",
-      address_type: reqObj?.mailing_address_type || "37303",
+      address_type: reqObj?.mailing_address_type || "",
     };
 
     try {

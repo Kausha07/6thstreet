@@ -231,29 +231,25 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
   return false;
 };
 
-const getAddressType = () => {
+const getAddressType = (mailing_address_type) => {
   const currentSelectedAddress =
     JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
     localStorage.getItem("cityAreaFromSelectionPopUp") ||
     {};
 
-  if (currentSelectedAddress) {
-    switch (currentSelectedAddress?.mailing_address_type) {
-      case "37303":
-        return "home";
-      case "37304":
-        return "work";
-      case "37305":
-        return "other";
-      default:
-        return "home";
-    }
-  }
-  return "";
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+
+  if (deliveryMappings?.[currentSelectedAddress?.mailing_address_type]) {
+    return deliveryMappings?.[currentSelectedAddress?.mailing_address_type];
+  } else return "home";
 };
 
-const expressDataOBJ = ({ allFacets }) => {
-  const addressType = getAddressType();
+const expressDataOBJ = ({ allFacets, mailing_address_type }) => {
+  const addressType = getAddressType(mailing_address_type);
   let facetKey = `express_delivery_${addressType}`;
   const data = allFacets?.[facetKey];
   if (data) {
@@ -285,6 +281,7 @@ function getFilters({
   moreFiltersData,
   newfacetStats,
   prodCountFacets,
+  mailing_address_type,
 }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
@@ -399,13 +396,13 @@ function getFilters({
   };
 
   // ExpressDelivery
-  let expressFacetKey = `express_delivery_${getAddressType()}`;
+  let expressFacetKey = `express_delivery_${getAddressType(mailing_address_type)}`;
   filtersObject[expressFacetKey] = {
     label: translate(expressFacetKey, lang),
     category: expressFacetKey,
     is_radio: false,
     selected_filters_count: 0,
-    data: expressDataOBJ({ allFacets: facets }),
+    data: expressDataOBJ({ allFacets: facets, mailing_address_type }),
   };
 
   // Discount
@@ -617,7 +614,7 @@ const _formatFacets = ({ facets, queryParams }) => {
   }, {});
 };
 
-function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
+function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={}, mailing_address_type = {} ) {
   const { client, env } = options;
   const moreFiltersArr = moreFiltersData?.more_filter || [];
     // data should get update - data is from json file.
@@ -832,6 +829,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         moreFiltersData,
         newfacetStats,
         prodCountFacets,
+        mailing_address_type,
       });
       const moreFilters = getMoreFilters(finalFiltersData.facets, queryParams, moreFiltersData);
       const sliderFilters = getSliderFilters(queryParams, locale, facets_stats, newfacetStats );

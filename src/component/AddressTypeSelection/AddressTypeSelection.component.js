@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import Field from "Component/Field";
 import "./AddressTypeSelection.style";
+import { getFinalAddressInWords } from "Util/Common";
 
 export const mapStateToProps = (state) => ({
   mailing_address_type: state.AppConfig.mailing_address_type,
@@ -16,7 +17,7 @@ export const AddressTypeSelection = (props) => {
   } = props;
 
   const [selectedAddressType, setSelectedAddressType] = useState(
-    address?.mailing_address_type || "37303"
+    address?.mailing_address_type || getFinalAddressInWords(mailing_address_type)?.["home"]
   );
 
   const handleAddressTypeChange = (value) => {

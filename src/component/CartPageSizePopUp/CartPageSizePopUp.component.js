@@ -20,6 +20,7 @@ export const mapStateToProps = (state) => ({
   isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
   currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 const CartPageSizePopUp = (props) => {
@@ -38,6 +39,7 @@ const CartPageSizePopUp = (props) => {
     isExpressServiceAvailable,
     currentSelectedCityArea,
     isSignedIn,
+    mailing_address_type,
   } = props;
 
   const wrapperRef = createRef();
@@ -168,6 +170,7 @@ const CartPageSizePopUp = (props) => {
         express_delivery_work = "",
         express_delivery_other = "",
       },
+      clickedProductInfo,
     } = props;
 
     const product = productStock[code];
@@ -179,6 +182,8 @@ const CartPageSizePopUp = (props) => {
       express_delivery_home,
       express_delivery_work,
       express_delivery_other,
+      mailing_address_type,
+      clickedProductInfo,
     });
 
     const isProductExpressEligible =

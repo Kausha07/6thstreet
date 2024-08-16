@@ -166,7 +166,7 @@ export class CartDispatcher {
     const params = {
       area: reqObj?.area || "",
       city: reqObj?.city || "",
-      address_type: reqObj?.mailing_address_type || "37303",
+      address_type: reqObj?.mailing_address_type || "",
     };
     try {
       dispatch(processingCartRequest());

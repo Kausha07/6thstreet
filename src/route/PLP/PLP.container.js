@@ -98,6 +98,7 @@ export const mapStateToProps = (state) => ({
   vwoData: state.AppConfig.vwoData,
   isAddressDeleted: state.MyAccountReducer.isAddressDeleted,
   prevSelectedAddress: state.MyAccountReducer.prevSelectedAddress,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -769,7 +770,7 @@ export class PLPContainer extends PureComponent {
   }
 
   onUnselectAllPress(category) {
-    const { filters, updatePLPInitialFilters } = this.props;
+    const { filters, updatePLPInitialFilters, mailing_address_type } = this.props;
     const { activeFilters = {}, newActiveFilters = {} } = this.state;
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
@@ -834,7 +835,7 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
-    let isScrollBehaviour = category === `express_delivery_${getAddressType()}` ? true : false;
+    let isScrollBehaviour = category === `express_delivery_${getAddressType(mailing_address_type)}` ? true : false;
 
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1" && key !== "categories_without_path") {
@@ -938,6 +939,7 @@ export class PLPContainer extends PureComponent {
       setAddressDeleted,
       prevSelectedAddress,
       setPrevSelectedAddressForPLPFilters,
+      mailing_address_type,
     } = this.props;
     let newMoreActiveFilters = {};
     const { isLoading: isCategoriesLoading } = this.state;
@@ -1126,7 +1128,7 @@ export class PLPContainer extends PureComponent {
         finalAddressType = prevSelectedAddress?.mailing_address_type;
         setPrevSelectedAddressForPLPFilters(null);
       }
-      const addressType = getAddressType(finalAddressType);
+      const addressType = getAddressType(mailing_address_type, finalAddressType);
       setAddressDeleted(null);
       this.onUnselectAllPress(`express_delivery_${addressType}`);
       PLPContainer.requestProductList(this.props);

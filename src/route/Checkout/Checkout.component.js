@@ -46,8 +46,10 @@ import {
   FREE,
   CHECKOUT_APPLE_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+import { getFinalAddressInWords } from "Util/Common";
 export const mapStateToProps = (state) => ({
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 })
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -106,7 +108,7 @@ export class Checkout extends SourceCheckout {
     validationError: false,
     isNationalityClick: true,
     isIdentityNumberModified: false,
-    mailing_address_type: "37303",
+    mailing_address_type: getFinalAddressInWords(this.props.mailing_address_type)?.["home"],
   };
 
   onIdentityNumberChange = (value) => {
