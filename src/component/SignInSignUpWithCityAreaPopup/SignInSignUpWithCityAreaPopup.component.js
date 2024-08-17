@@ -71,7 +71,7 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
         <div block="signInSignUpWithCityAreaOuterBlock">
           <div block="signInSignUpWithCityAreaPopUp" ref={wrapperRef}>
             <h1 block="signInSignUpWithCityAreaPopUpHeading">
-              {__("Sign in or create a account to see delivery location")}
+              {__("Sign in or create an account to view delivery locations.")}
             </h1>
             <div block="signInSignUpWithCityAreaInnerBlock">
               <div block="createAccountSignInButton">
@@ -79,10 +79,10 @@ export const SignInSignUpWithCityAreaPopup = (props) => {
                   block="createAccountButton"
                   onClick={renderCreateAccountPopUp}
                 >
-                  {__("Create Account")}
+                  {__("REGISTER")}
                 </button>
                 <button block="signInButton" onClick={renderSignInPopUp}>
-                  {__("Sign In")}
+                  {__("LOGIN")}
                 </button>
               </div>
               <div block="partition">{__("or")}</div>
