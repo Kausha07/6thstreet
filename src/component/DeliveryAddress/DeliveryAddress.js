@@ -67,7 +67,7 @@ const DeliveryAddress = (props) => {
     const { area = "", city = "", street = "" } = selectedAddressForRender;
 
     return (
-      <div block="address-card-Msite">
+      <div block="address-card-Msite"  mods={{ isArabic }}>
         <div block="address-card-Msite" elem="icon-container">
           <img src={address} alt="" />
         </div>
