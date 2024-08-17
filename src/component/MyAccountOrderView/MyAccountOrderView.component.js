@@ -1415,7 +1415,7 @@ class MyAccountOrderView extends PureComponent {
               key={i}
             >
               <div block="order-group-message">
-                <p>{__(refund_message)}</p>
+                <p block="refundMessage">{__(refund_message)}</p>
                 <p block="color-grey" mods={{ isArabic }}>
                   {refund_date}
                 </p>

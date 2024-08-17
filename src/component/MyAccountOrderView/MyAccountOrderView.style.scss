@@ -230,13 +230,17 @@
 
   &-PackagesMessageForREDD {
     background: var(--my-acc-background);
-    padding: 10px 25px;
+    padding: 10px 10px;
     font-family: Avenir Next;
     font-size: 12px;
 
     p {
       line-height: 1.3;
       margin: 0;
+    }
+
+    .refundMessage{
+      width: 75%;
     }
 
     &_isArabic {
