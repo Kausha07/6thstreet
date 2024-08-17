@@ -64,9 +64,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       const returnable_date_expired = this.expiredDateIfAny(returnable_date);
       const exchangeable_date_expired = this.expiredDateIfAny(exchangeable_date);
-      if(!returnable_date_expired) {
+      if(!returnable_date_expired && exchangeable_date_expired) {
         return exchangeable_date_expired ? __("Exchange window closed on %s", exchangeable_date_expired) :   __("This item is not returnable. Exchange only.");
-      } else if(!exchangeable_date_expired) {
+      } else if(!exchangeable_date_expired && returnable_date_expired) {
         return returnable_date_expired ? __("Return window closed on %s", returnable_date_expired) : __("This item is not exchangeable. Return only.");
       } else {
         return returnable_date_expired ? __("Returned/exchange window closed on %s", returnable_date_expired) : "";
@@ -74,16 +74,39 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
   }
     
-  expiredDateIfAny = (dateStr) =>{
-    if(!dateStr) return "";
+  expiredDateIfAny = (dateStr) => {
+    if (!dateStr) return "";
+  
     // Convert the date string to a Date object
-    const givenDate = new Date(dateStr);
-    // Get today's date (without time)
+    const givenDate = new Date(dateStr + ' UTC'); // Assume the dateStr is in UTC
+  
+    // Get the country code from the URL or another method
+    const countryCode = getCountryFromUrl();
+  
+    // Map country codes to their respective time zones
+    const timeZones = {
+      ae: 'Asia/Dubai',
+      sa: 'Asia/Riyadh',
+      bh: 'Asia/Bahrain',
+      om: 'Asia/Muscat',
+      kw: 'Asia/Kuwait',
+      qa: 'Asia/Qatar',
+      // Add more as needed
+    };
+  
+    const timeZone = timeZones[countryCode.toLowerCase()] || 'UTC';
+  
+    // Convert givenDate to the country's local time
+    const localGivenDate = new Date(givenDate.toLocaleString('en-US', { timeZone }));
+  
+    // Get today's date in the same timezone
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const localToday = new Date(today.toLocaleString('en-US', { timeZone }));
+    localToday.setHours(0, 0, 0, 0); // Reset to start of the day
+  
     // Convert both dates to ISO strings for comparison (YYYY-MM-DD)
-    const givenDateISO = givenDate.toISOString().split('T')[0];
-    const todayISO = today.toISOString().split('T')[0];
+    const givenDateISO = localGivenDate.toISOString().split('T')[0];
+    const todayISO = localToday.toISOString().split('T')[0];
   
     // Define options for formatting the date
     const options = {
@@ -91,10 +114,11 @@ export class MyAccountOrderViewItem extends SourceComponent {
       month: 'short',
       year: 'numeric',
     };
-    const countryCode = getCountryFromUrl();
-    const dateToReturn = givenDate.toLocaleDateString('en-'+countryCode.toUpperCase(), options).replace(',', '');
+  
+    const dateToReturn = localGivenDate.toLocaleDateString('en-US', options).replace(',', '');
     return givenDateISO > todayISO ? "" : dateToReturn;
-  }
+  };
+  
 
   renderDetails() {
     let {
