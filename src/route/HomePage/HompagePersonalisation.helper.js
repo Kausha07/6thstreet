@@ -4,6 +4,7 @@ import Event, {
   EVENT_PLP_SCREEN_VIEW,
   MOE_trackEvent,
 } from "Util/Event";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const getHomePagePersonalizationContent = async (
   devicePrefix,
