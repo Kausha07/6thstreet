@@ -63,7 +63,7 @@ export const DeliveryAddressPopUpWhenNoAddress = (props) => {
               <div block="deliveryNote">
                 <p>
                   {__(
-                    "We need your location to provide you with best experience. Your location is safe with us."
+                    "Please provide your location so that we can ensure the best available delivery. Your details are secure with us."
                   )}
                 </p>
               </div>
