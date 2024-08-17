@@ -83,7 +83,7 @@ import Loader from "Component/Loader";
 import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
-import { getDefaultEddMessage } from "Util/Date/index";
+import { getDefaultEddMessage, formatExpressDate } from "Util/Date/index";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -1000,24 +1000,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     /*await*/ this.savePaymentMethodAndPlaceOrder(paymentInformation);
   }
 
-  formatExpressDate(dayType) {
-    const today = new Date();
-    let targetDate;
   
-    if (dayType?.toLowerCase() === 'tomorrow delivery') {
-      targetDate = new Date(today);
-      targetDate?.setDate(today.getDate() + 1);
-    } else if (dayType?.toLowerCase() === 'today delivery') {
-      targetDate = today;
-    } else {
-      return "";
-    }
   
-    const year = targetDate.getFullYear();
-    const month = String(targetDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const day = String(targetDate.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+  
 
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
     // console.table(paymentInformation);
@@ -1052,7 +1037,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       step: 3,
       payment_code: code ? code : null,
     });
-    
+    const countryCode = getCountryFromUrl();
     if (!isSignedIn) {     
       if (paymentInformation?.billing_address?.firstname) MOE_AddFirstName(paymentInformation?.billing_address?.firstname);
       if (paymentInformation?.billing_address?.lastname) MOE_addLastName(paymentInformation?.billing_address?.lastname);
@@ -1123,7 +1108,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: this.formatExpressDate(express_delivery),
+            edd_date: formatExpressDate(express_delivery, countryCode),
             edd_message_en: "",
             edd_message_ar: "",
             intl_vendors: null,
@@ -1237,7 +1222,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: this.formatExpressDate(express_delivery),
+            edd_date: formatExpressDate(express_delivery, countryCode),
             edd_message_en: "",
             edd_message_ar: "",
             intl_vendors: null,

@@ -216,3 +216,43 @@ export const formatRefundDate = (dateStr, countryCode) => {
   // Format the date as "DD Mon YYYY"
   return `${day} ${month} ${year}`;
 };
+
+export const formatExpressDate = (dayType, countryCode) => {
+  const timeZoneMap = {
+    bh: 'Asia/Bahrain',   // Bahrain
+    om: 'Asia/Muscat',    // Oman
+    kw: 'Asia/Kuwait',    // Kuwait
+    sa: 'Asia/Riyadh',    // Saudi Arabia
+    qa: 'Asia/Qatar',      // Qatar
+    ae: 'Asia/Dubai',      // Qatar
+  };
+  const timeZone = timeZoneMap[countryCode.toLowerCase()];
+  
+  if (!timeZone) {
+    return ""; // Return an empty string if the country code is not found
+  }
+
+  const options = { timeZone: timeZone, year: 'numeric', month: '2-digit', day: '2-digit' };
+  const today = new Date();
+  
+  // Convert current time to the specified time zone
+  const formattedDate = new Intl.DateTimeFormat('en-US', options).format(today);
+  
+  // Create a date object from the formatted date
+  const [month, day, year] = formattedDate.split('/');
+  const targetDate = new Date(`${year}-${month}-${day}`);
+
+  if (dayType?.toLowerCase() === 'tomorrow delivery') {
+    targetDate.setDate(targetDate.getDate() + 1);
+  } else if (dayType?.toLowerCase() === 'today delivery') {
+    // No change needed
+  } else {
+    return "";
+  }
+
+  const yearFormatted = targetDate.getFullYear();
+  const monthFormatted = String(targetDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const dayFormatted = String(targetDate.getDate()).padStart(2, '0');
+  
+  return `${yearFormatted}-${monthFormatted}-${dayFormatted}`;
+}
