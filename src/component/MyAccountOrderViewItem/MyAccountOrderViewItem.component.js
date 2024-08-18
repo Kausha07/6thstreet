@@ -58,15 +58,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
 
 
   getReturnExchangeMessage = (returnable_date, exchangeable_date) => {
-    
     if(!returnable_date && !exchangeable_date) {
       return __("This item is not returnable or exchangeable.");
     } else {
       const returnable_date_expired = this.expiredDateIfAny(returnable_date);
       const exchangeable_date_expired = this.expiredDateIfAny(exchangeable_date);
-      if(!returnable_date_expired && exchangeable_date_expired) {
+      if(!returnable_date && exchangeable_date) {
         return exchangeable_date_expired ? __("Exchange window closed on %s", exchangeable_date_expired) :   __("This item is not returnable. Exchange only.");
-      } else if(!exchangeable_date_expired && returnable_date_expired) {
+      } else if(!exchangeable_date && returnable_date) {
         return returnable_date_expired ? __("Return window closed on %s", returnable_date_expired) : __("This item is not exchangeable. Return only.");
       } else {
         return returnable_date_expired ? __("Returned/exchange window closed on %s", returnable_date_expired) : "";
