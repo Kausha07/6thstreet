@@ -1105,10 +1105,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
         );
         if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
+          const express_delivery_day = sku_delivery_type[sku] !=0 ? (sku_delivery_type[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null 
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: formatExpressDate(express_delivery, countryCode),
+            edd_date: formatExpressDate(express_delivery_day, countryCode),
             edd_message_en: "",
             edd_message_ar: "",
             intl_vendors: null,
@@ -1219,10 +1220,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
         if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
+          const express_delivery_day = sku_delivery_type[sku] !=0 ? (sku_delivery_type[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null 
           eddItems.push({
             sku: sku,
             cross_border: cross_border,
-            edd_date: formatExpressDate(express_delivery, countryCode),
+            edd_date: formatExpressDate(express_delivery_day, countryCode),
             edd_message_en: "",
             edd_message_ar: "",
             intl_vendors: null,

@@ -76,7 +76,7 @@ class PurchaseEvent extends BaseEvent {
     const SHIPMENT_DETAILS =
         BrowserDatabase.getItem("SHIPMENT_DETAILS")
           ? BrowserDatabase.getItem("SHIPMENT_DETAILS")
-          : [];
+          : {};
     const total_items = totals?.items;
     const ga4_items = total_items.map((item) => ({
       item_name: item?.full_item_info?.name,

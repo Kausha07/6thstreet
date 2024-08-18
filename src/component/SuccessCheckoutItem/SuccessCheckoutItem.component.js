@@ -328,7 +328,7 @@ export class SuccessCheckoutItem extends PureComponent {
       <div block="EddExpressWrapper">
         <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
           <ExpressAndStandardEDD
-            express_delivery={shipmentDetails[sku] !=0 ? express_delivery: null }
+            express_delivery={shipmentDetails[sku] !=0 ? (shipmentDetails[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null }
             actualEddMess={actualEddMess}
             splitKey={splitKey}
             isPDP={false}
