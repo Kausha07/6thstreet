@@ -54,6 +54,8 @@ export const mapStateToProps = (state) => ({
   isExpressDelivery: state.AppConfig.isExpressDelivery,
   vwoData: state.AppConfig.vwoData,
   mailing_address_type: state.AppConfig.mailing_address_type,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  prevSelectedAddress: state.MyAccountReducer.prevSelectedAddress,
 });
 
 class FieldMultiselect extends PureComponent {
@@ -181,6 +183,48 @@ class FieldMultiselect extends PureComponent {
             searchList: finalSearchedData,
           });
         }
+      }
+    }
+
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+      "cityAreaFromSelectionPopUp"
+    );
+    const selctedAddress =
+      JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      cityAreaFromSelectionPopUp;
+
+    if (
+      this.props.currentSelectedCityArea?.id !=
+        prevProps.currentSelectedCityArea?.id &&
+      this.props.currentSelectedCityArea.id &&
+      category ===
+        `express_delivery_${getAddressType(
+          this.props.mailing_address_type
+        )}` &&
+      this.props.isExpressDelivery &&
+      this.props.vwoData?.Express?.isFeatureEnabled
+    ) {
+      if (!selctedAddress) {
+        this.props.onUnselectAllPress(category);
+      }
+    }
+
+    if (
+      this.props.isExpressServiceAvailable?.express_eligible !=
+        prevProps.isExpressServiceAvailable?.express_eligible &&
+      this.props.isExpressServiceAvailable &&
+      category ===
+        `express_delivery_${getAddressType(
+          this.props.mailing_address_type
+        )}` &&
+      this.props.isExpressDelivery &&
+      this.props.vwoData?.Express?.isFeatureEnabled
+    ) {
+      if (
+        selctedAddress &&
+        !this.props.isExpressServiceAvailable?.express_eligible
+      ) {
+        this.props.onUnselectAllPress(category);
       }
     }
   }
@@ -810,7 +854,6 @@ class FieldMultiselect extends PureComponent {
         JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
         cityAreaFromSelectionPopUp;
       if (!selctedAddress) {
-        this.props.onUnselectAllPress(category);
         return (
           <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
             {__("Please select your location to view the best available delivery options.")}
@@ -820,7 +863,6 @@ class FieldMultiselect extends PureComponent {
         selctedAddress &&
         !this.props.isExpressServiceAvailable?.express_eligible
       ) {
-        this.props.onUnselectAllPress(category);
         return (
           <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
             {__(
