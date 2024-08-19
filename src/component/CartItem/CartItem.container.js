@@ -166,23 +166,6 @@ export class CartItemContainer extends PureComponent {
       this.getCurrentProduct() || {};
     return min_sale_qty || 1;
   }
-// quote_status == null
-  // available -> 4
-  // reserved_qty -> 3
-  // cart => 3(4)
-  
-  // quote_status == null
-  // available -> 2
-  // reserved_qty -> 3
-  // cart => 3(1)
-
-    // quote_status == null
-  // available -> 1
-  // qty->5
-  // reserved_qty -> 3
-  // cart => 3(1)
-
-
 
   getMaxQuantity() {
     const {
