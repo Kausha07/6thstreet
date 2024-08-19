@@ -36,6 +36,7 @@ const PlaceOrderBtn = (props) => {
     onDropdownClicked,
     isArabic,
     processAddressChange,
+    placeOrderBtnEnable,
   } = props;
 
   const cashOnDeliveryFee = getValueFromTotals(
@@ -163,7 +164,8 @@ const PlaceOrderBtn = (props) => {
                 processingPaymentSelectRequest ||
                 isApplePay ||
                 !isCODInLimit ||
-                processAddressChange
+                processAddressChange ||
+                !placeOrderBtnEnable
               }
               onClick={processPlaceOrder}
               mix={{

@@ -119,6 +119,7 @@ const NewCheckoutPayment = (props) => {
     vwoData,
     showError,
     processAddressChange,
+    placeOrderBtnEnable,
   } = props;
 
   const isSignedInUser = isSignedIn();
@@ -366,6 +367,7 @@ const NewCheckoutPayment = (props) => {
           onDropdownClicked={onDropdownClicked}
           isArabic={isArabic}
           processAddressChange={processAddressChange}
+          placeOrderBtnEnable={placeOrderBtnEnable}
         />
       </>
     );
