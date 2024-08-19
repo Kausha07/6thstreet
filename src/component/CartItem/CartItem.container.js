@@ -101,6 +101,8 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  cartTotals: state.Cart.cartTotals
 });
 
 export class CartItemContainer extends PureComponent {
@@ -122,15 +124,23 @@ export class CartItemContainer extends PureComponent {
   state = {
     isLoading: false,
     showCartItemQuantityPopup: false,
+    is_express_visible: false
   };
 
   handlers = [];
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
+  }
 
   containerFunctions = {
     handleChangeQuantity: this.handleChangeQuantity.bind(this),
     handleRemoveItem: this.handleRemoveItem.bind(this),
     getCurrentProduct: this.getCurrentProduct.bind(this),
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
+    setExpressVisible: this.setExpressVisible.bind(this),
   };
 
   componentWillUnmount() {
@@ -159,9 +169,19 @@ export class CartItemContainer extends PureComponent {
 
   getMaxQuantity() {
     const {
-      item: { availableQty = 0 },
+      item: {
+        availableQty = 0,
+        full_item_info: { reserved_qty = 0 },
+      },
+      cartTotals: { status = null },
+      isExpressDelivery,
     } = this.props;
-    const max_sale_qty =
+    let max_sale_qty = 0;
+
+    // if (status != null && isExpressDelivery && availableQty === 0) {
+    //   return max_sale_qty = reserved_qty;
+    // }
+    max_sale_qty =
     availableQty === 0 ? availableQty :
       availableQty >= DEFAULT_MAX_PRODUCTS
         ? DEFAULT_MAX_PRODUCTS
@@ -184,6 +204,8 @@ export class CartItemContainer extends PureComponent {
     international_shipping_fee: this.props.international_shipping_fee,
     config: this.props.config,
     vwoData: this.props.vwoData,
+    isExpressDelivery: this.props.isExpressDelivery,
+    cartTotals: this.props.cartTotals,
   });
 
   /**
@@ -267,7 +289,7 @@ export class CartItemContainer extends PureComponent {
 
   removeEddData(sku) {
     const { edd_info, eddResponse } = this.props;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(edd_info && edd_info.is_enable && edd_info.has_item_level && eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length) {
       let obj = {};
       Object.keys(eddResponse).map(page => {
@@ -286,7 +308,7 @@ export class CartItemContainer extends PureComponent {
       if(obj && Object.keys(obj).length==0){
         this.props.setEddResponse(null, eddRequest);
       } else {
-        sessionStorage.setItem("EddAddressRes", obj);
+        localStorage.setItem("EddAddressRes", obj);
         this.props.setEddResponse(obj, JSON.parse(eddRequest));
       }
     }
@@ -343,7 +365,8 @@ export class CartItemContainer extends PureComponent {
           size: size_value,
           size_option: size_option, 
           variant_availability: availability, 
-          discount: discount_amount
+          discount: discount_amount,
+          is_express_visible: this.state.is_express_visible
         },
       });
       // vue analytics
@@ -397,7 +420,17 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.city
+          ? BrowserDatabase.getItem("currentSelectedAddress").city
+          : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -424,6 +457,7 @@ export class CartItemContainer extends PureComponent {
       cart_id: getCartID || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      is_express_visible: this.state.is_express_visible
     });
   }
 

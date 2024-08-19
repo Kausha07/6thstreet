@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import cardValidator from "card-validator";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const CONST_TEN = 10;
 
@@ -160,6 +161,13 @@ export const WEEK_ARABIC_TRANSLATION = {
   Thursday: "الخميس",
   Friday: "الجمعة",
   Saturday: "السبت",
+  Sun: "الأحد",
+  Mon: "الإثنين",
+  Tue: "الثلاثاء",
+  Wed: "الأربعاء",
+  Thu: "الخميس",
+  Fri: "الجمعة",
+  Sat: "السبت",
 };
 
 export const MONTHS_ARABIC_TRANSLATION = {
@@ -676,3 +684,373 @@ export function formatDate(inputDate) {
 
   return `${day} ${month} ${year}`;
 }
+
+export const getTodaysWeekDay = () => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const today = new Date();
+  const currentDayIndex = today.getDay();
+  const currentDayName = daysOfWeek[currentDayIndex];
+
+  return currentDayName?.toLowerCase();
+};
+
+export const getAddressType = (mailing_address_type, addressType) => {
+  const currentSelectedAddress = addressType
+    ? addressType
+    : JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      BrowserDatabase.getItem("cityAreaFromSelectionPopUp") ||
+      {};
+
+  const getAddressType = getMailingAddressType(mailing_address_type);
+
+  if (getAddressType?.[currentSelectedAddress?.mailing_address_type]) {
+    return getAddressType?.[currentSelectedAddress?.mailing_address_type];
+  } else return "home";
+};
+
+export const getCurrentTimeForCountry = (countryCode) => {
+  const now = new Date();
+  switch (countryCode) {
+    case "ae":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+    case "sa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for KSA
+      break;
+    case "qa":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Qatar
+      break;
+    case "kw":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Kuwait
+      break;
+    case "om":
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for Oman
+      break;
+    case "bh":
+      now.setUTCHours(now.getUTCHours() + 3); // Example: UTC+3 for Bahrain
+      break;
+    default:
+      now.setUTCHours(now.getUTCHours() + 4); // Example: UTC+4 for UAE
+      break;
+  }
+  return now;
+};
+
+export const getNumericAddressType = (mailing_address_type) => {
+  const addressType =
+    JSON.parse(localStorage.getItem("currentSelectedAddress"))
+      ?.mailing_address_type ||
+    getFinalAddressInWords(mailing_address_type)?.["home"];
+  return addressType;
+};
+
+export const checkProductOfficeServicable = ({
+  addressType = "",
+  isOfficeSameDayExpressServicable = true,
+  isOfficeNextDayExpressServicable = true,
+  isExpressTimeExpired = false,
+  express_delivery_key = "",
+  mailing_address_type,
+}) => {
+  getFinalAddressInWords;
+  if (addressType === getFinalAddressInWords(mailing_address_type)?.["work"]) {
+    if (
+      isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable &&
+      isExpressTimeExpired
+    ) {
+      return false;
+    } else if (
+      !isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable
+    ) {
+      return false;
+    } else if (
+      !isOfficeSameDayExpressServicable &&
+      isOfficeNextDayExpressServicable &&
+      isExpressTimeExpired
+    ) {
+      return true;
+    } else if (
+      isOfficeSameDayExpressServicable &&
+      !isOfficeNextDayExpressServicable &&
+      express_delivery_key?.toLowerCase()?.includes("tomorrow")
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const inventoryCheck = (quantity, cutoffTime) => {
+  return +quantity !== 0 ? cutoffTime : "00:00";
+};
+
+export const checkProductExpressEligible = (express_delivery_key) => {
+  return [
+    "today delivery",
+    "tomorrow delivery",
+    "التسليم غدا",
+    "التسليم اليوم",
+  ].includes?.(express_delivery_key?.toLowerCase());
+};
+
+export const getTodaysCutOffTime = ({
+  cutOffTime = {},
+  isPDP = false,
+  simple_products = {},
+  selectedSizeCode = "",
+  express_delivery_key = "",
+  whs_quantity = 0,
+  store_quantity = 0,
+  mp_quantity = 0,
+  mailing_address_type,
+}) => {
+  let tempTodaysCutOffTime = "00:00";
+  const todaysWeekDayName = getTodaysWeekDay();
+  const addressType = getNumericAddressType(mailing_address_type);
+
+  const data =
+    cutOffTime?.data?.find((item) => {
+      return (
+        item.day?.toLowerCase() === todaysWeekDayName &&
+        item?.address_type === addressType
+      );
+    }) || {};
+
+  const {
+    warehouse_cutoff_time = "00:00",
+    store_cutoff_time = "00:00",
+    mp_cutoff_time = "00:00",
+  } = data;
+
+  tempTodaysCutOffTime =
+    isPDP && selectedSizeCode
+      ? (+simple_products?.[selectedSizeCode]?.whs_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.whs_quantity,
+            warehouse_cutoff_time
+          )) ||
+        (+simple_products?.[selectedSizeCode]?.store_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.store_quantity,
+            store_cutoff_time
+          )) ||
+        (+simple_products?.[selectedSizeCode]?.mp_quantity != 0 &&
+          inventoryCheck(
+            simple_products?.[selectedSizeCode]?.mp_quantity,
+            mp_cutoff_time
+          ))
+      : (+whs_quantity != 0 &&
+          inventoryCheck(whs_quantity, warehouse_cutoff_time)) ||
+        (+store_quantity != 0 &&
+          inventoryCheck(store_quantity, store_cutoff_time)) ||
+        (+mp_quantity != 0 && inventoryCheck(mp_quantity, mp_cutoff_time));
+
+  if (
+    !tempTodaysCutOffTime &&
+    !selectedSizeCode &&
+    (express_delivery_key?.toLowerCase()?.includes("today") ||
+      express_delivery_key?.toLowerCase()?.includes("اليوم"))
+  ) {
+    let {
+      whs = false,
+      store = false,
+      mp = false,
+    } = knowInventoryOnPageLoad(simple_products);
+
+    tempTodaysCutOffTime = whs
+      ? warehouse_cutoff_time
+      : store
+      ? store_cutoff_time
+      : mp
+      ? mp_cutoff_time
+      : "00:00";
+  }
+
+  return tempTodaysCutOffTime || "00:00";
+};
+
+export const getFinalExpressDeliveryKey = ({
+  isPDP = false,
+  express_delivery_home = "",
+  express_delivery_work = "",
+  express_delivery_other = "",
+  express_delivery = "",
+  mailing_address_type,
+  productInfo = {},
+}) => {
+  const addressType = getNumericAddressType(mailing_address_type);
+  if (isPDP) {
+    return getFinalExpressDelivery(
+      mailing_address_type,
+      productInfo,
+      addressType
+    );
+  } else {
+    return express_delivery;
+  }
+};
+
+export const productOfficeServicable = ({
+  cutOffTime = {},
+  express_delivery_key = "",
+  isExpressTimeExpired = false,
+  mailing_address_type,
+}) => {
+  const addressType = getNumericAddressType(mailing_address_type);
+  const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
+  const isProductExpressEligible =
+    checkProductExpressEligible(express_delivery_key);
+
+  let isOfficeSameDayExpressServicable = true;
+  let isOfficeNextDayExpressServicable = true;
+  let isProductOfficeServicable = true;
+
+  if (
+    cutOffTime?.data &&
+    todaysWeekDayName &&
+    addressType &&
+    isProductExpressEligible
+  ) {
+    if (
+      addressType === getFinalAddressInWords(mailing_address_type)?.["work"] &&
+      ["friday", "saturday", "sunday"].includes?.(
+        todaysWeekDayName?.toLowerCase()
+      )
+    ) {
+      switch (todaysWeekDayName?.toLowerCase()) {
+        case "friday":
+          isOfficeSameDayExpressServicable = true;
+          isOfficeNextDayExpressServicable = false;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isExpressTimeExpired,
+            express_delivery_key,
+            mailing_address_type,
+          });
+          break;
+
+        case "saturday":
+          isOfficeSameDayExpressServicable = false;
+          isOfficeNextDayExpressServicable = false;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isExpressTimeExpired,
+            express_delivery_key,
+            mailing_address_type,
+          });
+          break;
+
+        case "sunday":
+          isOfficeSameDayExpressServicable = false;
+          isOfficeNextDayExpressServicable = true;
+          isProductOfficeServicable = checkProductOfficeServicable({
+            addressType,
+            isOfficeSameDayExpressServicable,
+            isOfficeNextDayExpressServicable,
+            isExpressTimeExpired,
+            express_delivery_key,
+            mailing_address_type,
+          });
+          break;
+
+        default:
+          isOfficeSameDayExpressServicable = true;
+          isOfficeNextDayExpressServicable = true;
+          isProductOfficeServicable = true;
+      }
+    } else {
+      isOfficeSameDayExpressServicable = true;
+      isOfficeNextDayExpressServicable = true;
+      isProductOfficeServicable = true;
+    }
+  }
+
+  return isProductOfficeServicable;
+};
+
+export const knowInventoryOnPageLoad = (simple_products) => {
+  let whs = false;
+  let store = false;
+  let mp = false;
+
+  for (const key in simple_products) {
+    if (simple_products.hasOwnProperty(key)) {
+      const item = simple_products?.[key];
+      if (+item?.whs_quantity > 0) {
+        whs = true;
+        break;
+      }
+      if (+item?.store_quantity > 0) {
+        store = true;
+        break;
+      }
+      if (+item?.mp_quantity > 0) {
+        mp = true;
+        break;
+      }
+    }
+  }
+
+  return { whs, store, mp };
+};
+
+export const arabicTranslatorForExpress = (day = "") => {
+  switch (day?.toLowerCase()) {
+    case "today":
+      return "اليوم";
+    case "tomorrow":
+      return "الغد";
+    default:
+      return "";
+  }
+};
+
+export const getMailingAddressType = (mailing_address_type) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+
+  return deliveryMappings;
+};
+
+export const getFinalAddressInWords = (mailing_address_type) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[deliveryKey] = item?.value;
+    return acc;
+  }, {});
+
+  return deliveryMappings;
+};
+
+export const getFinalExpressDelivery = (
+  mailing_address_type,
+  productInfo,
+  addressType
+) => {
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    let keyName = item?.label?.en?.toLowerCase();
+    const deliveryKey = `express_delivery_${keyName}`;
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+  if (deliveryMappings) {
+    return productInfo?.[deliveryMappings[addressType]];
+  } else return productInfo?.express_delivery_home || "";
+};

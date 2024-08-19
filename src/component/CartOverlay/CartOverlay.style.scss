@@ -162,7 +162,7 @@
       z-index: 900;
       margin-left: auto;
       margin-right: auto;
-      left: 55px;
+      left: 130px;
       right: 0;
       text-align: center;
       //   transform: rotate(45deg);
@@ -178,7 +178,7 @@
     &::before {
       @include after-mobile {
         // right: 327px;
-        left: -50px;
+        left: -130px;
       }
     }
   }
@@ -238,7 +238,6 @@
 
   &-Actions {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     // display: grid;
     // // grid-template-columns: 47.775% 47.775%;
@@ -251,6 +250,7 @@
     color: #ffffff;
     background-color: var(--OutrageousOrange);
     box-shadow: 0 1px 4px var(--BlackOpacityOf6);
+    margin: 0 20px;
 
     @include mobile {
       width: 100%;
@@ -450,7 +450,7 @@
 }
 
 div.CartOverlay.Overlay {
-  width: 375px;
+  width: 450px;
   //   overflow: unset;
   opacity: 1;
   border-radius: 12px;

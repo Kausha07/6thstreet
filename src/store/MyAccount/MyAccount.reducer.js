@@ -26,7 +26,14 @@ import {
   SET_NEW_ADDRESS_SAVED,
   SET_SELECTED_ADDRESS_ID,
   SET_LAST_OFFSET_LIMIT_OF_MYORDERS,
-  SET_SIGNIN_IS_LOADING_STATUS
+  SET_SIGNIN_IS_LOADING_STATUS,
+  SET_EXPRESS_SERVICE_AVAILABLE,
+  SET_SELECTED_CITY_AREA,
+  SET_EXPRESS_CUTOFF_TIME,
+  SET_EXPRESS_POPUP_OPEN,
+  SET_EXPRESS_PLP_ADDRESS_OPEN,
+  SET_ADDRESS_DELETED,
+  SET_PREVIOUS_SELECTED_ADDRESS,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -53,6 +60,12 @@ export const initialState = {
   newAddressSaved: false,
   addressIDSelected: null,
   myOrderLastOffsetLimit: {},
+  isExpressServiceAvailable: false,
+  currentSelectedCityArea: {},
+  cutOffTime: null,
+  isExpressPopUpOpen: false,
+  isAddressDeleted: false,
+  prevSelectedAddress: null,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -234,6 +247,57 @@ export const MyAccountReducer = (state = initialState, action) => {
       ...state,
       myOrderLastOffsetLimit: limit,
     };
+
+    case SET_EXPRESS_SERVICE_AVAILABLE:
+      const { data: expressAvailable } = action;
+      return {
+        ...state,
+        isExpressServiceAvailable: expressAvailable,
+      };
+
+    case SET_SELECTED_CITY_AREA:
+      const { data: cityAreaObj } = action;
+
+      return {
+        ...state,
+        currentSelectedCityArea: cityAreaObj,
+      };
+
+    case SET_EXPRESS_CUTOFF_TIME:
+      const { data: cutOfftime } = action;
+
+      return {
+        ...state,
+        cutOffTime: cutOfftime,
+      };
+
+    case SET_EXPRESS_POPUP_OPEN:
+      const { val } = action;
+      return {
+        ...state,
+        isExpressPopUpOpen: val,
+      };
+
+    case SET_EXPRESS_PLP_ADDRESS_OPEN:
+      const { isExpressPLPAddressOpen } = action;
+      return {
+        ...state,
+        isExpressPLPAddressOpen: isExpressPLPAddressOpen,
+      };
+
+    case SET_ADDRESS_DELETED:
+      const {val : deletedAdd} = action;
+      return {
+        ...state,
+        isAddressDeleted: deletedAdd,
+      };
+
+    case SET_PREVIOUS_SELECTED_ADDRESS:
+      const { val: prevAdd } = action;
+      return{
+        ...state,
+        prevSelectedAddress: prevAdd,
+      }
 
     default:
       return state;

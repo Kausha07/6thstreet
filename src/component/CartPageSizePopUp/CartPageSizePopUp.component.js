@@ -1,4 +1,5 @@
 import { useState, useEffect, createRef } from "react";
+import { connect } from "react-redux";
 
 import StrikeThrough from "Component/PLPAddToCart/icons/strike-through.png";
 import Image from "Component/Image";
@@ -7,6 +8,20 @@ import PDPSizeGuide from "Component/PDPSizeGuide";
 import { isArabic } from "Util/App";
 
 import "./CartPageSizePopUp.style.scss";
+import {
+  getFinalExpressDeliveryKey,
+  checkProductExpressEligible,
+} from "Util/Common";
+import { mapDispatchToProps } from "Route/BrandCMS";
+
+export const mapStateToProps = (state) => ({
+  edd_info: state.AppConfig.edd_info,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+  mailing_address_type: state.AppConfig.mailing_address_type,
+});
 
 const CartPageSizePopUp = (props) => {
   const {
@@ -19,10 +34,17 @@ const CartPageSizePopUp = (props) => {
     currentActiveSize,
     showSizePopUp,
     setShowHideSizePopUp,
+    edd_info,
+    isExpressDelivery,
+    isExpressServiceAvailable,
+    currentSelectedCityArea,
+    isSignedIn,
+    mailing_address_type,
   } = props;
 
   const wrapperRef = createRef();
   const [isOutOfStock, setIsOutOfStock] = useState(false);
+  const [selectedCityArea, setSelectedCityArea] = useState(false);
   const [sizelabel, setLabel] = useState("");
 
   useEffect(() => {
@@ -41,6 +63,22 @@ const CartPageSizePopUp = (props) => {
       html.style.overflow = "auto";
     };
   }, [showSizePopUp]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      setSelectedCityArea(
+        currentSelectedCityArea
+          ? currentSelectedCityArea
+          : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+          ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+          : BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+          ? BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+          : {}
+      );
+    } else if (!isSignedIn) {
+      setSelectedCityArea(null);
+    }
+  }, [isSignedIn]);
 
   const closePopupOnOutsideClick = (e) => {
     if (
@@ -120,6 +158,54 @@ const CartPageSizePopUp = (props) => {
     }
   };
 
+  const checkSKUExpressEligible = (productStock, code, label) => {
+    const quantity = productStock[code].quantity;
+
+    const {
+      edd_info,
+      clickedProductInfo: { international_vendor },
+      cross_border = 0,
+      clickedProductInfo: {
+        express_delivery_home = "",
+        express_delivery_work = "",
+        express_delivery_other = "",
+      },
+      clickedProductInfo,
+    } = props;
+
+    const product = productStock[code];
+    const whs_quantity = +product?.whs_quantity || 0;
+    const store_quantity = +product?.store_quantity || 0;
+    const mp_quantity = +product?.mp_quantity || 0;
+    const express_delivery_key = getFinalExpressDeliveryKey({
+      isPDP: true,
+      express_delivery_home,
+      express_delivery_work,
+      express_delivery_other,
+      mailing_address_type,
+      clickedProductInfo,
+    });
+
+    const isProductExpressEligible =
+      checkProductExpressEligible(express_delivery_key);
+
+    const isInternationalProduct =
+      edd_info?.international_vendors?.includes(international_vendor) ||
+      cross_border;
+
+    const isExpressEligibleSKU =
+      isProductExpressEligible &&
+      selectedCityArea &&
+      !isInternationalProduct &&
+      isExpressServiceAvailable?.express_eligible &&
+      isExpressDelivery &&
+      quantity !== 0 &&
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
+      !(+product?.quantity <= +product?.cross_border_qty);
+
+    return isExpressEligibleSKU;
+  };
+
   const renderSizeOption = (productStock, code, label, quantity) => {
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
@@ -135,6 +221,11 @@ const CartPageSizePopUp = (props) => {
     };
     const isCurrentSizeSelected = currentActiveSize === code;
     const iscurrentsizeSelected = sizelabel === label;
+    const isExpressEligibleSKU = checkSKUExpressEligible(
+      productStock,
+      code,
+      label
+    );
 
     return (
       <div
@@ -158,6 +249,11 @@ const CartPageSizePopUp = (props) => {
           <label
             for={code}
             style={iscurrentsizeSelected ? selectedLabelStyle : {}}
+            block="sizeOptionLabel"
+            mods={{
+              isExpressEligibleSKU: isExpressEligibleSKU,
+              isArabic: isArabic() && isExpressEligibleSKU,
+            }}
           >
             {label}
           </label>
@@ -245,4 +341,4 @@ const CartPageSizePopUp = (props) => {
   return <div block="outerBlock">{renderSizePopUP()}</div>;
 };
 
-export default CartPageSizePopUp;
+export default connect(mapStateToProps, mapDispatchToProps)(CartPageSizePopUp);

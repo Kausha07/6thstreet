@@ -24,7 +24,7 @@ import RatingStar from "./icons/rating_star.png";
 import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { ThreeDots } from "react-loader-spinner";
-
+import { ExpressDeliveryTruck, Shipping } from "Component/Icons";
 
 
 export class MyAccountOrderViewItem extends SourceComponent {
@@ -57,6 +57,68 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
 
+  getReturnExchangeMessage = (returnable_date, exchangeable_date) => {
+    if(!returnable_date && !exchangeable_date) {
+      return __("This item is not returnable or exchangeable.");
+    } else {
+      const returnable_date_expired = this.expiredDateIfAny(returnable_date);
+      const exchangeable_date_expired = this.expiredDateIfAny(exchangeable_date);
+      if(!returnable_date && exchangeable_date) {
+        return exchangeable_date_expired ? __("Exchange window closed on %s", exchangeable_date_expired) :   __("This item is not returnable. Exchange only.");
+      } else if(!exchangeable_date && returnable_date) {
+        return returnable_date_expired ? __("Return window closed on %s", returnable_date_expired) : __("This item is not exchangeable. Return only.");
+      } else {
+        return returnable_date_expired ? __("Returned/exchange window closed on %s", returnable_date_expired) : "";
+      }
+    }
+  }
+    
+  expiredDateIfAny = (dateStr) => {
+    if (!dateStr) return "";
+  
+    // Convert the date string to a Date object
+    const givenDate = new Date(dateStr + ' UTC'); // Assume the dateStr is in UTC
+  
+    // Get the country code from the URL or another method
+    const countryCode = getCountryFromUrl();
+  
+    // Map country codes to their respective time zones
+    const timeZones = {
+      ae: 'Asia/Dubai',
+      sa: 'Asia/Riyadh',
+      bh: 'Asia/Bahrain',
+      om: 'Asia/Muscat',
+      kw: 'Asia/Kuwait',
+      qa: 'Asia/Qatar',
+      // Add more as needed
+    };
+  
+    const timeZone = timeZones[countryCode.toLowerCase()] || 'UTC';
+  
+    // Convert givenDate to the country's local time
+    const localGivenDate = new Date(givenDate.toLocaleString('en-US', { timeZone }));
+  
+    // Get today's date in the same timezone
+    const today = new Date();
+    const localToday = new Date(today.toLocaleString('en-US', { timeZone }));
+    localToday.setHours(0, 0, 0, 0); // Reset to start of the day
+  
+    // Convert both dates to ISO strings for comparison (YYYY-MM-DD)
+    const givenDateISO = localGivenDate.toISOString().split('T')[0];
+    const todayISO = localToday.toISOString().split('T')[0];
+  
+    // Define options for formatting the date
+    const options = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    };
+  
+    const dateToReturn = localGivenDate.toLocaleDateString('en-US', options).replace(',', '');
+    return givenDateISO > todayISO ? "" : dateToReturn;
+  };
+  
+
   renderDetails() {
     let {
       currency,
@@ -77,11 +139,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
         international_vendor = null,
         original_price,
         unit_final_price,
+        returnable_date=null,
+        exchangeable_date=null
       } = {},
       status,
       paymentMethod,
       international_shipping_fee,
       item,
+      itemStatus="",
       orderDetailsCartTotal: {
         site_wide_applied = 0,
         discount_code = "",
@@ -97,6 +162,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments";
     const discountPercentage = Math.round(100 * (1 - (unit_final_price || price) / original_price));
+    const return_exchange_message = itemStatus.toLowerCase() === 'delivery_successful' ? this.getReturnExchangeMessage(returnable_date, exchangeable_date) : "";
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -131,6 +197,13 @@ export class MyAccountOrderViewItem extends SourceComponent {
               : `${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {
+          return_exchange_message && (
+            <div>
+              <p>{return_exchange_message}</p>
+            </div>
+          )
+        }
         {!!ctc_store_name && (
           <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
             <Store />
@@ -153,16 +226,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
           status !== "payment_aborted" ?
           this.renderEdd(parseInt(cross_border) === 1, orderEddDetails) : null
         }
-        {(isIntlBrand &&
-          edd_info &&
-          edd_info.is_enable &&
-          !isFailed &&
-          status !== "payment_failed" &&
-          status !== "payment_aborted") ||
-        (international_shipping_fee && +cross_border) ||
-        int_shipment === "1"
-          ? this.renderIntlTag()
-          : null}
       </div>
     );
   }
@@ -183,8 +246,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null },
+      isFailed,
+      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null, is_express_delivery = false, 
+        int_shipment = "0",
+        cross_border = 0 
+      },
+      status,
       intlEddResponse,
+      international_shipping_fee,
+      itemStatus= this.props
     } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
@@ -195,15 +265,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
     const { defaultEddDay, defaultEddMonth, defaultEddDat } =
       getDefaultEddDate(defaultDay);
-
+    const isIntlBrand =
+      (parseInt(cross_border) === 1 &&
+        edd_info &&
+        edd_info.has_cross_border_enabled) ||
+      int_shipment === "1";
     if (compRef === "checkout") {
       let customDefaultMess = isArabic()
         ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
         : DEFAULT_READY_MESSAGE;
-      const isIntlBrand =
-        crossBorder &&
-        edd_info &&
-        edd_info.has_cross_border_enabled;
       const intlEddObj = intlEddResponse["thankyou"]?.find(
         ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
@@ -265,9 +335,51 @@ export class MyAccountOrderViewItem extends SourceComponent {
         splitKey = splitKey;
       }
     }
+    if(is_express_delivery) {
+      return (
+        <>
+          <div className="EddExpressDeliveryTextBlock">
+            <ExpressDeliveryTruck />  
+            <span class="EddExpressDeliveryTextRed">{__("Express")} </span>
+            <span class="EddExpressDeliveryTextNormal"> {idealFormat ? `${splitBy[0]} ${splitKey}` : null}{" "}</span>
+            <span class="EddExpressDeliveryTextBold">{idealFormat ? `${splitBy[1]}` : actualEddMess}</span>
+          </div>
+        </>
+      )
+    } else {
+      return (
+        <div block="eddStandardDelivery">
+          <div block="EddStandardDeliveryTextBlock">
+            <Shipping />
+            <div block="shipmentText">
+              <span block="EddStandardDeliveryText">
+                {__("Standard")} {}
+                {__("Delivery")} {}
+                {splitKey} {}
+              </span>
+              <span block="EddStandardDeliveryTextBold">
+                {actualEddMess?.split(splitKey)?.[1]}
+              </span>
+            </div>
+          </div>
+          <div>
+            {(isIntlBrand &&
+                  edd_info &&
+                  edd_info.is_enable &&
+                  !isFailed &&
+                  status !== "payment_failed" &&
+                  status !== "payment_aborted") ||
+                (international_shipping_fee && +cross_border) ||
+                int_shipment === "1"
+                  ? <div>{this.renderIntlTag()}</div>
+                  : null}
+          </div>
+        </div>
+      )
+    }
 
     return (
-      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }} >
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >

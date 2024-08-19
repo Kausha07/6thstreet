@@ -28,7 +28,10 @@ export const mapStateToProps = (state) => ({
   brandInfoData : state.PDP.brandInfoData,
   catalogue_from_algolia:
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
-  international_shipping_fee: state.AppConfig.international_shipping_fee
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -69,6 +72,10 @@ export class PDPSummaryContainer extends PureComponent {
       international_shipping_fee,
       config = {},
       colourVarientsButtonClick,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      vwoData,
+      is_express_visible=false
     } = this.props;
     return {
       product,
@@ -90,6 +97,10 @@ export class PDPSummaryContainer extends PureComponent {
       international_shipping_fee,
       config,
       colourVarientsButtonClick,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      vwoData,
+      is_express_visible
     };
   };
 
@@ -162,13 +173,14 @@ export class PDPSummaryContainer extends PureComponent {
 
   render() {
     const { url_path } = this.state;
-    const {renderSummary} = this.props
+    const {renderSummary, setExpressVisible=()=>{}} = this.props
     return (
       <PDPSummary
       renderSummary ={renderSummary}
         {...this.containerProps()}
         url_path={url_path}
         brandNameclick={ this.brandNameclick }
+        setExpressVisible={setExpressVisible}
       />
     );
   }

@@ -52,6 +52,7 @@ export class Algolia {
     const productCount = isMobile.any() ? 10 : influencerCount !== 0 ? influencerCount :30 ;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
+      AppConfig: { mailing_address_type =  {} }
     } = getStore().getState();
 
     const url = queryString({
@@ -62,7 +63,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData );
+    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData, mailing_address_type );
   }
 
   async getProductForSearchContainer(params = {}, suggestionQuery) {

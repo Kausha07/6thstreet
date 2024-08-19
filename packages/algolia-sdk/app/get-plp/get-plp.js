@@ -231,6 +231,45 @@ const getIsSelected = (categoryIdsArray, filterObj) => {
   return false;
 };
 
+const getAddressType = (mailing_address_type) => {
+  const currentSelectedAddress =
+    JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+    localStorage.getItem("cityAreaFromSelectionPopUp") ||
+    {};
+
+  const deliveryMappings = mailing_address_type?.reduce((acc, item) => {
+    const deliveryKey = item?.label?.en?.toLowerCase();
+    acc[item?.value] = deliveryKey;
+    return acc;
+  }, {});
+
+  if (deliveryMappings?.[currentSelectedAddress?.mailing_address_type]) {
+    return deliveryMappings?.[currentSelectedAddress?.mailing_address_type];
+  } else return "home";
+};
+
+const expressDataOBJ = ({ allFacets, mailing_address_type }) => {
+  const addressType = getAddressType(mailing_address_type);
+  let facetKey = `express_delivery_${addressType}`;
+  const data = allFacets?.[facetKey];
+  if (data) {
+    const result = Object?.keys?.(data)?.reduce((acc, facetValue) => {
+      acc[facetValue] = {
+        facet_value: facetValue,
+        facet_key: facetKey,
+        label: getFacetLabel(facetValue),
+        is_selected: false,
+        product_count: data[facetValue],
+      };
+
+      return acc;
+    }, {});
+
+    return result;
+  }
+  return {};
+};
+
 function getFilters({
   locale,
   facets,
@@ -242,6 +281,7 @@ function getFilters({
   moreFiltersData,
   newfacetStats,
   prodCountFacets,
+  mailing_address_type,
 }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
@@ -353,6 +393,16 @@ function getFilters({
     data: getPriceRangeData({ currency, lang }),
     newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
     isPriceFilterAvailable: getIsPriceFilterAvaialbe(facets_stats, currency),
+  };
+
+  // ExpressDelivery
+  let expressFacetKey = `express_delivery_${getAddressType(mailing_address_type)}`;
+  filtersObject[expressFacetKey] = {
+    label: translate(expressFacetKey, lang),
+    category: expressFacetKey,
+    is_radio: false,
+    selected_filters_count: 0,
+    data: expressDataOBJ({ allFacets: facets, mailing_address_type }),
   };
 
   // Discount
@@ -564,7 +614,7 @@ const _formatFacets = ({ facets, queryParams }) => {
   }, {});
 };
 
-function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
+function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={}, mailing_address_type = {} ) {
   const { client, env } = options;
   const moreFiltersArr = moreFiltersData?.more_filter || [];
     // data should get update - data is from json file.
@@ -779,6 +829,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         moreFiltersData,
         newfacetStats,
         prodCountFacets,
+        mailing_address_type,
       });
       const moreFilters = getMoreFilters(finalFiltersData.facets, queryParams, moreFiltersData);
       const sliderFilters = getSliderFilters(queryParams, locale, facets_stats, newfacetStats );

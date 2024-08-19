@@ -117,6 +117,13 @@
         align-self: center;
       }
     }
+
+    .stockQuantityNotReservedText {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 5px;
+      color: #d12228;
+    }
   }
 
   &-Wrapper {
@@ -472,6 +479,45 @@
           top: -1px;
         }
       }
+    }
+  }
+
+  .EddExpressWrapper {
+    @include mobile {
+      margin-top: 5px;
+      .EddExpressDeliveryCutOffTime {
+        margin: 0 32px;
+      }
+      .internationalShipmentTag {
+        margin: 0 28px;
+      }
+      .EddStandardDeliveryTextBlock {
+        svg {
+          margin: 0 4px;
+        }
+        .EddStandardDeliveryText,
+        .EddStandardDeliveryTextBold {
+          font-size: 12px;
+        }
+      }
+      .eddExpressDelivery {
+        svg {
+          margin: 0 4px;
+        }
+        .EddExpressDeliveryTextNormal,
+        .EddExpressDeliveryTextBold,
+        .EddExpressDeliveryTextRed {
+          font-size: 12px;
+        }
+      }
+    }
+
+    @include desktop {
+      width: 290px;
+    }
+
+    @include mobile {
+      width: 100%;
     }
   }
 }

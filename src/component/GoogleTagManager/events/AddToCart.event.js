@@ -60,7 +60,7 @@ class AddToCartEvent extends BaseEvent {
       ecommerce: {
         currency: this.getCurrencyCode(),
         currencyCode:  this.getCurrencyCode(),
-        add: {
+        add: { 
           products: [formattedData],
         },
         items: [
@@ -79,6 +79,7 @@ class AddToCartEvent extends BaseEvent {
             item_size: product?.size ?? "",
             item_size_type : product?.size_id ?? "",
             variant_availability :product?.variant_availability ?? "",
+            is_express_visible : product?.is_express_visible ?? ""
           }
         ]
       },

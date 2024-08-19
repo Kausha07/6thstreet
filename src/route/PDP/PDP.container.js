@@ -139,10 +139,17 @@ export class PDPContainer extends PureComponent {
     influencerName: "",
     metaTitle: "",
     metaDesc: "",
+    is_express_visible: false
   };
 
   constructor(props) {
     super(props);
+  }
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
   }
 
   componentDidMount() {
@@ -195,7 +202,7 @@ export class PDPContainer extends PureComponent {
       addtoCartInfo,
       isNewDesign
     } = this.props;
-    const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
+    const { productSku = "", isPdpWidgetSet = false, eventSent, is_express_visible } = this.state;
     if (Object.keys(product).length) {
       if (!isPdpWidgetSet && pdpWidgetsData.length !== 0) {
         this.getPdpWidgetsVueData();
@@ -273,11 +280,22 @@ export class PDPContainer extends PureComponent {
             categories: categories, 
             discount: originalPrice - specialPrice,
             variant_availability: this.props?.product?.["in_stock"], 
+            is_express_visible: is_express_visible,
             ...addtoCartInfo
           },
         });
         const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+        const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.city
+          ? BrowserDatabase.getItem("currentSelectedAddress").city
+          : null;
+        const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+            BrowserDatabase.getItem("currentSelectedAddress")?.area
+            ? BrowserDatabase.getItem("currentSelectedAddress").area
+            : null;
         MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
+          city: city,
+          area: area,
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           category: currentAppState.gender
@@ -299,6 +317,7 @@ export class PDPContainer extends PureComponent {
           isLoggedIn: isSignedIn(),
           app6thstreet_platform: "Web",
           colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No",
+          is_express_visible: is_express_visible,
           ...addtoCartInfo,
         });
       
@@ -736,7 +755,7 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
     } = this.props;
-    const { pdpWidgetsAPIData = [], metaTitle, metaDesc } = this.state;
+    const { pdpWidgetsAPIData = [], metaTitle, metaDesc, is_express_visible } = this.state;
 
     // const { isLoading: isCategoryLoading } = this.state;
 
@@ -750,7 +769,8 @@ export class PDPContainer extends PureComponent {
       clickAndCollectStores,
       pdpWidgetsAPIData,
       metaTitle,
-      metaDesc
+      metaDesc,
+      is_express_visible
     };
   };
 
@@ -775,6 +795,7 @@ export class PDPContainer extends PureComponent {
             sourceCatgID: product?.product_type_6s,
             prodPrice: prodPrice,
           }}
+          setExpressVisible = {this.setExpressVisible}
         />
       );
     }

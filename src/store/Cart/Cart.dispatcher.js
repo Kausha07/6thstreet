@@ -29,15 +29,60 @@ export const GUEST_QUOTE_ID = "guest_quote_id";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { resetCart } from "Store/Cart/Cart.action";
 import { setCartTotal } from "Store/Checkout/Checkout.action";
+import { getCountryFromUrl } from "Util/Url";
+import MobileAPI from "Util/API/provider/MobileAPI";
 export class CartDispatcher {
   async setCheckoutStep(dispatch, checkoutDetails = false) {
     dispatch(setCheckoutDetails(checkoutDetails));
   }
 
-  async getCart(dispatch, isNewCart = false, createNewCart = true) {
+  async getCart(
+    dispatch,
+    isNewCart = false,
+    createNewCart = true,
+    isToMakeLastOrderAPICall = true
+  ) {
     const {
       Cart: { cartId },
+      AppConfig: {
+        isExpressDelivery = false,
+        vwoData = {},
+        isNewCheckoutPageEnable = false,
+      },
     } = getStore().getState();
+
+    const country_code = getCountryFromUrl();
+    if (
+      !localStorage.getItem("currentSelectedAddress") &&
+      isToMakeLastOrderAPICall &&
+      !localStorage.getItem("EddAddressReq") &&
+      (isExpressDelivery || isNewCheckoutPageEnable)
+    ) {
+      await MobileAPI.get(`order/last?country_specific=true`).then(
+        (response) => {
+          if (
+            response?.data?.city &&
+            response?.data?.area &&
+            response?.data?.country?.toLowerCase() ===
+              country_code?.toLowerCase()
+          ) {
+            let requestObj = {
+              country: country_code,
+              city: response?.data?.city,
+              area: response?.data?.area,
+              courier: null,
+              source: null,
+            };
+            // localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+            localStorage.setItem(
+              "currentSelectedAddress",
+              JSON.stringify(response?.data)
+            );
+          }
+        }
+      );
+    }
+
     const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
     if ((!cartId || isNewCart) && createNewCart) {
       try {
@@ -112,9 +157,20 @@ export class CartDispatcher {
   }
 
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+      "cityAreaFromSelectionPopUp"
+    );
+    const reqObj =
+      JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      cityAreaFromSelectionPopUp;
+    const params = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      address_type: reqObj?.mailing_address_type || "",
+    };
     try {
       dispatch(processingCartRequest());
-      const response = await getCart(cartId);
+      const response = await getCart(cartId, params);
       if (response == "Request does not match any route.") {
         // MyAccountDispatcher.logout(null, dispatch);
         dispatch(resetCart());

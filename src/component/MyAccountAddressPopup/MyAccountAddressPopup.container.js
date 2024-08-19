@@ -27,6 +27,8 @@ import { fetchMutation } from "Util/Request";
 import MyAccountAddressPopup from "./MyAccountAddressPopup.component";
 import { ADDRESS_POPUP_ID, ADD_ADDRESS } from "./MyAccountAddressPopup.config";
 import { showPopup } from "Store/Popup/Popup.action";
+import { setNewAddressSaved } from "Store/MyAccount/MyAccount.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -36,6 +38,9 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload[ADDRESS_POPUP_ID] || {},
   is_nationality_mandatory: state.AppConfig.is_nationality_mandatory,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
+  isNewCheckoutPageEnable: state.AppConfig.isNewCheckoutPageEnable,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,6 +69,30 @@ export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   showNotification: (error) =>
     dispatch(showNotification("error", error)),
+  setNewAddressSaved: (val) => dispatch(setNewAddressSaved(val)),
+  selectedCityArea: (data) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.selectedCityArea(dispatch, data)
+    ),
+  expressPopUpOpen: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.expressPopUpOpen(dispatch, val)
+    ),
+  setAddressDeleted: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.setAddressDeleted(dispatch, val)
+    ),
+  setPrevSelectedAddressForPLPFilters: (val) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.setPrevSelectedAddressForPLPFilters(dispatch, val)
+    ),
+  getCart: (isNewCart, createNewCart, isToMakeLastOrderAPICall) =>
+    CartDispatcher.getCart(
+      dispatch,
+      isNewCart,
+      createNewCart,
+      isToMakeLastOrderAPICall
+    ),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -104,6 +133,9 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       setAddressLoadingStatus
     } = this.props;
 
+    this.props?.payload?.onUpdateAddress ? 
+      this.props.payload.onUpdateAddress() : null;
+
     updateCustomerDetails().then(() => {
       this.setState({ isLoading: false }, () => {
         hideActiveOverlay();
@@ -130,6 +162,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       phonecode = "",
       type_of_identity = 0,
       identity_number = "",
+      mailing_address_type = "",
     } = address;
     const { validateAddress } = this.props;
 
@@ -142,7 +175,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       region: region ?? region_id,
       street: Array.isArray(street) ? street[0] : street,
       type_of_identity: type_of_identity,
-      identity_number: identity_number
+      identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     });
   }
 
@@ -179,6 +213,11 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         if (elmnts && elmnts.length > 0) {
           elmnts[0].scrollIntoView({ behavior: "smooth", block: "end" });
         }
+        setAddressLoadingStatus(false); 
+
+        let isAddressValidated = true;
+        this.props?.payload?.setCurrentAddress ? 
+          this.props.payload.setCurrentAddress({...address, id}, isAddressValidated) : null;
 
         if (id) {
           return this.handleEditAddress(address);
@@ -190,6 +229,47 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       return this.handleValidationError(response);
     });
   }
+
+  setDeletedAddress = (address) => {
+    const { setAddressDeleted } = this.props;
+    setAddressDeleted(address);
+  };
+
+  setLocalStorageAddress = (newAddress) => {
+    const {
+      isExpressDelivery,
+      setNewAddressSaved,
+      vwoData,
+      isNewCheckoutPageEnable,
+      selectedCityArea,
+      expressPopUpOpen,
+      setPrevSelectedAddressForPLPFilters,
+      getCart,
+    } = this.props;
+    if (
+      (isExpressDelivery && vwoData?.Express?.isFeatureEnabled) ||
+      isNewCheckoutPageEnable
+    ) {
+      const { country_code = "", city = "", area = "" } = newAddress;
+      let requestObj = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      setPrevSelectedAddressForPLPFilters( JSON.parse(localStorage.getItem("currentSelectedAddress")));
+      localStorage.setItem("EddAddressReq", JSON.stringify(requestObj));
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(newAddress)
+      );
+      setNewAddressSaved(false);
+      selectedCityArea(newAddress);
+      expressPopUpOpen(false);
+      getCart(false, false, false);
+    }
+  };
 
   handleEditAddress(address) {
     const {
@@ -234,7 +314,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     }
 
     if (apiResult) {
-      apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
+      apiResult.then(this.handleAfterAction, this.handleError, this.setLocalStorageAddress(newAddress)).then(showCards);
     }
   }
 
@@ -257,8 +337,9 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     if (default_shipping || default_billing) {
       this.setState({ isLoading: true });
       const deleteApiResult = removeAddress(id);
+      this.props.setNewAddressSaved(false);
       deleteApiResult
-        .then(this.handleAfterAction, this.handleError)
+        .then(this.handleAfterAction, this.setDeletedAddress(this.props?.payload?.address), this.handleError)
         .then(showCards);
       return;
     }
@@ -266,7 +347,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     this.setState({ isLoading: true });
     const deleteApiResult = removeAddress(id);
     deleteApiResult
-      .then(this.handleAfterAction, this.handleError)
+      .then(this.handleAfterAction, this.setDeletedAddress(this.props?.payload?.address), this.handleError)
       .then(showCards);
   }
 
@@ -291,6 +372,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       telephone,
       type_of_identity = this.props?.type_of_identity || 0,
       identity_number = this.props?.identity_number || "",
+      mailing_address_type,
     } = address;
     const newAddress = {
       firstname: firstname,
@@ -303,6 +385,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       default_shipping: default_shipping,
       type_of_identity: type_of_identity,
       identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     };
     return { newAddress };
   }

@@ -570,6 +570,7 @@ class PLPAddToCart extends PureComponent {
       product,
       newActiveFilters,
       product_Position,
+      is_express_visible = false
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
     const isFilters = getIsFilters(newActiveFilters);
@@ -619,9 +620,18 @@ class PLPAddToCart extends PureComponent {
     const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
-
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+      BrowserDatabase.getItem("currentSelectedAddress")?.city
+      ? BrowserDatabase.getItem("currentSelectedAddress").city
+      : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -649,13 +659,14 @@ class PLPAddToCart extends PureComponent {
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_Position || "",
       colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
+      is_express_visible: is_express_visible
     });
   }
 
   getSelectedCityAreaCountry = () => {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress } = this.props;
-    const sessionData = sessionStorage.getItem("EddAddressReq");
+    const sessionData = localStorage.getItem("EddAddressReq");
     let city = "";
     let area = "";
     if(sessionData) {
@@ -810,6 +821,7 @@ class PLPAddToCart extends PureComponent {
       newActiveFilters,
       product_Position,
       edd_info,
+      is_express_visible = false
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -836,6 +848,7 @@ class PLPAddToCart extends PureComponent {
         category: product_type_6s,
         variant: color,
         position: product_Position,
+        is_express_visible: is_express_visible
       },
     });
 
@@ -934,7 +947,8 @@ class PLPAddToCart extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          is_express_visible: is_express_visible
         },
       });
 
@@ -1004,7 +1018,8 @@ class PLPAddToCart extends PureComponent {
           size: optionValue,
           size_id: optionId,
           categories: categories, 
-          variant_availability: in_stock
+          variant_availability: in_stock,
+          is_express_visible: is_express_visible
         },
       });
 

@@ -14,6 +14,7 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
+import { trimCustomerAddressCheckout } from "Util/checkoutAddress"
 import { capitalize, isArabic } from "Util/App";
 import { getUUID, isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -47,6 +48,8 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcherDefalut.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
 
 export const mapStateToProps = (state) => ({
@@ -61,6 +64,8 @@ export const mapStateToProps = (state) => ({
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   config: state.AppConfig.config,
   vwoData: state.AppConfig.vwoData,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  checkoutLoader: state.CheckoutReducer.checkoutLoader,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
@@ -80,18 +85,57 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onShippingError: this.onShippingError.bind(this),
     checkClickAndCollect: this.checkClickAndCollect.bind(this),
     onAddressSelect: this.onAddressSelect.bind(this),
+    onUpdateAddress: this.onUpdateAddress.bind(this),
+    setCurrentAddress: this.setCurrentAddress.bind(this),
     handleClickNCollectPayment: this.handleClickNCollectPayment.bind(this),
     onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
     notSavedAddress: this.notSavedAddress.bind(this),
     onIdentityNumberChange: this.props.onIdentityNumberChange,
     onTypeOfIdentityChange: this.props.onTypeOfIdentityChange,
+    onMailingAddressTypeChange: this.props?.onMailingAddressTypeChange,
   };
 
+  constructor(props) {
+    super(props); 
+    this.state = {
+      currentAddress: {},
+    }
+  }
+  
   static defaultProps = {
     guestEmail: "",
   };
   
+  onAddressSelect(id) {
+    this.setState({ selectedCustomerAddressId: id }, () => {
+      this.onAddressSelectNewCheckoutFlow();
+    });
+  }
+
+  setCurrentAddress(currentAddress) {
+    this.setState({ currentAddress: currentAddress });
+  }
+
+  onUpdateAddress() {
+    const { currentAddress } = this.state
+    const { id } = currentAddress;
+
+    if(id){
+      this.setState({ selectedCustomerAddressId: id }, () => {
+        this.onShippingSuccess(currentAddress, true);
+      });
+    }else {
+      this.onShippingSuccess(currentAddress, true);
+    }
+  }
+
+  onAddressSelectNewCheckoutFlow = async () => {
+    const fields = this.getAddressById(this.state.selectedCustomerAddressId);
+    if(fields) {
+      this.onShippingSuccess(fields);
+    }
+  }
 
   async handleClickNCollectPayment(fields) {
     const {
@@ -117,6 +161,12 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     this.onShippingSuccess(inputFields);
   }
 
+  getAddressById(addressId) {
+    const { addresses } = this.props;
+    const address = addresses.find(({ id }) => id === addressId);
+    return (address);
+  }
+
   openForm() {
     this.setState({ formContent: true });
   }
@@ -128,6 +178,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       action: ADD_ADDRESS,
       title: __("Add new address"),
       address: {},
+      onUpdateAddress: this.onUpdateAddress.bind(this),
+      setCurrentAddress: this.setCurrentAddress.bind(this),
     });
     setNewAddressFromClick(true);
   }
@@ -144,9 +196,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     );
   }
 
-  validateAddress(address) {
+  validateAddress(address = {}) {
     const {
-      country_id,
+      country_id = "",
       region_id,
       region,
       city,
@@ -156,18 +208,22 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode,
       type_of_identity,
       identity_number,
+      country_code = "",
+      area = "",
+      phone = "",
     } = address;
-    const { validateAddress } = this.props;
+    const { validateAddress, mailing_address_type, } = this.props;
     return validateAddress({
-      area: region ?? postcode,
+      area: area ? area : region ?? postcode,
       city,
-      country_code: country_id,
-      phone: phonecode + telephone,
-      postcode: region ?? postcode,
-      region: region ?? postcode,
+      country_code: country_id || country_code,
+      phone: phone? phone : phonecode + telephone,
+      postcode: region ?? postcode ?? area,
+      region: region ?? postcode ?? area,
       street: Array.isArray(street) ? street[0] : street,
       type_of_identity: type_of_identity || this.props?.type_of_identity,
       identity_number: identity_number || this.props?.identity_number,
+      mailing_address_type: mailing_address_type || ""
     });
   }
 
@@ -195,10 +251,26 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       phonecode = "",
       type_of_identity,
       identity_number,
+      country_code = "",
+      area = "",
+      phone = "",
     } = address;
     setLoading(true);
 
-    const canEstimate = !Object.values(address).some(
+    const NewAddressObj = {
+      country_code: country_id || country_code,
+      street,
+      region: region_id ?? area,
+      area: region_id ?? area,
+      city,
+      postcode: region_id ?? area,
+      phone: phonecode + telephone ?? phone,
+      telephone: phonecode + telephone ?? phone,
+      type_of_identity: type_of_identity || this.props.type_of_identity,
+      identity_number: identity_number || this.props.identity_number,
+    };
+
+    const canEstimate = !Object.values(NewAddressObj).some(
       (item) => item === undefined
     );
 
@@ -210,23 +282,25 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     delete address.region_id;
 
     return estimateShipping(
-      {
-        country_code: country_id,
-        street,
-        region: region_id,
-        area: region_id,
-        city,
-        postcode: region_id,
-        phone: phonecode + telephone,
-        telephone: phonecode + telephone,
-        type_of_identity : type_of_identity || this.props.type_of_identity,
-        identity_number : identity_number || this.props.identity_number,
-      },
+      NewAddressObj,
       isValidted
     );
   }
 
-  onShippingSuccess(fields) {
+  isEmptyObject = (objectName) => {
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
+  };
+
+  onShippingSuccess(fields, isAddressesUpdating = false) {
+
+    if( (!fields && isSignedIn()) || this.isEmptyObject(fields)) {
+      return;
+    }
+
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
     const {
       setLoading,
@@ -238,8 +312,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       addressCityData,
     } = this.props;
     setLoading(true);
-    const shippingAddress = selectedCustomerAddressId
-      ? this._getAddressById(selectedCustomerAddressId)
+    const shippingAddress = selectedCustomerAddressId && !isAddressesUpdating
+      ? this.getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
     const addressForValidation =
       isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
@@ -253,9 +327,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         const { success } = response;
         if (edd_info && edd_info.is_enable) {
           if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
-            const { country_id, city, postcode } = addressForValidation;
+            const { country_id, city, postcode, country_code="", area="" } = addressForValidation;
             let request = {
-              country: country_id,
+              country: country_id ?? country_code,
               courier: null,
               source: null,
             };
@@ -280,10 +354,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                   }
                 }
               );
-              request["area"] = arabicArea[0];
+              request["area"] = arabicArea[0] ?? area;
               request["city"] = finalResp[0].city_ar;
             } else {
-              request["area"] = postcode;
+              request["area"] = postcode ?? area;
               request["city"] = city;
             }
             let payload = {};
@@ -334,7 +408,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                     {
                       selectedShippingMethod: response.data[0],
                     },
-                    () => this.processDelivery(fields)
+                    () => this.processDelivery(fields, isAddressesUpdating)
                   );
                 } else {
                   const { error } = response;
@@ -352,7 +426,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             }
           });
         } else if (success) {
-          this.processDelivery(fields);
+          this.processDelivery(fields, isAddressesUpdating);
         } else {
           this.handleError(response);
         }
@@ -360,9 +434,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     } else {
       if (edd_info && edd_info.is_enable) {
         if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
-          const { country_id, city, postcode } = addressForValidation;
+          const { country_id, city, postcode, country_code="", area="" } = addressForValidation;
           let request = {
-            country: country_id,
+            country: country_id ?? country_code,
             courier: null,
             source: null,
           };
@@ -385,10 +459,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                 }
               }
             );
-            request["area"] = arabicArea[0];
+            request["area"] = arabicArea[0] ?? area;
             request["city"] = finalResp[0].city_ar;
           } else {
-            request["area"] = postcode;
+            request["area"] = postcode ?? area;
             request["city"] = city;
           }
           let payload = {};
@@ -436,7 +510,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                   {
                     selectedShippingMethod: response.data[0],
                   },
-                  () => this.processDelivery(fields)
+                  () => this.processDelivery(fields, isAddressesUpdating)
                 );
               } else {
                 const { error } = response;
@@ -454,7 +528,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           }
         });
       } else {
-        this.processDelivery(fields);
+        this.processDelivery(fields, isAddressesUpdating);
       }
     }
   }
@@ -469,11 +543,12 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     setLoading(false);
   }
 
-  processDelivery(fields) {
+  processDelivery(fields, isAddressesUpdating = false) {
     const {
       saveAddressInformation,
       customer: { email },
       totals,
+      mailing_address_type,
     } = this.props;
     const { guest_email: guestEmail } = fields;
     const isCTC = this.checkClickAndCollect();
@@ -484,8 +559,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     }
 
     const shippingAddress =
-      selectedCustomerAddressId && !this.checkClickAndCollect()
-        ? this._getAddressById(selectedCustomerAddressId)
+      selectedCustomerAddressId && !this.checkClickAndCollect() && !isAddressesUpdating
+        ? this.getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
     const {
       city,
@@ -495,20 +570,24 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       postcode,
       type_of_identity = this.props?.type_of_identity || 0,
       identity_number = this.props?.identity_number || "",
+      country_code = "",
+      area = "",
+      phone = "",
     } = shippingAddress;
 
     const shippingAddressMapped = {
       ...shippingAddress,
       street: Array.isArray(street) ? street[0] : street,
-      area: postcode,
-      country_code: country_id,
-      phone: telephone,
+      area: postcode ?? area,
+      country_code: country_id ?? country_code,
+      phone: telephone ?? phone,
       email: isSignedIn() ? email : guestEmail,
       region: city,
       region_id: 0,
       address_id: isCTC ? null : selectedCustomerAddressId,
       type_of_identity: type_of_identity,
       identity_number: identity_number,
+      mailing_address_type: mailing_address_type,
     };
     // on checkout page, set update identity-number and type_of_identity store in the respective address
     if (this.props?.isIdentityNumberModified && isSignedIn()) {
@@ -517,13 +596,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         lastname: shippingAddress?.lastname,
         street: shippingAddress?.street,
         city: shippingAddress?.city,
-        area: postcode,
-        phone:shippingAddress?.telephone,
-        country_code: shippingAddress?.country_id,
+        area: postcode ?? area,
+        phone:shippingAddress?.telephone ?? phone,
+        country_code: shippingAddress?.country_id ?? country_code,
         default_shipping: shippingAddress?.default_shipping,
         identity_number: identity_number,
         type_of_identity: type_of_identity,
         id: selectedCustomerAddressId,
+        mailing_address_type: mailing_address_type,
       };
       try {
         const newPromise = new Promise((resolve, reject) => {
@@ -564,6 +644,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_carrier_code,
       shipping_method_code,
     };
+
+    // if user is guest user then set adddress in localstorage for get shipment
+    if(!isSignedIn()) {
+      localStorage.setItem(
+        "currentSelectedAddress",
+        JSON.stringify(shippingAddressMapped)
+      );
+    }
 
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");

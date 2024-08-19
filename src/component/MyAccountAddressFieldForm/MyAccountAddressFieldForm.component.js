@@ -23,6 +23,7 @@ import "./MyAccountAddressFieldForm.style";
 import MyAccountAddressNationalityFieldFrom from "Component/MyAccountAddressNationalityFieldForm/MyAccountAddressNationalityFieldFrom.component";
 import isMobile from "Util/Mobile";
 import { getStore } from "Store"
+import AddressTypeSelection from "Component/AddressTypeSelection/index";
 export class MyAccountAddressFieldForm extends PureComponent {
   onFormSuccess() {}
 
@@ -80,12 +81,13 @@ export class MyAccountAddressFieldForm extends PureComponent {
       region_string,
       default_common,
       identity_number,
-      type_of_identity
+      type_of_identity,
+      mailing_address_type,
     } = this.fieldMap;
 
     this.getCitiesData();
 
-    const { newForm } = this.props;
+    const { newForm, address={} } = this.props;
     const fromTitle = newForm ? __("New Address") : __("Edit Address");
     const region = region_id === undefined ? region_string : region_id;
     const {
@@ -108,6 +110,12 @@ export class MyAccountAddressFieldForm extends PureComponent {
           {this.renderField(["postcode", postcode])}
           {this.renderField(["country_id", country_id])}
         </div>
+        
+        <AddressTypeSelection
+          address={address}
+          mailing_address_type_props={mailing_address_type}
+          isArabic={isArabic}
+        />
 
         <div
           block="MyAccountAddressFieldForm"

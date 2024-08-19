@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setCountry } from 'Store/AppState/AppState.action';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
+import BrowserDatabase from "Util/BrowserDatabase";
 
 import CountrySwitcher from './CountrySwitcher.component';
 
@@ -30,8 +31,10 @@ export class CountrySwitcherContainer extends PureComponent {
 
     onCountrySelect(value) {
         const { setCountry } = this.props;
-        sessionStorage.removeItem('EddAddressReq')
-        sessionStorage.removeItem('EddAddressRes')
+        localStorage.removeItem('EddAddressReq')
+        localStorage.removeItem('EddAddressRes')
+        localStorage.removeItem("currentSelectedAddress");
+        BrowserDatabase.deleteItem("cityAreaFromSelectionPopUp");
         setCountry(value);
     }
 

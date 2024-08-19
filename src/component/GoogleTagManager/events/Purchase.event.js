@@ -73,7 +73,10 @@ class PurchaseEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
         : null;
-
+    const SHIPMENT_DETAILS =
+        BrowserDatabase.getItem("SHIPMENT_DETAILS")
+          ? BrowserDatabase.getItem("SHIPMENT_DETAILS")
+          : {};
     const total_items = totals?.items;
     const ga4_items = total_items.map((item) => ({
       item_name: item?.full_item_info?.name,
@@ -85,7 +88,8 @@ class PurchaseEvent extends BaseEvent {
       discount: item?.full_item_info?.discount_amount,
       quantity: item?.full_item_info?.qty,
       item_size: item?.full_item_info?.size_value,
-      item_size_type: item?.full_item_info?.size_option
+      item_size_type: item?.full_item_info?.size_option,
+      is_express_visible: SHIPMENT_DETAILS[item?.full_item_info?.sku] && SHIPMENT_DETAILS[item?.full_item_info?.sku] !=0 ? true : false
     }));
 
     this.pushEventData({
@@ -114,6 +118,8 @@ class PurchaseEvent extends BaseEvent {
       },
     });
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const currentSelectedAddress = BrowserDatabase.getItem("currentSelectedAddress");
+    const { city = "", area = "" } = currentSelectedAddress ? currentSelectedAddress: {};
     const productDetails = totals?.items;
     let productName = [],
       productColor = [],
@@ -148,6 +154,8 @@ class PurchaseEvent extends BaseEvent {
         productItemPrice.push(productKeys?.itemPrice);
 
         MOE_trackEvent(EVENT_MOE_PURCHASE_SUCCESS_PRODUCT, {
+          city:city,
+          area: area,
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           category: productKeys?.category
@@ -169,6 +177,7 @@ class PurchaseEvent extends BaseEvent {
           size: productKeys?.size_value || "",
           subcategory: productKeys?.subcategory || "",
           app6thstreet_platform: "Web",
+          is_express_visible: SHIPMENT_DETAILS[item?.full_item_info?.sku] && SHIPMENT_DETAILS[item?.full_item_info?.sku] !=0 ? true : false
         });
       });
 

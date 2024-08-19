@@ -68,6 +68,8 @@ import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMulti
 import { hppPlpScreenViewTrackingEvent } from "Route/HomePage/HompagePersonalisation.helper";
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { getAddressType } from "Util/Common/index";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -91,6 +93,12 @@ export const mapStateToProps = (state) => ({
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
+  isAddressDeleted: state.MyAccountReducer.isAddressDeleted,
+  prevSelectedAddress: state.MyAccountReducer.prevSelectedAddress,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -119,6 +127,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   setColourVarientsButtonClick: (colourVarientsButtonClick) =>
     dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
+  setAddressDeleted: (val) => MyAccountDispatcher.setAddressDeleted(dispatch,val),
+  setPrevSelectedAddressForPLPFilters: (val) => MyAccountDispatcher.setPrevSelectedAddressForPLPFilters(dispatch,val),
 });
 
 export class PLPContainer extends PureComponent {
@@ -760,7 +770,7 @@ export class PLPContainer extends PureComponent {
   }
 
   onUnselectAllPress(category) {
-    const { filters, updatePLPInitialFilters } = this.props;
+    const { filters, updatePLPInitialFilters, mailing_address_type } = this.props;
     const { activeFilters = {}, newActiveFilters = {} } = this.state;
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
@@ -825,9 +835,11 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
+    let isScrollBehaviour = category === `express_delivery_${getAddressType(mailing_address_type)}` ? true : false;
+
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1" && key !== "categories_without_path") {
-        WebUrlParser.setParam(key, activeFilters[key]);
+        WebUrlParser.setParam(key, activeFilters[key], [], isScrollBehaviour);
       }
     });
 
@@ -835,16 +847,14 @@ export class PLPContainer extends PureComponent {
     const key = "categories_without_path";
       //Below code is for Msite - here I am not sending category Ids to Algolia
     if(isMobile.any()) {
-      WebUrlParser.setParam(
-        key,
-        selectedFacetValues,
-      );
+      WebUrlParser.setParam(key, selectedFacetValues, [], isScrollBehaviour);
     }else {
       const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
       WebUrlParser.setParam(
         key,
         selectedFacetValues,
         selectedFacetCategoryIds,
+        isScrollBehaviour
       );
     }
   }
@@ -925,6 +935,11 @@ export class PLPContainer extends PureComponent {
       lastHomeItem,
       pages,
       newSelectedActiveFilters = {},
+      isAddressDeleted,
+      setAddressDeleted,
+      prevSelectedAddress,
+      setPrevSelectedAddressForPLPFilters,
+      mailing_address_type,
     } = this.props;
     let newMoreActiveFilters = {};
     const { isLoading: isCategoriesLoading } = this.state;
@@ -1074,6 +1089,51 @@ export class PLPContainer extends PureComponent {
         moreActiveFilters: newMoreActiveFilters,
       });
     }
+    if (
+      (this.props.currentSelectedCityArea?.mailing_address_type !=
+        prevProps.currentSelectedCityArea?.mailing_address_type ||
+        (this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+          this.props.currentSelectedCityArea?.mailing_address_type != null &&
+          prevProps.currentSelectedCityArea?.mailing_address_type != null &&
+          isAddressDeleted &&
+          prevProps.currentSelectedCityArea?.mailing_address_type !=
+            isAddressDeleted?.mailing_address_type) ||
+        (this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+          this.props.currentSelectedCityArea?.mailing_address_type != null &&
+          prevProps.currentSelectedCityArea?.mailing_address_type != null &&
+          prevSelectedAddress &&
+          prevProps.currentSelectedCityArea?.mailing_address_type !=
+            prevSelectedAddress?.mailing_address_type)) &&
+      this.props?.isExpressDelivery &&
+      this.props?.vwoData?.Express?.isFeatureEnabled
+    ) {
+      let finalAddressType = prevProps.currentSelectedCityArea;
+      if (
+        this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+        prevProps.currentSelectedCityArea?.mailing_address_type !=
+          isAddressDeleted?.mailing_address_type
+      ) {
+        finalAddressType = isAddressDeleted?.mailing_address_type;
+      }
+
+      if (
+        this.props.currentSelectedCityArea?.mailing_address_type ===
+          prevProps.currentSelectedCityArea?.mailing_address_type &&
+        prevProps.currentSelectedCityArea?.mailing_address_type !=
+        prevSelectedAddress?.mailing_address_type
+      ) {
+        finalAddressType = prevSelectedAddress?.mailing_address_type;
+        setPrevSelectedAddressForPLPFilters(null);
+      }
+      const addressType = getAddressType(mailing_address_type, finalAddressType);
+      setAddressDeleted(null);
+      this.onUnselectAllPress(`express_delivery_${addressType}`);
+      PLPContainer.requestProductList(this.props);
+    }
+
     const pagePathName = new URL(window.location.href).pathname;
     const isCollectionPage = pagePathName.includes(".html") || false;
     if (

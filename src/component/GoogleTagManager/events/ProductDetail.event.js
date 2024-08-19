@@ -100,6 +100,7 @@ class ProductDetailEvent extends BaseEvent {
             item_category5:product?.categories?.level5?.[0] ?? "",
             discount: product?.discount ?? "",
             variant_availability: product?.variant_availability ?? "",
+            is_express_visible: product?.is_express_visible ?? ""
           }
         ]
       },

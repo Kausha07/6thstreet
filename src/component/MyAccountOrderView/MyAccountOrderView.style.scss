@@ -215,6 +215,54 @@
         margin: 5px 0 0 15px;
       }
     }
+
+    .order-group-message {
+      .color-grey {
+        color: var(--color-light-gray);
+        &_isArabic {
+          direction: rtl;
+          text-align: right;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  &-PackagesMessageForREDD {
+    background: var(--my-acc-background);
+    padding: 10px 10px;
+    font-family: Avenir Next;
+    font-size: 12px;
+
+    p {
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .refundMessage{
+      width: 75%;
+    }
+
+    &_isArabic {
+      .Image {
+        margin: 5px 0 0 15px;
+      }
+    }
+
+    .order-group-message {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .color-grey {
+        color: #555555;
+        font-size: 12px;
+        font-weight: 400;
+        &_isArabic {
+          direction: ltr;
+          text-align: right;
+        }
+      }
+    }
   }
 
   &-Summary {
@@ -533,6 +581,27 @@
     h3{
       @include mobile{
         font-size: 14px;
+      }
+    }
+
+    .ExpressDeliveryBlock{
+      display: inline-block;
+      margin: 0 10px;
+      vertical-align: middle;
+    }
+    .ExpressDeliveryTextBlock {
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      background: #f964461a;
+      border-radius: 10px;
+      padding: 5px;
+      font-style: italic;
+      color: #ff6446;
+       svg {
+          width: 20px;
+          height: 20px;
+          margin: 0 5px;
       }
     }
   }

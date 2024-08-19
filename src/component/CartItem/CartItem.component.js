@@ -12,7 +12,7 @@
  */
 
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { isObject } from "Util/API/helper/Object";
@@ -32,11 +32,16 @@ import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import Price from "Component/Price";
 import { Store } from "../Icons";
+import { Shipping, ExpressDeliveryTruck } from "Component/Icons";
 
 import "./CartItem.style";
 import "./CartItem.extended.style";
 import { getDefaultEddMessage } from "Util/Date/index";
 import { getCountryFromUrl } from "Util/Url";
+
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 
 /**
  * Cart and CartOverlay item
@@ -74,6 +79,7 @@ export class CartItem extends PureComponent {
   state = {
     isArabic: isArabic(),
     isNotAvailble: false,
+    isExpressTimeExpired: false,
   };
 
   static defaultProps = {
@@ -88,9 +94,32 @@ export class CartItem extends PureComponent {
 
   static getDerivedStateFromProps(props) {
     const {
-      item: { availability, availableQty, qty },
-      intlEddResponse
+      item: {
+        availability = "",
+        availableQty,
+        qty,
+        full_item_info: { reserved_qty },
+      },
+      intlEddResponse,
+      isExpressDelivery,
+      cartTotals: { status = null},
+      isCheckoutPage,
     } = props;
+
+    // if (
+    //   isExpressDelivery &&
+    //   status != null &&
+    //   reserved_qty === 0
+    // ) {
+    //   return { isNotAvailble: true, intlEddResponseState: intlEddResponse };
+    // } else if (isExpressDelivery &&
+    //   status != null && 
+    //   reserved_qty > 0){
+    //     return {
+    //       isNotAvailble: false, 
+    //       intlEddResponseState: intlEddResponse
+    //     };
+    // }
 
     return {
       isNotAvailble:
@@ -250,11 +279,11 @@ export class CartItem extends PureComponent {
   }
 
   renderBrandName() {
-    const { brand_name } = this.props;
+    const { brand_name, isCheckoutPage= false } = this.props;
     const { isArabic } = this.state;
 
     return (
-      <p block="CartItem" elem="Heading" mods={{ isArabic }}>
+      <p block="CartItem" elem="Heading" mods={{ isArabic, brandName: true && isCheckoutPage }}>
         {brand_name}
       </p>
     );
@@ -394,6 +423,10 @@ export class CartItem extends PureComponent {
   renderColSizeQty() {
     const {
       item: { color, optionValue, qty },
+      isCheckoutPage = false,
+      isExpressDelivery,
+      vwoData,
+      isRenderQuantitySelection = true,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -404,6 +437,17 @@ export class CartItem extends PureComponent {
             <span> {__("Color:")}</span>
             {color}
           </div>
+          {isCheckoutPage &&
+            isExpressDelivery &&
+            vwoData?.Express?.isFeatureEnabled && (
+              <div block="CartItem" elem="Size" mods={{ isArabic }}>
+                <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
+                  |
+                </span>
+                <span> {__("Qty:")} </span>
+                {qty}
+              </div>
+            )}
           <div block="CartItem" elem="Size" mods={{ isArabic }}>
             <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
               |
@@ -411,8 +455,7 @@ export class CartItem extends PureComponent {
             <span> {__("Size:")} </span>
             {optionValue}
           </div>
-
-          {this.renderQuantitySelection()}
+          {isRenderQuantitySelection && this.renderQuantitySelection()}
         </div>
       );
     }
@@ -423,7 +466,18 @@ export class CartItem extends PureComponent {
           <span> {__("Color:")}</span>
           {color}
         </div>
-        {this.renderQuantitySelection()}
+        {isCheckoutPage &&
+          isExpressDelivery &&
+          vwoData?.Express?.isFeatureEnabled && (
+            <div block="CartItem" elem="Size" mods={{ isArabic }}>
+              <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
+                |
+              </span>
+              <span> {__("Qty:")} </span>
+              {qty}
+            </div>
+          )}
+        {isRenderQuantitySelection && this.renderQuantitySelection()}
       </div>
     );
   }
@@ -535,29 +589,129 @@ export class CartItem extends PureComponent {
     return actualEddMess;
   }
 
+  setTimerStateThroughProps = (val) => {
+    this.setState({ isExpressTimeExpired: val });
+  };
+
+  renderEddWhenExpressEnabled = (crossBorder) => {
+    const {
+      edd_info,
+      item: {
+        full_item_info: {
+          cross_border = 0,
+          express_delivery = "",
+          mp_quantity = 0,
+          store_quantity = 0,
+          whs_quantity = 0,
+        },
+        extension_attributes,
+      },
+      international_shipping_fee,
+      isExpressDelivery,
+      isCheckoutPage,
+      eddMessageForCheckoutPage,
+      vwoData,
+      setExpressVisible
+    } = this.props;
+    let actualEddMess = this.formatEddMessage(crossBorder);
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    if (!actualEddMess) {
+      return null;
+    }
+    if (isExpressDelivery && isCheckoutPage && vwoData?.Express?.isFeatureEnabled) {
+      eddMessageForCheckoutPage(actualEddMess, isIntlBrand);
+      return null;
+    }
+
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="AreaText" mods={{ isArabic }}>
+          <Shipping />
+          <span>{splitReadyByKey}</span>
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div block="EddExpressWrapper">
+        <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+          <ExpressAndStandardEDD
+            express_delivery={express_delivery}
+            actualEddMess={actualEddMess}
+            splitKey={splitKey}
+            isPDP={false}
+            isIntlBrand={isIntlBrand}
+            cross_border={cross_border}
+            isCart={true}
+            whs_quantity={whs_quantity}
+            store_quantity={store_quantity}
+            mp_quantity={mp_quantity}
+            isExpressTimeExpired={this.state.isExpressTimeExpired}
+            setTimerStateThroughProps={this.setTimerStateThroughProps}
+            setExpressVisible={setExpressVisible}
+          />
+        </Suspense>
+      </div>
+    );
+  };
+
   renderEdd = (crossBorder) => {
-    const { item: { extension_attributes } } = this.props;
+    const {
+      edd_info,
+      item: {
+        extension_attributes,
+        full_item_info: { cross_border = 0 },
+        international_vendor = null,
+      },
+      international_shipping_fee,
+      isExpressDelivery,
+      isCheckoutPage,
+      vwoData,
+    } = this.props;
+
     let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;
     }
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    const { isArabic } = this.state;
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+
     return (
-      <div block="AreaText" mods={{ isArabic }}>
-        {extension_attributes?.click_to_collect_store ? (
-          <span>{splitReadyByKey}</span>
-        ) : (
-          <span>
-            {actualEddMess.split(splitKey)[0]}
-            {splitKey}
-          </span>
-        )}
-        {extension_attributes?.click_to_collect_store ? (
-          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
-        ) : (
-          <span>{actualEddMess.split(splitKey)[1]}</span>
-        )}
+      <div>
+        <div block="AreaText" mods={{ isArabic }}>
+          {extension_attributes?.click_to_collect_store ? (
+            <span>{splitReadyByKey}</span>
+          ) : (
+            <span>
+              {actualEddMess.split(splitKey)[0]}
+              {splitKey}
+            </span>
+          )}
+          {extension_attributes?.click_to_collect_store ? (
+            <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+          ) : (
+            <span>{actualEddMess.split(splitKey)[1]}</span>
+          )}
+        </div>
+        {!isCheckoutPage &&
+        (!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && 
+        (isIntlBrand ||
+          (international_shipping_fee &&
+            (+cross_border ||
+              (edd_info.international_vendors &&
+                edd_info.international_vendors.indexOf(international_vendor) >
+                  -1))))
+          ? this.renderIntlTag()
+          : null}
       </div>
     );
   };
@@ -570,6 +724,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderExpressIntlTag = () => {
+    return (
+      <div block="ExpressInternationalShippmentTag">
+        <Shipping /> <div>{__("International Shipment")}</div>
+      </div>
+    );
+  };
+
   renderOOSMessage(){
     return(
       <span block="CartItem" elem="NotAvailable">
@@ -578,6 +740,14 @@ export class CartItem extends PureComponent {
     )
   }
 
+  renderQTYUnavailableMSG = (qty, reserved_qty, availableQty) => {
+    if (reserved_qty!= 0 && reserved_qty < qty) {
+      return (
+        <div block="stockQuantityNotReservedText">{__("Only %s qty available. Please update.", reserved_qty)}</div>
+      );
+    } else return null;
+  };
+
   renderContent() {
     const {
       isLikeTable,
@@ -585,13 +755,18 @@ export class CartItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border = 0 },
+        full_item_info: { cross_border = 0, reserved_qty = 0, available_qty },
         international_vendor = null,
         brand_name = "",
         row_total,
+        qty,
       },
       intlEddResponse,
       international_shipping_fee,
+      isExpressDelivery,
+      isCheckoutPage = false,
+      vwoData,
+      cartTotals: { status = null },
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -606,21 +781,52 @@ export class CartItem extends PureComponent {
         mods={{ isLikeTable, isArabic }}
       >
         {this.renderBrandName()}
-        {/* {this.renderProductName()} */}
+        {isCheckoutPage &&  this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
+        {!isNotAvailble && <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
-        {edd_info &&
-          edd_info.is_enable &&
-          edd_info.has_cart &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
-          !isNotAvailble &&
-          this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee && (+cross_border || (edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor) > -1)) )) ? this.renderIntlTag() : null}
-        {row_total === 0 ? null : this.renderActions()}
+        <div block="eddAndActionsBlock">
+          {isNotAvailble && this.renderOOSMessage()}
+          {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && 
+            edd_info &&
+            edd_info.is_enable &&
+            edd_info.has_cart &&
+            ((isIntlBrand && Object.keys(intlEddResponse).length > 0) ||
+              cross_border === 0 ||
+              edd_info.has_item_level) &&
+            !isNotAvailble &&
+            this.renderEdd(cross_border === 1)}
+          {isExpressDelivery && vwoData?.Express?.isFeatureEnabled && 
+            edd_info &&
+            edd_info.is_enable &&
+            edd_info.has_cart &&
+            ((isIntlBrand && Object.keys(intlEddResponse).length > 0) ||
+              cross_border === 0 ||
+              edd_info.has_item_level) &&
+            !isNotAvailble &&
+            this.renderEddWhenExpressEnabled(cross_border === 1)}
+          {isExpressDelivery &&
+          vwoData?.Express?.isFeatureEnabled &&
+          isCheckoutPage &&
+          (isIntlBrand ||
+            (international_shipping_fee &&
+              (+cross_border ||
+                (edd_info.international_vendors &&
+                  edd_info.international_vendors.indexOf(international_vendor) >
+                    -1))))
+            ? this.renderExpressIntlTag()
+            : null}
+
+          {row_total === 0 ? null : this.renderActions()}
+        </div>
+        {!isNotAvailble &&
+          status != null &&
+          isExpressDelivery &&
+          !isCheckoutPage &&
+          this.renderQTYUnavailableMSG(qty, reserved_qty, available_qty)}
       </figcaption>
     );
   }

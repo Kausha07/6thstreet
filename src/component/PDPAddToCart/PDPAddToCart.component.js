@@ -31,6 +31,11 @@ import PDPTags from "Component/PDPTags";
 import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
 import { getCountryFromUrl } from "Util/Url";
 import CDN from "Util/API/provider/CDN";
+import {
+  getFinalExpressDeliveryKey,
+  checkProductExpressEligible,
+  productOfficeServicable,
+} from "Util/Common";
 
 class PDPAddToCart extends PureComponent {
 
@@ -70,7 +75,8 @@ class PDPAddToCart extends PureComponent {
     OOSrendered: false,
     OOS_mailSent: false,
     sizePredictorMessage:'',
-    recommendedSizeSku:''
+    recommendedSizeSku:'',
+    selectedCityArea: {},
   };
 
   componentDidMount() {
@@ -129,6 +135,29 @@ class PDPAddToCart extends PureComponent {
     const { selectedSizeCode } = this.props;
     if(prevProps.selectedSizeCode !== selectedSizeCode) {
       this.getRecommendedSize("size_bar");
+    }
+
+    if (
+      prevProps.isSignedIn != this.props.isSignedIn ||
+      !this.props.currentSelectedCityArea
+    ) {
+      if (this.props.isSignedIn && this.props.currentSelectedCityArea) {
+        this.setState({
+          selectedCityArea: this.props.currentSelectedCityArea
+            ? this.props.currentSelectedCityArea
+            : JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            ? JSON.parse(localStorage.getItem("currentSelectedAddress"))
+            : BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+            ? BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+            : {},
+        });
+      } else if (
+        !this.props.isSignedIn ||
+        !this.props.currentSelectedCityArea ||
+        !BrowserDatabase.getItem("cityAreaFromSelectionPopUp")
+      ) {
+        this.setState({ selectedCityArea: null });
+      }
     }
   }
 
@@ -266,6 +295,70 @@ class PDPAddToCart extends PureComponent {
     return null;
   }
 
+  checkSKUExpressEligible = (productStock, code, label) => {
+    const {
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      isExpressTimeExpired,
+      cutOffTime,
+      vwoData,
+    } = this.props;
+    const quantity = productStock[code].quantity;
+
+    const {
+      edd_info,
+      product: { international_vendor },
+      cross_border = 0,
+      product: {
+        express_delivery_home = "",
+        express_delivery_work = "",
+        express_delivery_other = "",
+      },
+      mailing_address_type,
+    } = this.props;
+    const { product : productInfo } = this.props;
+
+    const product = productStock[code];
+    const whs_quantity = +product?.whs_quantity || 0;
+    const store_quantity = +product?.store_quantity || 0;
+    const mp_quantity = +product?.mp_quantity || 0;
+    const express_delivery_key = getFinalExpressDeliveryKey({
+      isPDP: true,
+      express_delivery_home,
+      express_delivery_work,
+      express_delivery_other,
+      mailing_address_type,
+      productInfo,
+    });
+
+    const isProductExpressEligible =
+      checkProductExpressEligible(express_delivery_key);
+
+    const isInternationalProduct =
+      edd_info?.international_vendors?.includes(international_vendor) ||
+      cross_border;
+
+    const isProductOfficeServicable = productOfficeServicable({
+      cutOffTime,
+      express_delivery_key,
+      isExpressTimeExpired,
+      mailing_address_type,
+    });
+
+    const isExpressEligibleSKU =
+      isProductExpressEligible &&
+      this.state.selectedCityArea &&
+      !isInternationalProduct &&
+      isExpressServiceAvailable?.express_eligible && vwoData?.Express?.isFeatureEnabled && 
+      isExpressDelivery &&
+      isProductOfficeServicable &&
+      quantity !== 0 &&
+      (whs_quantity !== 0 || store_quantity !== 0 || mp_quantity !== 0) &&
+      !(+product?.quantity <= +product?.cross_border_qty);
+
+    return isExpressEligibleSKU;
+  };
+
   getSizeTypeSelect() {
     const {
       sizeObject = {},
@@ -314,6 +407,9 @@ class PDPAddToCart extends PureComponent {
       notifyMeLoading,
       notifyMeSuccess,
       popUpType = "",
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      vwoData,
     } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const quantity = productStock[code].quantity;
@@ -336,8 +432,12 @@ class PDPAddToCart extends PureComponent {
     };
 
     const isCurrentSizeSelected = selectedSizeCode === code;
-    const { edd_info } = this.props;
 
+    const isExpressEligibleSKU = this.checkSKUExpressEligible(
+      productStock,
+      code,
+      label
+    );
     return (
       <div
         block="PDPAddToCart-SizeSelector"
@@ -362,6 +462,11 @@ class PDPAddToCart extends PureComponent {
           <label
             for={code}
             style={isCurrentSizeSelected ? selectedLabelStyle : this.state.recommendedSizeSku==code ? recommendedLabelStyle : {}}
+            block="sizeOptionLabel"
+            mods={{
+              isExpressEligibleSKU: isExpressEligibleSKU,
+              isArabic: isArabic() && isExpressEligibleSKU,
+            }}
           >
             {label}
           </label>

@@ -500,16 +500,19 @@ export class Router extends SourceRouter {
     const { isVwoEvent } = this.state;
 
     if(!isVwoEvent && vwoData){
-      console.log('vwoData ', vwoData );
       const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
 
       const userSegment = BrowserDatabase.getItem("customer")?.user_segment;
       let eventData = {
       };
-
+      let trackEvents = {};
+      for (const key in abTestingConfig) {
+        if(abTestingConfig[key] && abTestingConfig[key]["campaignName"])
+        trackEvents[abTestingConfig[key]["campaignName"]] = abTestingConfig[key]["trackEvent"];
+      }
       for (const key in vwoData) {
         const item = vwoData[key];
-        if(item?.campaignName) {
+        if(item?.campaignName && trackEvents[item?.campaignName]) {
           eventData = {
             ...eventData,
             [item.campaignName] : {
@@ -519,7 +522,6 @@ export class Router extends SourceRouter {
           }
         }
       }
-
       Event.dispatch(EVENT_Track_USER_VARIANT, {
         campaign_variant: JSON.stringify(eventData),
         segment_name :  userSegment || abTestingConfig?.HPP?.defaultUserSegment

@@ -5,7 +5,7 @@ import Loader from "Component/Loader";
 import Field from "Component/Field";
 import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor, arabicTranslatorForExpress } from "Util/Common";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
 import "./PLPFilterOption.style";
@@ -30,6 +30,8 @@ import Event,{
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { ExpressDeliveryTruck } from "Component/Icons";
+import { getAddressType } from "Util/Common/index";
 
 class PLPFilterOption extends PureComponent {
   static propTypes = {
@@ -265,6 +267,8 @@ class PLPFilterOption extends PureComponent {
   renderLabel() {
     const {
       option: { label = "", facet_value, facet_key, product_count, productCountMsite },
+      isExpressDelivery, vwoData,
+      mailing_address_type,
     } = this.props;
     const finalProductCount = product_count ? product_count : productCountMsite;
 
@@ -336,6 +340,37 @@ class PLPFilterOption extends PureComponent {
           {!isArabic()
               ? label
             : null}
+          {product_count && this.renderCount()}
+        </label>
+      );
+    }
+
+    if (facet_key === `express_delivery_${getAddressType(mailing_address_type)}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+      let finalLabel = label;
+      const words = label?.split(" ");
+      if (words?.length > 1) {
+        finalLabel = `${words?.[0]}`;
+      }
+
+      if(isArabic()) {
+        if (words?.length > 1) {
+          finalLabel = `${words?.[1]}`;
+        }
+      }
+
+      return (
+        <label block="PLPFilterOption" htmlFor={facet_value}>
+          <ExpressDeliveryTruck style={{ height: "24px", width: "24px" }} />
+          <span
+            style={{
+              color: "#f96446",
+              "font-weight": "600",
+              "font-style": "italic",
+            }}
+          >
+            {__("Express")}
+          </span>
+          <span>{finalLabel}</span>
           {product_count && this.renderCount()}
         </label>
       );

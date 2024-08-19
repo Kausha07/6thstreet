@@ -268,7 +268,7 @@
         }
         @include mobile {
             width: auto;
-            margin: 0 10px;
+            margin: 0 16px !important;
         }
         @include desktop {
             display: grid;

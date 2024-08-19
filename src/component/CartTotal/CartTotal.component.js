@@ -1,7 +1,10 @@
 import React from "react";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { connect } from "react-redux";
-import { getValueFromTotals } from "./utils/CartTotal.helper";
+import {
+  getValueFromTotals,
+  checkIsAnyExpressShipment,
+} from "./utils/CartTotal.helper";
 import { getFinalPrice } from "Component/Price/Price.config";
 import { getCurrency, isArabic as checkIsArabic } from "Util/App";
 import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
@@ -20,6 +23,9 @@ export const mapStateToProps = (state) => {
     isSignedIn: state.MyAccountReducer.isSignedIn,
     language: state.AppState.language,
     international_shipping_fee: state.AppConfig.international_shipping_fee,
+    isExpressDelivery: state.AppConfig.isExpressDelivery,
+    shipment: state.CheckoutReducer.shipment,
+    vwoData: state.AppConfig.vwoData,
   };
 };
 
@@ -37,6 +43,11 @@ function CartTotal(props) {
     pageType,
     cashOnDeliveryFee,
     international_shipping_fee,
+    shipment: {
+      expected_shipments = [],
+    },
+    isExpressDelivery,
+    vwoData,
   } = props;
   const isArabic = checkIsArabic();
   const currency_code = getCurrency();
@@ -51,10 +62,19 @@ function CartTotal(props) {
     }
   });
   const CODFee = getValueFromTotals(totals, "msp_cashondelivery") || 0;
-  const grandTotal =
+  let grandTotal =
   total > CODFee  || !cashOnDeliveryFee
     ? getFinalPrice(total, currency_code) - getFinalPrice(CODFee, currency_code)
     : getFinalPrice(total, currency_code);
+
+  let isFreeExpressDelivery = false;
+  if (isExpressDelivery && expected_shipments) {
+    isFreeExpressDelivery =
+      checkIsAnyExpressShipment({
+        expected_shipments,
+        totals,
+      }) || false;
+  }
 
   const renderPriceLine = (price, name, mods, allowZero = false) => {
     if (!price && !allowZero) {
@@ -87,7 +107,7 @@ function CartTotal(props) {
         <strong block={block} elem="Price">
           {isArabic
             ? `${parseFloat(price) || price === 0 ? currency_code : ""} ${
-                name === "My Cash" || name === "Coupon Savings" || name ===  "My Rewards" ? Math.abs(finalPrice) : finalPrice
+                name === __("My Cash") || name === __("Coupon Savings") || name ===  __("My Rewards") ? Math.abs(finalPrice) : finalPrice
               } ${mods?.couponSavings ? "-" : ""}`
             : `${mods?.couponSavings ? "-" : ""} ${
                 parseFloat(price) || price === 0 ? currency_code : ""
@@ -144,6 +164,15 @@ function CartTotal(props) {
     );
   };
 
+  const expressDeliveryFee = getValueFromTotals(
+    totals,
+    "express_delivery_charges"
+  );
+
+  grandTotal = expressDeliveryFee
+    ? grandTotal - expressDeliveryFee
+    : grandTotal;
+
   return (
     <div block={block} elem="OrderTotals">
       <h3 block="OrderTotalsHeading">{__("ORDER DETAILS")}</h3>
@@ -171,6 +200,18 @@ function CartTotal(props) {
               international_shipping_amount,
               __("International Shipping Fee")
             )}
+          {expressDeliveryFee != null &&
+            expressDeliveryFee != undefined &&
+            pageType === "CheckoutPage" &&
+            isExpressDelivery &&
+            vwoData?.Express?.isFeatureEnabled &&
+            renderPriceLine(
+              getValueFromTotals(totals, "express_delivery_charges") ||
+                (isFreeExpressDelivery && pageType === "CheckoutPage"
+                  ? __("FREE")
+                  : 0),
+              __("Express Service")
+            )}
           {renderPriceLine(
             getValueFromTotals(totals, "customerbalance"),
             __("My Cash"),
@@ -195,9 +236,9 @@ function CartTotal(props) {
             : null}
           {renderPriceLine(getValueFromTotals(totals, "tax"), __("Tax"))}
           {renderPriceLine(
-            pageType === "CartPage" || !cashOnDeliveryFee
+            pageType === "CartPage"
               ? grandTotal
-              : getValueFromTotals(totals, "grand_total"),
+              : (getValueFromTotals(totals, "grand_total")),
             __("Total"),
             {
               divider: true,

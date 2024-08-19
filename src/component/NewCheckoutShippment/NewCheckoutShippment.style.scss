@@ -1,0 +1,375 @@
+.NewCheckoutOrderShippment {
+  cursor: pointer;
+
+  &-CartItemList {
+    .NewShippmentItem {
+      border: 1px solid #d1d3d4;
+      padding: 20px 15px;
+      margin-bottom: 0;
+      border-bottom: none;
+
+      &:last-child {
+        border-bottom: 1px solid #d1d3d4;
+      }
+
+      @include mobile {
+        border: none;
+        border-bottom: 1px solid #d1d3d4;
+        padding: 20px 0px 8px 0px;
+      }
+
+      .CartItemHeading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .NumOfShipments {
+          font-family: Avenir Next;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        .ShippedBy {
+          font-family: Avenir Next;
+          font-size: 10px;
+          font-weight: 400;
+        }
+      }
+
+      .ExpressOrStandadrdDeliverySelection {
+        margin: 15px 0;
+
+        .ExpressDeliveryBlock {
+          border: 0.2px solid #d1d3d4;
+          display: flex;
+          justify-content: space-between;
+          background: #fff2f0;
+          align-items: center;
+          height: 52px;
+          padding: 0 10px 0px 24px;
+          cursor: pointer;
+
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+          }
+
+          &::before {
+            top: 17px;
+            left: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+
+          &::after {
+            opacity: 0;
+          }
+
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              left: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+
+          .EddExpressDelivery {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-transform: initial;
+            line-height: 8px;
+
+            svg {
+              width: 24px;
+              height: 24px;
+              margin: 0 4px;
+            }
+
+            .EddExpressDeliveryTextBlock {
+              display: flex;
+              align-items: center;
+
+              .EddExpressDeliveryTextRed {
+                color: #f96446;
+                font-weight: 600;
+                font-style: italic;
+                font-size: 13px;
+              }
+
+              .EddExpressDeliveryTextNormal {
+                font-weight: 400;
+                font-size: 13px;
+              }
+
+              .EddExpressDeliveryTextBold {
+                font-weight: 600;
+                font-size: 13px;
+              }
+
+              .expressVipImage {
+                background-size: 26px;
+                width: 27px;
+                height: 12px;
+                display: flex;
+                font-size: 0;
+                margin: 0 3px;
+              }
+
+              .EddExpressDeliveryText {
+                display: flex;
+              }
+            }
+          }
+
+          .EddExpressDeliveryCutOffTime {
+            font-size: 12px;
+            font-weight: 400;
+            color: #606060;
+            margin-top: 2px;
+            margin: 2px 32px;
+          }
+
+          .ExpressPrice {
+            font-family: Avenir Next;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+
+            &-freeExpressText {
+              color: #28d9aa;
+              padding-bottom: 5px;
+            }
+
+            &-freeExpressPrice {
+              text-decoration: line-through;
+            }
+          }
+        }
+
+        .StandardDeliveryBlock {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 0.2px solid #d1d3d4;
+          border-top: none;
+          cursor: pointer;
+
+          padding: 0 10px 0 24px;
+          height: 52px;
+
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+          }
+
+          &::before {
+            top: 17px;
+            left: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+
+          &::after {
+            opacity: 0;
+          }
+
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              left: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+
+          .EddStandardDelivery {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-transform: initial;
+            height: 40px;
+
+            .EddStandardDeliveryTextBlock {
+              display: flex;
+              align-items: center;
+
+              svg {
+                width: 20px;
+                height: 20px;
+                margin: 0 4px;
+              }
+
+              .EddStandardDeliveryText {
+                font-weight: 400;
+                font-size: 13px;
+              }
+
+              .EddStandardDeliveryTextBold {
+                font-weight: 600;
+                font-size: 13px;
+              }
+            }
+
+            .internationalShipmentTag {
+              .AdditionShippingInformation {
+                margin: 0 25px;
+                font-size: 11px;
+                color: #606060;
+              }
+            }
+          }
+
+          .StandardPrice {
+            font-family: Avenir Next;
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
+
+        .topBorder {
+          border-top: 0.2px solid #d1d3d4;
+        }
+
+        .ExpressisArabic {
+          padding: 0 24px 0px 10px;
+          &::before {
+            top: 17px;
+            right: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              right: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/OrangeDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+        }
+
+        .StandardisArabic {
+          padding: 0 24px 0 10px;
+          &::before {
+            top: 17px;
+            right: 7px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #979797;
+            background: #ffffff;
+          }
+          &_isSelected {
+            &::after {
+              opacity: 1;
+              top: 17px;
+              right: 7px;
+              width: 18px;
+              height: 18px;
+              background: url(../Icons/BlackDotSelector/icon.svg) no-repeat
+                center / contain;
+              transform: none;
+              -webkit-transform: none;
+            }
+
+            &::before {
+              opacity: 0;
+            }
+          }
+        }
+      }
+
+      .ProductInfo {
+        .CartItem {
+          margin: 0;
+          .CartItem-Price, .CartItem-ColSizeQty{
+            margin-top: 5px;
+          }
+        }
+      }
+
+      .CartItem-Wrapper {
+        padding-top: 0;
+      }
+    }
+
+    .NewShippmentItem::before {
+      content: "";
+    }
+
+    .cartItemsWrapper {
+      border: 1px solid #d1d3d4;
+
+      &-Header {
+        display: flex;
+        padding: 20px;
+      }
+
+      &-ItemCount {
+        flex: 50% 1;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 25px;
+      }
+
+      &-Edit {
+        font-size: 13px;
+        line-height: 18px;
+        text-align: right;
+        text-decoration: underline;
+        padding-top: 3px;
+      }
+
+      @include mobile {
+        padding: 5px;
+        border-radius: 5px;
+      }
+    }
+  }
+}

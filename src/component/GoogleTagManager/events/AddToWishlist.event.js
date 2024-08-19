@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_WISHLIST } from "Util/Event";
 import BaseEvent from "./Base.event";
-
+import BrowserDatabase from "Util/BrowserDatabase";
 export const SPAM_PROTECTION_DELAY = 200;
 
 /**
@@ -47,7 +47,8 @@ class AddToWishlistEvent extends BaseEvent {
             item_category5:product?.categories?.level5?.[0] ?? "",
             discount: product?.discount, 
             index: product?.productPosition,
-            variant_availability: product?.variant_availability
+            variant_availability: product?.variant_availability,
+            is_express_visible: product?.is_express_visible
           }
         ]
       },

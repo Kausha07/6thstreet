@@ -59,6 +59,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   vwoData: state.AppConfig.vwoData,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -158,6 +159,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       isChangePhonePopupOpen: false,
       isMobileVerification: false,
       ...MyAccountContainer.navigateToSelectedTab(this.props),
+      cartTotalRes: BrowserDatabase.getItem("CART_DETAILS"),
     };
 
     /*
@@ -267,6 +269,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
       initialTotals = {},
+      cartTotalRes,
     } = this.state;
     const {
       isFailed,
@@ -277,6 +280,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       isSignedIn,
       paymentMethod,
       redirectPaymentMethod,
+      isExpressDelivery,
     } = this.props;
     let isRedirectPayment = false;
     let newInitialTotal= {};
@@ -291,6 +295,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
     const countryCode = getCountryFromUrl();
     const isSidewideCouponEnabled =  vwoData?.SiteWideCoupon?.isFeatureEnabled || false;
+    const shipmentDetails = BrowserDatabase.getItem("SHIPMENT_DETAILS");
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -305,6 +310,9 @@ export class CheckoutSuccessContainer extends PureComponent {
         : orderDetailsCartTotal,
       initialTotals: isRedirectPayment ? newInitialTotal : initialTotals,
       payMethodCode: { code: redirectPaymentMethod },
+      shipmentDetails,
+      cartTotalRes,
+      isExpressDelivery,
     };
   };
 

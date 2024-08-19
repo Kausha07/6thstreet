@@ -44,6 +44,8 @@
       min-height: 55px !important;
       overflow-x: scroll;
       margin-bottom: 0px !important;
+      display: flex;
+      align-items: center;
       &::after {
         content: "";
       }
@@ -489,6 +491,7 @@
       display: inline-block;
       width: 100%;
     }
+
   }
 
 

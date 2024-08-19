@@ -212,6 +212,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       addressCityData,
       totals: { is_virtual },
       shippingAddress,
+      onMailingAddressTypeChange,
     } = this.props;
 
     if (
@@ -236,6 +237,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
           identity_number={this.props?.identity_number}
           onIdentityNumberChange={this.props?.onIdentityNumberChange}
           onTypeOfIdentityChange={this.props?.onTypeOfIdentityChange}
+          onMailingAddressTypeChange={onMailingAddressTypeChange}
         />
       </>
     );

@@ -431,13 +431,14 @@ export class CartOverlay extends PureComponent {
   }
 
   renderRemoveOOS() {
-    const { totals } = this.props;
+    const { totals, isExpressDelivery } = this.props;
     const { isArabic } = this.state;
     return (
         <RemoveOOS
           closeremoveOosOverlay={this.closeremoveOosOverlay}
           totals={totals}
           isArabic={isArabic}
+          isExpressDelivery={isExpressDelivery}
         />
     )
   }

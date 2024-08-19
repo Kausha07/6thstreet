@@ -92,7 +92,7 @@
 
   &-Wrapper {
     display: grid;
-    grid-template-columns: 110px calc(87% - 110px);
+    grid-template-columns: 135px calc(100% - 135px);
     background: var(--successcheckout-item-background);
     padding-top: 15px;
     text-transform: capitalize;
@@ -176,8 +176,7 @@
   }
 
   &-Picture {
-    height: 110px;
-    width: 85px;
+    width: 130px;
     margin-right: 24px;
     background-color: var(--image-default-background);
 
@@ -329,5 +328,29 @@
     color: var(--cart-item-heading-color);
     font-weight: var(--fw-medium);
     margin-left: -3px;
+  }
+
+  .EddExpressWrapper {
+    @include desktop {
+      width: 275px;
+    }
+
+    @include mobile {
+      width: 100%;
+    }
+
+    .eddStandardDelivery {
+      .internationalShipmentTag {
+        margin: 0 35px;
+        font-size: 10px;
+        color: #606060;
+        font-weight: 400;
+        text-align: left;
+
+        &_isArabic {
+          text-align: right;
+        }
+      }
+    }
   }
 }

@@ -26,6 +26,11 @@ import {
 import './MyAccountAddressPopup.style';
 
 export class MyAccountAddressPopup extends PureComponent {
+
+    constructor(props){
+        super(props);
+    }
+    
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         handleAddress: PropTypes.func.isRequired,
@@ -52,6 +57,7 @@ export class MyAccountAddressPopup extends PureComponent {
     
         return null;
     }
+
 
     componentDidUpdate(prevProps, _) {
         const { payload = {} } = this.props;
@@ -85,7 +91,7 @@ export class MyAccountAddressPopup extends PureComponent {
 
     renderAddressForm(form) {
         const {
-            payload: { address }, customer, closeForm, handleAddress, isExchange
+            payload: { address,  displayType = "" }, customer, closeForm, handleAddress, isExchange
         } = this.props;
         const { defaultChecked, mobileDeleteNotice } = this.state;
 
@@ -110,6 +116,7 @@ export class MyAccountAddressPopup extends PureComponent {
                     customer={customer}
                     defaultChecked={defaultChecked}
                     changeDefaultShipping={this.changeDefaultShipping}
+                    displayType={displayType}
                 />
             </>
         );

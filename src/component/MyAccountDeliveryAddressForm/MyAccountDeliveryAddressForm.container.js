@@ -21,6 +21,9 @@ export const mapStateToProps = (state) => ({
   isLoading: state.MyAccountReducer.isAddressLoading,
   addressCityData: state.MyAccountReducer.addressCityData,
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
+  isNewCheckoutPageEnable: state.AppConfig.isNewCheckoutPageEnable,
 });
 
 export default connect(
