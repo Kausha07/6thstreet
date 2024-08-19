@@ -1,6 +1,14 @@
 import { getStore } from "Store";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
-import { setShipping, setCartTotal } from "Store/Checkout/Checkout.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import {
+  setShipping,
+  setCartTotal,
+  setIsAddressSelected,
+  setShipment,
+  setCheckoutLoader,
+  setProcessAddressChange,
+} from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
   createOrder,
@@ -23,6 +31,8 @@ import {
   removeBinPromotion,
   getPaymentAuthorizationQPay,
   getPaymentAuthorizationKNET,
+  getShipment,
+  updateShipment,
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,
@@ -36,8 +46,9 @@ import {
   getInstallmentForTamara,
   createSessionTamara,
   verifyTamaraPayment,
-  updateTamaraPayment
+  updateTamaraPayment,
 } from "Util/API/endpoint/Tamara/Tamara.endpoint";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export class CheckoutDispatcher {
   async validateAddress(dispatch, address) {
@@ -113,14 +124,14 @@ export class CheckoutDispatcher {
       cartId,
       data: address,
     });
-    dispatch(setCartTotal(resp?.data?.totals?.total || 0 ));
+    dispatch(setCartTotal(resp?.data?.totals?.total || 0));
     return resp;
   }
 
   async getPaymentMethods() {
     const {
       Cart: { cartId },
-    } = getStore().getState();  
+    } = getStore().getState();
 
     return getPaymentMethods({
       cart_id: cartId.toString(),
@@ -134,19 +145,19 @@ export class CheckoutDispatcher {
   async createTamaraSession(dispatch, billingData = {}) {
     const {
       Cart: { cartId },
-    } = getStore().getState();    
+    } = getStore().getState();
 
     return createSessionTamara({
       cart_id: cartId.toString(),
     });
   }
 
-  async verifyTamaraPayment (dispatch, paymentID) {
+  async verifyTamaraPayment(dispatch, paymentID) {
     return verifyTamaraPayment(paymentID);
   }
 
-  async updateTamaraPayment (dispatch, paymentID, orderId, paymentStatus) {
-    return updateTamaraPayment(paymentID, orderId, paymentStatus)
+  async updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus) {
+    return updateTamaraPayment(paymentID, orderId, paymentStatus);
   }
 
   async getTabbyInstallment(dispatch, price) {
@@ -213,15 +224,22 @@ export class CheckoutDispatcher {
     return removeBinPromotion({ cartId });
   }
 
-  async createOrder(dispatch, code, additional_data, eddItems) {
+  async createOrder(dispatch, code, additional_data, eddItems, vipData = {} ) {
     const {
       Cart: { cartId },
     } = getStore().getState();
+
+    const {
+      is_vip = false,
+      is_vip_chargeable = true,
+    } = vipData;
 
     return createOrder({
       data: {
         cart_id: cartId,
         edd_items: eddItems,
+        is_vip,
+        is_vip_chargeable,
         payment: {
           method: code,
           data: additional_data,
@@ -262,15 +280,86 @@ export class CheckoutDispatcher {
     if (qpaymethod) {
       return getPaymentAuthorizationQPay({ paymentId });
     }
-    if(KNETpay) {
+    if (KNETpay) {
       return getPaymentAuthorizationKNET({ paymentId });
     }
-    
+
     return getPaymentAuthorization({ paymentId });
   }
 
   async capturePayment(dispatch, paymentId, orderId) {
     return capturePayment({ paymentId, orderId });
+  }
+
+  setCheckoutLoader(dispatch, currState) {
+    return setCheckoutLoader(currState);
+  }
+
+  selectIsAddressSet(dispatch, isAddress) {
+    dispatch(setIsAddressSelected(isAddress));
+  }
+
+  setProcessAddressChange(dispatch, currState) {
+    dispatch(setProcessAddressChange(currState));
+  }
+
+  async getShipment(dispatch, cartId) {
+    const {
+      AppConfig: { isExpressDelivery = false, vwoData = {} },
+    } = getStore().getState();
+
+    if(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled ) {
+      dispatch(setShipment({}));
+      this.setProcessAddressChange(dispatch, false);
+      return {};
+    }
+
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+        "cityAreaFromSelectionPopUp"
+    );
+ 
+    const reqObj = await JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    )|| cityAreaFromSelectionPopUp;
+    const params = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      address_type: reqObj?.mailing_address_type || "",
+    };
+
+    try {
+      const response = await getShipment({ cartId, params });
+      this.setProcessAddressChange(dispatch, false);
+      await CartDispatcher.getCartTotals(dispatch, cartId);
+      if(response) {
+        dispatch(setShipment(response));
+      }
+      return response;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async updateShipment(dispatch, shipmentData = {}) {
+    const reqObj = await JSON.parse(
+      localStorage.getItem("currentSelectedAddress")
+    );
+    const data = {
+      area: reqObj?.area || "",
+      city: reqObj?.city || "",
+      ...shipmentData,
+    };
+
+    try {
+      const response = await updateShipment({ data });
+
+      if (response) {
+        await this.getShipment(dispatch, shipmentData?.quote_id);
+        await CartDispatcher.getCartTotals(dispatch, shipmentData?.quote_id)
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 

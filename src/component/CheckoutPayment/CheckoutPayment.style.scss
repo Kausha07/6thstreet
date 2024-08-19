@@ -77,4 +77,9 @@
             }
         }
     }
+
+    @include mobile {
+        max-width: 100%;
+        margin: 14px 2px;
+    }
 }

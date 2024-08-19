@@ -8,11 +8,13 @@ import { MINI_CARDS } from './CreditCard.config';
 import secure from './icons/secure.png';
 import Field from 'Component/Field';
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 import cardValidator from 'card-validator';
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
 import SelectedIcon from './icons/selected.png';
+import ccimg from "./icons/ccimg.png";
 const AMEX = 'amex';
 import CreditCardSwipeToDelete from "Component/CreditCardSwipeToDelete";
 class CreditCard extends PureComponent {
@@ -38,6 +40,7 @@ class CreditCard extends PureComponent {
             isArabic: isArabic(),
             expMonth: '',
             expYear: '',
+            isMobile: isMobile.any() || isMobile.tablet(),
         };
         this.ScrollerRef = React.createRef();
     }
@@ -50,13 +53,15 @@ class CreditCard extends PureComponent {
 
     componentDidUpdate() {
         const { setOrderButtonDisabled, setOrderButtonEnabled } = this.props;
+        const { isMobile } = this.state;
 
         setOrderButtonEnabled();
         if (this.haveUnvalidFields()) {
             setOrderButtonDisabled();
         }
 
-        if (this?.ScrollerRef?.current) {
+        // focus on cvv 
+        if (this?.ScrollerRef?.current && !isMobile) {
             this?.ScrollerRef?.current?.scrollIntoView({ behavior: "smooth" });
             document.getElementById("cvv")?.focus();
         }
@@ -67,11 +72,27 @@ class CreditCard extends PureComponent {
             validatorMessage,
             numberFilled,
             expDateFilled,
-            cvvFilled
+            cvvFilled,
+            isMobile,
         } = this.state;
-        const { newCardVisible, savedCards } = this.props;
+        const {
+          newCardVisible,
+          savedCards,
+          selectedPaymentCode = "",
+          method = {},
+        } = this.props;
         if (newCardVisible) {//this case is for add new card
             return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
+        }
+        if(isMobile) {
+            const { m_code } = method;
+            const isCardsSelected = m_code === selectedPaymentCode;
+            let isSelected = savedCards.find(a => a.selected === true);
+
+            if (isSelected && isCardsSelected && !newCardVisible) {
+                return !cvvFilled;
+            }
+            return false;
         }
 
         //below code is for saved cards.
@@ -213,11 +234,18 @@ class CreditCard extends PureComponent {
 
     renderCreditCardForm() {
         const { isAmex, isSignedIn, savedCards } = this.props;
-        const { cvv, cardLogo, isArabic } = this.state;
-        
+        const { cvv, cardLogo, isArabic, isMobile } = this.state;
         return (
             <React.Fragment>               
-                {(isSignedIn && savedCards.length > 0)  ? <label block="MyCards" elem="Link" onClick={this.handleMyCardsClick}>{__("My Cards")}</label> : null}
+            {isSignedIn && savedCards.length > 0 && !isMobile ? (
+              <label
+                block="MyCards"
+                elem="Link"
+                onClick={this.handleMyCardsClick}
+              >
+                {__("My Cards")}
+              </label>
+            ) : null}
             
             <div block="CreditCard" elem="Card" dir={isArabic ? "rtl" : "ltr"}>
                 <p>{__("card number")}</p>
@@ -329,7 +357,11 @@ class CreditCard extends PureComponent {
     }
 
     renderSaveCardToggle(checkboxId) {
-        const { saveCard } = this.state;
+        const { isRenderEmmptyCard } = this.props;
+        const { saveCard, isMobile } = this.state;
+        if(!isRenderEmmptyCard && isMobile) {
+            return null;
+        }
         return (
             <div block="SaveCard">
                 <Field
@@ -366,11 +398,131 @@ class CreditCard extends PureComponent {
         return date1 > date2
     }
 
-    renderSavedCards(savedCards) {
+    handleMsiteCardClick() {
+        const { method, selectPaymentMethod } = this.props;
+        selectPaymentMethod(method);
+        this.props.toggleNewCardVisible(false);
+    }
+
+    renderSavedCardsMsite(item) {
         const { isArabic } = this.state;
+        const { method, selectedPaymentCode, newCardVisible } = this.props;
+        const { m_code } = method;
+        const isSelected = m_code === selectedPaymentCode;
+        const { entity_id, selected, details, expires_at } = item;
+        const {
+          maskedCC,
+          bin = "000000",
+          expirationDate,
+          scheme = "",
+        } = details;
+        let cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
+        let cardNumMsite = ` **** ${maskedCC}`;
+        const isExpired = this.checkisExpired(expires_at);
+
+        if (isArabic) {
+          cardNum = `${maskedCC} **** **** ${bin.substr(0, 4)}`;
+        }
+
+        if (selected && isSelected && !newCardVisible) {
+          const { cvv } = this.state;
+          const isAmex = scheme.toLowerCase() === AMEX;
+
+          return (
+            <div
+              block="SelectedSavedCard"
+              elem="Item"
+              key={entity_id}
+              ref={this.ScrollerRef}
+            >
+              <div block="selectedSavedCardMsite" mods={{ isArabic }}>
+                <div>
+                  <img src={ccimg} alt={"selected"} />
+                </div>
+
+                <div block="selectedSavedCardMsite" elem="headerWrap" mods={{ isArabic }}>
+                  <span>{this.renderMiniCard(scheme.toLowerCase())}</span>
+                  <span>Credit Card</span> <br />
+                  <span block="SelectedSavedCard" elem="CardNumber">
+                    {cardNumMsite}
+                  </span>{" "}
+                  <br />
+                  <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(
+                    5,
+                    2
+                  )}`}</span>
+                </div>
+              </div>
+
+              <div
+                block="SelectedSavedCard"
+                elem="CvvImgCon"
+                mods={{ isSelected: selected }}
+              >
+                <input
+                  id="cvv"
+                  name="cvv"
+                  value={cvv}
+                  type="password"
+                  inputMode="numeric"
+                  placeholder={__("CVV")}
+                  validation={["notEmpty"]}
+                  onPaste={this.handlePaste}
+                  maxLength={isAmex ? "4" : "3"}
+                  onChange={(e) => this.handleCvvChange(e, isAmex)}
+                  style={{ width: isAmex ? "56px" : "50px" }}
+                />
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div
+            block="SavedCard"
+            elem="Item"
+            key={entity_id}
+            ref={this.ScrollerRef}
+            onClick={() => {
+              this.handleMsiteCardClick();
+              this.props?.setIsRenderEmmptyCard(true);
+              this.props.selectSavedCard(entity_id);
+              if (this.state.cvv.length > 0) {
+                //remove cvv if filled on another card
+                this.setState({ cvv: "" });
+              }
+              this.props.applyPromotionSavedCard();
+            }}
+          >
+            <div block="selectedSavedCardMsite" mods={{ isArabic }}>
+              <div>
+                <img src={ccimg} alt={"selected"} />
+              </div>
+
+              <div block="selectedSavedCardMsite" elem="headerWrap" mods={{ isArabic }}>
+                <span>{this.renderMiniCard(scheme.toLowerCase())}</span>
+                <span>Credit Card</span> <br />
+                <span block="SavedCard" elem="CardNumber">
+                  {cardNumMsite}
+                </span>{" "}
+                <br />
+                <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(
+                  5,
+                  2
+                )}`}</span>
+              </div>
+            </div>
+          </div>
+        );
+    }
+
+    renderSavedCards(savedCards) {
+        const { isArabic, isMobile } = this.state;
         const { deleteCreditCard } = this.props;
         return (
-            <div block="SavedCards" elem="Container" style={{ gridTemplateColumns: `repeat(${savedCards.length}, 220px)` }}>
+            <div block="SavedCards" elem="Container" 
+                style={isMobile ? {} : { gridTemplateColumns: `repeat(${savedCards.length}, 220px)` }}
+            >
                 {
                     savedCards.map((item) => {
                         const { entity_id, selected, details, expires_at } = item;
@@ -380,6 +532,10 @@ class CreditCard extends PureComponent {
 
                         if (isArabic) {
                             cardNum = `${maskedCC} **** **** ${bin.substr(0, 4)}`;
+                        }
+
+                        if(isMobile) {
+                            return this.renderSavedCardsMsite(item);
                         }
 
                         if (isExpired) {
@@ -444,6 +600,15 @@ class CreditCard extends PureComponent {
     }
 
     renderSavedCardsBlock(savedCards) {
+        const { isMobile } = this.state;
+        if(isMobile) {
+            return (
+                <React.Fragment>
+                    {this.renderSavedCards(savedCards)}
+                </React.Fragment>
+            )
+        }
+
         return (
             <React.Fragment>
                 <label block="MyCards" elem="Label">
@@ -456,8 +621,18 @@ class CreditCard extends PureComponent {
     }
 
     renderCardsBlock() {
-        const { savedCards, newCardVisible } = this.props;
+        const { savedCards, newCardVisible, isRenderEmmptyCard } = this.props;
+        const { isMobile } = this.state;
         const isSavedCardsAvailable = savedCards.length > 0;
+        if(isMobile) {
+            if(isRenderEmmptyCard) {
+                return this.renderCreditCardForm();
+            }else if (isSavedCardsAvailable) {
+                return this.renderSavedCardsBlock(savedCards);
+            }
+            return null;
+        }
+
         if (newCardVisible) {
             return this.renderCreditCardForm();
         } else if (isSavedCardsAvailable) {
@@ -467,7 +642,8 @@ class CreditCard extends PureComponent {
     }
 
     render() {
-        const { loadingSavedCards, newCardVisible, isSignedIn } = this.props;
+        const { loadingSavedCards, newCardVisible, isSignedIn, isRenderEmmptyCard } = this.props;
+        const { isMobile } = this.state;
         if (loadingSavedCards) {
             return null;
         }
@@ -476,13 +652,13 @@ class CreditCard extends PureComponent {
                 {this.renderValidatorInfo()}
                 {this.renderCardsBlock()}
                 {
-                    newCardVisible && isSignedIn
+                    ((newCardVisible && isSignedIn) || (isSignedIn && isRenderEmmptyCard))
                     ?
                     this.renderSaveCardToggle('save_card_info')
                     :
                     null
                 }
-                {this.renderAcceptedCardsInfo()}
+                {!isMobile || isRenderEmmptyCard ? this.renderAcceptedCardsInfo() : null }
             </div>
         );
     }

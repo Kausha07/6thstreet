@@ -53,7 +53,12 @@ export class CreditCardContainer extends PureComponent {
     };
 
     componentDidMount() {
-        const { customer, toggleNewCardVisible, getSavedCards } = this.props;
+        const { customer, toggleNewCardVisible, getSavedCards, isRenderEmmptyCard } = this.props;
+        if(isRenderEmmptyCard) {
+            toggleNewCardVisible(true);
+            return;
+        }
+
         if (customer && customer.id) {
             getSavedCards();
         } else {

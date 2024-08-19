@@ -1,0 +1,245 @@
+.deliveryAddressMainBlock {
+  &_isArabic {
+    direction: rtl;
+  }
+  .deliveryAddressOuterBlock {
+    .deliveryAddressPopUp {
+      overflow: hidden;
+      @include mobile {
+        height: 479px;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffffff;
+        padding: 20px 20px;
+        z-index: 100;
+        border-radius: 12px;
+      }
+
+      @include desktop {
+        width: 570px;
+        height: 80vh;
+        background: #ffffff;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px;
+      }
+    }
+
+    .deliveryAddressInnerBlock {
+      .deliveryAddressUpperInnerBlock {
+        .deliveryTextwithAddNewButton {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .deliveryText {
+            font-family: Avenir Next;
+            font-weight: 600;
+            text-transform: initial;
+            font-size: 22px;
+          }
+
+          .addnewButton {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 36px;
+            min-width: 110px;
+            border: 1px solid #0b92d3;
+            font-family: Avenir Next;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0b92d3;
+            border-radius: 10px;
+            text-transform: initial;
+            font-family: Avenir Next;
+            padding: 0 12px;
+
+            .plusIconImage {
+              height: 16px;
+              width: 16px;
+            }
+          }
+
+          @include mobile {
+            .deliveryText {
+              font-size: 20px;
+              width: 70%;
+            }
+          }
+        }
+
+        .paragraphText {
+          margin-bottom: 15px;
+          font-family: Avenir Next;
+          font-weight: 400;
+          line-height: 18px;
+          color: #616161;
+        }
+      }
+
+      .allAddressAndEditBlock {
+        @include mobile {
+          height: 250px;
+          padding-bottom: 50px;
+        }
+
+        @include desktop {
+          height: 53vh;
+          padding-bottom: 50px;
+        }
+
+        overflow-y: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        .deliveryAddressInfoBlock {
+          display: flex;
+          justify-content: space-between;
+          border-top: 1px solid #dedede;
+          padding: 15px 0;
+
+          .nameAndCityAreaBlock {
+            padding-left: 35px;
+            width: 95%;
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+            }
+
+            &::before {
+              top: 0;
+              left: 0;
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              border: 1px solid #979797;
+              background: #ffffff;
+            }
+
+            &::after {
+              opacity: 0;
+            }
+
+            &_isSelected {
+              &::after {
+                opacity: 1;
+                top: 0;
+                left: 0;
+                width: 18px;
+                height: 18px;
+                background: url(../Icons/BlueTick/icon.svg) no-repeat center;
+                transform: none;
+                -webkit-transform: none;
+              }
+
+              &::before {
+                opacity: 0;
+              }
+            }
+
+            .nameWithDefaultText {
+              display: flex;
+              align-items: center;
+
+              .nameBlock {
+                font-family: Avenir Next;
+                font-size: 14px;
+                font-weight: 600;
+                text-transform: uppercase;
+              }
+
+              .defaultText {
+                width: 60px;
+                height: 20px;
+                border-radius: 4px;
+                opacity: 0px;
+                background: #ebebeb;
+                text-align: center;
+                font-size: 12px;
+                font-weight: 500;
+                color: #565656;
+                line-height: 20px;
+                margin: 0 10px;
+              }
+            }
+
+            .cityAreaInfo {
+              margin-top: 5px;
+              .street,
+              .city,
+              .number {
+                font-family: Avenir Next;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 16px;
+                margin-top: 5px;
+              }
+            }
+          }
+          .isArabic {
+            padding-left: initial;
+            padding-right: 35px;
+
+            &::before {
+              left: initial;
+              right: 0;
+            }
+            &_isSelected {
+              &::after {
+                opacity: 1;
+                top: 0;
+                left: initial;
+                right: 0;
+                width: 18px;
+                height: 18px;
+                background: url(../Icons/BlueTick/icon.svg) no-repeat;
+                transform: none;
+                -webkit-transform: none;
+              }
+
+              &::before {
+                opacity: 0;
+              }
+            }
+          }
+        }
+      }
+
+      .deliverHereBlock {
+        width: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffffff;
+        text-align: center;
+        .deliverHereButton {
+          width: 90%;
+          background: #000000;
+          color: #ffffff;
+          font-family: Avenir Next;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 15px;
+          text-align: center;
+          height: 50px;
+          z-index: 96;
+          border-radius: 5px;
+          margin: 25px auto;
+
+          @include desktop {
+            width: 335px;
+          }
+        }
+      }
+    }
+  }
+}

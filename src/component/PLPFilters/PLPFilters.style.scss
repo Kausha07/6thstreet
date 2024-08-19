@@ -238,6 +238,9 @@
           max-height: 180px;
         }
       }
+      &:last-child{
+        margin-bottom: 100px;
+      }
     }
     &-Refine {
       text-transform: uppercase;
@@ -443,6 +446,11 @@
                 }
               }
             }
+          }
+        }
+        .cityAreaAddressSelection {
+          .cityAreaDropdown {
+            max-width: 90%;
           }
         }
       }

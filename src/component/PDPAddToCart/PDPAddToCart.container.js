@@ -56,7 +56,14 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   eddResponse: state.MyAccountReducer.eddResponse,
   eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
-  addtoCartInfo:state.PDP.addtoCartInfo
+  addtoCartInfo:state.PDP.addtoCartInfo,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+  cutOffTime: state.MyAccountReducer.cutOffTime,
+  vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -453,7 +460,16 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag=()=>null
+      addTag=()=>null,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      currentSelectedCityArea, 
+      isSignedIn,
+      cutOffTime,
+      isExpressTimeExpired,
+      vwoData,
+      is_express_visible= false,
+      mailing_address_type,
     } = this.props;
     const {
       mappedSizeObject,
@@ -478,7 +494,16 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
-      addTag
+      addTag,
+      isExpressDelivery,
+      isExpressServiceAvailable,
+      currentSelectedCityArea,
+      isSignedIn,
+      cutOffTime,
+      isExpressTimeExpired,
+      vwoData,
+      is_express_visible,
+      mailing_address_type,
     };
   };
 
@@ -528,7 +553,7 @@ export class PDPAddToCartContainer extends PureComponent {
     let {eddResponse, eddResponseForPDP } = this.props;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(this.state.productStock)[0];
     let new_item = true;
-    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    let eddRequest = localStorage.getItem("EddAddressReq");
     if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
       eddResponse["pdp"].map(eddVal => {
         if(eddVal.sku == sku) {
@@ -549,7 +574,7 @@ export class PDPAddToCartContainer extends PureComponent {
           }
         })
       })
-      sessionStorage.setItem(
+      localStorage.setItem(
         "EddAddressRes",
         JSON.stringify(obj),
       );
@@ -582,7 +607,8 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType = "",
       closeAddToCartPopUp,
       edd_info,
-      addtoCartInfo
+      addtoCartInfo,
+      is_express_visible=false
     } = this.props;
 
     const eventPageType = popUpType === "wishListPopUp" ? "wishlist" : "pdp";
@@ -677,6 +703,7 @@ export class PDPAddToCartContainer extends PureComponent {
           size_id: optionId,
           categories: categories, 
           variant_availability: in_stock,
+          is_express_visible: is_express_visible,
           ...addtoCartInfo
         },
       });
@@ -767,6 +794,7 @@ export class PDPAddToCartContainer extends PureComponent {
           size_id: optionId,
           categories: categories, 
           variant_availability: in_stock,
+          is_express_visible: is_express_visible,
           ...addtoCartInfo
         },
       });
@@ -875,7 +903,8 @@ export class PDPAddToCartContainer extends PureComponent {
         size_us = [],
       },
       product,
-      addtoCartInfo
+      addtoCartInfo,
+      is_express_visible = false
     } = this.props;
     let newCartInfo = {};
     const { selectedSizeType, selectedSizeCode } = this.state;
@@ -925,7 +954,17 @@ export class PDPAddToCartContainer extends PureComponent {
     if(event === EVENT_MOE_ADD_TO_CART){
       newCartInfo = addtoCartInfo;
     }
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+      BrowserDatabase.getItem("currentSelectedAddress")?.city
+      ? BrowserDatabase.getItem("currentSelectedAddress").city
+      : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(event, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -950,6 +989,7 @@ export class PDPAddToCartContainer extends PureComponent {
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      is_express_visible: is_express_visible,
       ...newCartInfo
     });
   }

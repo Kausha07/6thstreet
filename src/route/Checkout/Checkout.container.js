@@ -83,7 +83,7 @@ import Loader from "Component/Loader";
 import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
-import { getDefaultEddMessage } from "Util/Date/index";
+import { getDefaultEddMessage, formatExpressDate } from "Util/Date/index";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -91,8 +91,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data, eddItems) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
+  createOrder: (code, additional_data, eddItems, vipData) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems, vipData),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -142,7 +142,13 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.verifyTamaraPayment(dispatch, paymentID),
   updateTamaraPayment: (paymentID, orderId, paymentStatus) =>
     CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus),
+  selectIsAddressSet: (isAddress) =>
+    CheckoutDispatcher.selectIsAddressSet(dispatch, isAddress),
+  getShipment: (cartId) => CheckoutDispatcher.getShipment(dispatch, cartId),
+  setCheckoutLoader: (currState) =>
+    CheckoutDispatcher.setCheckoutLoader(dispatch, currState),
 });
+
 export const mapStateToProps = (state) => ({
   couponsItems: state.CartReducer.cartCoupons,
   couponLists: state.CartReducer.cartCoupons,
@@ -172,6 +178,10 @@ export const mapStateToProps = (state) => ({
   addressIDSelected: state.MyAccountReducer.addressIDSelected,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+  isAddressSelected: state.CheckoutReducer.isAddressSelected,
+  shipment: state.CheckoutReducer.shipment,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -607,7 +617,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   async componentDidMount() {
-    const { setMeta, cartId, updateTotals, getCouponList } = this.props;
+    const {
+      setMeta,
+      cartId,
+      updateTotals,
+      getCouponList,
+      isSignedIn,
+      getShipment,
+      addresses,
+    } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
@@ -656,6 +674,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
       this.getOrderDetails(paymentData);
     }
+
+    // If a user has no address in the current country
+    const isNoAddressAvailableCountry =
+      !addresses.some((add) => add.country_code == getCountryFromUrl());
+
+    // calling get shipment
+    if(!isSignedIn || isNoAddressAvailableCountry) {
+      getShipment(cartId);
+    }
   }
 
   componentDidCatch(error, info) {
@@ -679,6 +706,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       totals: { items = [], discount = 0, total, total_segments = [] },
       updateStoreCredit,
       isSignedIn,
+      isExpressDelivery,
     } = this.props;
 
     const { checkoutStep, initialGTMSent, PaymentRedirect } = this.state;
@@ -687,6 +715,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (checkoutStep === BILLING_STEP && totals?.total !== prevtotals?.total) {
       this.getPaymentMethods();
     }
+
+    if (checkoutStep === SHIPPING_STEP && totals?.total !== prevtotals?.total) {
+      this.getPaymentMethods();
+    }
+    
     if (PaymentRedirect) {
       if (checkoutStep !== prevCheckoutStep) {
         updateStoreCredit();
@@ -727,7 +760,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     if (items.length !== 0) {
-      const mappedItems = checkProducts(items) || [];
+      const mappedItems = checkProducts(items, totals, isExpressDelivery) || [];
 
       if (mappedItems.length !== 0) {
         history.push("/cart", { errorState: false });
@@ -781,7 +814,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     });
   }
   componentWillUnmount() {
+    const { selectIsAddressSet } = this.props;
     this.removeBinPromotion();
+    selectIsAddressSet(false);
   }
 
   handleCheckoutGTM(isInitial = false) {
@@ -907,7 +942,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async saveAddressInformation(addressInformation) {
-    const { saveAddressInformation, showErrorNotification } = this.props;
+    const {
+      saveAddressInformation,
+      showErrorNotification,
+      selectIsAddressSet,
+      getShipment,
+      cartId,
+    } = this.props;
     const { shipping_address } = addressInformation;
 
     this.setState({
@@ -925,6 +966,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       } else {
         const { totals } = data;
 
+        selectIsAddressSet(true);
         BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
 
         this.setState({
@@ -932,6 +974,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         });
 
         this.getPaymentMethods();
+        //get shipment after update address
+        getShipment(cartId);
       }
     }, this._handleError);
   }
@@ -956,8 +1000,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     /*await*/ this.savePaymentMethodAndPlaceOrder(paymentInformation);
   }
 
+  
+  
+  
+
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
-    console.table(paymentInformation);
+    // console.table(paymentInformation);
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
@@ -975,18 +1023,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       totals,
       isSignedIn,
       international_shipping_fee,
+      shipment,
+      isExpressDelivery
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
     let eddItems = [];
+    let sku_delivery_type = {};
     Event.dispatch(EVENT_GTM_CHECKOUT, {
       totals,
       step: 3,
       payment_code: code ? code : null,
     });
-    
+    const countryCode = getCountryFromUrl();
     if (!isSignedIn) {     
       if (paymentInformation?.billing_address?.firstname) MOE_AddFirstName(paymentInformation?.billing_address?.firstname);
       if (paymentInformation?.billing_address?.lastname) MOE_addLastName(paymentInformation?.billing_address?.lastname);
@@ -996,7 +1047,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         MOE_AddUniqueID(paymentInformation.billing_address.guest_email?.toLowerCase());
       }
     }
-
+    if(isExpressDelivery && shipment) {
+      shipment.expected_shipments && shipment.expected_shipments.map(group => {
+        group.items && group.items.map(item => sku_delivery_type[item.sku] = group.selected_delivery_type)
+      })
+      BrowserDatabase.setItem(sku_delivery_type,"SHIPMENT_DETAILS")
+    }
     if (
       international_shipping_fee &&
       cartItems &&
@@ -1024,6 +1080,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           international_vendor,
           sku,
           extension_attributes,
+          express_delivery = null
         } = full_item_info;
         const defaultDay = extension_attributes?.click_to_collect_store
           ? edd_info.ctc_message
@@ -1047,48 +1104,60 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           ({ vendor }) =>
             vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
         );
-        eddItems.push({
-          sku: sku,
-          edd_date:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_date"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_date"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : extension_attributes?.click_to_collect_store
-              ? defaultEddDateString
-              : finalEdd,
-          cross_border: cross_border,
-          edd_message_en:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_message_en"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_message_en"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : actualEddMess,
-          edd_message_ar:
-            isIntlBrand &&
-            intlEddObj &&
-            edd_info &&
-            edd_info.has_cross_border_enabled
-              ? intlEddObj["edd_message_ar"]
-              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
-              ? intlEddResponse["checkout"][0]["edd_message_ar"]
-              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : actualEddMess,
-          intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
-            ? international_vendor : null)
-            : null,
-        });
+        if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
+          const express_delivery_day = sku_delivery_type[sku] !=0 ? (sku_delivery_type[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null 
+          eddItems.push({
+            sku: sku,
+            cross_border: cross_border,
+            edd_date: formatExpressDate(express_delivery_day, countryCode),
+            edd_message_en: "",
+            edd_message_ar: "",
+            intl_vendors: null,
+          });
+        } else {
+          eddItems.push({
+            sku: sku,
+            edd_date:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_date"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_date"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : extension_attributes?.click_to_collect_store
+                ? defaultEddDateString
+                : finalEdd,
+            cross_border: cross_border,
+            edd_message_en:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_message_en"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_message_en"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : actualEddMess,
+            edd_message_ar:
+              isIntlBrand &&
+              intlEddObj &&
+              edd_info &&
+              edd_info.has_cross_border_enabled
+                ? intlEddObj["edd_message_ar"]
+                : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+                ? intlEddResponse["checkout"][0]["edd_message_ar"]
+                : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : actualEddMess,
+            intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
+              ? international_vendor : null)
+              : null,
+          });
+        }
       });
     }
     if (edd_info?.is_enable && edd_info.has_item_level && cartItems) {
@@ -1097,7 +1166,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           cross_border = 0,
           sku,
           extension_attributes,
-          international_vendor = null
+          international_vendor = null,
+          express_delivery = null
         } = full_item_info;
         const defaultDay = extension_attributes?.click_to_collect_store
           ? edd_info.ctc_message
@@ -1149,24 +1219,35 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             finalEddForLineItem = defaultEddDateString;
           }
         }
-        
-        eddItems.push({
-          sku: sku,
-          edd_date:
-            cross_border && edd_info && !edd_info.has_cross_border_enabled
-              ? null
-              : edd_info && extension_attributes?.click_to_collect_store
-              ? defaultEddDateString
-              : finalEddForLineItem,
-          cross_border: cross_border,
-          edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
-          ? null
-          : actualEddMess,
-          edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
-          ? null
-          : actualEddMess,
-          intl_vendors: cross_border && international_vendor ? international_vendor : null
-        });
+        if(isExpressDelivery && sku_delivery_type.hasOwnProperty(sku) && (sku_delivery_type[sku] == 1 || sku_delivery_type[sku] == 2)) {
+          const express_delivery_day = sku_delivery_type[sku] !=0 ? (sku_delivery_type[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null 
+          eddItems.push({
+            sku: sku,
+            cross_border: cross_border,
+            edd_date: formatExpressDate(express_delivery_day, countryCode),
+            edd_message_en: "",
+            edd_message_ar: "",
+            intl_vendors: null,
+          });
+        } else {
+          eddItems.push({
+            sku: sku,
+            edd_date:
+              cross_border && edd_info && !edd_info.has_cross_border_enabled
+                ? null
+                : edd_info && extension_attributes?.click_to_collect_store
+                ? defaultEddDateString
+                : finalEddForLineItem,
+            cross_border: cross_border,
+            edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
+            ? null
+            : actualEddMess,
+            edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
+            ? null
+            : actualEddMess,
+            intl_vendors: cross_border && international_vendor ? international_vendor : null
+          });
+        }
       });
     }
     if (code === CARD) {
@@ -1223,7 +1304,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd, eddItems) {
-    const { createOrder, showErrorNotification, totals } = this.props;
+    const {
+      createOrder,
+      showErrorNotification,
+      totals,
+      isExpressDelivery,
+      customer,
+      isExpressServiceAvailable,
+    } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -1234,7 +1322,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data, eddItems);
+      const vipData = {
+        is_vip : customer?.vipCustomer == 1 ? true : false,
+        is_vip_chargeable: isExpressServiceAvailable?.is_vip_chargeable,
+      };
+      const response = await createOrder(code, data, eddItems, vipData);
+      if (response?.data?.code === "CHK-33" && isExpressDelivery) {
+        showErrorNotification(__(response?.data?.message));
+        history.push({
+          pathname: "/cart",
+        });
+        return;
+      }
+
       if (response && response.data) {
         if (finalEdd) {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
@@ -1419,6 +1519,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     });
                 }
               }
+              //  saving cart details to local for use on Thank you page
+              localStorage.setItem("CART_DETAILS", JSON.stringify(totals));
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
               this.setDetailsStep(order_id, increment_id);
               this.resetCart();
@@ -1540,7 +1642,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   getPaymentMethods() {
-    const { getPaymentMethods } = this.props;
+    const { getPaymentMethods, setCheckoutLoader } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
@@ -1557,9 +1659,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({
           isLoading: false,
           paymentMethods: availablePaymentMethods,
-          checkoutStep: BILLING_STEP,
         });
       }
+      setCheckoutLoader(false);
     }, this._handleError);
   }
 

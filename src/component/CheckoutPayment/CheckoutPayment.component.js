@@ -17,6 +17,7 @@ import tabbyAr from "./icons/tabby-logo-black-ar@2x.png";
 import TamaraLogo from "./icons/Tamara.svg";
 
 import "./CheckoutPayment.style";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export class CheckoutPayment extends PureComponent {
   static propTypes = {
@@ -36,9 +37,16 @@ export class CheckoutPayment extends PureComponent {
 
   sendMoeEvent(method) {
     const {
-      totals: { currency_code, discount, subtotal, total },
+      totals: { currency_code, discount, subtotal, total, items },
     } = this.props;
+    let is_express_visible = false;
+    console.log("sendMoeEvent ", this.props);
     if (method) {
+      items.map(item => {
+        if(['today delivery', 'tomorrow delivery'].indexOf(item?.full_item_info?.express_delivery?.toLowerCase()) >-1){
+          is_express_visible = true;
+        }
+      });
       const payment_Type =
       (method == "msp_cashondelivery")
           ? "Cash on Delivery"
@@ -49,7 +57,18 @@ export class CheckoutPayment extends PureComponent {
           : (method == "tabby_installments")
           ? "Tabby - Installments"
           : method;
+      const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.city
+          ? BrowserDatabase.getItem("currentSelectedAddress").city
+          : null;
+      const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+          BrowserDatabase.getItem("currentSelectedAddress")?.area
+          ? BrowserDatabase.getItem("currentSelectedAddress").area
+          : null;
+          console.log("sendMoeEvent visble ", is_express_visible)
       MOE_trackEvent(EVENT_MOE_ADD_PAYMENT_INFO, {
+        city: city,
+        area: area,
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         subtotal_amount: subtotal,
@@ -58,6 +77,7 @@ export class CheckoutPayment extends PureComponent {
         currency: currency_code,
         payment_type: payment_Type,
         app6thstreet_platform: "Web",
+        is_express_visible: is_express_visible
       });
     }
   }

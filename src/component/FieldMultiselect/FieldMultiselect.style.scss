@@ -104,16 +104,16 @@ $select-arrow-width: 6px !default;
     // margin: 10px;
     font-size: 14px;
     letter-spacing: 0.5px;
-    line-height: 18px;
+    // line-height: 18px;
     padding: 15px 0px;
     text-align: left;
     transition: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    &_selectedItems {
-      padding-bottom: 22px;
-    }
+    // &_selectedItems {
+    //   padding-bottom: 22px;
+    // }
     @include mobile {
       // border: 1px solid var(--field-multiselect-border);
       padding: 0 15px;
@@ -156,6 +156,16 @@ $select-arrow-width: 6px !default;
         right: unset;
         left: 10px;
       }
+    }
+  }
+  .cityAreaAddressSelection {
+    .cityAreaDropdown {
+      max-width: 90%;
+      padding: 10px;
+      @include mobile{
+        margin: 0 auto;
+      }
+      
     }
   }
 
@@ -466,6 +476,15 @@ $select-arrow-width: 6px !default;
       flex-direction: column;
       margin: -20px;
       width: 10%;
+    }
+  }
+
+  .expressNotificationPara {
+    font-size: 13px;
+    margin: 5px;
+    
+    &_isArabic {
+      direction: rtl;
     }
   }
 }

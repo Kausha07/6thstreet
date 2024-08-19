@@ -47,6 +47,8 @@ const MsiteAddToCartPopUp = lazy(() =>
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component";
 import Ratings from 'Component/Ratings/Ratings';
+import ExpressDeliveryTag from "Component/ExpressDeliveryTag";
+
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
 var influencerPDPURL;
@@ -56,7 +58,10 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
-  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false
+  isNewDesign:state.AppConfig?.vwoData?.NewPDP?.isFeatureEnabled || false,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -109,7 +114,8 @@ class ProductItem extends PureComponent {
       imageScroller: false,
       showImageScroller: false,
       colorVarientratingSku: null,
-      colorVarientratingBrand: null
+      colorVarientratingBrand: null,
+      is_express_visible: false
     };
   }
   componentDidMount() {
@@ -117,6 +123,12 @@ class ProductItem extends PureComponent {
     if(pageType !== "wishlist") {
       this.registerViewPortEvent();
     }
+  }
+
+  setExpressVisible = (visible) => {
+    this.setState({
+      is_express_visible: visible
+    });
   }
 
   registerViewPortEvent() {
@@ -168,8 +180,8 @@ class ProductItem extends PureComponent {
       : null;
     const productDataWithQueryID =
       page == "plp" && queryID
-        ? { ...product, ...{ productQueryID: queryID } }
-        : product;
+        ? { ...product, ...{ productQueryID: queryID }, is_express_visible: this.state.is_express_visible }
+        : {...product, is_express_visible: this.state.is_express_visible};
     if (page == "plp" && sendProductImpressionOnBundle) {
       sendProductImpression([productDataWithQueryID]);
     } else {
@@ -348,6 +360,7 @@ class ProductItem extends PureComponent {
         isFilters={isFilters}
         product_position={position}
         colorVarientButtonClick={this.state?.colorVarientButtonClick}
+        is_express_visible={this.state.is_express_visible}
       />
     );
   }
@@ -857,7 +870,7 @@ class ProductItem extends PureComponent {
       isVueData,
       isFilters,
     } = this.props;
-    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick, is_express_visible } = this.state;
     const modifiedProductData = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data : product; 
     let price = Array.isArray(modifiedProductData?.price)
       ? Object.values(modifiedProductData?.price[0])
@@ -879,6 +892,7 @@ class ProductItem extends PureComponent {
           isVueData={isVueData}
           isFilters={isFilters}
           colorVarientButtonClick={colorVarientButtonClick}
+          is_express_visible={is_express_visible}
         />
       </div>
     );
@@ -1003,16 +1017,24 @@ class ProductItem extends PureComponent {
     }
   };
 
+  renderExpressDeliveryTag = () => {
+    const { product } = this.props;
+
+    return <ExpressDeliveryTag productInfo={product} setExpressVisible={this.setExpressVisible} />;
+  };
 
   render() {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
-      pageType
+      pageType,
+      isExpressDelivery,
+      vwoData,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const showExpressDeliveryTagArr = ["wishlist", "plp", "cartSlider"];
     return (
       <li
         id={sku}
@@ -1039,6 +1061,10 @@ class ProductItem extends PureComponent {
           {this.renderTitle()}
           {this.renderPrice()}
           {!isMobile.any() &&
+            showExpressDeliveryTagArr?.includes(pageType) &&
+            isExpressDelivery && vwoData?.Express?.isFeatureEnabled &&
+            this.renderExpressDeliveryTag()}
+          {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           pageType !== "cartSlider" &&
@@ -1051,7 +1077,10 @@ class ProductItem extends PureComponent {
             {this.renderExclusiveMobile(true)}
           </div>
         )}
-
+        {isMobile.any() &&
+          showExpressDeliveryTagArr?.includes(pageType) &&
+          isExpressDelivery && vwoData?.Express?.isFeatureEnabled &&
+          this.renderExpressDeliveryTag()}
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer

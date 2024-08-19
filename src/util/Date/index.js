@@ -84,7 +84,7 @@ export const getDefaultEddDate = (days) => {
     .toISOString()
     .substring(0, 10);
   const defaultEddDay = defaultEddDate.toLocaleString("en-US", {
-    weekday: "long",
+    weekday: "short",
   });
   const defaultEddMonth = defaultEddDate.toLocaleString("en-US", {
     month: "short",
@@ -177,3 +177,82 @@ export const getDefaultEddMessage = (
   }
   return { defaultEddMess, defaultEdd };
 };
+
+export const formatRefundDate = (dateStr, countryCode) => {
+  if (!dateStr) return null;
+
+  // Create a new Date object from the UTC date string
+  const utcDate = new Date(dateStr);
+
+  // Define time zone offsets for the respective country codes
+  const timeZoneOffsets = {
+    "ae": 4,  // UAE (Asia/Dubai) is UTC+4
+    "sa": 3,  // KSA (Asia/Riyadh) is UTC+3
+    "bh": 3,  // Bahrain (Asia/Bahrain) is UTC+3
+    "om": 4,  // Oman (Asia/Muscat) is UTC+4
+    "kw": 3,  // Kuwait (Asia/Kuwait) is UTC+3
+    "qa": 3   // Qatar (Asia/Qatar) is UTC+3
+  };
+
+  // Get the offset based on the country code (default to 0 if not found)
+  const offset = timeZoneOffsets[countryCode.toLowerCase()] || 0;
+
+  // Convert UTC to local time based on the offset
+  utcDate.setHours(utcDate.getHours() + offset);
+
+  // Define an array for month names
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Extract the day, month, and year from the Date object
+  const day = utcDate.getUTCDate(); // Get day of the month (1-31)
+  let month = monthNames[utcDate.getUTCMonth()]; // Get month name
+  const year = utcDate.getUTCFullYear(); // Get full year (e.g., 2023)
+
+  console.log("day month year ", day, month, year);
+
+  // Translate month if needed
+  month = isArabic() ? MONTHS_ARABIC_TRANSLATION[month] : month;
+
+  // Format the date as "DD Mon YYYY"
+  return `${day} ${month} ${year}`;
+};
+
+export const formatExpressDate = (dayType, countryCode) => {
+  const timeZoneMap = {
+    bh: 'Asia/Bahrain',   // Bahrain
+    om: 'Asia/Muscat',    // Oman
+    kw: 'Asia/Kuwait',    // Kuwait
+    sa: 'Asia/Riyadh',    // Saudi Arabia
+    qa: 'Asia/Qatar',      // Qatar
+    ae: 'Asia/Dubai',      // Qatar
+  };
+  const timeZone = timeZoneMap[countryCode.toLowerCase()];
+  
+  if (!timeZone) {
+    return ""; // Return an empty string if the country code is not found
+  }
+
+  const options = { timeZone: timeZone, year: 'numeric', month: '2-digit', day: '2-digit' };
+  const today = new Date();
+  
+  // Convert current time to the specified time zone
+  const formattedDate = new Intl.DateTimeFormat('en-US', options).format(today);
+  
+  // Create a date object from the formatted date
+  const [month, day, year] = formattedDate.split('/');
+  const targetDate = new Date(`${year}-${month}-${day}`);
+
+  if (dayType?.toLowerCase() === 'tomorrow delivery') {
+    targetDate.setDate(targetDate.getDate() + 1);
+  } else if (dayType?.toLowerCase() === 'today delivery') {
+    // No change needed
+  } else {
+    return "";
+  }
+
+  const yearFormatted = targetDate.getFullYear();
+  const monthFormatted = String(targetDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const dayFormatted = String(targetDate.getDate()).padStart(2, '0');
+  
+  return `${yearFormatted}-${monthFormatted}-${dayFormatted}`;
+}

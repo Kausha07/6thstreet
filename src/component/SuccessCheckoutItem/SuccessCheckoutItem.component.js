@@ -1,17 +1,21 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Suspense, lazy } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Store } from "../Icons";
 import Price from "Component/Price";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddMessage, getDefaultEddDate } from "Util/Date/index";
+import { Shipping } from "Component/Icons";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
+const ExpressAndStandardEDD = lazy(() =>
+  import("Component/ExpressAndStandardEDD")
+);
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
@@ -283,6 +287,65 @@ export class SuccessCheckoutItem extends PureComponent {
     )
   }
 
+  renderEddWhenExpressEnabled = (crossBorder) => {
+    const {
+      edd_info,
+      item: {
+        full_item_info: {
+          cross_border = 0,
+          express_delivery = "",
+          mp_quantity = 0,
+          store_quantity = 0,
+          whs_quantity = 0,
+        },
+        sku,
+        extension_attributes,
+      },
+      shipmentDetails
+    } = this.props;
+
+    let actualEddMess = this.formatEddMessage(crossBorder);
+    const isIntlBrand =
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+
+    if (!actualEddMess) {
+      return null;
+    }
+
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="AreaText" mods={{ isArabic }}>
+          <Shipping />
+          <span>{splitReadyByKey}</span>
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div block="EddExpressWrapper">
+        <Suspense fallback={<div>{__("Loading Express Info")}</div>}>
+          <ExpressAndStandardEDD
+            express_delivery={shipmentDetails[sku] !=0 ? (shipmentDetails[sku] == 1 ? "Today Delivery" : "Tomorrow Delivery") : null }
+            actualEddMess={actualEddMess}
+            splitKey={splitKey}
+            isPDP={false}
+            isIntlBrand={isIntlBrand}
+            cross_border={cross_border}
+            isCart={true}
+            whs_quantity={whs_quantity}
+            store_quantity={store_quantity}
+            mp_quantity={mp_quantity}
+            showTimer={false}
+            showStandardText={true}
+          />
+        </Suspense>
+      </div>
+    );
+  };
+
   renderContent() {
     const {
       isLikeTable,
@@ -298,6 +361,8 @@ export class SuccessCheckoutItem extends PureComponent {
       eddResponse,
       intlEddResponse,
       international_shipping_fee,
+      isExpressDelivery,
+      vwoData,
     } = this.props;
     const isIntlBrand =
     cross_border === 1 && edd_info && edd_info.has_cross_border_enabled ;
@@ -317,13 +382,21 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductPrice()}
         {this.renderClickAndCollectStoreName()}
 
-        {edd_info &&
+        {(!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled) && edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
-        {((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
+
+        {(isExpressDelivery && vwoData?.Express?.isFeatureEnabled) && edd_info &&
+        edd_info.is_enable &&
+        edd_info.has_thank_you &&
+        ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
+        !isFailed &&
+        this.renderEddWhenExpressEnabled(cross_border === 1)}
+
+        {!isExpressDelivery && ((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
       </figcaption>
     );
   }

@@ -92,7 +92,6 @@
 
     @include desktop() {
       display: block;
-      border-top: 1px solid var(--my-acc-border);
       margin-top: 0;
       padding-top: 29px;
     }
@@ -102,7 +101,7 @@
     position: absolute;
     display: flex;
     align-items: center;
-    top: 11px;
+    top: 12px;
     left: 10px;
     font-size: 14px;
   }

@@ -41,10 +41,10 @@ import { isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 import { Helmet } from "react-helmet";
+import ModelForMobilePLPFilter from "../../component/ModalWithOutsideClick/ModelForMobilePLPFilter.component";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
-export const mapDispatchToProps = (_dispatch) => ({});
 
 export class PLP extends PureComponent {
   constructor(props) {
@@ -625,9 +625,10 @@ export class PLP extends PureComponent {
             </div>
           </ContentWrapper>
           {this.renderFooterContent()}
+          <ModelForMobilePLPFilter />
         </main>
       );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PLP);
+export default connect(mapStateToProps)(PLP);

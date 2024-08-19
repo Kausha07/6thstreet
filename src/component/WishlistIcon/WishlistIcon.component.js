@@ -74,6 +74,7 @@ class WishlistIcon extends PureComponent {
       isFilters,
       product_position,
       indexCodeRedux,
+      is_express_visible=false
     } = this.props;
 
     const customer = BrowserDatabase.getItem("customer");
@@ -215,14 +216,24 @@ class WishlistIcon extends PureComponent {
           productPosition: product_position || "",
           colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
           categories: data?.categories,
-          variant_availability: data?.in_stock
+          variant_availability: data?.in_stock,
+          is_express_visible: is_express_visible
         },
       });
     }
     const windowLocation = new URL(window.location.href);
     const parseProductUrl = windowLocation + data?.url_key + ".html";
-
+    const city = BrowserDatabase.getItem("currentSelectedAddress") &&
+      BrowserDatabase.getItem("currentSelectedAddress")?.city
+      ? BrowserDatabase.getItem("currentSelectedAddress").city
+      : null;
+    const area = BrowserDatabase.getItem("currentSelectedAddress") &&
+        BrowserDatabase.getItem("currentSelectedAddress")?.area
+        ? BrowserDatabase.getItem("currentSelectedAddress").area
+        : null;
     MOE_trackEvent(EVENT_MOE_ADD_TO_WISHLIST, {
+      city: city,
+      area: area,
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -249,6 +260,7 @@ class WishlistIcon extends PureComponent {
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_position || "",
       colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
+      is_express_visible: is_express_visible
     });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({

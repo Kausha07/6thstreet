@@ -57,6 +57,8 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
   is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -320,9 +322,17 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderAccount() {
     const isFooter = false;
+    const { isExpressDelivery, vwoData } = this.props;
 
     return (
-      <HeaderAccount key="account" isFooter={isFooter} isMobile showNudge />
+      <HeaderAccount
+        key="account"
+        isFooter={isFooter}
+        isMobile
+        showNudge={
+          isExpressDelivery && vwoData?.Express?.isFeatureEnabled ? false : true
+        }
+      />
     );
   }
 
@@ -861,13 +871,18 @@ class HeaderMainSection extends NavigationAbstract {
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
     const { signInPopUp, showPLPSearch } = this.state;
-    const { displaySearch, gender } = this.props;
+    const { displaySearch, gender, isExpressDelivery } = this.props;
+    const showMegaMenuHeaderSearchStyle = isMsiteMegaMenuRoute();
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>
         <div
-          block="HeaderMainSection"
+          block={`HeaderMainSection ${
+            isExpressDelivery && !showMegaMenuHeaderSearchStyle
+              ? "expressHeaderPositionCSS"
+              : null
+          }`}
           mods={{ showPLPSearch }}
           data-visible={this.getHeaderMainSectionVisibility()}
         >

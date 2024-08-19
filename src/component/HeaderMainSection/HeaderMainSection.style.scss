@@ -12,6 +12,20 @@ main {
   }
 }
 
+.expressHeaderPositionCSS{
+  .moveDownGenders {
+    @include mobile {
+      top: 130px !important;
+      background-color: #ffffff;
+      padding-top: 18px !important;
+      padding-bottom: 18px;
+    }
+    @include tablet {
+      top: 100px;
+    }
+  }
+}
+
 .HeaderSearchSection {
   .HeaderSearch {
     @include mobile {
@@ -56,6 +70,21 @@ main {
       left : 10%;  
     }
   }
+
+  .cityAreaAddressSelection{
+    width: 100%;
+
+    .showBackgroundColor{
+      background: none;
+    }
+
+    .cityAreaDropdown{
+      margin: 0;
+      .locationImage {
+        margin: 0 8px 0 5px;
+    }
+    }
+  }
 }
 
 .HeaderSearchMegaMenuSection {
@@ -83,7 +112,7 @@ main {
       height: 54px;
       top: 49px;
     }
-    .Form {
+    #header-search  {
       border-radius: 10px;
       width: 300px;
       background-color: var(--gray);
@@ -119,7 +148,7 @@ main {
       height: 54px;
       top: 49px;
     }
-    .Form {
+    #header-search {
       border-radius: 10px;
       width: 300px;
       background-color: var(--gray);
@@ -500,7 +529,7 @@ main {
   
   .moveUpGenders {
     @include mobile {
-      top: 48px;
+      top: 46px;
       background-color: #ffffff;
       padding-top: 10px;
       padding-bottom: 18px;

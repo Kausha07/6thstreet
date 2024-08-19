@@ -53,6 +53,7 @@ import { isSignedIn as isSignedInFn } from "Util/Auth";
 import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
 import { lazy, Suspense } from "react";
 import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
+import { getValueFromTotals } from "Component/CartTotal/utils/CartTotal.helper";
 
 const DynamicContentReferralBanner = lazy(() =>
   import(
@@ -642,11 +643,7 @@ export class CheckoutSuccess extends PureComponent {
 
   renderTotalsItems() {
     const { paymentMethod, order } = this.props;
-    if (
-      (paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments" ||
-      paymentMethod?.code === TAMARA) && order
-    ) {
+    if (paymentMethod?.code === "checkout_qpay" && order) {
       const {
         order: { status, unship = [], base_currency_code: currency },
         incrementID,
@@ -690,9 +687,15 @@ export class CheckoutSuccess extends PureComponent {
       );
     } else {
       const {
-        initialTotals: { items = [], quote_currency_code, site_wide_applied = 0, coupon_code= "" },
+        initialTotals: {
+          items = [],
+          quote_currency_code,
+          site_wide_applied = 0,
+          coupon_code = "",
+        },
         incrementID,
         isFailed,
+        shipmentDetails
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -702,7 +705,9 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
-          {(incrementID || incrementID != undefined) ? `${__("Order")} #${incrementID} ${__("Details")}` : "Order Details"}
+            {incrementID || incrementID != undefined
+              ? `${__("Order")} #${incrementID} ${__("Details")}`
+              : "Order Details"}
           </div>
           <ul block="TotalItems" elem="Items">
             {items.map((item) => (
@@ -715,6 +720,7 @@ export class CheckoutSuccess extends PureComponent {
                 isLikeTable
                 checkoutPageSiteWide={site_wide_applied}
                 checkoutPageCouponCode={coupon_code}
+                shipmentDetails={shipmentDetails}
               />
             ))}
           </ul>
@@ -820,6 +826,27 @@ export class CheckoutSuccess extends PureComponent {
     );
   }
 
+  checkIsAnyExpressShipment = () => {
+    const {
+      shipmentDetails = {},
+      cartTotalRes: { total_segments = []},
+    } = this.props;
+    
+    const expressFee = getValueFromTotals(total_segments, "express_delivery_charges");
+
+    let checkIsExpressShipment = false;
+
+    for (let key in shipmentDetails) {
+      if (shipmentDetails[key] == 1 || shipmentDetails[key] == 2) {
+        checkIsExpressShipment =  true;
+      }
+    }
+  
+    if (checkIsExpressShipment && expressFee === 0) {
+      return true;
+    } else return false;
+  };
+
   renderTotals = () => {
     const { isArabic } = this.state;
     const {
@@ -827,6 +854,7 @@ export class CheckoutSuccess extends PureComponent {
       initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [] },
       international_shipping_fee,
       isSidewideCouponEnabled,
+      isExpressDelivery,
     } = this.props;
     let inventory_level_cross_border = false;
     items?.map((item) => {
@@ -838,6 +866,12 @@ export class CheckoutSuccess extends PureComponent {
         inventory_level_cross_border = true;
       }
     });
+
+    let isFreeExpressDelivery = false;
+    if (isExpressDelivery) {
+      isFreeExpressDelivery =
+        this.checkIsAnyExpressShipment() || false;
+    }
 
     return (
       <div block="PriceTotals" mods={{ isArabic }}>
@@ -876,14 +910,17 @@ export class CheckoutSuccess extends PureComponent {
               __("FREE"),
             __("International Shipping Fee")
           )}
-        {cashOnDeliveryFee
-          ? this.renderPriceLine(
+        {this.renderPriceLine(
+            getDiscountFromTotals(total_segments, "express_delivery_charges") || (isFreeExpressDelivery ? __("FREE") : 0),
+            __("Express Service")
+          )}
+        {this.renderPriceLine(
               getDiscountFromTotals(total_segments, "msp_cashondelivery"),
               getCountryFromUrl() === "QA"
                 ? __("Cash on Receiving Fee")
                 : __("Cash on Delivery Fee")
             )
-          : null}
+          }
         {this.renderDiscountPriceLine(
             getDiscountFromTotals(total_segments, "customerbalance"),
             __("My Cash"),
@@ -1561,9 +1598,19 @@ export class CheckoutSuccess extends PureComponent {
         fulfilled_from = "",
         total_mrp = 0,
         total_discount = 0,
+        express_delivery_charges = 0,
       } = {},
+      cartTotalRes: { total_segments = [] },
+      isExpressDelivery,
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
+    const expressFee = getDiscountFromTotals(total_segments, "express_delivery_charges") || 0;
+
+    let isFreeExpressDelivery = false;
+    if (isExpressDelivery) {
+      isFreeExpressDelivery =
+        this.checkIsAnyExpressShipment() || false;
+    }
 
     return (
       <div block="MyAccountOrderView" elem="OrderTotals">
@@ -1594,6 +1641,10 @@ export class CheckoutSuccess extends PureComponent {
                   divider: true,
                 }
               )}
+            {this.renderSitewidePriceLine(
+              ((express_delivery_charges || expressFee) || (isFreeExpressDelivery ? __("FREE") : 0)),
+              __("Express Service")
+            )}
             {store_credit_amount !== 0
               ? this.renderSitewidePriceLine(
                   store_credit_amount,
@@ -1651,10 +1702,20 @@ export class CheckoutSuccess extends PureComponent {
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
         international_shipping_charges= 0,
+        express_delivery_charges = 0
       },
+      cartTotalRes: { total_segments = [] },
+      isExpressDelivery,
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    const expressFee = getDiscountFromTotals(total_segments, "express_delivery_charges") || 0;
+
+    let isFreeExpressDelivery = false;
+    if (isExpressDelivery) {
+      isFreeExpressDelivery =
+        this.checkIsAnyExpressShipment() || false;
+    }
 
     return (
       <div block="MyAccountOrderView" elem="OrderTotals">
@@ -1667,6 +1728,10 @@ export class CheckoutSuccess extends PureComponent {
             {this.renderPriceLineQPAY(
               international_shipping_charges,
               __("International Shipping fee")
+            )}
+            {this.renderPriceLineQPAY(
+              (express_delivery_charges || expressFee) || (isFreeExpressDelivery ? __("FREE") : 0),
+              __("Express Service")
             )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
@@ -1775,6 +1840,7 @@ export class CheckoutSuccess extends PureComponent {
       this.setState({ eventSent: true });
     }
     localStorage.removeItem("cartProducts");
+    console.log('checking=>', 'CheckProps=====>>>', this.props );
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}

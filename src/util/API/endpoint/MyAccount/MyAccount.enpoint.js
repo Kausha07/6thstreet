@@ -60,3 +60,8 @@ export const updateStarRating = (data) => MobileAPI.post(
 export const deleteStarRating = (simpleSKU, configSKU, incrementId) => MobileAPI.delete(
     `/product-rating/${simpleSKU}?order_id=${incrementId}&config_sku=${configSKU}`
 ) || {};
+
+export const expressServicable = (data) =>
+    MobileAPI.post("/express-serviceable", data) || {};
+  
+export const cutOffTime = () => MobileAPI.get("/express-delivery-cutoff?") || {};

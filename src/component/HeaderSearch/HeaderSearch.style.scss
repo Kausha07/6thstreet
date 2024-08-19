@@ -34,6 +34,35 @@
   }
 }
 
+.HeaderSearchSection {
+  .expressPOsitionCSS{
+    @include mobile {
+      position: fixed;
+      // display: flex;
+      display: block !important;
+      padding-top: 12px !important;
+      height: 85px !important;
+      background: #F8F8F8 !important;
+
+      #header-search .Field {
+        margin: 0;
+        width: 100%;
+    
+        input {
+          background-color: #ffffff;
+          
+          &::placeholder{
+            color: #979797 !important;
+          }
+          @include mobile {
+            border: 0.5px solid #A9A9A9;
+          }
+        }
+      }
+    }
+  }
+}
+
 .HeaderSearch {
   position: absolute;
   z-index: 100;
@@ -52,10 +81,14 @@
     }
   }
 
+  @include mobile{
+    padding: 0 10px;
+  }
+
   @include before-desktop {
     position: absolute;
     top: 75px;
-    padding: 0 20px;
+    // padding: 0 20px;
   }
 
   &-Clear {
@@ -143,7 +176,7 @@
     }
   }
 
-  .Form {
+  #header-search {
     width: 100%;
     @include tablet {
       width: 372px;
@@ -151,7 +184,7 @@
 
     @include before-desktop {
       border-radius: 10px;
-      width: 372px;
+      // width: 372px;
       background-color: var(--gray);
       height: 36px;
       display: flex;
@@ -167,7 +200,7 @@
     }
   }
 
-  .Field {
+  #header-search .Field {
     margin: 0;
     width: 100%;
 

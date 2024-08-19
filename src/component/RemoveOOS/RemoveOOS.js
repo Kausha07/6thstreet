@@ -12,9 +12,23 @@ export const mapDispatchToProps = (dispatch) => ({
     updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
-function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
+function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic, isExpressDelivery}) {
 
-    const checkProducts = (items = {}) => Object.entries(items).reduce((acc, item) => {
+    const checkProducts = (items = {}, totals = {}) => Object.entries(items).reduce((acc, item) => {
+        const {
+            full_item_info: { reserved_qty = 0 },
+          } = item?.[1];
+          const { status = null } = totals;
+        //   if (
+        //     status != null &&
+        //     item[1].availableQty > 0 &&
+        //     +reserved_qty === 0 &&
+        //     isExpressDelivery
+        //   ) {
+        //     const item1 = { ...item[1], id: item[1].item_id };
+        //     acc.push(item1);
+        //   }
+
         if (item[1].availableQty === 0 || item[1].availableQty < item[1].qty) {
             const item1 = {...item[1], id: item[1].item_id}
             acc.push(item1);            
@@ -48,7 +62,7 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
         } = totals;
 
         if (items.length !== 0) {
-            const mappedItems = checkProducts(items) || [];
+            const mappedItems = checkProducts(items, totals, isExpressDelivery) || [];
             const availableItems = checkIsAvailableProducts(items) || [];
 
             if(mappedItems) {

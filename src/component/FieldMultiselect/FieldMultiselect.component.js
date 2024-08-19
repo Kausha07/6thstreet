@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
+import { connect } from "react-redux";
 import PLPFilterOption from "Component/PLPFilterOption";
 import PropTypes from "prop-types";
 import { createRef, PureComponent, Fragment } from "react";
@@ -43,6 +44,19 @@ import {
   getAttributeName,
   getLevelsFromCategoryKey,
 } from "./utils/FieldMultiselect.helper";
+import CityArea from "Component/CityArea";
+import { getAddressType } from "Util/Common/index";
+import BrowserDatabase from "Util/BrowserDatabase";
+
+export const mapStateToProps = (state) => ({
+  isExpressServiceAvailable: state.MyAccountReducer.isExpressServiceAvailable,
+  isExpressPopUpOpen: state.MyAccountReducer.isExpressPopUpOpen,
+  isExpressDelivery: state.AppConfig.isExpressDelivery,
+  vwoData: state.AppConfig.vwoData,
+  mailing_address_type: state.AppConfig.mailing_address_type,
+  currentSelectedCityArea: state.MyAccountReducer.currentSelectedCityArea,
+  prevSelectedAddress: state.MyAccountReducer.prevSelectedAddress,
+});
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -171,6 +185,48 @@ class FieldMultiselect extends PureComponent {
         }
       }
     }
+
+    const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+      "cityAreaFromSelectionPopUp"
+    );
+    const selctedAddress =
+      JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+      cityAreaFromSelectionPopUp;
+
+    if (
+      this.props.currentSelectedCityArea?.id !=
+        prevProps.currentSelectedCityArea?.id &&
+      this.props.currentSelectedCityArea.id &&
+      category ===
+        `express_delivery_${getAddressType(
+          this.props.mailing_address_type
+        )}` &&
+      this.props.isExpressDelivery &&
+      this.props.vwoData?.Express?.isFeatureEnabled
+    ) {
+      if (!selctedAddress) {
+        this.props.onUnselectAllPress(category);
+      }
+    }
+
+    if (
+      this.props.isExpressServiceAvailable?.express_eligible !=
+        prevProps.isExpressServiceAvailable?.express_eligible &&
+      this.props.isExpressServiceAvailable &&
+      category ===
+        `express_delivery_${getAddressType(
+          this.props.mailing_address_type
+        )}` &&
+      this.props.isExpressDelivery &&
+      this.props.vwoData?.Express?.isFeatureEnabled
+    ) {
+      if (
+        selctedAddress &&
+        !this.props.isExpressServiceAvailable?.express_eligible
+      ) {
+        this.props.onUnselectAllPress(category);
+      }
+    }
   }
 
   handleClickOutside = (event) => {
@@ -271,6 +327,9 @@ class FieldMultiselect extends PureComponent {
       parentActiveFilters,
       currentActiveFilter,
       OnLevelTwoCategoryPressMsite,
+      isExpressDelivery,
+      vwoData,
+      mailing_address_type,
     } = this.props;
 
     const { subcategories = {} } = option;
@@ -298,6 +357,9 @@ class FieldMultiselect extends PureComponent {
         OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
         isLoadingFilter={this.props.isLoadingFilter}
         setLoadingMobileFilter={this.props.setLoadingMobileFilter}
+        isExpressDelivery={isExpressDelivery}
+        vwoData={vwoData}
+        mailing_address_type={mailing_address_type}
       />
     );
   };
@@ -668,6 +730,9 @@ class FieldMultiselect extends PureComponent {
       },
       filter,
       initialOptions,
+      isExpressDelivery, 
+      vwoData,
+      mailing_address_type,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
@@ -776,6 +841,38 @@ class FieldMultiselect extends PureComponent {
         </ul>
       );
     }
+
+    if (
+      category === `express_delivery_${getAddressType(mailing_address_type)}` &&
+      isExpressDelivery &&
+      vwoData?.Express?.isFeatureEnabled
+    ) {
+      const cityAreaFromSelectionPopUp = BrowserDatabase.getItem(
+        "cityAreaFromSelectionPopUp"
+      );
+      const selctedAddress =
+        JSON.parse(localStorage.getItem("currentSelectedAddress")) ||
+        cityAreaFromSelectionPopUp;
+      if (!selctedAddress) {
+        return (
+          <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
+            {__("Please select your location to view the best available delivery options.")}
+          </p>
+        );
+      } else if (
+        selctedAddress &&
+        !this.props.isExpressServiceAvailable?.express_eligible
+      ) {
+        return (
+          <p block="expressNotificationPara" mods={{ isArabic: isArabic() }}>
+            {__(
+              "Express Delivery is currently not available for this location."
+            )}
+          </p>
+        );
+      }
+    }
+
     return (
       <>
         <ul
@@ -874,9 +971,13 @@ class FieldMultiselect extends PureComponent {
           category.split(category.charAt(0))[1]
         }`
       : "";
-    const { currentActiveFilter } = this.props;
+    const { currentActiveFilter, isExpressDelivery, vwoData, mailing_address_type } = this.props;
     const { isArabic } = this.state;
     const currency = getCountryCurrencyCode();
+
+    if (category === `express_delivery_${getAddressType(mailing_address_type)}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) {
+      return <CityArea isSignInTypePopUp={true} showBackgroundColor={true} />;
+    }
 
     if (
       (isMobile.any() && currentActiveFilter !== category) ||
@@ -888,6 +989,7 @@ class FieldMultiselect extends PureComponent {
     ) {
       return null;
     }
+
 
     return (
       <div block="Search-Container" mods={{ isArabic }}>
@@ -1211,6 +1313,8 @@ class FieldMultiselect extends PureComponent {
       initialOptions,
       currentActiveFilter,
       isBrandPLP,
+      isExpressDelivery,
+      vwoData,
     } = this.props;
     let conditionalData = data ? data : subcategories;
     let selectedItems = true;
@@ -1219,7 +1323,12 @@ class FieldMultiselect extends PureComponent {
     if(category === "brand_name" && isBrandPLP) {
       return null;
     }
-
+    if (
+      category === "express_delivery_home" &&
+      (!isExpressDelivery || !vwoData?.Express?.isFeatureEnabled)
+    ) {
+      return null;
+    }
     const datakeys = [];
     if (category === "sizes") {
       Object.keys(data).map((key) => {
@@ -1255,12 +1364,14 @@ class FieldMultiselect extends PureComponent {
         },
         [priceAttribute]: { selected_filters_count: priceCount },
       },
+      mailing_address_type,
     } = this.props;
 
     let CategorySelected =
       isMobile.any() && (selectedCategoryCount > 0 || priceCount > 0)
         ? true
         : false;
+      const expressSelectedaddress = JSON.parse(localStorage.getItem("currentSelectedAddress"));
     return (
       <div
         ref={this.filterDropdownRef}
@@ -1287,20 +1398,37 @@ class FieldMultiselect extends PureComponent {
             {this.renderFilterCount()}
           </button>
         )}
-        {toggleOptionsList && !isMobile.any() && (
-          <>
-            {Object.keys(conditionalData).length > (category === "sort" ? 10 : 0) 
-              ? this.renderFilterSearchbox(label, category)
-              : null}
-            {category === "sizes" && !isMobile.any()
-              ? this.renderSizeDropDown(datakeys)
-              : null}
-            {category !== "sizes" &&
-              !isMobile.any() &&
-              !is_radio &&
-              this.renderUnselectButton(category)}
-          </>
-        )}
+        {(toggleOptionsList ||
+          (category === `express_delivery_${getAddressType(mailing_address_type)}` && this.props.isExpressPopUpOpen && isExpressDelivery && vwoData?.Express?.isFeatureEnabled)) &&
+          !isMobile.any() && (
+            <>
+              {category !== `express_delivery_${getAddressType(mailing_address_type)}` ? (
+                <>
+                  {" "}
+                  {Object.keys(conditionalData).length >
+                  (category === "sort" ? 10 : 0)
+                    ? this.renderFilterSearchbox(label, category)
+                    : null}
+                  {category === "sizes" && !isMobile.any()
+                    ? this.renderSizeDropDown(datakeys)
+                    : null}
+                  {category !== "sizes" &&
+                    !isMobile.any() &&
+                    !is_radio &&
+                    this.renderUnselectButton(category)}
+                </>
+              ) : (
+                <>
+                  {(category === `express_delivery_${getAddressType(mailing_address_type)}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled) && (
+                    <CityArea
+                    isSignInTypePopUp={true}
+                      showBackgroundColor={true}
+                    />
+                  )}
+                </>
+              )}
+            </>
+          )}
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
@@ -1311,7 +1439,9 @@ class FieldMultiselect extends PureComponent {
             mods: { isArabic },
           }}
         >
-          {isMobile.any() && Object.keys(conditionalData).length > 10
+          {isMobile.any() &&
+          (Object.keys(conditionalData).length > 10 ||
+          (category === `express_delivery_${getAddressType(mailing_address_type)}` && isExpressDelivery && vwoData?.Express?.isFeatureEnabled ))
             ? this.renderFilterSearchbox(label, category)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>
@@ -1325,4 +1455,4 @@ class FieldMultiselect extends PureComponent {
   }
 }
 
-export default FieldMultiselect;
+export default connect(mapStateToProps)(FieldMultiselect);

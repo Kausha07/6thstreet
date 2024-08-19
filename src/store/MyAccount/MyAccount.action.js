@@ -29,6 +29,13 @@ export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
 export const SET_LAST_OFFSET_LIMIT_OF_MYORDERS =
   "SET_LAST_OFFSET_LIMIT_OF_MYORDERS";
 export const SET_SIGNIN_IS_LOADING_STATUS = "SET_SIGNIN_IS_LOADING_STATUS";
+export const SET_EXPRESS_SERVICE_AVAILABLE = "SET_EXPRESS_SERVICE_AVAILABLE";
+export const SET_SELECTED_CITY_AREA = "SET_SELECTED_CITY_AREA";
+export const SET_EXPRESS_CUTOFF_TIME = "SET_EXPRESS_CUTOFF_TIME";
+export const SET_EXPRESS_POPUP_OPEN = "SET_EXPRESS_POPUP_OPEN";
+export const SET_EXPRESS_PLP_ADDRESS_OPEN = "SET_EXPRESS_PLP_ADDRESS_OPEN";
+export const SET_ADDRESS_DELETED = "SET_ADDRESS_DELETED";
+export const SET_PREVIOUS_SELECTED_ADDRESS = "SET_PREVIOUS_SELECTED_ADDRESS";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -127,4 +134,39 @@ export const setLastLimit = (limit) => ({
 export const setSignInIsLoading = (isLoading) => ({
   type: SET_SIGNIN_IS_LOADING_STATUS,
   isLoading
+})
+
+export const setExpressServicable = (data) => ({
+  type: SET_EXPRESS_SERVICE_AVAILABLE,
+  data,
+});
+
+export const setSelectedCityArea = (data) => ({
+  type: SET_SELECTED_CITY_AREA,
+  data,
+});
+
+export const setExpressCutOffTime = (data) => ({
+  type: SET_EXPRESS_CUTOFF_TIME,
+  data,
+});
+
+export const setisExpressPopUpOpen = (val) => ({
+  type: SET_EXPRESS_POPUP_OPEN,
+  val,
+});
+
+export const setisExpressPLPAddressForm = (isExpressPLPAddressOpen) => ({
+  type: SET_EXPRESS_PLP_ADDRESS_OPEN,
+  isExpressPLPAddressOpen,
+});
+
+export const setAddressdeleted = (val) => ({
+  type: SET_ADDRESS_DELETED,
+  val,
+});
+
+export const setPrevSelectedAddressForPLPFilters = (val) => ({
+  type: SET_PREVIOUS_SELECTED_ADDRESS,
+  val,
 })

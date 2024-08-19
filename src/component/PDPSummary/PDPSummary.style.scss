@@ -90,7 +90,7 @@
     }
   }
 
-  h1 {
+  .headingH1 {
     font-size: 24px;
     margin: 0.4px 0 0 0;
     text-decoration: none;
@@ -380,6 +380,60 @@
   &-AvailableItems {
     margin-top: 20px;
     font-size: 17px;
+  }
+
+  .SeperatorExpress{
+    background-color: #efefef;
+    margin: 20px 0 20px 0;
+    height: 1px;
+    @include mobile {
+      margin: 20px 0 20px 0;
+    }
+  }
+
+  .EddParentExpressWrapper {
+
+    .expressNotificationPara {
+      font-size: 13px;
+      margin: 5px;
+
+      &_isArabic {
+        direction: rtl;
+      }
+    }
+
+
+    .cityAreaAddressSelection {
+      margin: 0;
+      padding: 0;
+
+      .cityAreaDropdown {
+        margin: 0;
+        padding: 0;
+        min-width: 35%;
+        max-width: 90%;
+        height: auto;
+
+        .cityAreaText{
+          font-size: 14px;
+        }
+      }
+    }
+
+    .EddExpressWrapper {
+      margin-top: 10px;
+      @include desktop {
+        width: 343px;
+      }
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .eddStandardDelivery{
+        margin-top: 10px;
+      }
+    }
   }
 }
 

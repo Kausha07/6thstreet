@@ -259,6 +259,32 @@ $select-arrow-width: 6px !default;
           padding: 5px;
           cursor: pointer;
         }
+
+        .sizeOptionLabel {
+          &_isExpressEligibleSKU {
+            &:before {
+              content: "";
+              background: url(../Icons/ExpressDeliveryTruck/icon.svg) no-repeat;
+              width: 13px;
+              height: 10px;
+              position: absolute;
+              top: 2px;
+              left: 2px;
+            }
+          }
+          &_isArabic {
+            &:before {
+              content: "";
+              background: url(../Icons/ExpressDeliveryTruck/icon.svg) no-repeat;
+              width: 13px;
+              height: 10px;
+              font-size: 0;
+              position: absolute;
+              top: 2px;
+              left: 22px;
+            }
+          }
+        }
       }
 
       &-SizeOptionContainerOOS {
