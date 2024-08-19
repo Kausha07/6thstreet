@@ -606,6 +606,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       mailing_address_type,
       setShippingAddress,
       selectedPaymentMethod,
+      placeOrderBtnEnable,
     } = this.props;
 
     return (
@@ -641,6 +642,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         mailing_address_type={mailing_address_type}
         setShippingAddress={setShippingAddress} // Delete this if not used
         selectedPaymentMethod={selectedPaymentMethod}
+        placeOrderBtnEnable={placeOrderBtnEnable}
       />
     );
   };

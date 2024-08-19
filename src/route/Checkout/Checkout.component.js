@@ -109,6 +109,7 @@ export class Checkout extends SourceCheckout {
     isNationalityClick: true,
     isIdentityNumberModified: false,
     mailing_address_type: getFinalAddressInWords(this.props.mailing_address_type)?.["home"],
+    placeOrderBtnEnable: false,
   };
 
   onIdentityNumberChange = (value) => {
@@ -344,7 +345,7 @@ export class Checkout extends SourceCheckout {
   };
 
   setPaymentCode = (code) => {
-    this.setState({ selectedPaymentMethod: code });
+    this.setState({ selectedPaymentMethod: code, placeOrderBtnEnable: true });
   };
 
   setCashOnDeliveryFee = (fee) => {
@@ -790,6 +791,7 @@ export class Checkout extends SourceCheckout {
       isIdentityNumberModified = false,
       mailing_address_type = "",
       cashOnDeliveryFee,
+      placeOrderBtnEnable,
     } = this.state;
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
@@ -844,6 +846,7 @@ export class Checkout extends SourceCheckout {
           setIsAddressAdded={setIsAddressAdded}
           setShippingAddress={setShippingAddressCareem}
           selectedPaymentMethod={selectedPaymentMethod}
+          placeOrderBtnEnable={placeOrderBtnEnable}
         />
       </div>
     );
