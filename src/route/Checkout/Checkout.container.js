@@ -320,13 +320,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (paymentStatus === APPROVED) {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-          this.setDetailsStep(order_id, increment_id);
           this.setState({ isLoading: false });
           this.resetCart();
         } else {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isFailed: true });
-          this.setDetailsStep(order_id, increment_id);
           this.resetCart();
         }
         // below call is only to update payment state to magento
@@ -383,13 +381,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
             if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-              this.setDetailsStep(order_id, increment_id);
               this.setState({ isLoading: false });
               this.resetCart();
             } else {
               cancelOrder(order_id, PAYMENT_FAILED);
               this.setState({ isFailed: true });
-              this.setDetailsStep(order_id, increment_id);
               this.resetCart();
             }
           }
@@ -446,7 +442,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-            this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
             this.resetCart();
             try {
@@ -484,7 +479,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
-            this.setDetailsStep(order_id, increment_id);
             this.resetCart();
             try {
               const cResponse = await capturePayment(paymentId, order_id);
@@ -556,7 +550,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-            this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
             this.resetCart();
             try {
@@ -583,7 +576,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
-            this.setDetailsStep(order_id, increment_id);
             this.resetCart();
             try {
               const cResponse = await capturePayment(paymentId, order_id);
@@ -654,21 +646,25 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { order_id, increment_id } = TAMARA_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setDetailsStep(order_id, increment_id);
         this.setState({redirectPaymentMethod: TAMARA})
       } else if (TABBY_CHECK) {
         const { order_id, increment_id } = TABBY_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setDetailsStep(order_id, increment_id);
         this.setState({redirectPaymentMethod: TABBY_ISTALLMENTS})
       } else if (KNET_CHECK) {
         const { order_id, increment_id } = KNET_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setDetailsStep(order_id, increment_id);
         this.setState({redirectPaymentMethod: KNET_PAY})
       } else if (QPAY_CHECK) {
         const { order_id, increment_id } = QPAY_CHECK;
         paymentData.orderID = order_id;
         paymentData.incrementID = increment_id;
+        this.setDetailsStep(order_id, increment_id);
         this.setState({redirectPaymentMethod: CHECKOUT_QPAY})
       }
 
