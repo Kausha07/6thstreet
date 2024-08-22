@@ -31,6 +31,7 @@ import { resetCart } from "Store/Cart/Cart.action";
 import { setCartTotal } from "Store/Checkout/Checkout.action";
 import { getCountryFromUrl } from "Util/Url";
 import MobileAPI from "Util/API/provider/MobileAPI";
+import { isSignedIn } from "Util/Auth";
 export class CartDispatcher {
   async setCheckoutStep(dispatch, checkoutDetails = false) {
     dispatch(setCheckoutDetails(checkoutDetails));
@@ -57,6 +58,7 @@ export class CartDispatcher {
       isToMakeLastOrderAPICall &&
       !localStorage.getItem("EddAddressReq") &&
       (isExpressDelivery || isNewCheckoutPageEnable)
+      && isSignedIn()
     ) {
       await MobileAPI.get(`order/last?country_specific=true`).then(
         (response) => {

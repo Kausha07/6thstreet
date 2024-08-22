@@ -41,6 +41,9 @@ function BrandCMS(props) {
 
   const gender = useSelector((state) => state.AppState.gender);
   const BrandCMSData = useSelector((state) => state.BrandCms);
+  const customer = useSelector((state) => state.MyAccountReducer.customer);
+  const abTestingConfig = useSelector((state) => state.AppConfig.abTestingConfig);
+  const vwoData = useSelector((state) => state.AppConfig.vwoData);
 
   const [isLoading, setIsLoading] = useState(true);
   const [storeWidgets, setStoreWidgets] = useState([]);
@@ -107,6 +110,41 @@ function BrandCMS(props) {
     }
   };
 
+  const getSegmentWiseWidgets = async () => {
+    try {
+      setIsLoading(true);
+      dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: true });
+      const devicePrefix = isMobile.any() ? "m/" : "d/";
+      const userSegementValue = customer?.user_segment ? customer.user_segment : abTestingConfig?.HPP?.defaultUserSegment;
+      const widgetData = await getStaticFile(HOME_STATIC_FILE_KEY, {
+        $FILE_NAME: `${devicePrefix}${userSegementValue}_store_page.json`,
+      });
+
+      const { HPP : { variationName = "" } = {}}  = vwoData || {};
+      
+      const variant_name = variationName ? variationName : abTestingConfig?.HPP?.defaultValue; 
+
+    if (!widgetData || widgetData?.length === 0) {
+      dispatch({ type: "SET_BRAND_CMS_DATA", data: [] });
+      dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
+    }else{
+      // same logic as home page for filter usersegment wise widgets
+      const filteredContent = widgetData.filter(
+        (item) => !item?.widget_variant || item.widget_variant === `${variant_name}`
+      );
+      dispatch({ type: "SET_BRAND_CMS_DATA", data: filteredContent?.length > 0 ? filteredContent : widgetData });
+      dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });      
+      Array.isArray(filteredContent) && filteredContent?.length > 0 ? setStoreWidgets(filteredContent) : setStoreWidgets(widgetData);
+    }
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
+      setStoreWidgets([]);
+      setIsLoading(false);
+    }
+  }
+
   const renderWidget = () => {
     const { tagName = "" } = getTagName();
     let widgetData = [];
@@ -142,9 +180,13 @@ function BrandCMS(props) {
   };
 
   useEffect(() => {
-    getWidgets();
+    getSegmentWiseWidgets();
     renderWidget();
   }, []);
+
+  useEffect(() => {
+    getSegmentWiseWidgets();
+  }, [customer?.user_segment, abTestingConfig?.HPP?.defaultUserSegment]);
 
   useEffect(() => {
     renderWidget();
