@@ -58,6 +58,52 @@ export class AppConfigDispatcher {
     const isSiteWideCall = config?.countries?.[country]?.isSidewideCouponEnabled || false;
     const getSitewideConfigVwo = abTestingConfig?.SiteWideCoupon?.getConfigVwo || false;
 
+    const DefaultABConfig = () => {
+        let defaultValueForExpress = false;
+        if(abTestingConfig && abTestingConfig.Express && abTestingConfig?.Express?.variable && Array.isArray(abTestingConfig?.Express?.variable)){
+            defaultValueForExpress = abTestingConfig.Express.variable.filter(item => item.name === "enable")[0]['defaultValue'];
+        }
+        let defaultValueForSWC = false;
+        if(abTestingConfig && abTestingConfig.SiteWideCoupon && abTestingConfig?.SiteWideCoupon?.variable && Array.isArray(abTestingConfig?.SiteWideCoupon?.variable)){
+            defaultValueForSWC = abTestingConfig.SiteWideCoupon.variable.filter(item => item.name === "enable")[0]['defaultValue'];
+        }
+        let defaultValueForNewPDP = false;
+        if(abTestingConfig && abTestingConfig.NewPDP && abTestingConfig?.NewPDP?.defaultValue){
+            defaultValueForNewPDP = abTestingConfig.NewPDP.defaultValue === 'v1' ? true: false; 
+        }
+        let defaultValueForHPP = false;
+        if(abTestingConfig && abTestingConfig.HPP && abTestingConfig?.HPP?.defaultValue){
+            defaultValueForHPP = abTestingConfig.HPP.defaultValue === '1' ? true : false;
+        }
+        
+        return {
+            SiteWideCoupon : {
+                isFeatureEnabled: defaultValueForSWC,
+                enableSitewideCoupon: defaultValueForSWC,
+                variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
+                vwo: '0',
+                campaignName: siteWideCampaignName,
+            },
+            HPP : {
+                variationName: abTestingConfig?.HPP?.defaultValue,
+                vwo: '0',
+                campaignName: HPPCampaignName,
+                isFeatureEnabled: defaultValueForHPP
+            },
+            NewPDP : {
+                isFeatureEnabled: defaultValueForNewPDP,
+                variationName: abTestingConfig?.NewPDP?.defaultVariant,
+                vwo: '0',
+                campaignName: newPDPCompaignName
+            },
+            Express : {
+                variationName: abTestingConfig?.Express?.defaultVariant,
+                vwo: '0',
+                campaignName: expressCampaignName,
+                isFeatureEnabled: defaultValueForExpress,
+            } 
+        }
+    }
     const getVwoDataNewPDP = () => {
         const isEnable = config?.countries?.[country]?.new_design || false;
         const callVwo = abTestingConfig?.NewPDP?.getConfigVwo || false; 
@@ -202,39 +248,14 @@ export class AppConfigDispatcher {
             window.vwoClientInstance?.push({ ...pushData, ...options.customVariables, userAgent }, `${userId}`);
             return { SiteWideCoupon, HPP, NewPDP, Express };
         } else {
-            let defaultValueForExpress = false;
-            if(abTestingConfig && abTestingConfig.Express && abTestingConfig?.Express?.variable && Array.isArray(abTestingConfig?.Express?.variable)){
-                defaultValueForExpress = abTestingConfig.Express.variable.filter(item => item.name === "enable")[0]['defaultValue'];
-            }
-            return {
-                SiteWideCoupon : {
-                    isFeatureEnabled: false,
-                    enableSitewideCoupon: false,
-                    variationName: abTestingConfig?.SiteWideCoupon?.defaultVariant || "c",
-                    vwo: '0',
-                    campaignName: siteWideCampaignName,
-                },
-                HPP : {
-                    variationName: abTestingConfig?.HPP?.defaultValue,
-                    vwo: '0',
-                    campaignName: HPPCampaignName,
-                },
-                NewPDP : {
-                    variationName: abTestingConfig?.NewPDP?.defaultVariant,
-                    vwo: '0',
-                    campaignName: newPDPCompaignName
-                },
-                Express : {
-                    variationName: abTestingConfig?.Express?.defaultVariant,
-                    vwo: '0',
-                    campaignName: expressCampaignName,
-                    isFeatureEnabled: defaultValueForExpress,
-                } 
-            }
+            const defaultConfig =  DefaultABConfig();
+            return defaultConfig;
         }
     } catch (e) {
-        console.error("vwo varition error", e);
-    }
+            const defaultConfig =  DefaultABConfig();
+            console.error("vwo varition error", e);
+            return defaultConfig;
+        }
     }
 
     async getAppConfig(dispatch) {

@@ -500,6 +500,7 @@ export class Router extends SourceRouter {
     const { isVwoEvent } = this.state;
 
     if(!isVwoEvent && vwoData){
+      console.log('vwoData ', vwoData );
       const { SiteWideCoupon: { isFeatureEnabled = false } = {}, HPP: { variationName: HPPvariationName } ={} } = vwoData;
 
       const userSegment = BrowserDatabase.getItem("customer")?.user_segment;
