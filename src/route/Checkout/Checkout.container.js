@@ -380,6 +380,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             const { status } = data;
 
             if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
+              updateTabbyPayment(tabbyPaymentId,order_id);
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
               this.setState({ isLoading: false });
               this.resetCart();
