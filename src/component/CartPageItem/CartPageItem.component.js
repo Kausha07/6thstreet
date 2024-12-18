@@ -976,7 +976,7 @@ export class CartItem extends PureComponent {
     const isExpressProduct = false;
     if (extension_attributes?.click_to_collect_store) {
       return (
-        <div block="AreaText" mods={{ isArabic }}>
+        <div block="" mods={{ isArabic }}>
           <Shipping />
           <span>{splitReadyByKey}</span>
           <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
@@ -1018,7 +1018,7 @@ export class CartItem extends PureComponent {
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
 
     return (
-      <div block="AreaText" mods={{ isArabic }}>
+      <div block="" mods={{ isArabic }}>
         <Shipping />
         {extension_attributes?.click_to_collect_store ? (
           <span>{splitReadyByKey}</span>

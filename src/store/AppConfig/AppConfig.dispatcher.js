@@ -100,7 +100,8 @@ export class AppConfigDispatcher {
                 variationName: abTestingConfig?.Express?.defaultVariant,
                 vwo: '0',
                 campaignName: expressCampaignName,
-                isFeatureEnabled: defaultValueForExpress,
+                isFeatureEnabled:true,
+                //isFeatureEnabled: defaultValueForExpress,
             } 
         }
     }

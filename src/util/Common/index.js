@@ -899,7 +899,71 @@ export const getFinalExpressDeliveryKey = ({
     return express_delivery;
   }
 };
+export const determineServiceability = ({ sameDay, nextDay, expressExpired,addressType,mailing_address_type}) => {
+  return checkProductOfficeServicable({
+    addressType,
+    isOfficeSameDayExpressServicable: sameDay,
+    isOfficeNextDayExpressServicable: nextDay,
+    isExpressTimeExpired: expressExpired,
+    express_delivery_key,
+    mailing_address_type,
+  });
+};
+// export const productOfficeServicable = ({
+//   cutOffTime = {},
+//   express_delivery_key = "",
+//   isExpressTimeExpired = false,
+//   mailing_address_type,
+// }) => {
+//   // Only proceed if the mailing address type is "work"
+//   //console.log("hello",getFinalAddressInWords(mailing_address_type));
+//   //console.log("hello1",getNumericAddressType(mailing_address_type));
+  
+//   // if (getFinalAddressInWords(mailing_address_type)?.["work"]) {
+//   //   return false; // Not serviceable if the address type is not "work"
+    
+//   // }
+// console.log("kaise ",cutOffTime);
+//   const addressType = getNumericAddressType(mailing_address_type);
+//   //console.log("hello2",getTodaysWeekDay()?.toLowerCase() || "");
+//   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
+//   //console.log("hello3",checkProductExpressEligible(express_delivery_key));
+//   const isProductExpressEligible = checkProductExpressEligible(express_delivery_key);
 
+//   let isOfficeSameDayExpressServicable = true;
+//   let isOfficeNextDayExpressServicable = true;
+//   let isProductOfficeServicable = true;
+
+//   const cutoffSettings = cutOffTime.data[0];
+// console.log("kaushal2",cutoffSettings,cutOffTime,todaysWeekDayName);
+//   if (
+//     cutOffTime?.data &&
+//     todaysWeekDayName &&
+//     addressType &&
+//     isProductExpressEligible
+//   ) {
+//     //const cutoffSettings = cutOffTime.data[todaysWeekDayName];
+//     console.log("kaushal1",cutoffSettings);
+//     if (cutoffSettings) {
+//       console.log("kaushal",cutoffSettings);
+//       isOfficeSameDayExpressServicable = cutoffSettings.sameDay;
+//       isOfficeNextDayExpressServicable = cutoffSettings.nextDay;
+//       isProductOfficeServicable = determineServiceability({
+//         addressType:addressType,
+//         sameDay: isOfficeSameDayExpressServicable,
+//         nextDay: isOfficeNextDayExpressServicable,
+//         expressExpired: isExpressTimeExpired,
+//         mailing_address_type:mailing_address_type,
+//       });
+//     } else {
+//       isOfficeSameDayExpressServicable = true;
+//       isOfficeNextDayExpressServicable = true;
+//       isProductOfficeServicable = true;
+//     }
+//   }
+
+//   return isProductOfficeServicable;
+// };
 export const productOfficeServicable = ({
   cutOffTime = {},
   express_delivery_key = "",
@@ -908,79 +972,133 @@ export const productOfficeServicable = ({
 }) => {
   const addressType = getNumericAddressType(mailing_address_type);
   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
-  const isProductExpressEligible =
-    checkProductExpressEligible(express_delivery_key);
+  const isProductExpressEligible = checkProductExpressEligible(express_delivery_key);
+//console.log("hello",todaysWeekDayName);
+  // Find today's cutoff data
+  //console.log("kaushal2",todaysWeekDayName)
+  console.log("kaushal",cutOffTime?.data);
+  // console.log("kaushal2",cutOffTime?.data?.find(item => 
+  //   item.id?.day));
+  const data = cutOffTime?.data?.find(item => 
+    item?.day?.toLowerCase() === todaysWeekDayName &&
+    item?.address_type === addressType
+  ) || {};
+  console.log("Hello",data);
 
-  let isOfficeSameDayExpressServicable = true;
-  let isOfficeNextDayExpressServicable = true;
+  // Destructure 
+  let { is_deliverable_today, is_deliverable_tomorrow } = data;
+
+  // Determine if office is same-day and next-day express serviceable
+  let isOfficeSameDayExpressServicable = is_deliverable_today === "0" ? false : true;
+  let isOfficeNextDayExpressServicable = is_deliverable_tomorrow === "0" ? false : true;
+
+  // Initialize 
   let isProductOfficeServicable = true;
 
-  if (
-    cutOffTime?.data &&
-    todaysWeekDayName &&
-    addressType &&
-    isProductExpressEligible
-  ) {
+  // Main 
+  if (cutOffTime?.data && todaysWeekDayName && addressType && isProductExpressEligible) {
     if (
-      addressType === getFinalAddressInWords(mailing_address_type)?.["work"] &&
-      ["friday", "saturday", "sunday"].includes?.(
-        todaysWeekDayName?.toLowerCase()
-      )
+      addressType === getFinalAddressInWords(mailing_address_type)?.["work"]
+    
     ) {
-      switch (todaysWeekDayName?.toLowerCase()) {
-        case "friday":
-          isOfficeSameDayExpressServicable = true;
-          isOfficeNextDayExpressServicable = false;
-          isProductOfficeServicable = checkProductOfficeServicable({
-            addressType,
-            isOfficeSameDayExpressServicable,
-            isOfficeNextDayExpressServicable,
-            isExpressTimeExpired,
-            express_delivery_key,
-            mailing_address_type,
-          });
-          break;
-
-        case "saturday":
-          isOfficeSameDayExpressServicable = false;
-          isOfficeNextDayExpressServicable = false;
-          isProductOfficeServicable = checkProductOfficeServicable({
-            addressType,
-            isOfficeSameDayExpressServicable,
-            isOfficeNextDayExpressServicable,
-            isExpressTimeExpired,
-            express_delivery_key,
-            mailing_address_type,
-          });
-          break;
-
-        case "sunday":
-          isOfficeSameDayExpressServicable = false;
-          isOfficeNextDayExpressServicable = true;
-          isProductOfficeServicable = checkProductOfficeServicable({
-            addressType,
-            isOfficeSameDayExpressServicable,
-            isOfficeNextDayExpressServicable,
-            isExpressTimeExpired,
-            express_delivery_key,
-            mailing_address_type,
-          });
-          break;
-
-        default:
-          isOfficeSameDayExpressServicable = true;
-          isOfficeNextDayExpressServicable = true;
-          isProductOfficeServicable = true;
-      }
+      isProductOfficeServicable = checkProductOfficeServicable({
+        addressType,
+        isOfficeSameDayExpressServicable,
+        isOfficeNextDayExpressServicable,
+        isExpressTimeExpired,
+        express_delivery_key,
+        mailing_address_type,
+      });
     } else {
-      isOfficeSameDayExpressServicable = true;
-      isOfficeNextDayExpressServicable = true;
-      isProductOfficeServicable = true;
+      isProductOfficeServicable = true;  // Default to true if not a work address
     }
   }
 
   return isProductOfficeServicable;
 };
+
+
+// export const productOfficeServicable = ({
+//   cutOffTime = {},
+//   express_delivery_key = "",
+//   isExpressTimeExpired = false,
+//   mailing_address_type,
+// }) => {
+//   const addressType = getNumericAddressType(mailing_address_type);
+//   const todaysWeekDayName = getTodaysWeekDay()?.toLowerCase() || "";
+//   const isProductExpressEligible =
+//     checkProductExpressEligible(express_delivery_key);
+
+//   let isOfficeSameDayExpressServicable = true;
+//   let isOfficeNextDayExpressServicable = true;
+//   let isProductOfficeServicable = true;
+
+//   if (
+//     cutOffTime?.data &&
+//     todaysWeekDayName &&
+//     addressType &&
+//     isProductExpressEligible
+//   ) {
+//     if (
+//       addressType === getFinalAddressInWords(mailing_address_type)?.["work"] &&
+//       ["friday", "saturday", "sunday"].includes?.(
+//         todaysWeekDayName?.toLowerCase()
+//       )
+//     ) {
+//       switch (todaysWeekDayName?.toLowerCase()) {
+//         case "friday":
+//           isOfficeSameDayExpressServicable = true;
+//           isOfficeNextDayExpressServicable = false;
+//           isProductOfficeServicable = checkProductOfficeServicable({
+//             addressType,
+//             isOfficeSameDayExpressServicable,
+//             isOfficeNextDayExpressServicable,
+//             isExpressTimeExpired,
+//             express_delivery_key,
+//             mailing_address_type,
+//           });
+//           break;
+
+//         case "saturday":
+//           isOfficeSameDayExpressServicable = false;
+//           isOfficeNextDayExpressServicable = false;
+//           isProductOfficeServicable = checkProductOfficeServicable({
+//             addressType,
+//             isOfficeSameDayExpressServicable,
+//             isOfficeNextDayExpressServicable,
+//             isExpressTimeExpired,
+//             express_delivery_key,
+//             mailing_address_type,
+//           });
+//           break;
+
+//         case "sunday":
+//           isOfficeSameDayExpressServicable = false;
+//           isOfficeNextDayExpressServicable = true;
+//           isProductOfficeServicable = checkProductOfficeServicable({
+//             addressType,
+//             isOfficeSameDayExpressServicable,
+//             isOfficeNextDayExpressServicable,
+//             isExpressTimeExpired,
+//             express_delivery_key,
+//             mailing_address_type,
+//           });
+//           break;
+
+//         default:
+//           isOfficeSameDayExpressServicable = true;
+//           isOfficeNextDayExpressServicable = true;
+//           isProductOfficeServicable = true;
+//       }
+//     } else {
+//       isOfficeSameDayExpressServicable = true;
+//       isOfficeNextDayExpressServicable = true;
+//       isProductOfficeServicable = true;
+//     }
+//   }
+
+//   return isProductOfficeServicable;
+// };
 
 export const knowInventoryOnPageLoad = (simple_products) => {
   let whs = false;
